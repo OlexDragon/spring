@@ -5,13 +5,17 @@ import irt.web.form.PartNumberForm;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Controller
 public class PartNumberController {
@@ -27,12 +31,14 @@ public class PartNumberController {
 	}
 
 	@RequestMapping(value="/part-numbers", method=RequestMethod.POST)
-	public String getPartNumber(@ModelAttribute @Validated PartNumberForm o, ModelMap modelMap) {
+    @ResponseStatus(value = HttpStatus.CREATED)
+	public String getPartNumber(@Valid @ModelAttribute PartNumberForm o, ModelMap modelMap, BindingResult result) {
 
-		System.out.println(o.getClass().getSimpleName());
+		System.out.println("getPartNumber : "+o.getClass().getSimpleName());
 		System.out.println(o);
 			
 		modelMap.addAttribute("PNF", partNumberForm);
+		modelMap.addAttribute("GROUPS", componentGroups);
 		return "part-numbers";
 	}
 
