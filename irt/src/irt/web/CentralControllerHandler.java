@@ -1,7 +1,7 @@
 package irt.web;
 
-import irt.exceptions.PartNumberNotFoundException;
-import irt.validators.PartNumberFormValidator;
+import irt.web.exceptions.PartNumberNotFoundException;
+import irt.web.validators.PartNumberFormValidator;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

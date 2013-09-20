@@ -1,11 +1,14 @@
 package irt.web.form;
 
+import javax.validation.constraints.NotNull;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import irt.objects.components.componentGroup.ComponentGroup;
 
 public class PartNumberForm {
 
+	@NotNull
 	private ComponentGroup componentGroup;
 
 	public ComponentGroup getComponentGroup() {
