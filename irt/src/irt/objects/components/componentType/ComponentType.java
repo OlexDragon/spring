@@ -2,10 +2,10 @@ package irt.objects.components.componentType;
 
 public class ComponentType {
 
+	private int classId;
 	private char groupId;
 	private String type;
 	private String description;
-	private int classId;
 
 	public char getGroupId() {
 		return groupId;
@@ -37,5 +37,15 @@ public class ComponentType {
 
 	public void setClassId(int classId) {
 		this.classId = classId;
+	}
+
+	@Override
+	public int hashCode() {
+		return classId>0 ? classId : super.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return obj!=null ? obj.hashCode()==hashCode() : false;
 	}
 }

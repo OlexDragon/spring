@@ -9,9 +9,6 @@ public class PartNumberFormValidator implements Validator {
 
 	@Override
 	public boolean supports(Class<?> clazz) {
-		System.out.print("supports : Class - "+clazz);
-		System.out.println(" - "+clazz.isAssignableFrom(PartNumberForm.class));
-
 		return clazz.isAssignableFrom(PartNumberForm.class);
 	}
 

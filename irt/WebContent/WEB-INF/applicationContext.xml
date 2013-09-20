@@ -3,7 +3,8 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:util="http://www.springframework.org/schema/util"
+ 	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
@@ -14,7 +15,7 @@
 
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
-		<property name="url" value="jdbc:mysql://localhost:3306/irt"></property>
+		<property name="url" value="jdbc:mysql://irttechnologies:3306/irt"></property>
 		<property name="username" value="lab"></property>
 		<property name="password" value="lab"></property>
 	</bean>
@@ -24,12 +25,16 @@
 	</bean>
 
 	<bean id="componentGroup" class="irt.objects.components.componentGroup.ComponentGroup"/>
-	<bean id="componentGroupDAO" class=" irt.objects.components.componentGroup.dao.ComponentGroupDAO"/>
+	<bean id="componentGroupDAO" class=" irt.objects.components.componentGroup.dao.ComponentGroupDAO" init-method="getComponentGroupList"/>
+
+	<bean id="componentType" class="irt.objects.components.componentType.ComponentType"></bean>
+	<bean id="componentTypeDAO" class=" irt.objects.components.componentType.dao.ComponentTypeDAO"/>
+
 	<bean id="partNumberForm" class="irt.web.form.PartNumberForm"/>
-	
-	<bean id="partNumberController" class="irt.web.PartNumberController">
-		<property name="componentGroups">
-			<bean factory-bean="componentGroupDAO" factory-method="getListComponentGroup"/>
-		</property>
-	</bean>
+	<bean id="componentGroupEditor" class="irt.web.editors.ComponentGroupEditor"/>
+	<bean id="componentTypeEditor" class="irt.web.editors.ComponentTypeEditor"/>
+
+	<bean id="partNumberController" class="irt.web.PartNumberController"/>
+	<bean id="centralControllerHandler" class="irt.web.CentralControllerHandler"/>
+
 </beans>  

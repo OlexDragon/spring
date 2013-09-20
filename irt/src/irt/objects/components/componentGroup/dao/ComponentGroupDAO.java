@@ -13,23 +13,29 @@ import org.springframework.jdbc.core.RowMapper;
 public class ComponentGroupDAO {
 
 	private JdbcTemplate jdbcTemplate;
+	private List<ComponentGroup> componentGroupList;
 
 	@Autowired
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
-	public List<ComponentGroup> getListComponentGroup(){
-		String sql = "SELECT*FROM`first_digit`";
+	public List<ComponentGroup> getComponentGroupList() {
 
-		return jdbcTemplate.query(sql, new RowMapper<ComponentGroup>() {
-			@Override
-			public ComponentGroup mapRow(ResultSet rs, int rowNum) throws SQLException {
-				ComponentGroup componentGroup = new ComponentGroup();
- 				componentGroup.setId(rs.getString("id").charAt(0));
- 				componentGroup.setDescription(rs.getString("description"));
-				return componentGroup;
-			}
-		});
+		if(componentGroupList==null){
+			String sql = "SELECT*FROM`first_digit`";
+
+			componentGroupList = jdbcTemplate.query(sql, new RowMapper<ComponentGroup>() {
+				@Override
+				public ComponentGroup mapRow(ResultSet rs, int rowNum) throws SQLException {
+					ComponentGroup componentGroup = new ComponentGroup();
+					componentGroup.setId(rs.getString("id").charAt(0));
+					componentGroup.setDescription(rs.getString("description"));
+					return componentGroup;
+				}
+			});
+		}
+
+		return componentGroupList;
 	}
 }
