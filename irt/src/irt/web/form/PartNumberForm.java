@@ -1,5 +1,6 @@
 package irt.web.form;
 
+import irt.objects.components.Component;
 import irt.objects.components.componentGroup.ComponentGroup;
 import irt.objects.components.componentType.ComponentType;
 
@@ -9,6 +10,7 @@ public class PartNumberForm {
 
 	private ComponentGroup componentGroup;
 	private ComponentType componentType;
+	private Component component;
 
 	public ComponentGroup getComponentGroup() {
 		return componentGroup;

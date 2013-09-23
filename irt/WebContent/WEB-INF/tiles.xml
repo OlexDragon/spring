@@ -16,4 +16,8 @@
 		<put-attribute name="title" value="IRT Part Numbers" />
 		<put-attribute name="body" value="/WEB-INF/jsp/layout/part-number.jsp" />
 	</definition>
+	<definition name="manufacture-links" extends="part-number-layout">
+		<put-attribute name="title" value="IRT Manufactures" />
+		<put-attribute name="body" value="/WEB-INF/jsp/layout/manufactures.jsp" />
+	</definition>
 </tiles-definitions>  
