@@ -1,18 +1,17 @@
 package irt.objects.components.componentGroup.dao;
 
 import irt.objects.components.componentGroup.ComponentGroup;
-import irt.objects.components.dao.AListDAO;
+import irt.objects.components.dao.ADAO;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import org.springframework.jdbc.core.RowMapper;
 
-public class ComponentGroupDAO extends AListDAO<ComponentGroup>{
+public class ComponentGroupDAO extends ADAO<ComponentGroup>{
 
-	@Override
-	protected RowMapper<ComponentGroup> getRowMapper() {
-		return new RowMapper<ComponentGroup>() {
+	private RowMapper<ComponentGroup> rowMapper = new RowMapper<ComponentGroup>() {
 			@Override
 			public ComponentGroup mapRow(ResultSet rs, int rowNum) throws SQLException {
 				ComponentGroup componentGroup = new ComponentGroup();
@@ -21,10 +20,8 @@ public class ComponentGroupDAO extends AListDAO<ComponentGroup>{
 				return componentGroup;
 			}
 		};
-	}
 
-	@Override
-	protected String getQuery() {
-		return "SELECT*FROM`irt`.`first_digit`";
+	public List<ComponentGroup> getComponentGroups(){
+		return getList("SELECT*FROM`irt`.`first_digit`", rowMapper);
 	}
 }

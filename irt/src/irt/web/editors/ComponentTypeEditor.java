@@ -2,6 +2,7 @@ package irt.web.editors;
 
 import irt.objects.components.componentType.ComponentType;
 import irt.objects.components.componentType.dao.ComponentTypeDAO;
+import irt.web.PartNumberController;
 
 import java.beans.PropertyEditorSupport;
 import java.util.List;
@@ -23,7 +24,7 @@ public class ComponentTypeEditor extends PropertyEditorSupport {
 		int classId = Integer.parseInt(text);
 		componentType.setClassId(classId);
 
-		List<ComponentType> componentTypes = componentTypeDAO.getList(false);
+		List<ComponentType> componentTypes = PartNumberController.getComponentTypes();
 
 		if(componentTypes!=null){
 			int index = componentTypes.indexOf(componentType);

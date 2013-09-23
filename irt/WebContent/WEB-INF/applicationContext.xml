@@ -15,7 +15,7 @@
 
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
-		<property name="url" value="jdbc:mysql://localhost:3306/irt"></property>
+		<property name="url" value="jdbc:mysql://irttechnologies:3306/irt"></property>
 		<property name="username" value="lab"></property>
 		<property name="password" value="lab"></property>
 	</bean>
@@ -34,10 +34,7 @@
 	<bean id="componentGroupEditor" class="irt.web.editors.ComponentGroupEditor"/>
 	<bean id="componentTypeEditor" class="irt.web.editors.ComponentTypeEditor"/>
 
-	<bean id="manufacture" class="irt.objects.components.Manufacture">
-		<property name="id" value="DF"/>
-		<property name="name" value="Frtertyu"/>
-	</bean>
+	<bean id="manufacture" class="irt.objects.components.Manufacture"/>
 	<bean id="manufactureForm" class="irt.web.form.ManufactureForm"/>
 	<bean id="manufactureDAO" class="irt.objects.components.dao.ManufactureDAO"></bean>
 

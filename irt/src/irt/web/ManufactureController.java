@@ -1,6 +1,9 @@
 package irt.web;
 
+import irt.objects.components.dao.ManufactureDAO;
 import irt.web.form.ManufactureForm;
+
+import java.sql.SQLException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,9 +16,12 @@ public class ManufactureController {
 
 	private ManufactureForm manufactureForm;
 
+	private ManufactureDAO manufactureDAO;
+
 	@RequestMapping(value="/manufacture-links", method=RequestMethod.GET)
-	public String getManufactures(ModelMap modelMap) {
-		System.out.println("Yes - "+manufactureForm);
+	public String getManufactures(ModelMap modelMap) throws SQLException {
+
+		manufactureForm.setTable(manufactureDAO.getTable(true, null));
 		modelMap.addAttribute("MFRF", manufactureForm);
 		return "manufacture-links";
 	}
@@ -27,5 +33,14 @@ public class ManufactureController {
 	@Autowired
 	public void setManufactureForm(ManufactureForm manufactureForm) {
 		this.manufactureForm = manufactureForm;
+	}
+
+	public ManufactureDAO getManufactureDAO() {
+		return manufactureDAO;
+	}
+
+	@Autowired
+	public void setManufactureDAO(ManufactureDAO manufactureDAO) {
+		this.manufactureDAO = manufactureDAO;
 	}
 }
