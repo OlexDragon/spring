@@ -18,7 +18,7 @@ public class ComponentGroupEditor extends PropertyEditorSupport {
 		ComponentGroup componentGroup = new ComponentGroup();
 		componentGroup.setId(text.charAt(0));
 
-		List<ComponentGroup> componentGroups = componentGroupDAO.getComponentGroupList();
+		List<ComponentGroup> componentGroups = componentGroupDAO.getList(false);
 
 		int index = componentGroups.indexOf(componentGroup);
 		if(index>=0)
