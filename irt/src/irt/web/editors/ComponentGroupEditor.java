@@ -2,6 +2,7 @@ package irt.web.editors;
 
 import irt.objects.components.componentGroup.ComponentGroup;
 import irt.objects.components.componentGroup.dao.ComponentGroupDAO;
+import irt.web.PartNumberController;
 
 import java.beans.PropertyEditorSupport;
 import java.util.List;
@@ -18,7 +19,7 @@ public class ComponentGroupEditor extends PropertyEditorSupport {
 		ComponentGroup componentGroup = new ComponentGroup();
 		componentGroup.setId(text.charAt(0));
 
-		List<ComponentGroup> componentGroups = componentGroupDAO.getList(false);
+		List<ComponentGroup> componentGroups = PartNumberController.getComponentGroups();
 
 		int index = componentGroups.indexOf(componentGroup);
 		if(index>=0)

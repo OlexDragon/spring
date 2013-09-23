@@ -1,6 +1,10 @@
 package irt.web;
 
+import java.util.List;
+
+import irt.objects.components.componentGroup.ComponentGroup;
 import irt.objects.components.componentGroup.dao.ComponentGroupDAO;
+import irt.objects.components.componentType.ComponentType;
 import irt.objects.components.componentType.dao.ComponentTypeDAO;
 import irt.web.form.PartNumberForm;
 
@@ -24,15 +28,21 @@ public class PartNumberController {
 
 	private PartNumberForm partNumberForm;
 
-	private ComponentGroupDAO componentGroupDAO;
-	private ComponentTypeDAO componentTypeDAO;
+	private static ComponentGroupDAO componentGroupDAO;
+	private static ComponentTypeDAO componentTypeDAO;
+
+	private static List<ComponentGroup> componentGroups;
+	private static List<ComponentType> componentTypes;
 
 	@RequestMapping(value="/part-numbers", method=RequestMethod.GET)
 	public String partNumber(ModelMap modelMap) {
 
+		componentGroups = componentGroupDAO.getComponentGroups();
+		componentTypes = componentTypeDAO.getComponentTypes(partNumberForm.getComponentGroup().getId());
+
 		modelMap.addAttribute("PNF", partNumberForm);
-		modelMap.addAttribute("GROUPS", componentGroupDAO.getList(false));
-		modelMap.addAttribute("TYPES", componentTypeDAO.getComponentTypeList(partNumberForm.getComponentGroup().getId()));
+		modelMap.addAttribute("GROUPS", componentGroups);
+		modelMap.addAttribute("TYPES", componentTypes);
 
 		return "part-numbers";
 	}
@@ -43,8 +53,8 @@ public class PartNumberController {
 
 		logger.info("getPartNumber:"+partNumberForm);
 		modelMap.addAttribute("PNF", this.partNumberForm = partNumberForm);
-		modelMap.addAttribute("GROUPS", componentGroupDAO.getList(false));
-		modelMap.addAttribute("TYPES", componentTypeDAO.getComponentTypeList(partNumberForm.getComponentGroup().getId()));
+		modelMap.addAttribute("GROUPS", componentGroups);
+		modelMap.addAttribute("TYPES", componentTypes);
 
 		return "part-numbers";
 	}
@@ -66,7 +76,7 @@ public class PartNumberController {
 	@Autowired
 	public void setComponentGroupDAO(ComponentGroupDAO componentGroupDAO) {
 		logger.info("setComponentGroupDAO:"+componentGroupDAO);
-		this.componentGroupDAO = componentGroupDAO;
+		PartNumberController.componentGroupDAO = componentGroupDAO;
 	}
 
 	public ComponentTypeDAO getComponentTypeDAO() {
@@ -76,6 +86,14 @@ public class PartNumberController {
 	@Autowired
 	public void setComponentTypeDAO(ComponentTypeDAO componentTypeDAO) {
 		logger.info("setComponentTypeDAO:"+componentTypeDAO);
-		this.componentTypeDAO = componentTypeDAO;
+		PartNumberController.componentTypeDAO = componentTypeDAO;
+	}
+
+	public static List<ComponentGroup> getComponentGroups() {
+		return componentGroups!=null ? componentGroups : componentGroupDAO.getComponentGroups();
+	}
+
+	public static List<ComponentType> getComponentTypes() {
+		return componentTypes!=null ? componentTypes : componentTypeDAO.getComponentTypes();
 	}
 }
