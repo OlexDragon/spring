@@ -22,9 +22,6 @@ public class IRTValidator implements Validator {
 	public boolean supports(Class<?> clazz) {
 		logger.info("supports:"+clazz);
 
-		System.out.println("supports:"+clazz.getSimpleName());
-		System.out.println("setPartNumberValidator:"+partNumberValidator);
-		System.out.println("setManufactureValidaror:"+manufactureValidaror);
 		boolean hasValidator = true;
 		if(clazz.isAssignableFrom(PartNumberForm.class))
 			validator = partNumberValidator;

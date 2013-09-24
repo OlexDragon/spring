@@ -92,3 +92,53 @@ a {
 #footer a{
 	color: #DBE9FB;
 }
+
+#manufacture{
+	color:blue;
+	margin:auto;
+	box-shadow: 0 5px 5px gray, inset 0 2px 2px white;
+	border-radius: 10px;
+}
+
+#manufacture .odd:HOVER, #manufacture .even:HOVER{
+	background-color: #A9F5BC;
+}
+
+#manufacture a{
+	color: blue;
+}
+
+#manufacture th{
+	border-radius: 10px;
+	box-shadow: 0 2px 2px gray, inset 0 1px 1px white;
+}
+
+#manufacture td{
+	border-radius: 10px;
+	text-align: right;
+	padding: .3em;
+}
+
+#manufacture .title{
+	background-color:#81BEF7;
+}
+
+#manufacture .odd{
+	background-color:#EFF8FB;
+}
+
+#manufacture .even{
+	background-color:white;
+}
+
+#mfr_form button{
+	background-color: #81BEF7;
+	border-radius: 10px;
+	padding: .5em;
+	box-shadow: 0 2px 2px gray, inset 0 1px 1px white;
+}
+#mfr_form button:HOVER{
+	color: yellow;
+	cursor: pointer;
+	background-color: #1313EB;
+}

@@ -1,5 +1,6 @@
 package irt.objects.components.dao;
 
+import irt.tools.table.OrderBy;
 import irt.tools.table.Row;
 import irt.tools.table.Table;
 
@@ -13,6 +14,7 @@ import org.springframework.jdbc.core.RowMapper;
 public abstract class ADAO<T> implements IDAO<T> {
 
 	protected JdbcTemplate jdbcTemplate;
+	private OrderBy orderBy = new OrderBy();
 
 	@Autowired
 	@Override
@@ -22,12 +24,12 @@ public abstract class ADAO<T> implements IDAO<T> {
 
 	@Override
 	public List<T> getList(String query, RowMapper<T> rowMapper){
-		return jdbcTemplate.query(query, rowMapper);
+		return jdbcTemplate.query(query+orderBy, rowMapper);
 	}
 
 	protected Table getTable(String dbName, String TableName, RowMapper<Row> rowMapper, final boolean showRowCount, String href, Row titleRow) throws SQLException {
 
-		List<Row> rows = jdbcTemplate.query("SELECT*FROM`"+dbName+"`.`"+TableName+"`", rowMapper);
+		List<Row> rows = jdbcTemplate.query("SELECT*FROM`"+dbName+"`.`"+TableName+"`"+orderBy, rowMapper);
 
 		//Add Titles
 		rows.add(0, titleRow);
@@ -36,5 +38,13 @@ public abstract class ADAO<T> implements IDAO<T> {
 		table.setRows(rows);
 
 		return table;
+	}
+
+	public OrderBy getOrderBy() {
+		return orderBy;
+	}
+
+	public void setOrderBy(String orderBy) {
+		this.orderBy.setOrderBy(orderBy);
 	}
 }

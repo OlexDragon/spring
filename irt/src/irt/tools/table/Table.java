@@ -6,6 +6,7 @@ public class Table {
 	private String className;	//use with CSS(HTML)
 	private HTMLHeader title;
 	private List<Row> rows;
+	private String id;
 
 
 	public String getClassName() {
@@ -41,11 +42,16 @@ public class Table {
 	public String toString() {
 
 		String returnStr = title!=null ? title.toString() : "";
-		returnStr += "<table"+(className==null ? "" : " class=\""+className+"\" " )+">";
+		returnStr += "<table"+(id==null ? "" : " id=\""+id+"\" ")+(className==null ? "" : " class=\""+className+"\" " )+">";
 		
 		for(Row row:rows)
 			returnStr += row;
 		
 		return returnStr+"</table>";
+	}
+
+
+	public void setId(String id) {
+		this.id = id;
 	}
 }
