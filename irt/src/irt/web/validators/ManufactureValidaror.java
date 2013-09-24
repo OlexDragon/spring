@@ -14,7 +14,7 @@ public class ManufactureValidaror implements Validator {
 
 	@Override
 	public void validate(Object target, Errors errors) {
-		System.out.println("validate");
+		System.out.println("validate manufacture");
 	}
 
 }

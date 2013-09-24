@@ -6,7 +6,6 @@ import irt.web.form.PartNumberForm;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
@@ -22,6 +21,7 @@ public class IRTValidator implements Validator {
 	public boolean supports(Class<?> clazz) {
 		logger.info("supports:"+clazz);
 
+		System.out.println("supports : "+clazz);
 		boolean hasValidator = true;
 		if(clazz.isAssignableFrom(PartNumberForm.class))
 			validator = partNumberValidator;
@@ -30,12 +30,14 @@ public class IRTValidator implements Validator {
 		else
 			hasValidator = false;
 
+		System.out.println("hasValidator : "+hasValidator);
 		return hasValidator;
 	}
 
 	@Override
 	public void validate(Object target, Errors errors) {
 		logger.info("validate:target"+target+"; errors:"+errors);
+		System.out.println("supports : "+target);
 		validator.validate(target, errors); 
 	}
 }
