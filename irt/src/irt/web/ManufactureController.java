@@ -20,6 +20,8 @@ public class ManufactureController {
 
 	private ManufactureDAO manufactureDAO;
 
+	private boolean add;
+
 	@RequestMapping(value="/manufacture-links", method=RequestMethod.GET)
 	public String getManufactures(ModelMap modelMap) throws SQLException {
 
@@ -40,13 +42,16 @@ public class ManufactureController {
 	@RequestMapping(value="/manufacture-links/**", method=RequestMethod.POST)
 	public String getManufacturesAction(@RequestParam String mfr_btn, ModelMap modelMap) throws SQLException {
 
-		System.out.println(mfr_btn);
 		switch(mfr_btn){
 		case "Add":
-			
+			add = true;
+			break;
+		case "Cansel":
+			add = false;
 		};
 		manufactureForm.setTable(manufactureDAO.getTable(true, "/irt/manufacture-links"));
 		modelMap.addAttribute("MFRF", manufactureForm);
+		modelMap.addAttribute("ADD", add);
 		return "manufacture-links";
 	}
 
