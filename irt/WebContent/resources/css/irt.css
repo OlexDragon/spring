@@ -15,7 +15,7 @@ img {
 
 header{
 	border-radius: 10px;
-	position: absolute;
+	position: fixed;
 	top:2px;
 	width:70em;
 	height:4em;
@@ -131,18 +131,40 @@ a {
 	background-color:white;
 }
 
+#mfr_form input{
+	box-shadow: 0 2px 2px white, inset 0 1px 1px gray;
+}
+
+#mfr_form input, #mfr_form label{
+	position: relative;
+	float: left;
+	margin-top: .5em;
+	color: #000099;
+}
+
+#mfr_form label{
+	margin-left: 1em;
+}
+
 #mfr_form button{
+	position: relative;
+	float: left;
 	background-color: #81BEF7;
-	border-radius: 10px;
-	padding: .5em;
+	border-radius: 8px;
+	padding: .3em;
+	margin: .3em;
 	box-shadow: 0 2px 2px gray, inset 0 1px 1px white;
 }
+
 #mfr_form button:HOVER{
 	color: yellow;
 	cursor: pointer;
 	background-color: #1313EB;
 }
 
+#mfr_form table{
+	clear: both;
+}
 .c3em {
 	width: 3em;
 }

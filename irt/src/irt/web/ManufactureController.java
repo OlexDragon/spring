@@ -5,9 +5,12 @@ import irt.web.form.ManufactureForm;
 
 import java.sql.SQLException;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -40,7 +43,7 @@ public class ManufactureController {
 	}
 
 	@RequestMapping(value="/manufacture-links/**", method=RequestMethod.POST)
-	public String getManufacturesAction(@RequestParam String mfr_btn, ModelMap modelMap) throws SQLException {
+	public String getManufacturesAction(@RequestParam String mfr_btn,@Valid @ModelAttribute("manufactureForm")ManufactureForm manufactureForm, ModelMap modelMap) throws SQLException {
 
 		switch(mfr_btn){
 		case "Add":
