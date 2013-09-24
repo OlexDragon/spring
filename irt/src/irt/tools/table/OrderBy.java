@@ -25,7 +25,7 @@ public class OrderBy {
 
 	@Override
 	public String toString() {
-		return (orderBy.isEmpty()) 
+		return (orderBy==null) 
 				? ""
 				: ORDER_BY+orderBy +"`"
 						+ ((isDesc()) 

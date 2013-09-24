@@ -26,8 +26,7 @@ public class ManufactureDAO extends ADAO<Manufacture>{
 			manufacture.setLink(resultSet.getString("link"));
 
 			return manufacture;
-		}
-		
+		}	
 	};
 
 	public Manufacture getManufacture(String id){
@@ -42,7 +41,7 @@ public class ManufactureDAO extends ADAO<Manufacture>{
 	}
 
 	public List<Manufacture> getManufacturs(){
-		return getList("SELECT*FROM`irt`.`manufacture", rowMapper);
+		return getList("SELECT*FROM`irt`.`manufacture`", rowMapper);
 	}
 
 	public Table getTable(boolean showRowCount, String href) throws SQLException {
@@ -55,18 +54,21 @@ public class ManufactureDAO extends ADAO<Manufacture>{
 				row.add(new Field(rowNum+1, null, null));
 				row.add(new Field(rs.getString("id"), null, null));
 				row.add(new Field(rs.getString("name"), null, rs.getString("link")));
-				
+				row.setClassName(rowNum%2==1 ? "even" : "odd");
+
 				return row;
 			}
 		};
 
 		Row titles = new Row();
 		titles.setClassName("title");
-		titles.add(new Field("", null, null));
-		titles.add(new Title("ID", null, null));
-		titles.add(new Title("Name", null, null));
+		titles.add(new Title("", null, null));
+		titles.add(new Title("ID", null, href!=null ? href+"/id" : null));
+		titles.add(new Title("Name", null, href!=null ? href+"/name" : null));
 
-		return getTable("irt", "manufacture", rowMapper, showRowCount, href, titles);
+		Table table = super.getTable("irt", "manufacture", rowMapper, showRowCount, href, titles);
+		table.setId("manufacture");
+		return table;
 
 	}
 }
