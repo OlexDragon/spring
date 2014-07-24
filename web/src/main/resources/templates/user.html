@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+	<title>User</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link rel="stylesheet" type="text/css" href="../css/jk.css" th:href="@{/css/jk.css}"></link>
+</head>
+<body>
+<div id="header"><h4>Header</h4></div>
+<div id="menuDiv"  th:replace="fragments/menu :: menu" >Menu</div>
+<div class="contents">
+	<table>
+		<tr>
+			<th th:text="#{login.username}">Username</th>
+			<th th:text="${user.loginEntity.username}">Username</th>
+		</tr>
+		<tr>
+			<th th:text="#{login.password}">Password</th>
+			<th >*****************</th>
+		</tr>
+		<tr>
+			<th th:text="#{signup.firstName}">First Name</th>
+			<th th:text="${user.firstName}">First Name</th>
+		</tr>
+		<tr>
+			<th th:text="#{signup.lastName}">Last Name</th>
+			<th th:text="${user.lastName}">Last Name</th>
+		</tr>
+		<tr>
+			<th th:text="#{signup.eMail}">e-mail</th>
+			<th th:text="${user.email}">e-mail</th>
+		</tr>
+		<tr>
+			<th th:text="#{signup.sex}">Gender</th>
+			<th th:text="${user.gender}">Gender</th>
+		</tr>
+		<tr>
+			<th th:text="#{signup.birthday}">Birthday</th>
+			<th th:text="${user.birthday}">Birthday</th>
+		</tr>
+	</table>
+</div>
+<div>Footer</div>
+</body>
+</html>

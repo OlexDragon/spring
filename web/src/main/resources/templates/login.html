@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<title>Log in</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link rel="stylesheet" type="text/css" href="../css/jk.css" th:href="@{/css/jk.css}"></link>
+</head>
+<body>
+	<div id="menuDiv"  th:replace="fragments/menu :: menu" >Menu</div>
+	<div id="login" th:fragment="login" th:switch="${#authorization.expression('isAuthenticated()')}">
+	<div th:case="${false}">
+		<form name="loginForm" th:action="@{/login}" method="post">
+			<p class="error" th:if="${param.error}" th:text="#{login.wrong_username_or_password}">login.wrong_username_or_password</p>
+        	<p th:if="${param.logout}" th:text="#{login.you_have_been_logged_out}">You have been logged out.</p>
+			<table>
+				<tr>
+					<th><label for="username" th:text="#{login.username}">#{login.username}</label>:</th>
+					<td><input type="text" id="username" name="username" /></td>
+				</tr>
+				<tr>
+					<th><label for="password" th:text="#{login.password}">#{login.password}</label>:</th>
+					<td><input type="password" id="password" name="password" /></td>
+				</tr>
+				<tr>
+					<th><input type="checkbox" id="remember-me-id" name="remember-me" /><label for="remember-me-id" th:text="#{login.remember-me}">Remember Me</label>:</th>
+					<td>
+						<button type="submit" name="loginBth" th:text="#{login.login}" >Log In</button>
+						<button type="button" name="signupBtn" th:text="#{login.signup}" onclick="javascript:window.location.href ='/signup';" >sign Up</button>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	<div th:case="${true}">
+		<form th:action="@{/logout}" method="post" th:fragment="logout">
+			<button type="submit" name="logoutBtn" th:text="#{login.logout}" >Log Out</button>
+		</form>
+	</div>
+	</div>
+	<div>Footer</div>
+</body>
+</html>

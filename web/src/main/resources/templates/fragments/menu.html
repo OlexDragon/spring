@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+  <head>
+      <title>Footer</title>
+  </head>
+  <body>
+    <div id="menu" th:fragment="menu">
+      <ul id="menuUL">
+      	<li><a href="/" th:text="#{menu.home}">Home</a></li>
+      	<li><a href="/user" th:text="${#authorization.expression('isAuthenticated()')} ? ${#authentication.name} : #{menu.user}">User</a>
+      		<ul>
+      			<li th:if="${#authorization.expression('isAuthenticated()')}"><a href="/login?logout" th:href="@{/login?logout}" th:text="#{login.logout}" th:replace="login::logout">Logout</a></li>
+      			<li th:if="${#authorization.expression('isAuthenticated()')}==false"><a href="/login" th:tref="@{/login}" th:text="#{login.login}">Login</a></li>
+      			<li th:if="${#authorization.expression('isAuthenticated()')}==false"><a href="/signup" th:tref="@{/signup}" th:text="#{login.signup}">Sing Up</a></li>
+      		</ul>
+      	</li>
+      	<li ><p th:text="#{__${#locale.displayLanguage}__}">Language</p>
+      		<ul>
+      			<li th:each="lang : ${@menuLanguages}" ><a th:href="'?language='+${lang}" th:text="#{__${lang.displayLanguage}__}"></a></li>
+      		</ul>
+      	</li>
+      </ul>
+    </div>
+
+	<a href="/login" th:text="login.login" th:fragment="alogin">Login</a>
+  </body>
+</html>
