@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+	<title th:text="#{login.signup}">Sing Up</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link rel="stylesheet" type="text/css" href="../css/jk.css" th:href="@{/css/jk.css}"></link>
+	<link rel="stylesheet" type="text/css" href="../js/jQuery/jquery-ui.css" th:href="@{/js/jQuery/jquery-ui.css}"></link>
+	<script src="../js/jQuery/jquery.js" th:src="@{/js/jQuery/jquery.js}"></script>
+	<script src="../js/jQuery/jquery-ui.js" th:src="@{/js/jQuery/jquery-ui.js}"></script>
+	<script type="text/javascript" th:inline="javascript">
+		$(function() {
+			$("#birthday").datepicker();
+		});
+	</script>
+</head>
+<body>
+	<div id="menuDiv"  th:replace="fragments/menu :: menu" >Menu</div>
+	<div id="signup" th:fragment="login" th:switch="${#authorization.expression('isAuthenticated()')}">
+	<div th:case="${false}">
+		<form name="signUpForm" th:action="@{/signup}" method="post"  th:object="${signUpForm}">
+			<p class="error" th:if="${param.error}" th:text="#{login.wrong_username_or_password}">login.wrong_username_or_password</p>
+        	<p th:if="${param.logout}" th:text="#{login.you_have_been_logged_out}">You have been logged out.</p>
+			<table>
+				<tr>
+					<th><label for="username" th:text="#{login.username}">#{login.username}</label>:</th>
+					<td><input type="text" id="username" name="username" th:field="*{username}" /></td>
+            		<td th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username Error</td>
+        		</tr>
+				<tr>
+					<th><label for="password" th:text="#{login.password}">#{login.password}</label>:</th>
+					<td><input type="password" id="password" name="password" th:field="*{password}"/></td>
+            		<td th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</td>
+				</tr>
+				<tr>
+					<th><label for="repassword" th:text="#{signup.repassword}">#{login.repassword}</label>:</th>
+					<td><input type="password" id="repassword" name="repassword" th:field="*{repassword}"/></td>
+            		<td th:if="${#fields.hasErrors('repassword')}" th:errors="*{repassword}">Confirm Password Error</td>
+				</tr>
+				<tr>
+					<th><label for="firstName" th:text="#{signup.firstName}">#{login.firstName}</label>:</th>
+					<td><input type="text" id="firstName" name="firstName" th:field="*{firstName}"/></td>
+            		<td th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">First Name</td>
+				</tr>
+				<tr>
+					<th><label for="lastName" th:text="#{signup.lastName}">#{login.lastName}</label>:</th>
+					<td><input type="text" id="lastName" name="lastName" th:field="*{lastName}"/></td>
+            		<td th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Last Name</td>
+				</tr>
+				<tr>
+					<th><label for="eMail" th:text="#{signup.eMail}">#{login.email}</label>:</th>
+					<td><input type="email" id="eMail" name="eMail" th:field="*{eMail}"/></td>
+            		<td th:if="${#fields.hasErrors('eMail')}" th:errors="*{eMail}">E-Mail Error</td>
+				</tr>
+					<tr>
+						<th th:text="#{signup.sex}+':'"></th>
+						<td><ul>
+								<li th:each="sex : ${T(jk.web.user.SignUpForm.Gender).values()}">
+									<input type="radio" th:field="*{sex}" th:value="${sex}" />
+									<label th:for="${#ids.prev('sex')}" th:text="#{${sex}}">Gender</label>
+								</li>
+							</ul>
+						</td>
+						<td th:if="${#fields.hasErrors('sex')}"
+							th:errors="*{sex}">Sex Error</td>
+					</tr>
+					<tr>
+					<th><label for="birthday" th:text="#{signup.birthday}">#{login.email}</label>:</th>
+					<td><input type="text" id="birthday" name="birthday" th:field="*{birthday}"/></td>
+            		<td th:if="${#fields.hasErrors('birthday')}" th:errors="*{birthday}">E-Mail Error</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>
+						<button type="submit" name="signup" th:text="#{login.signup}" >sign Up</button>
+						<button type="reset" name="reset" th:text="#{signup.reset}" onclick="javascript:window.location.href ='/signup/clear';" >Reset</button>
+					</td>
+					<td></td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	</div>
+	<div>Footer</div>
+</body>
+</html>

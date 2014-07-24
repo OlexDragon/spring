@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+	<title>Fashion PRO Finder</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link rel="stylesheet" type="text/css" href="../css/jk.css" th:href="@{/css/jk.css}"></link>
+</head>
+<body>
+<div id="header"><h4>Header</h4></div>
+	<div id="menuDiv"  th:replace="fragments/menu :: menu" >Menu</div>
+	<div th:switch="${status}">
+		<div th:case="${T(jk.web.configuration.EMailConfig.ConfirmStatus).SENT}">
+			<h2 th:text="#{confirm.sent}">Created</h2>
+		</div>
+		<div th:case="${T(jk.web.configuration.EMailConfig.ConfirmStatus).CONFIRMED}">
+			<h2 th:text="#{confirm.confirmed(${uname})}">Confirmed</h2>
+		</div>
+		<div th:case="${T(jk.web.configuration.EMailConfig.ConfirmStatus).ERROR}">
+			<p th:text="#{confirm.error}">Confirmed</p>
+		</div>
+	</div>
+	<div>Footer</div>
+</body>
+</html>

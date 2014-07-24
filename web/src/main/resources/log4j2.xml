@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout pattern="%n%-5p%n%d [%t] %C{2} %M (%F:%L) - %m%xEx%n" />
+        </Console>
+
+    <RollingRandomAccessFile name="FILE" fileName="c:/jk/jk.log"
+    						  			filePattern="c:/jk/jk.log-%i.log.gz">
+		<PatternLayout pattern="%n%-5p%n%d [%t] %C{2} %M (%F:%L) - %m%xEx%n"/>
+		<Policies>
+			<SizeBasedTriggeringPolicy size="500 MB" />
+		</Policies>
+		<DefaultRolloverStrategy max="10" />
+    </RollingRandomAccessFile>
+    </Appenders>
+
+    <Loggers>
+	<Logger name="org.springframework" level="all">
+			<AppenderRef ref="STDOUT" />
+	</Logger>
+        <Root level="all">
+			<AppenderRef ref="STDOUT" />
+			<AppenderRef ref="FILE" />
+         </Root>
+    </Loggers>
+</Configuration>
