@@ -16,42 +16,46 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
-@Entity(name="emails")
-@Table(name="emails")
+@Entity(name="email")
+@Table(name="emails", catalog="jk", schema = "")
 public class EMailEntity implements Serializable {
 	private static final long serialVersionUID = -2050447855974732472L;
 
 	public enum EMailStatus{
 		TO_CONFIRM,
-		CONFIRMED,
-		NOT_ACTIVE
+		ACTIVE,
+		NOT_ACTIVE,
+		NOT_CONFIRMED
 	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id_emails")
+	@Column(name="emailID")
 	private Long id;
 
 	@Basic(optional = false)
     @NotNull
-    @Column(name = "id_users")
-    private int idUsers;
+    @Column(name = "logins_loginID")
+    private Long idUsers;
 
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
 	@Column(name = "email", nullable = false, length = 145)
 	private String eMail;
 
-	@Basic(optional = false)
-    @NotNull
+	@Basic
+    @Column(name = "created_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createDate;
+
+	@Basic
     @Column(name = "update_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date updateDate;
 
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "status", nullable = false)
+    @Basic
+    @Column(name = "status")
     @Enumerated(EnumType.ORDINAL)
-    private EMailStatus status;
+    private EMailStatus status = EMailStatus.TO_CONFIRM;
 
     public Long getId() {
 		return id;
@@ -61,12 +65,13 @@ public class EMailEntity implements Serializable {
 		return this;
 	}
 
-    public int getIdUsers() {
+    public Long getIdUsers() {
         return idUsers;
     }
 
-    public void setIdUsers(int idUsers) {
+    public EMailEntity setIdUsers(Long idUsers) {
         this.idUsers = idUsers;
+        return this;
     }
 
 	public String getEMail() {
@@ -81,38 +86,32 @@ public class EMailEntity implements Serializable {
         return updateDate;
     }
 
-    public void setUpdateDate(Date updateDate) {
+    public EMailEntity setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
+        return this;
     }
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
 	@Override
 	public int hashCode() {
-		return 31 + ((eMail == null) ? 0 : eMail.hashCode());
+		return eMail == null ? 0 : eMail.hashCode();
 	}
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		EMailEntity other = (EMailEntity) obj;
-		return eMail != null ? eMail.equals(other.eMail) : other.eMail != null;
+		return obj!=null ? obj.hashCode()==hashCode() : false;
 	}
 
     public EMailStatus getStatus() {
         return status;
     }
 
-    public void setStatus(EMailStatus status) {
+    public EMailEntity setStatus(EMailStatus status) {
         this.status = status;
+        return this;
     }
-
-    @Override
+	@Override
 	public String toString() {
-		return "EMailEntity [id=" + id + ", idUsers=" + idUsers + ", eMail=" + eMail + ", updateDate=" + updateDate + ", status=" + status + "]";
+		return "EMailEntity [id=" + id + ", idUsers=" + idUsers + ", eMail=" + eMail + ", createDate=" + createDate + ", updateDate=" + updateDate + ", status=" + status + "]";
 	}
 }

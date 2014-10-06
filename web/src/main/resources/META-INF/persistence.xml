@@ -3,6 +3,12 @@
   <persistence-unit name="jk.wab_jk_jar_0.1.0PU" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>jk.web.user.entities.Users</class>
+    <class>jk.web.user.entities.Country</class>
+    <class>jk.web.user.entities.CountryEntity</class>
+    <class>jk.web.user.entities.RegionEntity</class>
+    <class>jk.web.user.entities.Addsresses</class>
+    <class>jk.web.user.entities.AddressEntity</class>
+    <class>jk.web.user.entities.SocialEntity</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/jk?zeroDateTimeBehavior=convertToNull"/>
       <property name="javax.persistence.jdbc.password" value="potomkina"/>

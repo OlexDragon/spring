@@ -1,11 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
   <head>
-      <title>Footer</title>
-  </head>
+	<title>Footer</title>
+	<link rel="stylesheet" type="text/css" href="../../static/css/jk.css" th:href="@{/css/jk.css}"></link>
+   </head>
   <body>
-    <div th:fragment="footer">
-      © 2013 Footer
+    <div id="footer" th:fragment="footer">
+	<div class="menuBrdr"></div>
+     <p class="smal">
+     	<span th:text="#{footer}">Fashion PRO Finder®</span> |
+     	<a href="#" th:text="#{footer.about}">About us</a> |
+     	<a href="#" th:text="#{footer.help}">Help</a> |
+     	<a href="#" th:text="#{footer.search}">Search</a> |
+     </p>
     </div>
   </body>
 </html>

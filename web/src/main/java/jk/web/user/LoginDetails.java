@@ -1,6 +1,8 @@
 package jk.web.user;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import jk.web.user.repository.LoginRepository;
 import jk.web.user.repository.LoginRepository.Permission;
@@ -56,12 +58,14 @@ public class LoginDetails implements UserDetails{//or SocialUser
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return logger.exit(LoginRepository.Permission.toPermissions(permissions.toLong()));
+		return logger.exit(permissions!=null ? LoginRepository.Permission.toPermissions(permissions.toLong()) : getDefaultPermission()); 
 	}
-//
-//	public Long getPermissions() {
-//		return logger.exit(permissions);
-//	}
+
+	public Set<Permission> getDefaultPermission() {
+		Set<Permission> permissions = new HashSet<>();
+		permissions.add(Permission.NEW);
+		return permissions;
+	}
 
 	public static Builder getBuilder() {
 		return new Builder();

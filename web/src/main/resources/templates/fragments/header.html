@@ -1,35 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
   <head>
-      <title>Header</title>
+    <title>Header</title>
+	<th:block th:fragment="links">
+		<link rel="stylesheet" type="text/css" href="../static/css/jk.css" th:href="@{/css/jk.css}"></link>
+		<link rel="stylesheet" type="text/css" href="../static/css/social.css" th:href="@{/css/social.css}" />
+	</th:block>
   </head>
   <body>
-    <div class="navbar navbar-inverse navbar-fixed-top" th:fragment="header">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">My project</a>
-        </div>
-        <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="#" th:href="@{/}">Home</a></li>
-            <li><a href="#" th:href="@{/message}">Messages</a></li>
-            <li><a href="#" th:href="@{/task}">Tasks</a></li>
-          </ul>
-          <ul class="nav navbar-nav navbar-right">
-            <li th:if="${#authorization.expression('!isAuthenticated()')}">
-              <a href="/signin" th:href="@{/signin}">Sign in</a>
-            </li>
-            <li th:if="${#authorization.expression('isAuthenticated()')}">
-              <a href="/logout" th:href="@{/logout}">Logout</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
+    <div id="header" th:fragment="pageHeader">
+    	<a class="fleft" href="../home.html" th:href="@{/}">
+			<img alt="Fashion Pro Finder" src="../../static/images/fpf_gray" th:src="@{/images/fpf_gray.png}" />
+		</a>
+		<th:block th:if="${#authorization.expression('isAuthenticated()')}==false" >
+		<div id="langDiv">
+			<ul>
+				<li id="languageMenu" class="fright">
+					<p th:text="#{__${#locale.displayLanguage}__}">Language</p>
+					<ul>
+						<li th:each="lang : ${@menuLanguages}"><a th:href="'?language='+${lang}" th:text="#{__${lang.displayLanguage}__}"></a></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+		</th:block>
+		<p th:replace="fragments/search :: search">Search</p>
+	</div>
   </body>
 </html>

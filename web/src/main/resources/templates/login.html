@@ -3,42 +3,66 @@
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-<title>Log in</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<link rel="stylesheet" type="text/css" href="../css/jk.css" th:href="@{/css/jk.css}"></link>
+<title th:text="#{login}">Log in</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link th:replace="fragments/header :: links" rel="stylesheet"
+	type="text/css" href="../static/css/jk.css" th:href="@{/css/jk.css}" />
 </head>
 <body>
-	<div id="menuDiv"  th:replace="fragments/menu :: menu" >Menu</div>
-	<div id="login" th:fragment="login" th:switch="${#authorization.expression('isAuthenticated()')}">
-	<div th:case="${false}">
-		<form name="loginForm" th:action="@{/login}" method="post">
-			<p class="error" th:if="${param.error}" th:text="#{login.wrong_username_or_password}">login.wrong_username_or_password</p>
-        	<p th:if="${param.logout}" th:text="#{login.you_have_been_logged_out}">You have been logged out.</p>
-			<table>
-				<tr>
-					<th><label for="username" th:text="#{login.username}">#{login.username}</label>:</th>
-					<td><input type="text" id="username" name="username" /></td>
-				</tr>
-				<tr>
-					<th><label for="password" th:text="#{login.password}">#{login.password}</label>:</th>
-					<td><input type="password" id="password" name="password" /></td>
-				</tr>
-				<tr>
-					<th><input type="checkbox" id="remember-me-id" name="remember-me" /><label for="remember-me-id" th:text="#{login.remember-me}">Remember Me</label>:</th>
-					<td>
-						<button type="submit" name="loginBth" th:text="#{login.login}" >Log In</button>
-						<button type="button" name="signupBtn" th:text="#{login.signup}" onclick="javascript:window.location.href ='/signup';" >sign Up</button>
-					</td>
-				</tr>
-			</table>
-		</form>
+	<div id="header" th:replace="fragments/header :: pageHeader">Header</div>
+	<div id="menuDiv" th:replace="fragments/menu :: menu">Menu</div>
+	<div id="contentsDiv" class="cntr pddng3">
+		<div th:if="${status}">
+			<h2 th:utext="#{confirm.confirmed(${uname})}">Confirmed</h2>
+		</div>
+		<div id="login" th:fragment="login" th:switch="${#authorization.expression('isAuthenticated()')}">
+			<div class="thinFilm"></div>
+			<div th:case="${false}">
+				<form id="loginForm" th:action="@{/login}" method="post">
+					<p class="error" th:if="${param.error}"><span  th:text="#{login.wrong_username_or_password}">login.wrong_username_or_password</span></p>
+					<p th:if="${param.logout}" th:text="#{login.you_have_been_logged_out}">You have been logged out.</p>
+					<table >
+						<tr>
+							<td><input type="text" id="username" name="username" autofocus="autofocus" th:placeholder="#{login.username_email}" th:title="#{login.username_email}" /></td>
+						</tr>
+						<tr>
+							<td>
+								<table>
+									<tr>
+										<td>
+											<input type="password" id="password" name="password" th:placeholder="#{login.password}" th:title="#{login.password}"/>
+										</td>
+										<td class="cntr">
+											<button th:replace="fragments/menu :: jk_button(#{login.login})">sign Up</button>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<small>
+												<input type="checkbox" id="remember-me-id" name="remember-me" />
+												<label for="remember-me-id" th:text="#{login.remember-me}">Remember Me</label>
+											</small>
+										</td>
+										<td class="cntr">
+											<small><a href="forgot_password" th:href="@{/login/forgot}" th:text="#{login.forgot_password}">Forgot your password</a></small>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						
+					</table>
+				</form>
+				<div th:replace="fragments/menu :: socialBtns"></div>
+			</div>
+			<div th:case="${true}">
+				<form th:action="@{/login?logout}" method="post" th:fragment="logout">
+					<button th:replace="fragments/menu :: jk_button(#{login.logout})">Logout</button>
+				</form>
+			</div>
+			<div class="thinFilm"></div>
+		</div>
 	</div>
-	<div th:case="${true}">
-		<form th:action="@{/logout}" method="post" th:fragment="logout">
-			<button type="submit" name="logoutBtn" th:text="#{login.logout}" >Log Out</button>
-		</form>
-	</div>
-	</div>
-	<div>Footer</div>
+	<div th:replace="fragments/footer :: footer">Footer</div>
 </body>
 </html>
