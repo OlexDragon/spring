@@ -2,12 +2,16 @@ package jk.web.user.entities;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -15,13 +19,16 @@ import javax.validation.constraints.NotNull;
 
 import jk.web.user.repository.LoginRepository.Permission;
 
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+
 @Entity(name="login")
-@Table(name="logins")
+@Table(name="logins", catalog="jk", schema = "")
 public class LoginEntity implements Serializable{
 	private static final long serialVersionUID = -884435162021696875L;
 
 	@Id
-	@Column(name="id_logins")
+	@Column(name="loginID")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
@@ -43,6 +50,12 @@ public class LoginEntity implements Serializable{
 	@Column(name = "last_accessed")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastAccessed;
+
+    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
+    @OneToMany(fetch=FetchType.LAZY)
+    @JoinColumn(name = "logins_loginID", referencedColumnName="loginID")
+    @NotFound(action=NotFoundAction.IGNORE)
+    private List<EMailEntity> emails;
 
     public LoginEntity() {
 	}
@@ -72,8 +85,9 @@ public class LoginEntity implements Serializable{
 		return password;
 	}
 
-	public void setPassword(String password) {
+	public LoginEntity setPassword(String password) {
 		this.password = password;
+		return this;
 	}
 
 	public Permission getPermissions() {
@@ -107,5 +121,13 @@ public class LoginEntity implements Serializable{
 	public String toString() {
 		return "LoginEntity [id=" + id + ", username=" + username + ", password=" + password + ", permissions=" + permissions + ", createdDate=" + createdDate + ", lastAccessed="
 				+ lastAccessed + "]";
+	}
+
+	public List<EMailEntity> getEmails() {
+		return emails;
+	}
+
+	public void setEmails(List<EMailEntity> emails) {
+		this.emails = emails;
 	}
 }

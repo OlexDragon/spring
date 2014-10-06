@@ -16,9 +16,7 @@
     </Appenders>
 
     <Loggers>
-	<Logger name="org.springframework" level="all">
-			<AppenderRef ref="STDOUT" />
-	</Logger>
+
         <Root level="all">
 			<AppenderRef ref="STDOUT" />
 			<AppenderRef ref="FILE" />

@@ -5,12 +5,39 @@
 <head>
 	<title>Fashion PRO Finder</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<link rel="stylesheet" type="text/css" href="../css/jk.css" th:href="@{/css/jk.css}"></link>
+	<meta name="viewport" content="width=device-width" />
+	<link th:replace="fragments/header :: links" rel="stylesheet" type="text/css" href="../static/css/jk.css" th:href="@{/css/jk.css}" />
+	<script type="text/javascript" th:replace="signup :: js"></script>
 </head>
 <body>
-<div id="header"><h4>Header</h4></div>
+<div id="header" th:replace="fragments/header :: pageHeader">Header</div>
 <div id="menuDiv"  th:replace="fragments/menu :: menu" >Menu</div>
-<div class="contents" th:utext="#{home.welcome}">Content</div>
-<div>Footer</div>
+<div id="contents" >
+	<div class="fleft" th:utext="#{home.welcome}"></div>
+	<div th:if="${#authorization.expression('isAuthenticated()')}==false" id="tables" class="fright">
+		<div th:replace="login :: login"></div>
+		<div th:replace="signup :: signup"></div>
+	</div>
+</div>
+		<div id="btns">
+			<ul>
+			<li>
+				<div class="menuBrdr"></div>
+				<a th:text="#{home.news}">News</a>
+				<div class="menuBrdr"></div>
+			</li>
+			<li>
+				<div class="menuBrdr"></div>
+				<a th:text="#{home.find_professionals}">News</a>
+				<div class="menuBrdr"></div>
+			</li>
+			<li>
+				<div class="menuBrdr"></div>
+				<a th:text="#{home.find_contacts}">Find Contacts</a>
+				<div class="menuBrdr"></div>
+			</li>
+			</ul>
+		</div>
+<div th:replace="fragments/footer :: footer">Footer</div>
 </body>
 </html>

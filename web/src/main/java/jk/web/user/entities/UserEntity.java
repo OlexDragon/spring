@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package jk.web.user.entities;
 
 import java.io.Serializable;
@@ -19,16 +13,19 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import jk.web.user.SignUpForm.Gender;
+import jk.web.user.User.Gender;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 /**
  * @author Oleksandr Potomkin
@@ -40,35 +37,40 @@ public class UserEntity implements Serializable {
 
     @Id
     @Basic(optional = false)
-    @Column(name = "id_users", nullable = false)
+    @Column(name = "logins_loginID", nullable = false)
     private Long id;
-    @Basic(optional = false)
-    @NotNull
     @Size(min = 1, max = 164)
-    @Column(name = "first_name", nullable = false, length = 164)
+    @Column(name = "first_name", length = 164)
     private String firstName;
-    @Basic(optional = false)
-    @NotNull
     @Size(min = 1, max = 164)
-    @Column(name = "last_name", nullable = false, length = 164)
+    @Column(name = "last_name", length = 164)
     private String lastName;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "birthday", nullable = false)
+    @Size(min = 1, max = 164)
+    @Column(name = "professional_skill", length = 164)
+    private String professionalSkill;
+    @Size(min = 1, max = 164)
+    @Column(name = "workplace", length = 164)
+    private String workplace;
+    @Column(name = "birthday")
     @Temporal(TemporalType.DATE)
     private Date birthday;
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
-    @OneToMany
-    @JoinTable(name = "emails", joinColumns = @JoinColumn(name = "id_users"))
+    @OneToMany(fetch=FetchType.EAGER)
+    @JoinColumn(name = "logins_loginID")
+    @NotFound(action=NotFoundAction.IGNORE)
+    @Cascade(value=CascadeType.ALL)
     private List<EMailEntity> emails;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "gender", nullable = false)
+    @OneToMany(fetch=FetchType.EAGER)
+    @JoinColumn(name = "logins_loginID", referencedColumnName = "logins_loginID")
+    @NotFound(action=NotFoundAction.IGNORE)
+    @Cascade(value=CascadeType.ALL)
+    private List<AddressEntity> addressEntities;
+    @Column(name = "gender")
     @Enumerated(EnumType.ORDINAL)
     private Gender gender;
 
-    @JoinColumn(name = "id_users", referencedColumnName = "id_logins", nullable = false, insertable = false, updatable = false)
-    @OneToOne(optional = false, fetch = FetchType.LAZY)
+    @OneToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "logins_loginID", referencedColumnName = "loginID", nullable = false, insertable = false, updatable = false)
     private LoginEntity loginEntity;
 
     public UserEntity() {
@@ -87,7 +89,7 @@ public class UserEntity implements Serializable {
     }
 
     public Long getId() {
-        return id;
+        return id!=null ? id : loginEntity!=null ? loginEntity.getId() : null;
     }
 
     public void setId(Long id) {
@@ -118,7 +120,15 @@ public class UserEntity implements Serializable {
         this.emails = emails;
     }
 
-    public Date getBirthday() {
+    public List<AddressEntity> getAddressEntities() {
+		return addressEntities;
+	}
+
+	public void setAddressEntities(List<AddressEntity> addressEntities) {
+		this.addressEntities = addressEntities;
+	}
+
+	public Date getBirthday() {
         return birthday;
     }
 
@@ -138,8 +148,9 @@ public class UserEntity implements Serializable {
         return loginEntity;
     }
 
-    public void setLoginEntity(LoginEntity loginEntity) {
+    public UserEntity setLoginEntity(LoginEntity loginEntity) {
         this.loginEntity = loginEntity;
+        return this;
     }
 
     @Override
@@ -162,9 +173,25 @@ public class UserEntity implements Serializable {
         return true;
     }
 
+	public String getProfessionalSkill() {
+		return professionalSkill;
+	}
+
+	public void setProfessionalSkill(String professionalSkill) {
+		this.professionalSkill = professionalSkill;
+	}
+
+	public String getWorkplace() {
+		return workplace;
+	}
+
+	public void setWorkplace(String workplace) {
+		this.workplace = workplace;
+	}
+
 	@Override
 	public String toString() {
-		return "UserEntity [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", emails=" + emails + ", birthday=" + birthday + ", gender=" + gender
-				+ ", loginEntity=" + loginEntity + "]";
+		return "UserEntity [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", professionalSkill=" + professionalSkill + ", workplace=" + workplace
+				+ ", birthday=" + birthday + ", emails=" + emails + ", addressEntities=" + addressEntities + ", gender=" + gender + ", loginEntity=" + loginEntity + "]";
 	}
 }

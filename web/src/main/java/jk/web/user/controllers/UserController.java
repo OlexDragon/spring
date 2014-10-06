@@ -1,165 +1,372 @@
 package jk.web.user.controllers;
 
 import java.security.Principal;
-import java.sql.Timestamp;
+import java.text.ParseException;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.AddressException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import jk.web.configuration.EMailConfig.ConfirmStatus;
-import jk.web.user.SignUpForm;
-import jk.web.user.entities.EMailEntity;
-import jk.web.user.entities.EMailEntity.EMailStatus;
-import jk.web.user.entities.LoginEntity;
-import jk.web.user.entities.UserEntity;
-import jk.web.user.repository.EMailRepository;
-import jk.web.user.repository.UserRepository;
-import jk.web.user.repository.LoginRepository.Permission;
+import jk.web.user.User;
+import jk.web.user.User.Gender;
+import jk.web.user.entities.AddressEntity;
+import jk.web.user.entities.CountryEntity;
 import jk.web.user.validators.SignUpFormValidator;
-import jk.web.workers.EMailWorker;
-import jk.web.workers.LoginWorker;
+import jk.web.workers.AddressWorker;
 import jk.web.workers.UserWorker;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.LocaleResolver;
 
 @Controller
 public class UserController {
 
+
 	private final Logger logger = LogManager.getLogger();
 
-	@Value("${confirm.url}")
-	private String confirmURL;
-	@Autowired
-	private PasswordEncoder passwordEncoder;
-	@Autowired
-	private EMailWorker eMailWorker;
-	@Autowired
-	private LocaleResolver localeResolver;
-	@Autowired
-	private LoginWorker loginWorker;
 	@Autowired
 	private UserWorker userWorker;
 	@Autowired
-	private UserRepository userRepository;
+	private SignUpFormValidator signUpFormValidator;
 	@Autowired
-	private EMailRepository eMailRepository;
-
-	@RequestMapping(value={"/login", "/logout"})
-	public String login(){
-		logger.entry();
-		return "login";
-	}
-
-	@RequestMapping(value="/signup", method=RequestMethod.GET)
-	public String signup(SignUpForm signUpBean){
-		logger.entry(RequestMethod.GET);
-		return "signup";
-	}
+	private PasswordEncoder passwordEncoder;
+	@Autowired
+	private AddressWorker addressWorker;
 
 	@RequestMapping(value="/user", method=RequestMethod.GET)
-	public String user(Principal principal, Model model){
+	public String user(User user, Principal principal){
+
 		String username = principal.getName();
 		logger.entry(username);
-		if(username==null){
-			return "login";
-		}
 
-		UserEntity userEntity = userWorker.getUserEntity(username);
-		if(userEntity==null)
-			return "login";
-
-		model.addAttribute("user", userEntity);
+		userWorker.setUser(username, user);
 		return "user";
 	}
 
-	@RequestMapping(value="/signup", method=RequestMethod.POST)
-	public String signup(SignUpForm signUpForm, BindingResult bindingResult, HttpServletRequest request, Model model) throws AddressException, MessagingException{
+	@RequestMapping(value="/user", method=RequestMethod.POST, params = "submit_edit_username")
+	public String editUsername(User user, Principal principal, Model model, BindingResult bindingResults, HttpServletRequest request, HttpServletResponse response){
 
-		SignUpFormValidator validator = new SignUpFormValidator(userRepository);
-		validator.validate(signUpForm, bindingResult);
+		String username = principal.getName();
 
-		boolean hasErrors = bindingResult.hasErrors();
-		logger.trace("{}, hasErrors={}", RequestMethod.POST, hasErrors);
-
-		if(hasErrors)
-			return "signup";
-
-		UserEntity newUser = createNewUser(signUpForm);
-
-		if(newUser.getId()!=null)
-			eMailWorker.sendRegistrationMail(signUpForm, confirmURL, localeResolver.resolveLocale(request));
-		logger.trace("\n\t{}", newUser);
-
-		model.addAttribute("status", ConfirmStatus.SENT);
-		return "confirm";
-	}
-
-	@RequestMapping(value="/signup/clear")
-	public String clear(SignUpForm signUpForm){
-		signUpForm.setUsername(null);
-		signUpForm.setFirstName(null);
-		signUpForm.setLastName(null);
-		signUpForm.setSex(null);
-		signUpForm.setBirthday(null);
-		signUpForm.setEMail(null);
-		return "signup";
-	}
-
-        @RequestMapping(value="/confirm/{username}")
-	public String confirm(@PathVariable String username, @RequestParam(required = false) String email, Model model){
-		logger.entry(username, email);
-
-		if(username==null || email==null)
-			return"login";
-
-		UserEntity userEntity = userWorker.getUserEntity(username);
-		if(userEntity==null)
-			model.addAttribute("status", ConfirmStatus.ERROR);
+		String un = user.getUsername();
+		final String attributeName = "edit_username";
+		if(un==null)
+			model.addAttribute(attributeName, true);
 		else{
-			LoginEntity loginEntity = userEntity.getLoginEntity();
-			if(loginEntity==null)
-				model.addAttribute("status", ConfirmStatus.ERROR);
-			else{
-				EMailEntity em = userWorker.getEmailToConfirm();
-				if(em!=null && em.getEMail().equals(email)){
-					if(em.getStatus()==EMailStatus.TO_CONFIRM){
-						em.setStatus(EMailStatus.CONFIRMED);
-						Permission permissions = loginEntity.getPermissions();
-						if(permissions==null){
-							loginEntity.setPermissions(Permission.DEFAULT);
-							model.addAttribute("status", ConfirmStatus.CONFIRMED);
-						}else
-							return logger.exit("login");
+			String password = user.getPassword();
+			if(passwordMatches(username, password, attributeName, model, bindingResults)){
+				signUpFormValidator.usernameValidation(bindingResults, user);
+				if(bindingResults.hasErrors()){
+					logger.debug("Username '{}' can not be updated by '{}'.", username, un);
+					model.addAttribute(attributeName, true);
+				}else{
+					if(!username.equals(un)){
+						userWorker.saveNewUsername(un);
+						logger.debug("Username '{}' updated by'{}'.", username, un);
+
+						LoginController.logout(request);
+
+						return "redirect:/login";
 					}else
-						return logger.exit("login");
-				}else
-					model.addAttribute("status", ConfirmStatus.ERROR);
+						bindingResults.rejectValue("username", "UserController.username_has_not_change", "Username.");
+				}
 			}
 		}
-		model.addAttribute("uname", username);
-		return logger.exit("confirm");
+
+		userWorker.setUser(user);
+		userWorker.setUserAddress(user);
+		return "user";
 	}
 
-	private UserEntity createNewUser(SignUpForm signUpForm) throws AddressException, MessagingException {
+	@RequestMapping(value="/user", method=RequestMethod.POST, params = "submit_edit_password")
+	public String editPassword(User user, Principal principal, Model model, BindingResult bindingResults, HttpServletRequest request){
 
-		LoginEntity loginEntity = loginWorker.save( new LoginEntity(signUpForm.getUsername(), passwordEncoder.encode(signUpForm.getPassword())));
+		String username = principal.getName();
 
-		userWorker.setUserEntity(new UserEntity(loginEntity.getId(), signUpForm.getFirstName(), signUpForm.getLastName(), new Timestamp(signUpForm.getBirthday().getTime()), signUpForm.getSex()));
-		userWorker.addEMail(eMailRepository.save(new EMailEntity().setId(loginEntity.getId()).setEMail(signUpForm.getEMail())));
-		logger.trace("\n\t{}\n\t{}", signUpForm, loginEntity);
-		return userWorker.save();
+		String attributeName = "edit_password";
+		String password = user.getPassword();
+		if(passwordMatches(username, password, attributeName, model, bindingResults)){
+			if(signUpFormValidator.passwordValidation(bindingResults, user)){
+				userWorker.saveNewPassword(user.getNewPassword());
+
+				LoginController.logout(request);
+
+				return "redirect:/login";
+			}else
+				model.addAttribute(attributeName, true);
+		}
+
+		userWorker.setUser(user);
+		userWorker.setUserAddress(user);
+		return "user";
+	}
+
+	@RequestMapping(value="/user", method=RequestMethod.POST, params = "submit_edit_firstName")
+	public String editFirstName(User user, Principal principal, Model model, BindingResult bindingResults){
+
+		String username = principal.getName();
+		logger.entry(username);
+
+		final String firstName = user.getFirstName();
+		final String attributeName = "edit_firstName";
+		if(firstName==null)
+			model.addAttribute(attributeName, true);
+		else{
+			if(signUpFormValidator.fieldValidation("firstName", firstName, bindingResults))
+				if(userWorker.isValid())
+					userWorker.saveFirstName(username, firstName);
+				else{
+					userWorker.setFirstName(username, firstName);
+					if(!saveIfValid())
+						bindingResults.rejectValue("firstName", "UserController.fill_missing_fields");
+				}
+			else
+				model.addAttribute(attributeName, true);
+		}
+
+		userWorker.setUser(user);
+		userWorker.setUserAddress(user);
+		return "user";
+	}
+
+	@RequestMapping(value="/user", method=RequestMethod.POST, params = "submit_edit_lastName")
+	public String editLastName(User user, Principal principal, Model model, BindingResult bindingResults){
+
+		String username = principal.getName();
+
+		String lastName = user.getLastName();
+		final String attributeName = "edit_lastName";
+		if(lastName==null)
+			model.addAttribute(attributeName, true);
+		else{
+			if(signUpFormValidator.fieldValidation("lastName", lastName, bindingResults))
+				if(userWorker.isValid())
+					userWorker.saveLastName(username, lastName);
+				else{
+					userWorker.setLastName(username, lastName);
+					if(!saveIfValid())
+						bindingResults.rejectValue("lastName", "UserController.fill_missing_fields");
+				}
+			else
+				model.addAttribute(attributeName, true);
+		}
+
+		userWorker.setUser(user);
+		userWorker.setUserAddress(user);
+		return "user";
+	}
+
+	@RequestMapping(value="/user", method=RequestMethod.POST, params = "submit_edit_eMail")
+	public String editEMail(User user, Principal principal, Model model, Errors bindingResults){
+
+		String username = principal.getName();
+
+		String eMail = user.getEMail();
+		final String attributeName = "edit_eMail";
+		if(eMail==null)
+			model.addAttribute(attributeName, true);
+		else{
+			eMail = eMail.toLowerCase();
+			if(signUpFormValidator.eMailValidation(bindingResults, user.getEMail()))
+				if(userWorker.isValid())
+					userWorker.saveEMail(username, eMail);
+				else{
+					userWorker.setEMail(username, eMail);
+					if(!saveIfValid())
+						bindingResults.rejectValue("eMail", "UserController.fill_missing_fields");
+				}
+			else
+				model.addAttribute(attributeName, true);
+		}
+
+		userWorker.setUser(user);
+		userWorker.setUserAddress(user);
+		return "user";
+	}
+
+	@RequestMapping(value="/user", method=RequestMethod.POST, params = "submit_edit_gender")
+	public String editGender(User user, Principal principal, Model model, Errors bindingResults){
+
+		String username = principal.getName();
+
+		Gender gender = user.getSex();
+		final String attributeName = "edit_gender";
+		if(gender==null)
+			model.addAttribute(attributeName, true);
+		else{
+			if(signUpFormValidator.genderValidation(bindingResults, user))
+				if(userWorker.isValid())
+					userWorker.saveGender(username, gender);
+				else{
+					userWorker.setGender(username, gender);
+					if(!saveIfValid())
+						bindingResults.rejectValue("sex", "UserController.fill_missing_fields");
+				}
+			else
+				model.addAttribute(attributeName, true);
+		}
+
+		userWorker.setUser(user);
+		userWorker.setUserAddress(user);
+		return "user";
+	}
+
+	@RequestMapping(value="/user", method=RequestMethod.POST, params = "submit_edit_birthday")
+	public String editBirthday(User user, Principal principal, Model model, Errors bindingResults){
+
+		String username = principal.getName();
+
+		String year = user.getBirthYear();
+		String month = user.getBirthMonth();
+		String day = user.getBirthDay();
+
+		try{
+			final String attributeName = "edit_birthday";
+			if(year==null && month==null && day==null)
+				model.addAttribute(attributeName, true);
+			else{
+				if(signUpFormValidator.birthdayValidation(bindingResults, user))
+					if(userWorker.isValid()){
+						userWorker.saveBirthdayr(username, year, month, day);
+					}else{
+						userWorker.setBirthday(username, year, month, day);
+						if(!saveIfValid())
+							bindingResults.rejectValue("birthday", "UserController.fill_missing_fields");
+					}
+				else
+					model.addAttribute(attributeName, true);
+			}
+		}catch(ParseException ex){
+			bindingResults.rejectValue("birthday", "UserController.fill_missing_fields");
+			logger.catching(ex);
+		}
+
+		userWorker.setUser(user);
+		userWorker.setUserAddress(user);
+		return "user";
+	}
+
+	private boolean saveIfValid(){
+		boolean saved = false;
+		if(userWorker.isValid())
+			saved = userWorker.save()!=null;
+		return saved;
+	}
+
+	@RequestMapping(value="/user", method=RequestMethod.POST, params = "submit_edit_address")
+	public String editAddress(User user, Principal principal, Model model, BindingResult bindingResults, HttpServletRequest request){
+
+		String username = principal.getName();
+		AddressEntity addressEntity = userWorker.getAddressEntity(username);
+
+		String attributeName = "edit_address";
+		String address = user.getAddress();
+		String city = user.getCity();
+		String postalCode = user.getPostalCode();
+		addressWorker.setCountryCode(user.getCountry());
+		String region = user.getRegion();
+
+		logger.trace("\n\t"
+				+ "address:\t{}\n\t"
+				+ "city:\t{}\n\t"
+				+ "postalCode:\t{}\n\t"
+				+ "region:\t{}",
+				address,
+				city,
+				postalCode,
+				region);
+
+		boolean edit = false;
+		boolean newAddress = false;
+
+		//Address
+		if(address == null || address.isEmpty()){
+			edit = true;
+			bindingResults.rejectValue("address", "UserController.enter_address");
+		}else 
+			newAddress = addressEntity==null || !address.equals(addressEntity.getAddress());
+
+		//City
+		if(city == null || city.isEmpty()){
+			edit = true;
+			bindingResults.rejectValue("city", "UserController.enter_city");
+		}else 
+			newAddress = newAddress || addressEntity==null || !city.equals(addressEntity.getCity());
+
+		//Postal code
+		if(postalCode == null || postalCode.isEmpty()){
+			edit = true;
+			bindingResults.rejectValue("postalCode", "UserController.enter_postal_code");
+		}else 
+			newAddress = newAddress || addressEntity==null || !postalCode.equals(addressEntity.getPostalCode());
+
+		//Country
+		if(addressWorker.getCountryCode()==null){
+			edit = true;
+			bindingResults.rejectValue("country", "UserController.select_country");
+		}else{
+
+			CountryEntity ce = addressWorker.getCountryEntity(addressWorker.getCountryCode());
+
+			if(ce!=null && ce.getRegionName()!=null){
+				if(region==null || region.isEmpty() || region.equals("Select")){
+					edit = true;
+					bindingResults.rejectValue("region", "UserController.select_"+ce.getRegionName());
+				}else
+					newAddress = newAddress || addressEntity==null || addressEntity.getRegionEntity()==null || !region.equals(addressEntity.getRegionEntity().getRegionEntityPK().getRegionCode());
+			}
+
+			newAddress = newAddress || addressEntity==null || addressEntity.getCountryEntity()==null || addressWorker.getCountryCode()==null || !addressWorker.getCountryCode().equals(addressEntity.getCountryEntity().getCountryCode());
+		}
+
+		userWorker.setUser(user);
+
+		if(edit){
+			model.addAttribute(attributeName, true);
+			user.setRegionName(addressWorker.getRegionName());
+		}else{
+			userWorker.saveAddress(new AddressEntity()
+										.setAddress(address)
+										.setCity(city)
+										.setCountryCode(addressWorker.getCountryCode())
+										.setPostalCode(postalCode)
+										.setRegionsCode(region));
+		}
+
+		model.addAttribute("addressWorker", addressWorker);
+		return "user";
+	}
+
+	@RequestMapping(value="/user", method=RequestMethod.POST, params = "submit_user_img")
+	public String addUserImage(User user, Principal principal, Model model, BindingResult bindingResults, HttpServletRequest request){
+		
+		model.addAttribute("addressWorker", addressWorker);
+		return "user";
+	}
+
+	private boolean passwordMatches(String username, String password, String attributeName, Model model, BindingResult bindingResults){
+
+		boolean matches = false;
+		if(password==null || password.isEmpty()){
+
+			bindingResults.rejectValue("password", "UserController.enter_the_password", "Enter_the password.");
+			model.addAttribute(attributeName, true);
+
+		}else if(passwordEncoder.matches(password, userWorker.getPassword(username)))
+			matches = true;
+		else{
+
+			bindingResults.rejectValue("password", "UserController.wrong_password");
+			model.addAttribute(attributeName, true);
+		}
+
+		return matches;
 	}
 }

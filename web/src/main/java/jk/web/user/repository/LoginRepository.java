@@ -5,11 +5,11 @@ import java.util.Set;
 
 import jk.web.user.entities.LoginEntity;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.security.core.GrantedAuthority;
 
-public interface LoginRepository  extends CrudRepository<LoginEntity, Long>  {
+public interface LoginRepository  extends JpaRepository<LoginEntity, Long>  {
 
 	public enum Permission implements GrantedAuthority{
 		ALL					(1	 ),
@@ -80,4 +80,10 @@ public interface LoginRepository  extends CrudRepository<LoginEntity, Long>  {
 
 	@Query("SELECT count(l.id)>0 FROM login l WHERE l.username = ?1")
 	public boolean exists(String username);
+
+	@Query("UPDATE login l SET l.username=:username WHERE l.id=:id")
+	public int saveUsernae(Long id, String username);
+
+	@Query(value="SELECT l FROM login l LEFT JOIN l.emails e WHERE l.username=?1 or e.eMail=?1")
+	public LoginEntity findByUsernameOrEMail(String usernameOrEMail);
 }

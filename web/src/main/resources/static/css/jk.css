@@ -1,41 +1,76 @@
 @CHARSET "UTF-8";
  
- body {	width: 75em;
+ body {	width: 65em;
 		margin: auto;
 		padding: 0;
 		border-width: 0;
 		font-size: 1em;
 		font-family:"Times New Roman", Times, serif;
+		background-color: #5A5A5A;
 }
 
-div, table, ul, p, h6 {
+form, div, ul, li, a, p, h6, button.jk {
 		margin: 0;
 		padding: 0;
 		border-width: 0;
-		font-family:"Times New Roman", Times, serif;
 }
-
-p {
-   text-indent: 2em;
+table{
+	border-collapse: collapse;
+}
+table.center{
+		margin: auto;
 }
 input, button, label{
 	margin: .1em;
 }
-
-div {	background-color: #E0E0E0 ;
+#contents {
+	background-color: #666666;
+	padding-right: .5em;
 }
-
+#tables td input[type="text"], #tables td input[type="password"], #tables td input[type="email"]{
+	width: 99%;
+}
+#tables, button.jk, #contents a{
+	color:#CCCCCC;
+}
+#contents h3{
+	margin-top: .5em;
+	margin-bottom: 0;
+}
+#tables form{
+	margin: .5em;
+}
+#login, #signup{
+	margin-top: .5em;
+	margin-bottom: .5em;
+	background-color: #5C514D;
+	border: .2em solid black;
+}
 button, checkbox, label{
 	cursor: pointer;
+}
+
+#header {
+	color: #999999;
+	padding: .5em;
+	background-color: #5A5A5A;
+    background-image: linear-gradient(black, #5A5A5A);
+}
+#header form{
+	margin-top: .5em;
 }
 .contents{
 	padding: .5em;
 }
-#login { margin: .1em;
+.btnDiv{
+	display: inline-block;
 }
-
-#login table th, #signup table th{min-width: 8em;
+#tables .btnDiv{
+	width: 6em;
+}
+.th_right th, p.rght{
 				text-align: right;
+				padding-right: .5em;
 }
 
 #loginDiv {	display: block;
@@ -59,38 +94,35 @@ button, checkbox, label{
 					-o-transform-origin: left top;
 }
 
-#header #logo{	float: left;
-}
-
-#header:AFTER {	content: ".";
+#header:AFTER, #contents:AFTER {	
+					content: ".";
     				display: block;
 					height: 0;
 					clear: both;
 					visibility: hidden;
 }
 
-/* Main */
+/* Menu */
 #menu{
     width: 100%;
     margin: 0;
 }
-#menu ul{
-    padding: .2em 0 0 0;
+#menu ul, #tables ul, #btns ul, #langDiv ul{
     list-style: none;
+}
+#menu ul{
     background-color: #111;
     background-image: linear-gradient(#444, #111);
-    border-radius: .5em;
-    box-shadow: 0 2px 1px #9c9c9c;
 }
-
-#menu ul li {
-    float: left;
-    padding: 0 0 10px 0;
+#menu ul li , #tables ul li, #langDiv ul li{
     position: relative;
+    display: inline;
 }
-
+ #langDiv ul li{
+    padding: 0 0 .5em 0;
+}
 /* Clear floated elements */
-#menu ul:after {
+#menu ul:after, #langDiv  ul:after {
     visibility: hidden;
     display: block;
     font-size: 0;
@@ -98,9 +130,8 @@ button, checkbox, label{
     clear: both;
     height: 0;
 }
-
-#menu a, #menu p {
-    float: left;
+#menu ul a, #menu ul p, #menu ul div, #langDiv ul a {
+	display: inline;
     height: 1.5em;
     padding: 0 1.5em;
     color: #999;
@@ -109,27 +140,35 @@ button, checkbox, label{
     text-decoration: none;
     text-shadow: 0 1px 0 #000;
 }
-#menu ul li:hover > a, #menu ul li:hover > p {
+
+#menu ul li:hover > a, #menu ul li:hover > p, #langDiv ul li:hover > a {
     color: #fafafa;
 }
 
-*html #menu ul li a:hover, *html #menu ul li p:hover { /* IE6 */
+*html #menu ul li a:hover, *html #menu ul li p:hover , *html #langDiv ul li a:hover { /* IE6 */
     color: #fafafa;
 }
 
-#menu ul li:hover > ul {
+#menu ul li:hover > ul, #langDiv ul li:hover > ul {
     display: block;
 }
 
 /* Sub-menu */
-#menu ul ul {
-    list-style: none;
+#menu ul ul{
+    left: 0;
+    right: auto;
+}
+#langDiv ul ul, #menu ul #languageMenu ul {
+	left: auto;
+    right: 0;
+}
+#menu ul ul, #langDiv ul ul {
+	list-style: none;
     margin: 0;
     padding: 0;
     display: none;
     position: absolute;
-    top: 1.7em;
-    left: 0;
+    top: 1.5em;
     z-index: 99999;
     background-color: #444;
     background-image: linear-gradient(#444, #111);
@@ -137,7 +176,7 @@ button, checkbox, label{
     border-radius: .3em;
 }
 
-#menu ul ul li {
+#menu ul ul li, #langDiv ul ul li {
     float: none;
     margin: 0;
     padding: 0;
@@ -146,11 +185,11 @@ button, checkbox, label{
                 0 2px 0 #777777;
 }
 
-#menu ul ul li:last-child { 
+#menu ul ul li:last-child, #langDiv ul ul li:last-child  { 
     box-shadow: none;    
 }
 
-#menu ul ul a {    
+#menu ul ul a, #langDiv ul ul a{    
     padding: 10px;
     height: auto;
     line-height: 1;
@@ -159,30 +198,36 @@ button, checkbox, label{
     float: none;
     text-transform: none;
 }
-
-*html #menu ul ul a { /* IE6 */   
+*html #menu ul ul a, *html #langDiv ul ul a { /* IE6 */   
     height: 10px;
     width: 150px;
 }
 
-*:first-child+html #menu ul ul a { /* IE7 */    
+*:first-child+html #menu ul ul a, *:first-child+html #langDiv ul ul a { /* IE7 */    
     height: 10px;
     width: 150px;
 }
 
-#menu ul ul a:hover {
+#menu ul ul a:hover, #langDiv ul ul a:hover {
     background-color: #0186ba;
     background-image: linear-gradient(#04acec, #0186ba);
 }
 
-#menu ul ul li:first-child a {
+#menu ul ul li:first-child a, #langDiv ul ul li:first-child a  {
     border-radius: 5px 5px 0 0;
 }
 
-#menu ul ul li:first-child a:after {
-    content: '';
-    position: absolute;
+#menu ul ul li:first-child a:after{
     left: 30px;
+    right: auto;
+}
+#menu ul #languageMenu ul li:first-child a:after,  #langDiv ul #languageMenu ul li:first-child a:after{
+	left: auto;
+    right: 30px;
+}
+#menu ul ul li:first-child a:after, #langDiv ul ul li:first-child a:after {
+	content: '';
+    position: absolute;
     top: -8px;
     width: 0;
     height: 0;
@@ -191,13 +236,116 @@ button, checkbox, label{
     border-bottom: 8px solid #444;
 }
 
-#menu ul ul li:first-child a:hover:after {
+#menu ul ul li:first-child a:hover:after, #langDiv ul ul li:first-child a:hover:after {
     border-bottom-color: #04acec; 
 }
 
-#menu ul ul li:last-child a {
+#menu ul ul li:last-child a, #langDiv ul ul li:last-child a {
     border-radius: 0 0 5px 5px;
 }
 
 * html #menu             { zoom: 1; } /* IE6 */
 *:first-child+html #menu { zoom: 1; } /* IE7 */
+
+li button{margin: 0; padding: 0;}
+
+.error {
+	color: red;
+}
+.error span{
+	background-color: #faf1ee;
+}
+input.error::-webkit-input-placeholder {
+	color: red;
+}
+input.error::-moz-placeholder {
+	color: red;
+}
+input.error:-moz-placeholder {
+	color: red;
+}
+input.error:-ms-input-placeholder {
+	color: red;
+}
+input.error{
+	border-color: red;
+}
+input:focus{
+	border-color: yellow;
+	background-color: #ffffe3;
+}
+ul.error{
+	border: 1px solid red;
+}
+td.error, p.error{
+	font-size: 75%;
+}
+.fleft{
+	float: left;
+}
+.fright{
+	float: right;
+}
+.asLink{
+    background:none;
+     border:none; 
+     padding:0;
+     outline-color: transparent;
+}
+.cntr, td.error{
+	text-align: center;
+}
+.pddng3{
+	padding: 3em;
+}
+#footer{
+	border-top: thick solid #444;
+	border-top-width: 1px;
+}
+.smal{
+	font-size: small;
+}
+.thinFilm, .btnBrdr, .menuBrdr{
+	width: 100%;
+	background-image: url('/images/join_now.png');
+}
+.menuBrdr{
+	height: .4em;
+	background-size: .4em;
+}
+.btnBrdr{
+	height: .3em;
+	background-size: .3em;
+}
+.thinFilm{
+	height: .7em;
+	background-size: .7em;
+	background-color: white;
+}
+button.jk{
+	text-align: center;
+	width: 100%;
+	background-color: #5C514D;
+}
+#tables{
+	min-width: 22em;
+	margin: .5em;
+	padding: 0 .5em 0 .5em;
+}
+#tables table{
+	width: 100%;
+	border: 1px solid blck;
+}
+#btns{
+	width: 100%;
+    background-color:#666666;
+    text-align: center;
+}#btns ul li{
+	margin: 5%;
+	width: 18%;
+	display: inline-block;
+    background-color:#5C514D;
+}
+#socialBtns{
+	margin-bottom: .5em;
+}

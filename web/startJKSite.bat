@@ -1,0 +1,1 @@
+java -jar target/jk-0.1.0.jar

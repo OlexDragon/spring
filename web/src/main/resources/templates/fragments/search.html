@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+  <head>
+    <title>Header</title>
+	<link rel="stylesheet" type="text/css" href="../static/css/jk.css" th:href="@{/css/jk.css}"></link>
+  </head>
+  <body>
+  	<form th:if="${#authorization.expression('isAuthenticated()')}" name="searchForm" action="/search"  th:action="@{/search}" class="fright" th:fragment="search" >
+  		<input type="text" name="searchFor"/>
+  		<select name="searchDetails">
+			<option th:each="details : ${T(jk.web.workers.SearchClass.SearchDetails).values()}" th:value="${details}" th:text="#{__${details}__}" />
+  		</select>
+  		<button type="submit" th:text="#{search}" >Search</button>
+  	</form>
+  </body>
+</html>

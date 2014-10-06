@@ -1,5 +1,6 @@
 package jk.web.configuration;
 
+import jk.web.user.listeners.LoginListener;
 import jk.web.user.repository.LoginRepository;
 import jk.web.user.services.LoginDetailsServiceImpl;
 
@@ -21,19 +22,41 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private LoginRepository loginRepository;
 
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService())
-        .passwordEncoder(passwordEncoder());
+//	@Override
+//	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.userDetailsService(userDetailsService())
+//        .passwordEncoder(passwordEncoder());
+//	}
+	@Autowired
+	protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+	    // @formatter:off
+	    auth
+	        .userDetailsService(userDetailsService())
+	        .passwordEncoder(passwordEncoder())
+	    ;
+	    // @formatter:on
 	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/", "/home", "/login/**", "/signup", "/confirm/*", "/css/**", "/js/**").permitAll().anyRequest().authenticated();
-		http.formLogin().loginPage("/login").permitAll().and().logout().permitAll()
+		http.authorizeRequests().antMatchers(
+				"/",
+				"/home",
+				"/login/**",
+				"/connect/**",
+				"/signup",
+				"/confirm/**",
+				"/css/**",
+				"/js/**",
+				"/images/**",
+				"/**/favicon.ico")
+		.permitAll().anyRequest().authenticated();
+
+		http.formLogin().loginPage("/login").permitAll()
 		.and()
-		.rememberMe();
+			.rememberMe();
 		http.authorizeRequests().antMatchers("*.css").permitAll();
+		http.csrf().disable();
 	}
 
 	@Bean
@@ -45,5 +68,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public UserDetailsService userDetailsService() {
         return new LoginDetailsServiceImpl(loginRepository);
+    }
+
+    @Bean
+    public LoginListener getLoginListener(){
+		return new LoginListener();
     }
 }

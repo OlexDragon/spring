@@ -2,28 +2,100 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-  <head>
-      <title>Footer</title>
-  </head>
-  <body>
-    <div id="menu" th:fragment="menu">
-      <ul id="menuUL">
-      	<li><a href="/" th:text="#{menu.home}">Home</a></li>
-      	<li><a href="/user" th:text="${#authorization.expression('isAuthenticated()')} ? ${#authentication.name} : #{menu.user}">User</a>
-      		<ul>
-      			<li th:if="${#authorization.expression('isAuthenticated()')}"><a href="/login?logout" th:href="@{/login?logout}" th:text="#{login.logout}" th:replace="login::logout">Logout</a></li>
-      			<li th:if="${#authorization.expression('isAuthenticated()')}==false"><a href="/login" th:tref="@{/login}" th:text="#{login.login}">Login</a></li>
-      			<li th:if="${#authorization.expression('isAuthenticated()')}==false"><a href="/signup" th:tref="@{/signup}" th:text="#{login.signup}">Sing Up</a></li>
-      		</ul>
-      	</li>
-      	<li ><p th:text="#{__${#locale.displayLanguage}__}">Language</p>
-      		<ul>
-      			<li th:each="lang : ${@menuLanguages}" ><a th:href="'?language='+${lang}" th:text="#{__${lang.displayLanguage}__}"></a></li>
-      		</ul>
-      	</li>
-      </ul>
-    </div>
+<head>
+<title>Menu</title>
+<link rel="stylesheet" type="text/css" href="../../static/css/jk.css"
+	th:href="@{/css/jk.css}"></link>
+</head>
+<body>
+	<div th:if="${#authorization.expression('isAuthenticated()')}"  id="menu" th:fragment="menu">
+		<div class="menuBrdr"></div>
+		<ul id="menuUL">
+			<li class="fleft"><a href="/user"
+				th:text="${#authorization.expression('isAuthenticated()')} ? ${#authentication.name} : #{menu.user}">User</a>
+				<ul>
+					<th:block th:if="${#authorization.expression('isAuthenticated()')}">
+						<li><a href="/user" th:text="#{menu.profile}">Profile</a></li>
+						<li>
+							<form name="loForm" th:action="@{/login?logout}" method="post" th:fragment="logout">
+								<a href="/logout" th:href="@{/logout}" th:text="#{login.logout}" th:onclick="'javascript:document.loForm.submit();'">Logout</a>
+							</form>
+						</li>
+					</th:block>
+					<th:block th:if="${#authorization.expression('isAuthenticated()')}==false">
+						<li><a href="/login" th:href="@{/login}" th:text="#{login.login}">Login</a></li>
+						<li><a href="/signup" th:href="@{/signup}" th:text="#{login.join_now}">Sing Up</a></li>
+						<li><form name="fbForm" action="/connect/facebook" method="POST">
+								<a href="#" class="social" th:onclick="'javascript:document.fbForm.submit();'">
+									<i class="fbIcon"></i>
+									<span>Facebook</span>
+								</a>
+							</form>
+						</li>
+						<li><form name="twForm" action="/connect/twitter" method="POST">
+								<a href="#" class="social" th:onclick="'javascript:document.twForm.submit();'">
+									<i class="twIcon"></i>
+									<span>Twitter</span>
+								</a>
+							</form>
+						</li>
+						<li><form name="okForm" action="/connect/odnoklassniki" method="POST">
+								<a href="#" class="social" th:onclick="'javascript:document.okForm.submit();'">
+									<i class="okIcon"></i>
+									<span>Odnoklassniki</span>
+								</a>
+							</form></li>
+						<li><form name="inForm" action="/connect/linkedin" method="POST">
+								<a href="#" class="social" th:onclick="'javascript:document.inForm.submit();'">
+									<i class="inIcon"></i>
+									<span>LinkedIn</span>
+								</a>
+							</form>
+						</li>
+					</th:block>
+				</ul></li>
+			<li id="languageMenu" class="fright">
+				<p th:text="#{__${#locale.displayLanguage}__}">Language</p>
+				<ul>
+					<li th:each="lang : ${@menuLanguages}"><a
+						th:href="'?language='+${lang}"
+						th:text="#{__${lang.displayLanguage}__}"></a></li>
+				</ul>
+			</li>
+		</ul>
+		<div class="menuBrdr"></div>
+	</div>
 
-	<a href="/login" th:text="login.login" th:fragment="alogin">Login</a>
-  </body>
+	<div id="socialBtns" th:fragment="socialBtns">
+		<small><span th:text="#{menu.login_with}">Login with:</span></small>
+		<ul>
+			<li><form id="fbForm" action="/connect/facebook" method="POST">
+					<button type="submit"><span>Facebook</span></button>
+				</form>
+			</li>
+			<li><form id="twForm" action="/connect/twitter" method="POST">
+					<button type="submit"><span>Twitter</span></button>
+				</form>
+			</li>
+			<li><form id="okForm" action="/connect/odnoklassniki" method="POST">
+					<button type="submit"><span>Odnoklassniki</span></button>
+				</form>
+			</li>
+			<li><form id="inForm" action="/connect/linkedin" method="POST">
+					<button type="submit"><span>LinkedIn</span></button>
+				</form>
+			</li>
+			<li><form id="glForm" action="/connect/google" method="POST">
+					<button type="submit"><span>Google</span></button>
+				</form>
+			</li>
+		</ul>
+	</div>
+
+							<div class="btnDiv" th:fragment="jk_button(textToShow)">
+								<div class="btnBrdr"></div>
+								<button class="jk" type="submit" name="signup" th:text="${textToShow}">sign Up</button>
+								<div class="btnBrdr"></div>
+							</div>
+</body>
 </html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+  <head>
+	<title>Facebook</title>
+	<link rel="stylesheet" type="text/css" href="../../static/css/jk.css" th:href="@{/css/jk.css}"></link>
+	<link rel="stylesheet" type="text/css" href="../../static/css/social.css" th:href="@{/css/social.css}" />
+  </head>
+  <body>
+	<p>You aren't connected to Facebook yet. Click the button to connect this application with your Facebook account.</p>
+    <div id="facebookBthDiv">
+		<form action="/connect/facebook" method="POST"  th:fragment="facebookBthDiv">
+			<input type="hidden" name="scope" value="read_stream" />
+			<p><button class="facebook" type="submit">Facebook</button></p>
+		</form>
+    </div>
+  </body>
+</html>
