@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+  <head>
+	<title>Profile</title>
+	<link rel="stylesheet" type="text/css" href="../../../static/css/jk.css" th:href="@{/css/jk.css}"></link>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$("#prflH").click(function() {
+				$("#prflTbl").toggle(500);
+			});
+		});
+</script>
+</head>
+  <body>
+    <div id="profile" class="bttm5 bclr wth40" th:fragment="profile">
+	<div class="btnBrdr"></div>
+    <h2 id="prflH" th:text="#{profile}" class="cntr pntr">Profile</h2>
+    <div id="prflTbl" th:class="${showP==null} ? 'dn'">
+	<table class="th_right borderB wth100">
+		<tr class="borderBB">
+			<td class="w5"><button type="submit"
+						name="submit_edit_username"
+						th:text="${edit_username!=null} ? #{user.save} : #{user.edit}"
+						th:replace="fragments/menu :: jk_button(${edit_username!=null} ? #{user.save} : #{user.edit}, null, 'submit_edit_username')">Edit</button>
+			</td>
+			<th class="w10" th:text="#{login.username}">Username</th>
+			<td class="w13" th:switch="${edit_username}">
+				<input th:case="${true}" type="text" name="newUsername" th:field="*{username}" autofocus="autofocus"/>
+				<p th:case="*" th:text="*{username}">Username</p>
+			</td>
+       		<td class="lft"><p class="error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username Error</p></td>
+		</tr>
+		<tr class="borderBB">
+			<td class="w5"><button th:if="${edit_username==null}"
+						type="submit"
+						name="submit_edit_password"
+						th:id="${edit_password!=null ? 'activeButton' : null}"
+						th:text="${edit_password!=null} ? #{user.save} : #{user.edit}"
+						th:replace="fragments/menu :: jk_button(${edit_password!=null} ? #{user.save} : #{user.edit}, ${edit_password!=null ? 'activeButton' : null}, 'submit_edit_password')">Edit</button>
+			</td>
+			<th th:text="#{login.password}">Password</th>
+			<td th:switch="${edit_password==true || edit_username==true}">
+				<input th:case="${true}" type="password" name="oldPassword"  th:field="*{password}" autofocus="autofocus"/>
+				<p th:case="*">********</p>
+			</td>
+       		<td class="lft"><p class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"
+       		>Password Error</p></td>
+		</tr>
+		<th:block th:if="${edit_password}" >
+			<tr>
+				<td></td>
+				<th th:text="#{user.new_password}">Password</th>
+				<td>
+					<input type="password" name="newPassword" th:field="*{newPassword}" />
+				</td>
+       			<td class="lft"><p class="error" th:if="${#fields.hasErrors('newPassword')}" th:errors="*{newPassword}">Username as new password</p></td>
+			</tr>
+			<tr class="borderBB">
+				<td></td>
+ 				<th th:text="#{signup.repassword}">Password</th>
+				<td>
+					<input type="password" name="newUsername" th:field="*{repassword}" />
+				</td>
+      			<td><p class="error" th:if="${#fields.hasErrors('repassword')}" th:errors="*{repassword}">Password Error</p></td>
+			</tr>
+		</th:block>
+		<tr class="borderBB">
+			<td class="w5"><button type="submit"
+						name="submit_edit_eMail"
+						th:id="${edit_eMail!=null ? 'activeButton' : null}"
+						th:text="${edit_eMail!=null} ? #{user.save} : #{user.edit}"
+						th:replace="fragments/menu :: jk_button(${edit_eMail!=null} ? #{user.save} : #{user.edit}, ${edit_eMail!=null ? 'activeButton' : null}, 'submit_edit_eMail')">Edit</button>
+			</td>
+			<th th:text="#{signup.eMail}">e-mail</th>
+			<td th:switch="${edit_eMail}">
+				<input th:case="${true}" type="text" name="eMail" th:field="*{eMail}"  autofocus="autofocus"/>
+				<p th:case="*" th:text="*{eMail}">e-mail</p>
+			</td>
+       		<td><p class="error" th:if="${#fields.hasErrors('eMail')}" th:errors="*{eMail}">E-Mail Error</p></td>
+		</tr>
+		<tr class="borderBB">
+			<td><button type="submit"
+						name="submit_edit_firstName"
+						th:id="${edit_firstName!=null ? 'activeButton' : null}"
+						th:text="${edit_firstName!=null} ? #{user.save} : #{user.edit}"
+						th:replace="fragments/menu :: jk_button(${edit_firstName!=null} ? #{user.save} : #{user.edit}, ${edit_firstName!=null ? 'activeButton' : null}, 'submit_edit_firstName')">Edit</button></td>
+			<th th:text="#{signup.firstName}">First Name</th>
+			<td th:switch="${edit_firstName}">
+				<input th:case="${true}" type="text" name="firstName" th:field="*{firstName}"  autofocus="autofocus"/>
+				<p th:case="*" th:text="*{firstName}">First Name</p>
+			</td>
+       		<td><p class="error" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">First Name error</p></td>
+		</tr>
+		<tr class="borderBB">
+			<td><button type="submit"
+						name="submit_edit_lastName"
+						th:id="${edit_lastName!=null ? 'activeButton' : null}"
+						th:text="${edit_lastName!=null} ? #{user.save} : #{user.edit}"
+						th:replace="fragments/menu :: jk_button(${edit_lastName!=null} ? #{user.save} : #{user.edit}, ${edit_lastName!=null ? 'activeButton' : null}, 'submit_edit_lastName')">Edit</button></td>
+			<th th:text="#{signup.lastName}">Last Name</th>
+			<td th:switch="${edit_lastName}">
+				<input th:case="${true}" type="text" name="lastName" th:field="*{lastName}"  autofocus="autofocus"/>
+				<p th:case="*" th:text="*{lastName}">Last Name</p>
+			</td>
+       		<td><p class="error" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Last Name</p></td>
+		</tr>
+		<tr class="borderBB">
+			<td><button type="submit"
+						name="submit_edit_gender"
+						th:id="${edit_gender!=null ? 'activeButton' : null}"
+						th:text="${edit_gender!=null} ? #{user.save} : #{user.edit}"
+						th:replace="fragments/menu :: jk_button(${edit_gender!=null} ? #{user.save} : #{user.edit}, ${edit_gender!=null ? 'activeButton' : null}, 'submit_edit_gender')">Edit</button></td>
+			<th th:text="#{signup.sex}">Gender</th>
+			<td th:switch="${edit_gender}">
+				<ul th:case="${true}">
+					<li th:each="sex : ${T(jk.web.user.User.Gender).values()}">
+						<input type="radio" th:field="*{sex}" th:value="${sex}" />
+						<label th:for="${#ids.prev('sex')}" th:text="#{${sex}}">Gender</label>
+					</li>
+				</ul>
+				<p th:case="*" th:text="*{sex} ? #{__*{sex}__}">Gender</p>
+			</td>
+			<td><p class="error" th:if="${#fields.hasErrors('sex')}" th:errors="*{sex}">Sex Error</p></td>
+		</tr>
+		<tr>
+			<td><button type="submit"
+						name="submit_edit_birthday"
+						th:id="${edit_birthday!=null ? 'activeButton' : null}"
+						th:text="${edit_birthday!=null} ? #{user.save} : #{user.edit}"
+						th:replace="fragments/menu :: jk_button(${edit_birthday!=null} ? #{user.save} : #{user.edit}, ${edit_birthday!=null ? 'activeButton' : null}, 'submit_edit_birthday')">Edit</button></td>
+			<th th:text="#{signup.birthday}">Birthday</th>
+			<td th:switch="${edit_birthday}">
+				<th:block th:case="${true}">
+					<input th:replace="signup :: birthday"/>
+				</th:block>
+				<p th:case="*" th:text="*{birthYear!=null and birthMonth!=null and birthDay!=null} ? *{#calendars.format(#calendars.create(birthYear, birthMonth, birthDay), 'yyyy MMM d') }">Birthday</p>
+			</td>
+       		<td><p class="error" th:if="${#fields.hasErrors('birthYear')}" th:errors="*{birthYear}">Birthday error</p></td>
+		</tr>
+	</table>
+	</div>
+	<div class="btnBrdr"></div>
+    </div>
+  </body>
+</html>

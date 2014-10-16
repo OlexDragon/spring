@@ -53,7 +53,7 @@ public class LoginEntity implements Serializable{
 
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
     @OneToMany(fetch=FetchType.LAZY)
-    @JoinColumn(name = "logins_loginID", referencedColumnName="loginID")
+    @JoinColumn(name = "logins_loginID", referencedColumnName="loginID", insertable=false, updatable=false)
     @NotFound(action=NotFoundAction.IGNORE)
     private List<EMailEntity> emails;
 

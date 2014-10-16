@@ -9,6 +9,8 @@
     <class>jk.web.user.entities.Addsresses</class>
     <class>jk.web.user.entities.AddressEntity</class>
     <class>jk.web.user.entities.SocialEntity</class>
+    <class>jk.web.user.entities.Workplaces</class>
+    <class>jk.web.user.entities.ProfessionalSkills</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/jk?zeroDateTimeBehavior=convertToNull"/>
       <property name="javax.persistence.jdbc.password" value="potomkina"/>

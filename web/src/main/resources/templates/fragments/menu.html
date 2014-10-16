@@ -92,10 +92,11 @@
 		</ul>
 	</div>
 
-							<div class="btnDiv" th:fragment="jk_button(textToShow)">
-								<div class="btnBrdr"></div>
-								<button class="jk" type="submit" name="signup" th:text="${textToShow}">sign Up</button>
-								<div class="btnBrdr"></div>
-							</div>
+	<div class="btnDiv" th:fragment="jk_button(textToShow, idName, name)">
+		<div class="btnBrdr"></div>
+			<button type="submit" th:id="${idName}" th:name="${name}" class="jk" th:text="${textToShow}">sign Up</button>
+		<div class="btnBrdr"></div>
+	</div>
+
 </body>
 </html>

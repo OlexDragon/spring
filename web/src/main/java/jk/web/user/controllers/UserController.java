@@ -12,6 +12,7 @@ import jk.web.user.entities.AddressEntity;
 import jk.web.user.entities.CountryEntity;
 import jk.web.user.validators.SignUpFormValidator;
 import jk.web.workers.AddressWorker;
+import jk.web.workers.FileWorker;
 import jk.web.workers.UserWorker;
 
 import org.apache.logging.log4j.LogManager;
@@ -39,6 +40,8 @@ public class UserController {
 	private PasswordEncoder passwordEncoder;
 	@Autowired
 	private AddressWorker addressWorker;
+	@Autowired
+	private FileWorker fileWorker;
 
 	@RequestMapping(value="/user", method=RequestMethod.GET)
 	public String user(User user, Principal principal){
@@ -80,8 +83,9 @@ public class UserController {
 			}
 		}
 
-		userWorker.setUser(user);
-		userWorker.setUserAddress(user);
+		userWorker.fillUser(user);
+		userWorker.fillUserAddress(user);
+		model.addAttribute("showP", true);
 		return "user";
 	}
 
@@ -103,8 +107,9 @@ public class UserController {
 				model.addAttribute(attributeName, true);
 		}
 
-		userWorker.setUser(user);
-		userWorker.setUserAddress(user);
+		userWorker.fillUser(user);
+		userWorker.fillUserAddress(user);
+		model.addAttribute("showP", true);
 		return "user";
 	}
 
@@ -131,8 +136,9 @@ public class UserController {
 				model.addAttribute(attributeName, true);
 		}
 
-		userWorker.setUser(user);
-		userWorker.setUserAddress(user);
+		userWorker.fillUser(user);
+		userWorker.fillUserAddress(user);
+		model.addAttribute("showP", true);
 		return "user";
 	}
 
@@ -158,8 +164,9 @@ public class UserController {
 				model.addAttribute(attributeName, true);
 		}
 
-		userWorker.setUser(user);
-		userWorker.setUserAddress(user);
+		userWorker.fillUser(user);
+		userWorker.fillUserAddress(user);
+		model.addAttribute("showP", true);
 		return "user";
 	}
 
@@ -186,8 +193,9 @@ public class UserController {
 				model.addAttribute(attributeName, true);
 		}
 
-		userWorker.setUser(user);
-		userWorker.setUserAddress(user);
+		userWorker.fillUser(user);
+		userWorker.fillUserAddress(user);
+		model.addAttribute("showP", true);
 		return "user";
 	}
 
@@ -213,19 +221,21 @@ public class UserController {
 				model.addAttribute(attributeName, true);
 		}
 
-		userWorker.setUser(user);
-		userWorker.setUserAddress(user);
+		userWorker.fillUser(user);
+		userWorker.fillUserAddress(user);
+		model.addAttribute("showP", true);
 		return "user";
 	}
 
 	@RequestMapping(value="/user", method=RequestMethod.POST, params = "submit_edit_birthday")
 	public String editBirthday(User user, Principal principal, Model model, Errors bindingResults){
+		logger.entry(user);
 
 		String username = principal.getName();
 
-		String year = user.getBirthYear();
-		String month = user.getBirthMonth();
-		String day = user.getBirthDay();
+		Integer year = user.getBirthYear();
+		Integer month = user.getBirthMonth();
+		Integer day = user.getBirthDay();
 
 		try{
 			final String attributeName = "edit_birthday";
@@ -234,22 +244,23 @@ public class UserController {
 			else{
 				if(signUpFormValidator.birthdayValidation(bindingResults, user))
 					if(userWorker.isValid()){
-						userWorker.saveBirthdayr(username, year, month, day);
+						userWorker.saveBirthday(username, year, month, day);
 					}else{
 						userWorker.setBirthday(username, year, month, day);
 						if(!saveIfValid())
-							bindingResults.rejectValue("birthday", "UserController.fill_missing_fields");
+							bindingResults.rejectValue("birthYear", "UserController.fill_missing_fields");
 					}
 				else
 					model.addAttribute(attributeName, true);
 			}
 		}catch(ParseException ex){
-			bindingResults.rejectValue("birthday", "UserController.fill_missing_fields");
+			bindingResults.rejectValue("birthYear", "UserController.fill_missing_fields");
 			logger.catching(ex);
 		}
 
-		userWorker.setUser(user);
-		userWorker.setUserAddress(user);
+		userWorker.fillUser(user);
+		userWorker.fillUserAddress(user);
+		model.addAttribute("showP", true);
 		return "user";
 	}
 
@@ -267,70 +278,83 @@ public class UserController {
 		AddressEntity addressEntity = userWorker.getAddressEntity(username);
 
 		String attributeName = "edit_address";
+
+		boolean edit = false;
+
+		//Address
 		String address = user.getAddress();
+		if(address == null || address.isEmpty()){
+			edit = true;
+			if(addressEntity==null || addressEntity.getAddress()==null)
+				bindingResults.rejectValue("address", "UserController.enter_address");
+		}
+
+		//City
 		String city = user.getCity();
+		if(city == null || city.isEmpty()){
+			edit = true;
+			if(addressEntity==null || addressEntity.getCity()==null)
+				bindingResults.rejectValue("city", "UserController.enter_city");
+		}
+
+		//Postal code
 		String postalCode = user.getPostalCode();
-		addressWorker.setCountryCode(user.getCountry());
+		if(postalCode == null || postalCode.isEmpty()){
+			edit = true;
+			if(addressEntity==null || addressEntity.getPostalCode()==null)
+				bindingResults.rejectValue("postalCode", "UserController.enter_postal_code");
+		}
+
+		//Country
+		String countryCode = user.getCountry();
 		String region = user.getRegion();
+		AddressEntity ae = userWorker.getAddressEntity();
+		String uwCountryCode = ae!=null ? ae.getCountryCode() : null;
+		CountryEntity ce = null;
+		if(countryCode==null){
+			if(ae!=null)
+				ce = ae.getCountryEntity();
+			addressWorker.setCountryCode(uwCountryCode);
+			edit = true;
+			if(addressEntity==null || addressEntity.getCountryCode()==null)
+				bindingResults.rejectValue("country", "UserController.select_country");
+		}else{
+			addressWorker.setCountryCode(countryCode);
+			if(uwCountryCode!=null && !countryCode.equals(uwCountryCode))
+				edit = true;
+
+			ce = addressWorker.getCountryEntity(countryCode);
+
+			if(ce!=null && ce.getRegionName()!=null){
+				if(region==null){
+					edit = true;
+					if(addressEntity==null || addressEntity.getRegionsCode()==null)
+						bindingResults.rejectValue("region", "UserController.select_"+ce.getRegionName());
+				}else{
+					String uwRegionCode = ae!=null ? ae.getRegionsCode() : null;
+					if(uwRegionCode!=null && !region.equals(uwRegionCode))
+						edit = true;
+				}
+			}
+		}
 
 		logger.trace("\n\t"
-				+ "address:\t{}\n\t"
-				+ "city:\t{}\n\t"
-				+ "postalCode:\t{}\n\t"
-				+ "region:\t{}",
+				+ "address:\t'{}'\n\t"
+				+ "city:\t'{}'\n\t"
+				+ "postalCode:\t'{}'\n\t"
+				+ "region:\t'{}'\n\t"
+				+ "countryCode:\t'{}'",
 				address,
 				city,
 				postalCode,
-				region);
+				region,
+				countryCode);
 
-		boolean edit = false;
-		boolean newAddress = false;
-
-		//Address
-		if(address == null || address.isEmpty()){
-			edit = true;
-			bindingResults.rejectValue("address", "UserController.enter_address");
-		}else 
-			newAddress = addressEntity==null || !address.equals(addressEntity.getAddress());
-
-		//City
-		if(city == null || city.isEmpty()){
-			edit = true;
-			bindingResults.rejectValue("city", "UserController.enter_city");
-		}else 
-			newAddress = newAddress || addressEntity==null || !city.equals(addressEntity.getCity());
-
-		//Postal code
-		if(postalCode == null || postalCode.isEmpty()){
-			edit = true;
-			bindingResults.rejectValue("postalCode", "UserController.enter_postal_code");
-		}else 
-			newAddress = newAddress || addressEntity==null || !postalCode.equals(addressEntity.getPostalCode());
-
-		//Country
-		if(addressWorker.getCountryCode()==null){
-			edit = true;
-			bindingResults.rejectValue("country", "UserController.select_country");
-		}else{
-
-			CountryEntity ce = addressWorker.getCountryEntity(addressWorker.getCountryCode());
-
-			if(ce!=null && ce.getRegionName()!=null){
-				if(region==null || region.isEmpty() || region.equals("Select")){
-					edit = true;
-					bindingResults.rejectValue("region", "UserController.select_"+ce.getRegionName());
-				}else
-					newAddress = newAddress || addressEntity==null || addressEntity.getRegionEntity()==null || !region.equals(addressEntity.getRegionEntity().getRegionEntityPK().getRegionCode());
-			}
-
-			newAddress = newAddress || addressEntity==null || addressEntity.getCountryEntity()==null || addressWorker.getCountryCode()==null || !addressWorker.getCountryCode().equals(addressEntity.getCountryEntity().getCountryCode());
-		}
-
-		userWorker.setUser(user);
+		fileWorker.saveMap(userWorker.getUserEntity().getId(), user.getAddress(), user.getCity(), user.getRegion(), ce!=null ? ce.getCountryName() : null, user.getPostalCode());
+		user.setRegionName(ce!=null ? ce.getRegionName() : null);
 
 		if(edit){
 			model.addAttribute(attributeName, true);
-			user.setRegionName(addressWorker.getRegionName());
 		}else{
 			userWorker.saveAddress(new AddressEntity()
 										.setAddress(address)
@@ -340,7 +364,9 @@ public class UserController {
 										.setRegionsCode(region));
 		}
 
+		userWorker.fillUser(user);
 		model.addAttribute("addressWorker", addressWorker);
+		model.addAttribute("showAH", true);
 		return "user";
 	}
 

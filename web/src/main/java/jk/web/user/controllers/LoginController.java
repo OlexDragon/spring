@@ -50,9 +50,8 @@ public class LoginController {
 	private String mainURL;
 
 	@RequestMapping
-	public String login(User user, Model model) {
-		logger.entry();
-		model.addAttribute("yearsList", SignupController.getYearsList());
+	public String login(User user) {
+		logger.entry(user);
 		return "home";
 	}
 

@@ -18,10 +18,13 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
 import jk.web.user.User.Gender;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.NotFound;
@@ -35,39 +38,54 @@ import org.hibernate.annotations.NotFoundAction;
 public class UserEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    @Transient
+    private final Logger logger = LogManager.getLogger();
+
     @Id
     @Basic(optional = false)
     @Column(name = "logins_loginID", nullable = false)
     private Long id;
+
     @Size(min = 1, max = 164)
     @Column(name = "first_name", length = 164)
     private String firstName;
+
     @Size(min = 1, max = 164)
     @Column(name = "last_name", length = 164)
     private String lastName;
-    @Size(min = 1, max = 164)
-    @Column(name = "professional_skill", length = 164)
-    private String professionalSkill;
-    @Size(min = 1, max = 164)
-    @Column(name = "workplace", length = 164)
-    private String workplace;
+
     @Column(name = "birthday")
     @Temporal(TemporalType.DATE)
     private Date birthday;
+
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
     @OneToMany(fetch=FetchType.EAGER)
     @JoinColumn(name = "logins_loginID")
     @NotFound(action=NotFoundAction.IGNORE)
     @Cascade(value=CascadeType.ALL)
     private List<EMailEntity> emails;
+
     @OneToMany(fetch=FetchType.EAGER)
     @JoinColumn(name = "logins_loginID", referencedColumnName = "logins_loginID")
     @NotFound(action=NotFoundAction.IGNORE)
     @Cascade(value=CascadeType.ALL)
     private List<AddressEntity> addressEntities;
+
     @Column(name = "gender")
     @Enumerated(EnumType.ORDINAL)
     private Gender gender;
+
+    @OneToMany(fetch=FetchType.EAGER)
+    @JoinColumn(name = "logins_loginID", referencedColumnName = "logins_loginID")
+    @NotFound(action=NotFoundAction.IGNORE)
+    @Cascade(value=CascadeType.ALL)
+    private List<ProfessionalSkillEntity> professionalSkills;
+
+    @OneToMany(fetch=FetchType.EAGER)
+    @JoinColumn(name = "logins_loginID", referencedColumnName = "logins_loginID")
+    @NotFound(action=NotFoundAction.IGNORE)
+    @Cascade(value=CascadeType.ALL)
+    private List<WorkplaceEntity> workplaces;
 
     @OneToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "logins_loginID", referencedColumnName = "loginID", nullable = false, insertable = false, updatable = false)
@@ -93,6 +111,7 @@ public class UserEntity implements Serializable {
     }
 
     public void setId(Long id) {
+    	logger.entry(id);
         this.id = id;
     }
 
@@ -101,6 +120,7 @@ public class UserEntity implements Serializable {
     }
 
     public void setFirstName(String firstName) {
+    	logger.entry(firstName);
         this.firstName = firstName;
     }
 
@@ -109,6 +129,7 @@ public class UserEntity implements Serializable {
     }
 
     public void setLastName(String lastName) {
+    	logger.entry(lastName);
         this.lastName = lastName;
     }
 
@@ -133,6 +154,7 @@ public class UserEntity implements Serializable {
     }
 
     public void setBirthday(Date birthday) {
+    	logger.entry(birthday);
         this.birthday = birthday;
     }
 
@@ -141,6 +163,7 @@ public class UserEntity implements Serializable {
     }
 
     public void setGender(Gender gender) {
+    	logger.entry(gender);
         this.gender = gender;
     }
 
@@ -173,25 +196,25 @@ public class UserEntity implements Serializable {
         return true;
     }
 
-	public String getProfessionalSkill() {
-		return professionalSkill;
+	public List<ProfessionalSkillEntity> getProfessionalSkills() {
+		return professionalSkills;
 	}
 
-	public void setProfessionalSkill(String professionalSkill) {
-		this.professionalSkill = professionalSkill;
+	public void setProfessionalSkills(List<ProfessionalSkillEntity> professionalSkills) {
+		this.professionalSkills = professionalSkills;
 	}
 
-	public String getWorkplace() {
-		return workplace;
+	public List<WorkplaceEntity> getWorkplaces() {
+		return workplaces;
 	}
 
-	public void setWorkplace(String workplace) {
-		this.workplace = workplace;
+	public void setWorkplaces(List<WorkplaceEntity> workplaces) {
+		this.workplaces = workplaces;
 	}
 
 	@Override
 	public String toString() {
-		return "UserEntity [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", professionalSkill=" + professionalSkill + ", workplace=" + workplace
-				+ ", birthday=" + birthday + ", emails=" + emails + ", addressEntities=" + addressEntities + ", gender=" + gender + ", loginEntity=" + loginEntity + "]";
+		return "UserEntity [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", birthday=" + birthday + ", emails=" + emails + ", addressEntities="
+				+ addressEntities + ", gender=" + gender + ", professionalSkills=" + professionalSkills + ", workplaces=" + workplaces + ", loginEntity=" + loginEntity + "]";
 	}
 }

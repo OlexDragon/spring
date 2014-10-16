@@ -22,7 +22,7 @@ import org.springframework.data.domain.Sort;
 
 public class AddressWorker {
 
-	private final Logger logger = LogManager.getLogger();
+	private static final Logger logger = LogManager.getLogger();
 
 	public enum AddressStatus{
 		ACTIVE,
@@ -78,15 +78,17 @@ public class AddressWorker {
 	}
 
 	public CountryEntity getCountryEntity(String countryCode) {
+		logger.entry();
 		return countryRepository.findOne(countryCode);
 	}
 
 	public String getCountryCode() {
-		return countryCode;
+		return logger.exit(countryCode);
 	}
 
 	public void setCountryCode(String countryCode) {
-		this.countryCode = countryCode==null || countryCode.isEmpty() || countryCode.equals("Select") ? null : countryCode;
+		logger.entry(countryCode);
+		this.countryCode = countryCode==null || countryCode.isEmpty() ? null : countryCode;
 	}
 
 	public CountryEntity getCountryEntity() {
@@ -117,16 +119,69 @@ public class AddressWorker {
 	public AddressEntity save(AddressEntity addressEntity) {
 		logger.entry(addressEntity);
 		List<AddressEntity> addresses = addressRepository.findByUserId(addressEntity.getUserId());
-		if(addresses!=null)
-			for(AddressEntity ae:addresses)
-				if(ae.getStatus()==AddressStatus.ACTIVE)
-					addressRepository.save(ae.setStatus(AddressStatus.OLD).setStatusUpdateDate(new Date()));
+		AddressEntity savedEntity = null;
+		if(addresses!=null){
+			savedEntity = getFrom(addresses, addressEntity);
+			logger.trace("\n\t{}", savedEntity);
+			if(savedEntity==null){
+				for(AddressEntity ae:addresses)
+					if(ae.getStatus()==AddressStatus.ACTIVE)
+						addressRepository.save(ae.setStatus(AddressStatus.OLD).setStatusUpdateDate(new Date()));
+				savedEntity = addressRepository.save(addressEntity);
+			}
+		}else
+			savedEntity = addressRepository.save(addressEntity);
 
-		return addressRepository.save(addressEntity);
+		return savedEntity;
 	}
 
 	public String getRegionName() {
 		CountryEntity countryEntity = getCountryEntity();
+		logger.trace("\n\t{}", countryEntity);
 		return countryEntity!=null ? countryEntity.getRegionName() : null;
+	}
+
+	public static AddressEntity getFrom(List<AddressEntity> addressEntities, AddressEntity addressEntity) {
+		logger.entry(addressEntity, addressEntities);
+		AddressEntity containsAE = null;
+		if(addressEntities!=null && addressEntity!=null)
+			for(AddressEntity ae:addressEntities){
+
+				//Address
+				String address = ae.getAddress();
+				String newAddress = addressEntity.getAddress();
+				if(address!=null ? !address.equals(newAddress) : newAddress!=null)
+					continue;//if not equal check next entity
+				
+
+				//City
+				String city = ae.getCity();
+				String newCity = addressEntity.getCity();
+				if(city!=null ? !city.equals(newCity) : newCity!=null)
+					continue;//if not equal check next
+
+				//Country
+				String countryCode = ae.getCountryCode();
+				String newCountryCode = addressEntity.getCountryCode();
+				if(countryCode!=null ? countryCode.equals(newCountryCode) : newCountryCode!=null)
+					continue;//if not equal check next entity
+
+				//Postal Code
+				String postalCode = ae.getPostalCode();
+				String newPostalCode = addressEntity.getPostalCode();
+				if(postalCode!=null ? postalCode.equals(newPostalCode) : newPostalCode!=null)
+					continue;//if not equal check next entity
+
+				//Region
+				String regionsCode = ae.getRegionsCode();
+				String newRegionsCode = addressEntity.getRegionsCode();
+				if(regionsCode!=null ? regionsCode.equals(newRegionsCode) : newRegionsCode!=null)
+					continue;//if not equal check next entity
+
+				containsAE = ae;
+				break;
+			}
+		return containsAE;
+		
 	}
 }
