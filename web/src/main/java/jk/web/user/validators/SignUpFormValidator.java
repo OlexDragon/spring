@@ -150,8 +150,8 @@ public class SignUpFormValidator implements Validator {
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, fieldName, "SignUpFormValidator.this_field_must_be_filled");
 
 		if(errors.getFieldError(fieldName)==null){
-			String month = user.getBirthMonth();
-			String day = user.getBirthDay();
+			Integer month = user.getBirthMonth();
+			Integer day = user.getBirthDay();
 			if(month==null || day==null)
 				errors.rejectValue(fieldName, "SignUpFormValidator.this_field_must_be_filled");
 			else{

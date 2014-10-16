@@ -8,8 +8,7 @@
 	<meta name="viewport" content="width=device-width" />
 	<link th:replace="fragments/header :: links" rel="stylesheet" type="text/css" href="../static/css/jk.css" th:href="@{/css/jk.css}" />
 	<link rel="stylesheet" type="text/css" href="../js/jQuery/jquery-ui.css" th:href="@{/js/jQuery/jquery-ui.css}"></link>
-	<script src="../js/jQuery/jquery.js" th:src="@{/js/jQuery/jquery.js}"></script>
-	<script src="../js/jQuery/jquery-ui.js" th:src="@{/js/jQuery/jquery-ui.js}"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script type="text/javascript" th:inline="javascript">
 
 	$(document).ready(function () {
@@ -23,13 +22,20 @@
 		$("select").on('change', function() {
 			document.getElementById('activeButton').click();
 		});
+		$("#prflH").click(function() {
+			$("#prflTbl").slideToggle('slow');
+		});
+		$("#homeH").click(function() {
+			$("#homeTbl").slideToggle('slow');
+		});
     });
 	</script>
 </head>
 <body>
 <div id="header" th:replace="fragments/header :: pageHeader"><h4>Header</h4></div>
-<div class="contents">
-<form th:action="@{/user_img_frm}" method="post" th:object="${user}">
+	<div id="menuDiv" th:replace="fragments/menu :: menu">Menu</div>
+<div id="contents">
+<form id="imgForm" class="fleft borderB" th:action="@{/user_img_frm}" method="post" th:object="${user}">
 	<table id="img_tbl">
 		<tr>
 			<td><img id="user_img" alt="User Image" src="" /></td>
@@ -39,154 +45,11 @@
 		</tr>
 	</table>
 </form>
-<form th:action="@{/user}" method="post" th:object="${user}">
-	<table id="user_tbl" class="th_right">
-		<tr>
-			<th th:text="#{login.username}">Username</th>
-			<td th:switch="${edit_username}">
-				<input th:case="${true}" type="text" name="newUsername" th:field="*{username}" autofocus="autofocus"/>
-				<p th:case="*" th:text="*{username}">Username</p>
-			</td>
-			<td><button type="submit" id="submit_edit_username" name="submit_edit_username" th:text="${edit_username!=null} ? #{user.save} : #{user.edit}">Edit</button></td>
-       		<td><p class="error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username Error</p></td>
-		</tr>
-		<tr>
-			<th th:text="#{login.password}">Password</th>
-			<td th:switch="${edit_password==true || edit_username==true}">
-				<input th:case="${true}" type="password" name="oldPassword"  th:field="*{password}" autofocus="autofocus"/>
-				<p th:case="*">********</p>
-			</td>
-			<td><button th:if="${edit_username==null}" type="submit" name="submit_edit_password" th:id="${edit_password!=null ? 'activeButton' : null}" th:text="${edit_password!=null} ? #{user.save} : #{user.edit}">Edit</button></td>
-       		<td><p class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</p></td>
-		</tr>
-		<th:block th:if="${edit_password}" >
-			<tr>
-				<th th:text="#{user.new_password}">Password</th>
-				<td>
-					<input type="password" name="newPassword" th:field="*{newPassword}" />
-				</td>
-				<td></td>
-       			<td><p class="error" th:if="${#fields.hasErrors('newPassword')}" th:errors="*{newPassword}">Username as new password</p></td>
-			</tr>
-			<tr>
-				<th th:text="#{signup.repassword}">Password</th>
-				<td>
-					<input type="password" name="newUsername" th:field="*{repassword}" />
-				</td>
-				<td></td>
-       			<td><p class="error" th:if="${#fields.hasErrors('repassword')}" th:errors="*{repassword}">Password Error</p></td>
-			</tr>
-		</th:block>
-		<tr>
-			<th th:text="#{signup.firstName}">First Name</th>
-			<td th:switch="${edit_firstName}">
-				<input th:case="${true}" type="text" name="firstName" th:field="*{firstName}"  autofocus="autofocus"/>
-				<p th:case="*" th:text="*{firstName}">First Name</p>
-			</td>
-			<td><button type="submit" name="submit_edit_firstName" th:id="${edit_firstName!=null ? 'activeButton' : null}" th:text="${edit_firstName!=null} ? #{user.save} : #{user.edit}">Edit</button></td>
-       		<td><p class="error" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">First Name error</p></td>
-		</tr>
-		<tr>
-			<th th:text="#{signup.lastName}">Last Name</th>
-			<td th:switch="${edit_lastName}">
-				<input th:case="${true}" type="text" name="lastName" th:field="*{lastName}"  autofocus="autofocus"/>
-				<p th:case="*" th:text="*{lastName}">Last Name</p>
-			</td>
-			<td><button type="submit" name="submit_edit_lastName" th:id="${edit_lastName!=null ? 'activeButton' : null}" th:text="${edit_lastName!=null} ? #{user.save} : #{user.edit}">Edit</button></td>
-       		<td><p class="error" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Last Name</p></td>
-		</tr>
-		<tr>
-			<th th:text="#{signup.eMail}">e-mail</th>
-			<td th:switch="${edit_eMail}">
-				<input th:case="${true}" type="text" name="eMail" th:field="*{eMail}"  autofocus="autofocus"/>
-				<p th:case="*" th:text="*{eMail}">e-mail</p>
-			</td>
-			<td><button type="submit" name="submit_edit_eMail" th:id="${edit_eMail!=null ? 'activeButton' : null}"  th:text="${edit_eMail!=null} ? #{user.save} : #{user.edit}">Edit</button></td>
-       		<td><p class="error" th:if="${#fields.hasErrors('eMail')}" th:errors="*{eMail}">E-Mail Error</p></td>
-		</tr>
-		<tr>
-			<th th:text="#{signup.sex}">Gender</th>
-			<td th:switch="${edit_gender}">
-				<ul th:case="${true}">
-					<li th:each="sex : ${T(jk.web.user.User.Gender).values()}">
-						<input type="radio" th:field="*{sex}" th:value="${sex}" />
-						<label th:for="${#ids.prev('sex')}" th:text="#{${sex}}">Gender</label>
-					</li>
-				</ul>
-				<p th:case="*" th:text="*{sex} ? #{__*{sex}__}">Gender</p>
-			</td>
-			<td><button type="submit" name="submit_edit_gender" th:id="${edit_gender!=null ? 'activeButton' : null}" th:text="${edit_gender!=null} ? #{user.save} : #{user.edit}">Edit</button></td>
-			<td><p class="error" th:if="${#fields.hasErrors('sex')}" th:errors="*{sex}">Sex Error</p></td>
-		</tr>
-		<tr>
-			<th th:text="#{signup.birthday}">Birthday</th>
-			<td th:switch="${edit_birthday}">
-				<th:block th:case="${true}">
-					<input type="text" id="birthday" name="birthday" th:field="*{birthday}"  autofocus="autofocus"/>
-					<script type="text/javascript" th:inline="javascript">
-						$(function() {
-							$("#birthday").attr( 'readOnly' , 'true' );
-							$("#birthday").datepicker({ yearRange: "-100:+0", changeMonth: true, changeYear: true });
-						});
-					</script>
-				</th:block>
-				<p th:case="*" th:text="*{birthday!=null ? #calendars.format(birthday, 'dd MMMM yyyy') : null}">Birthday</p>
-			</td>
-			<td><button type="submit" name="submit_edit_birthday" th:id="${edit_birthday!=null ? 'activeButton' : null}" th:text="${edit_birthday!=null} ? #{user.save} : #{user.edit}">Edit</button></td>
-       		<td><p class="error" th:if="${#fields.hasErrors('birthday')}" th:errors="*{birthday}">Birthday error</p></td>
-		</tr>
-		<tr>
-			<th th:text="#{user.address}">Address</th>
-			<td th:switch="${edit_address}">
-				<input th:case="${true}" type="text" name="address" th:field="*{address}" autofocus="autofocus"/>
-				<p th:case="*" th:text="*{address}">Address</p>
-			</td>
-			<td><button type="submit" name="submit_edit_address" th:id="${edit_address!=null ? 'activeButton' : null}" th:text="${edit_address!=null} ? #{user.save} : #{user.edit}">Edit</button></td>
-       		<td><p class="error" th:if="${#fields.hasErrors('address')}" th:errors="*{address}">Address error</p></td>
-		</tr>
-		<tr>
-			<th th:text="#{user.city}">City</th>
-			<td th:switch="${edit_address}">
-				<input th:case="${true}" type="text" name="city" th:field="*{city}"/>
-				<p th:case="*" th:text="*{city}">City</p>
-			</td>
-			<td></td>
-       		<td><p class="error" th:if="${#fields.hasErrors('city')}" th:errors="*{city}">City error</p></td>
-		</tr>
-		<tr th:if="*{regionName}!=null">
-			<th th:text="#{__*{regionName}__}">Region</th>
-			<td th:switch="${edit_address}">
-				<select th:case="${true}" th:field="*{region}">
-					<option value="Select" th:text="#{Select}">Select</option>
-					<option th:each="region : ${addressWorker.regions}" th:value="${region.value}" th:text="${region.innerHTML}" />
-				</select>
-				<p th:case="*" th:text="*{region}">Region</p>
-			</td>
-			<td></td>
-      		<td><p class="error" th:if="${#fields.hasErrors('region')}" th:errors="*{region}">Region error</p></td>
-		</tr>
-		<tr>
-			<th th:text="#{user.country}">Country</th>
-			<td th:switch="${edit_address}">
-				<select th:case="${true}" th:field="*{country}">
-					<option value="Select" th:text="#{Select}">Select</option>
-					<option th:each="country : ${addressWorker.countries}" th:value="${country.value}" th:text="${country.innerHTML}" th:attr="disabled=${country.disabled ? 'disabled' : null}"></option>
-				</select>
-				<p th:case="*" th:text="*{country!=null ? country : null}">Country</p>
-			</td>
-			<td></td>
-       		<td><p class="error" th:if="${#fields.hasErrors('country')}" th:errors="*{country}">Country error</p></td>
-		</tr>
-		<tr>
-			<th th:text="#{user.postal_code}">City</th>
-			<td th:switch="${edit_address}">
-				<input th:case="${true}" type="text" name="postal_code" th:field="*{postalCode}"/>
-				<p th:case="*" th:text="*{postalCode}">Postal code</p>
-			</td>
-			<td></td>
-       		<td><p class="error" th:if="${#fields.hasErrors('postalCode')}" th:errors="*{postalCode}">Postal code error</p></td>
-		</tr>
-	</table>
+<form id="userForm" th:action="@{/user}" method="post" th:object="${user}">
+	<div class="fleft">
+	<table th:replace="fragments/user/profile :: profile"></table>
+	<table th:replace="fragments/user/home_address :: home"></table>
+	</div>
 </form>
 </div>
 <div th:replace="fragments/footer :: footer">Footer</div>

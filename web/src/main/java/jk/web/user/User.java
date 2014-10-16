@@ -49,9 +49,9 @@ public class User{
     @Size(min=1, max = 164)
     private String workplace;
 
-    private String birthYear;
-    private String birthMonth;
-    private String birthDay;
+    private Integer birthYear;
+    private Integer birthMonth;
+    private Integer birthDay;
 
     @NotNull
     private Gender sex;
@@ -66,6 +66,8 @@ public class User{
 	private String postalCode;
 
 	private String regionName;
+
+	private String mapPath;
 
 	public String getUsername() {
 		return username;
@@ -207,47 +209,45 @@ public class User{
 		this.workplace = workplace;
 	}
 
-	public String getBirthYear() {
+	public Integer getBirthYear() {
 		return birthYear;
 	}
 
-	public void setBirthYear(String year) {
+	public void setBirthYear(Integer year) {
 		logger.entry(year);
-		if(year!=null && !(year.isEmpty() || Character.isDigit(year.charAt(0))))
-			this.birthYear = null;
-		else
-			this.birthYear = year;
+		this.birthYear = year;
 	}
 
-	public String getBirthMonth() {
+	public Integer getBirthMonth() {
 		return birthMonth;
 	}
 
-	public void setBirthMonth(String month) {
+	public void setBirthMonth(Integer month) {
 		logger.entry(month);
-		if(month!=null && !(month.isEmpty() || Character.isDigit(month.charAt(0))))
-			this.birthMonth = null;
-		else
-			this.birthMonth = month;
+		this.birthMonth = month;
 	}
 
-	public String getBirthDay() {
+	public Integer getBirthDay() {
 		return birthDay;
 	}
 
-	public void setBirthDay(String day) {
-		logger.entry(day);
-		if(day!=null && !(day.isEmpty() || Character.isDigit(day.charAt(0))))
-			this.birthDay = null;
-		else
-			this.birthDay = day;
+	public void setBirthDay(Integer day) {
+		this.birthDay = day;
+	}
+
+	public String getMapPath() {
+		return mapPath;
+	}
+
+	public void setMapPath(String mapPath) {
+		this.mapPath = mapPath;
 	}
 
 	@Override
 	public String toString() {
 		return "User [username=" + username + ", password=" + password + ", repassword=" + repassword + ", firstName=" + firstName + ", lastName=" + lastName + ", eMail=" + eMail
-				+ ", professionalSkill=" + professionalSkill + ", workplace=" + workplace + ", year=" + birthYear + ", month=" + birthMonth + ", day=" + birthDay + ", sex=" + sex
-				+ ", newPassword=" + newPassword + ", address=" + address + ", region=" + region + ", country=" + country + ", city=" + city + ", postalCode=" + postalCode
-				+ ", regionName=" + regionName + "]";
+				+ ", professionalSkill=" + professionalSkill + ", workplace=" + workplace + ", birthYear=" + birthYear + ", birthMonth=" + birthMonth + ", birthDay=" + birthDay
+				+ ", sex=" + sex + ", newPassword=" + newPassword + ", address=" + address + ", region=" + region + ", country=" + country + ", city=" + city + ", postalCode="
+				+ postalCode + ", regionName=" + regionName + ", mapPath=" + mapPath + "]";
 	}
 }

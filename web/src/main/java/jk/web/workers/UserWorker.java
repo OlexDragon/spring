@@ -15,20 +15,25 @@ import jk.web.user.entities.CountryEntity;
 import jk.web.user.entities.EMailEntity;
 import jk.web.user.entities.EMailEntity.EMailStatus;
 import jk.web.user.entities.LoginEntity;
+import jk.web.user.entities.ProfessionalSkillEntity;
 import jk.web.user.entities.RegionEntity;
 import jk.web.user.entities.SocialEntity;
 import jk.web.user.entities.UserEntity;
+import jk.web.user.entities.WorkplaceEntity;
 import jk.web.user.repository.EMailRepository;
-import jk.web.user.repository.UserRepository;
 import jk.web.user.repository.SocialRepository;
+import jk.web.user.repository.UserRepository;
 import jk.web.workers.AddressWorker.AddressStatus;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.connect.ConnectionKey;
 
 public class UserWorker extends LoginWorker{
 
-	public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy,mm,d");
+	private static final Logger logger = LogManager.getLogger();
+	public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy,m,dd");
 
 	@Autowired
 	private UserRepository userRepository;
@@ -38,6 +43,8 @@ public class UserWorker extends LoginWorker{
 	private AddressWorker addressWorker;
 	@Autowired
 	private SocialRepository socialRepository;
+	@Autowired
+	private FileWorker fileWorker;
 
 	private UserEntity userEntity;
 	private ConfirmationStaus eMailStatus;
@@ -64,6 +71,7 @@ public class UserWorker extends LoginWorker{
 		return userEntity;
 	}
 	public void setUserEntity(UserEntity userEntity) {
+		logger.entry(userEntity);
 		this.userEntity = userEntity;
 	}
 
@@ -115,8 +123,8 @@ public class UserWorker extends LoginWorker{
         													user.getBirthDay())
         									).getTime()),
         							user.getSex());
-        userEntity.setWorkplace(user.getWorkplace());
-        userEntity.setProfessionalSkill(user.getProfessionalSkill());
+        setWorkplace(user.getWorkplace());
+        setProfessionalSkill(user.getProfessionalSkill());
         eMailStatus = ConfirmationStaus.NEW_USER;
         setEmail(userEntity, user.getEMail());
 
@@ -129,12 +137,36 @@ public class UserWorker extends LoginWorker{
         return userEntity;
 	}
 
+	public void setProfessionalSkill(String professionalSkill) {
+		List<ProfessionalSkillEntity> professionalSkills = userEntity.getProfessionalSkills();
+        if(professionalSkills == null){
+        	ProfessionalSkillEntity pse = new ProfessionalSkillEntity(userEntity.getId(), professionalSkill);
+        	professionalSkills = new ArrayList<ProfessionalSkillEntity>();
+        	professionalSkills.add(pse);
+        	userEntity.setProfessionalSkills(professionalSkills);
+        }else{
+        	//TODO
+        }
+	}
+
+	public void setWorkplace(String workplace) {
+        List<WorkplaceEntity> workpaces = userEntity.getWorkplaces();
+        if(workpaces==null){
+        	WorkplaceEntity wpe = new WorkplaceEntity(userEntity.getId(), workplace);
+        	workpaces = new ArrayList<WorkplaceEntity>();
+        	workpaces.add(wpe);
+        	userEntity.setWorkplaces(workpaces);
+        }else{
+        	//TODO
+        }
+	}
+
 	public UserWorker setUser(String username) {
 		logger.trace("\n\t{}\n\t{}", username, userEntity);
 
 		if(userEntity==null || userEntity.getLoginEntity()==null || userEntity.getLoginEntity().getUsername()==null || !userEntity.getLoginEntity().getUsername().equals(username)){
-			logger.trace("userEntity has been set from repository. userEntity={}", userEntity);
-			userEntity = userRepository.findByUsername(username);
+			setUserEntity(userRepository.findByUsername(username));
+			logger.trace("\n\tuserEntity has been set from repository. userEntity={}", userEntity);
 		}
 
 		LoginEntity loginEntity;
@@ -142,7 +174,7 @@ public class UserWorker extends LoginWorker{
 			 loginEntity = super.getLoginEntity(username);
 			if(loginEntity!=null){
 				logger.trace("\n\tCreated new userEntity");
-				userEntity = new UserEntity(loginEntity.getId()).setLoginEntity(loginEntity);
+				setUserEntity(new UserEntity(loginEntity.getId()).setLoginEntity(loginEntity));
 			}
 		}else{
 			loginEntity = userEntity.getLoginEntity();
@@ -195,50 +227,67 @@ public class UserWorker extends LoginWorker{
 		setUser(username);
 		User signUpForm = new User();
 		if(userEntity!=null)
-			setUser(signUpForm);
+			fillUser(signUpForm);
 		return signUpForm;
 	}
 
 	public void setUser(String username, User user) {
 		setUser(username);
 		if(userEntity!=null){
-			setUser(user);
-			setUserAddress(user);
+			fillUser(user);
+			fillUserAddress(user);
 		}
 	}
 
-	public void setUser(User user) {
+	public void fillUser(User user) {
 		logger.entry(user);
 		
-		user
-		.setUsername(getUsername())
-		.setFirstName(userEntity.getFirstName())
-		.setLastName(userEntity.getLastName())
-		.setSex(userEntity.getGender())
-		.setEMail(getEMail());
+		user.setUsername(getUsername());
+		user.setFirstName(userEntity.getFirstName());
+		user.setLastName(userEntity.getLastName());
+		user.setSex(userEntity.getGender());
+		user.setEMail(getEMail());
 
 		Date birthday = userEntity.getBirthday();
 		if(birthday!=null){
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime(birthday);
-			user.setBirthYear(String.valueOf(calendar.get(Calendar.YEAR)));
-			user.setBirthMonth(String.valueOf(calendar.get(Calendar.MONTH)));
-			user.setBirthDay(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)));
+			logger.trace("\n\tUserEntityBirthday{}", birthday);
+			user.setBirthYear(calendar.get(Calendar.YEAR));
+			user.setBirthMonth(calendar.get(Calendar.MONTH));
+			user.setBirthDay(calendar.get(Calendar.DAY_OF_MONTH));
 		}
+		List<AddressEntity> addressEntities = userEntity.getAddressEntities();
+		if(addressEntities!=null){
+			for(AddressEntity ae:addressEntities)
+				if(ae.getStatus()==null || ae.getStatus()==AddressStatus.ACTIVE){
+					logger.trace("\n\t{}",ae);
+					user.setAddress(ae.getAddress());
+					user.setCity(ae.getCity());
+					user.setRegion(ae.getRegionsCode());
+					user.setCountry(ae.getCountryCode());
+					user.setPostalCode(ae.getPostalCode());
+					break;
+				}
+		}
+		user.setMapPath(fileWorker.getMapPath(userEntity.getId()));
 
-		logger.trace("\n\t{}\n\t{}", user, userEntity);
+		logger.trace("EXIT\n\t{}\n\t{}", user, userEntity);
 	}
 
-	public void setUserAddress(User user){
+	public void fillUserAddress(User user){
 		AddressEntity addressEntity = getAddressEntity();
 		if(addressEntity!=null) {
 			CountryEntity countryEntity = addressEntity.getCountryEntity();
 			RegionEntity regionEntity = addressEntity.getRegionEntity();
-			user.setAddress(addressEntity.getAddress())
-				.setCity(addressEntity.getCity())
-				.setCountry(countryEntity.getCountryName())
-				.setPostalCode(addressEntity.getPostalCode())
-				.setRegionName(countryEntity.getRegionName());
+
+			if(countryEntity!=null){
+				user.setCountry(countryEntity.getCountryName());
+				user.setRegionName(countryEntity.getRegionName());
+			}
+			user.setAddress(addressEntity.getAddress());
+			user.setCity(addressEntity.getCity());
+			user.setPostalCode(addressEntity.getPostalCode());
 			if(regionEntity!=null)
 				user.setRegion(regionEntity.getRegionName());
 			else
@@ -248,7 +297,7 @@ public class UserWorker extends LoginWorker{
 	}
 
 	private String getUsername() {
-		return userEntity!=null && userEntity.getLoginEntity()!=null ? userEntity.getLoginEntity().getUsername() : "";
+		return userEntity!=null && userEntity.getLoginEntity()!=null ? userEntity.getLoginEntity().getUsername() : null;
 	}
 
 	public LoginEntity saveNewUsername(String username) {
@@ -386,9 +435,9 @@ public class UserWorker extends LoginWorker{
 		userEntity.setGender(gender);
 	}
 
-	public UserEntity saveBirthdayr(String username,String year, String month, String day) throws ParseException {
+	public UserEntity saveBirthday(String username,Integer year, Integer month, Integer day) throws ParseException {
+		logger.entry(username, year, month, day);
 		setBirthday(username, parseBirthday(year, month, day));
-		logger.trace(userEntity);
 		return save();
 	}
 
@@ -398,7 +447,7 @@ public class UserWorker extends LoginWorker{
 		userEntity.setBirthday(birthday);
 	}
 
-	public void setBirthday(String username, String year, String month, String day) throws ParseException {
+	public void setBirthday(String username, Integer year, Integer month, Integer day) throws ParseException {
 		logger.entry(username, year, month, day);
 		setUser(username);
 		userEntity.setBirthday(parseBirthday(year, month, day));
@@ -409,7 +458,7 @@ public class UserWorker extends LoginWorker{
 
 		LoginEntity loginEntity = userEntity.getLoginEntity();
 		userEntity.setLoginEntity(null);
-		userEntity = userRepository.save(userEntity);
+		setUserEntity(userRepository.save(userEntity));
 		userEntity.setLoginEntity(loginEntity);
 
 		if(eMailStatus!=null){
@@ -481,13 +530,15 @@ public class UserWorker extends LoginWorker{
 
 	public void saveAddress(AddressEntity addressEntity) {
 		logger.entry(addressEntity);
-		if(addressEntity!=null){
+		AddressEntity existsAE = AddressWorker.getFrom(userEntity.getAddressEntities(), addressEntity);
+
+		if(addressEntity!=null && existsAE==null){
 			addressEntity.setUserId(userEntity.getId());
 			addressWorker.save(addressEntity);
 
 			//Reset UserEntity
 			String username = getUsername();
-			userEntity = null;
+			setUserEntity(null);
 			setUser(username);
 		}
 	}
@@ -500,7 +551,15 @@ public class UserWorker extends LoginWorker{
 		return userRepository.findByEMail(eMail);
 	}
 
-	public static Date parseBirthday(String year, String month, String day) throws ParseException {
-		return SIMPLE_DATE_FORMAT.parse(String.format("%s,%s,%s", year, month, day));
+	public static Date parseBirthday(Integer year, Integer month, Integer day) throws ParseException {
+		logger.entry(year, month, day);
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(year, month, day);
+		return logger.exit(calendar.getTime());
+	}
+
+	public String getCountryCode() {
+		AddressEntity addressEntity = getAddressEntity();
+		return addressEntity!=null ? addressEntity.getCountryCode() : null;
 	}
 }

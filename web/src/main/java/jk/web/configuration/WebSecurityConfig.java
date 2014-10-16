@@ -48,14 +48,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/confirm/**",
 				"/css/**",
 				"/js/**",
-				"/images/**",
-				"/**/favicon.ico")
+				"/images/**")
 		.permitAll().anyRequest().authenticated();
 
 		http.formLogin().loginPage("/login").permitAll()
 		.and()
 			.rememberMe();
-		http.authorizeRequests().antMatchers("*.css").permitAll();
 		http.csrf().disable();
 	}
 

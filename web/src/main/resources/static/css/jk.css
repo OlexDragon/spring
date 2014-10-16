@@ -7,9 +7,10 @@
 		font-size: 1em;
 		font-family:"Times New Roman", Times, serif;
 		background-color: #5A5A5A;
+		color: white;
 }
 
-form, div, ul, li, a, p, h6, button.jk {
+form, div, ul, li, a, p, h2, h6, button.jk {
 		margin: 0;
 		padding: 0;
 		border-width: 0;
@@ -27,11 +28,12 @@ input, button, label{
 	background-color: #666666;
 	padding-right: .5em;
 }
-#tables td input[type="text"], #tables td input[type="password"], #tables td input[type="email"]{
+#tables td input[type="text"], #tables td input[type="password"], #tables td input[type="email"],
+#userForm input[type="text"], #userForm input[type="password"], #userForm input[type="email"]{
 	width: 99%;
 }
 #tables, button.jk, #contents a{
-	color:#CCCCCC;
+	color:white;
 }
 #contents h3{
 	margin-top: .5em;
@@ -40,13 +42,16 @@ input, button, label{
 #tables form{
 	margin: .5em;
 }
-#login, #signup{
+#login, #signup, #userForm table{
 	margin-top: .5em;
 	margin-bottom: .5em;
 	background-color: #5C514D;
-	border: .2em solid black;
+	border: 1px solid black;
 }
-button, checkbox, label{
+.bclr{
+	background-color: #5C514D;
+}
+button, checkbox, label, .pntr{
 	cursor: pointer;
 }
 
@@ -62,7 +67,7 @@ button, checkbox, label{
 .contents{
 	padding: .5em;
 }
-.btnDiv{
+.btnDiv, #userForm ul li{
 	display: inline-block;
 }
 #tables .btnDiv{
@@ -252,7 +257,7 @@ li button{margin: 0; padding: 0;}
 .error {
 	color: red;
 }
-.error span{
+.error span, p.error{
 	background-color: #faf1ee;
 }
 input.error::-webkit-input-placeholder {
@@ -294,6 +299,9 @@ td.error, p.error{
 }
 .cntr, td.error{
 	text-align: center;
+}
+.lft{
+	text-align: left;
 }
 .pddng3{
 	padding: 3em;
@@ -346,6 +354,52 @@ button.jk{
 	display: inline-block;
     background-color:#5C514D;
 }
-#socialBtns{
+#socialBtns, .bttm5{
 	margin-bottom: .5em;
+}
+#imgForm{
+	margin: .5em;
+}
+#imgForm img{
+	height: 10em;
+	width: 10em;
+}
+.borderB{
+	border: 1px solid black;
+}
+ .wth40{
+ 	width: 40em;
+ }
+ .wth100{
+ 	width: 100%;
+ }
+ .borderBB{
+ 	border-bottom: 1px solid #867771;
+ }
+#userForm .btnDiv{
+ width: 100%;
+ }
+ .w5{
+ width: 5em;
+ }
+ .w15{
+ width: 15em;
+ }
+ .w10{
+ width: 10em;
+ }
+ .w13{
+ width: 16em;
+ }
+ caption {
+	font-size: 150%;
+	margin-top: .5em;
+}
+ caption {
+	font-size: 150%;
+	font-weight: bold;
+	margin-top: .5em;
+}
+.dn{
+	display: none;
 }

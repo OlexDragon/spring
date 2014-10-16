@@ -75,7 +75,6 @@ public class SignupController {
 	public String signup(User user, BindingResult bindingResult, HttpServletRequest request, Model model) throws AddressException, MessagingException{
 
 		signUpFormValidator.validate(user, bindingResult);
-		model.addAttribute("yearsList", getYearsList());
 
 		if(bindingResult.hasErrors()){
 			model.addAttribute("usernameRange", signUpFormValidator.getUsernameRange());
@@ -133,11 +132,11 @@ public class SignupController {
 	}
 
 	@RequestMapping(value="/confirm/{username}")
-	public String confirm(@PathVariable String username, @RequestParam(required = false) String eMail, Model model){
+	public String confirm(@PathVariable String username, @RequestParam(value="email", required = false) String eMail, Model model){
 		logger.entry(username, eMail);
 
 		if(username==null || eMail==null)
-			return"login";
+			return logger.exit("home");
 
 		eMail = eMail.toLowerCase();
 		UserEntity userEntity = userWorker.getUserEntity(username);
@@ -158,13 +157,13 @@ public class SignupController {
 						if(permissions==null){
 							loginEntity.setPermissions(Permission.DEFAULT);
 							userWorker.save(loginEntity);
-							model.addAttribute("uname", username);
 							model.addAttribute("status", ConfirmStatus.CONFIRMED);
-							return logger.exit("login");
 						}else
-							return logger.exit("login");
-					}else
-						return logger.exit("login");
+							return logger.exit("home");
+					}else{
+						model.addAttribute(new User().setUsername(username));
+						return logger.exit("home");
+					}
 				}else
 					model.addAttribute("status", ConfirmStatus.ERROR);
 			}

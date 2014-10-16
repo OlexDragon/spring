@@ -140,9 +140,10 @@
 						<tr>
 							<td>
 								<span th:text="#{signup.birthday}">signup.birthday</span><span>:</span>
+							<th:block  th:fragment="birthday">
 								<select th:field="*{birthYear}">
     								<option th:text="#{year}" th:value="null">Select</option>
-    								<option th:each="y : ${yearsList}" th:value="${y}" th:text="${y}" />
+    								<option th:each="y : ${T(jk.web.user.controllers.SignupController).yearsList}" th:value="${y}" th:text="${y}" />
 								</select>
 								<select th:field="*{birthMonth}">
     								<option th:text="#{month}" th:value="null">Select</option>
@@ -152,6 +153,7 @@
     								<option th:text="#{day}" th:value="null">Select</option>
     								<option th:each="d : ${#numbers.sequence(1,31)}" th:value="${d}" th:text="${d}"/>
 								</select>
+							</th:block>
 							</td>
 						</tr>
 						<tr>
@@ -170,7 +172,7 @@
 											</ul>
 										</td>
 										<td>
-											<button th:replace="fragments/menu :: jk_button(#{login.join_now})">sign Up</button>
+											<button th:replace="fragments/menu :: jk_button(#{login.join_now}, null, null)">sign Up</button>
 										</td>
 									</tr>
 								</table>

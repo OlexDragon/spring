@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+  <head>
+	<title>Home Localisation</title>
+	<link rel="stylesheet" type="text/css" href="../../../static/css/jk.css" th:href="@{/css/jk.css}"></link>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$("#homeH").click(function() {
+				$("#homeTbl").toggle(500);
+			});
+		});
+</script>
+</head>
+  <body>
+    <div id="homeLclstn" class="bclr wth40" th:fragment="home">
+	<div class="btnBrdr"></div>
+    <h2 id="homeH" th:text="#{home}" class="cntr pntr">Profile</h2>
+    <div id="homeTbl"  th:class="${showAH==null} ? 'dn'">
+	<table class="wth100">
+		<tr>
+			<td class="w5">
+				<button type="submit"
+						name="submit_edit_address"
+						th:id="${edit_address!=null ? 'activeButton' : null}"
+						th:text="${edit_address!=null} ? #{user.save} : #{user.edit}"
+						th:replace="fragments/menu :: jk_button(${edit_address!=null} ? #{user.save} : #{user.edit}, ${edit_address!=null ? 'activeButton' : null}, 'submit_edit_address')">Edit</button></td>
+			<th class="w10" th:text="#{user.address}">Address</th>
+			<td class="w13" th:switch="${edit_address}">
+				<input th:case="${true}" type="text" name="address" th:field="*{address}" autofocus="autofocus"/>
+				<p th:case="*" th:text="*{address}">Address</p>
+			</td>
+       		<td><p class="error" th:if="${#fields.hasErrors('address')}" th:errors="*{address}">Address error</p></td>
+		</tr>
+		<tr>
+			<td></td>
+			<th th:text="#{user.city}">City</th>
+			<td th:switch="${edit_address}">
+				<input th:case="${true}" type="text" name="city" th:field="*{city}"/>
+				<p th:case="*" th:text="*{city}">City</p>
+			</td>
+       		<td><p class="error" th:if="${#fields.hasErrors('city')}" th:errors="*{city}">City error</p></td>
+		</tr>
+		<tr th:if="*{regionName}!=null">
+			<td></td>
+			<th th:text="#{__*{regionName}__}">Region</th>
+			<td th:switch="${edit_address}">
+				<select th:case="${true}" th:field="*{region}">
+					<option th:value="null" th:text="#{Select}">Select</option>
+					<option th:each="region : ${addressWorker.regions}" th:value="${region.value}" th:text="${region.innerHTML}" />
+				</select>
+				<p th:case="*" th:text="*{region}">Region</p>
+			</td>
+      		<td><p class="error" th:if="${#fields.hasErrors('region')}" th:errors="*{region}">Region error</p></td>
+		</tr>
+		<tr>
+			<td></td>
+			<th th:text="#{user.country}">Country</th>
+			<td th:switch="${edit_address}">
+				<select th:case="${true}" th:field="*{country}">
+					<option th:value="null" th:text="#{Select}">Select</option>
+					<option th:each="country : ${addressWorker.countries}" th:value="${country.value}" th:text="${country.innerHTML}" th:attr="disabled=${country.disabled ? 'disabled' : null}"></option>
+				</select>
+				<p th:case="*" th:text="*{country!=null ? country : null}">Country</p>
+			</td>
+       		<td><p class="error" th:if="${#fields.hasErrors('country')}" th:errors="*{country}">Country error</p></td>
+		</tr>
+		<tr>
+			<td></td>
+			<th th:text="#{user.postal_code}">City</th>
+			<td th:switch="${edit_address}">
+				<input th:case="${true}" type="text" name="postal_code" th:field="*{postalCode}"/>
+				<p th:case="*" th:text="*{postalCode}">Postal code</p>
+			</td>
+       		<td><p class="error" th:if="${#fields.hasErrors('postalCode')}" th:errors="*{postalCode}">Postal code error</p></td>
+		</tr>
+		<tr>
+			<td colspan="4" class="cntr "><img alt="Map" th:src="*{mapPath}" /></td>
+		</tr>
+	</table>
+	</div>
+	<div class="btnBrdr"></div>
+    </div>
+  </body>
+</html>

@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 public class DatabaseConfig {
 
 	//Values from application.properties file
-	@Value("${dump_path}")
+	@Value("${dump.path}")
 	private String dumpPath;
 
 	@Value("${dump_time}")

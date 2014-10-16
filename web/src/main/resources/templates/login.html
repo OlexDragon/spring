@@ -11,29 +11,29 @@
 <body>
 	<div id="header" th:replace="fragments/header :: pageHeader">Header</div>
 	<div id="menuDiv" th:replace="fragments/menu :: menu">Menu</div>
-	<div id="contentsDiv" class="cntr pddng3">
+	<div id="contents" class="cntr pddng3">
 		<div th:if="${status}">
 			<h2 th:utext="#{confirm.confirmed(${uname})}">Confirmed</h2>
 		</div>
 		<div id="login" th:fragment="login" th:switch="${#authorization.expression('isAuthenticated()')}">
 			<div class="thinFilm"></div>
 			<div th:case="${false}">
-				<form id="loginForm" th:action="@{/login}" method="post">
+				<form id="loginForm" th:action="@{/login}" method="post" th:object="${user}">
 					<p class="error" th:if="${param.error}"><span  th:text="#{login.wrong_username_or_password}">login.wrong_username_or_password</span></p>
 					<p th:if="${param.logout}" th:text="#{login.you_have_been_logged_out}">You have been logged out.</p>
 					<table >
 						<tr>
-							<td><input type="text" id="username" name="username" autofocus="autofocus" th:placeholder="#{login.username_email}" th:title="#{login.username_email}" /></td>
+							<td><input type="text" th:autofocus="*{username}==null ? autofocus" th:placeholder="#{login.username_email}" th:title="#{login.username_email}" th:field="*{username}"/></td>
 						</tr>
 						<tr>
 							<td>
 								<table>
 									<tr>
 										<td>
-											<input type="password" id="password" name="password" th:placeholder="#{login.password}" th:title="#{login.password}"/>
+											<input type="password" th:autofocus="*{username} ? autofocus" th:placeholder="#{login.password}" th:title="#{login.password}" th:field="*{password}"/>
 										</td>
 										<td class="cntr">
-											<button th:replace="fragments/menu :: jk_button(#{login.login})">sign Up</button>
+											<button th:replace="fragments/menu :: jk_button(#{login.login}, null, null)">sign Up</button>
 										</td>
 									</tr>
 									<tr>
