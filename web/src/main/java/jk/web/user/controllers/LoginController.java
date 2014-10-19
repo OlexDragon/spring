@@ -10,6 +10,7 @@ import jk.web.user.User;
 import jk.web.user.entities.LoginEntity;
 import jk.web.user.entities.UserEntity;
 import jk.web.user.repository.LoginRepository;
+import jk.web.user.repository.TitleRepository;
 import jk.web.user.validators.SignUpFormValidator;
 import jk.web.workers.EMailWorker;
 import jk.web.workers.UserWorker;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.NoSuchMessageException;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -45,6 +47,8 @@ public class LoginController {
 	protected ApplicationContext applicationContext;
 	@Autowired
 	private LoginRepository loginRepository;
+	@Autowired
+	private TitleRepository titleRepository;
 
 	@Value("${main.url}")
 	private String mainURL;
@@ -52,6 +56,7 @@ public class LoginController {
 	@RequestMapping
 	public String login(User user) {
 		logger.entry(user);
+		user.setTitles(titleRepository.findAll(new Sort("id")));
 		return "home";
 	}
 

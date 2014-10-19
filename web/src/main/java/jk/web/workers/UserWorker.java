@@ -17,11 +17,14 @@ import jk.web.user.entities.EMailEntity.EMailStatus;
 import jk.web.user.entities.LoginEntity;
 import jk.web.user.entities.ProfessionalSkillEntity;
 import jk.web.user.entities.RegionEntity;
+import jk.web.user.entities.RegionEntityPK;
 import jk.web.user.entities.SocialEntity;
+import jk.web.user.entities.TitleEntity;
 import jk.web.user.entities.UserEntity;
 import jk.web.user.entities.WorkplaceEntity;
 import jk.web.user.repository.EMailRepository;
 import jk.web.user.repository.SocialRepository;
+import jk.web.user.repository.TitleRepository;
 import jk.web.user.repository.UserRepository;
 import jk.web.workers.AddressWorker.AddressStatus;
 
@@ -37,6 +40,8 @@ public class UserWorker extends LoginWorker{
 
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private TitleRepository titleRepository;
 	@Autowired
 	private EMailRepository eMailRepository;
 	@Autowired
@@ -123,6 +128,10 @@ public class UserWorker extends LoginWorker{
         													user.getBirthDay())
         									).getTime()),
         							user.getSex());
+        Integer titleId = user.getTitleId();
+        if(titleId!=null)
+        	userEntity.setTitle(titleRepository.findOne(titleId));
+ 
         setWorkplace(user.getWorkplace());
         setProfessionalSkill(user.getProfessionalSkill());
         eMailStatus = ConfirmationStaus.NEW_USER;
@@ -133,6 +142,7 @@ public class UserWorker extends LoginWorker{
  
         logger.trace("\n\t{}", userEntity);
 
+        user.setTitles(titleRepository.findAll());
         eMailStatus = null;
         return userEntity;
 	}
@@ -247,6 +257,11 @@ public class UserWorker extends LoginWorker{
 		user.setLastName(userEntity.getLastName());
 		user.setSex(userEntity.getGender());
 		user.setEMail(getEMail());
+		TitleEntity title = userEntity.getTitle();
+		if(title!=null)
+			user.setTitleId(title.getId());
+		else
+			user.setTitleId(null);
 
 		Date birthday = userEntity.getBirthday();
 		if(birthday!=null){
@@ -272,6 +287,8 @@ public class UserWorker extends LoginWorker{
 		}
 		user.setMapPath(fileWorker.getMapPath(userEntity.getId()));
 
+		user.setTitles(titleRepository.findAll());
+
 		logger.trace("EXIT\n\t{}\n\t{}", user, userEntity);
 	}
 
@@ -282,15 +299,18 @@ public class UserWorker extends LoginWorker{
 			RegionEntity regionEntity = addressEntity.getRegionEntity();
 
 			if(countryEntity!=null){
-				user.setCountry(countryEntity.getCountryName());
+				user.setCountry(countryEntity.getCountryCode());
 				user.setRegionName(countryEntity.getRegionName());
 			}
 			user.setAddress(addressEntity.getAddress());
 			user.setCity(addressEntity.getCity());
 			user.setPostalCode(addressEntity.getPostalCode());
-			if(regionEntity!=null)
-				user.setRegion(regionEntity.getRegionName());
-			else
+			if(regionEntity!=null) {
+				RegionEntityPK regionEntityPK = regionEntity.getRegionEntityPK();
+				if(regionEntityPK!=null){
+					user.setRegion(regionEntityPK.getRegionCode());
+				}
+			} else
 				user.setRegion(null);
 		}else
 			user.setRegion(null);
@@ -313,6 +333,16 @@ public class UserWorker extends LoginWorker{
 		loginEntity = super.saveNewPassword(loginEntity, newPassword, getEMail());
 		userEntity.setLoginEntity(loginEntity);
 		return loginEntity;
+	}
+
+	public UserEntity saveTitle(String username, Integer titleId) {
+		setTitle(username, titleId);
+		return save();
+	}
+
+	public void setTitle(String username, Integer titleId) {
+		setUser(username);
+		userEntity.setTitle(titleRepository.findOne(titleId));
 	}
 
 	public String getPassword(String username) {
@@ -528,19 +558,22 @@ public class UserWorker extends LoginWorker{
 		return addressEntity;
 	}
 
-	public void saveAddress(AddressEntity addressEntity) {
+	public boolean saveAddress(AddressEntity addressEntity) {
 		logger.entry(addressEntity);
 		AddressEntity existsAE = AddressWorker.getFrom(userEntity.getAddressEntities(), addressEntity);
 
-		if(addressEntity!=null && existsAE==null){
+		boolean saved = false;
+		if(isValid() && addressEntity!=null && existsAE==null){
 			addressEntity.setUserId(userEntity.getId());
 			addressWorker.save(addressEntity);
+			saved = true;
 
 			//Reset UserEntity
 			String username = getUsername();
 			setUserEntity(null);
 			setUser(username);
 		}
+		return saved;
 	}
 
 	public SocialEntity getSocialEntity(ConnectionKey connectionKey) {

@@ -8,7 +8,10 @@
 	<meta name="viewport" content="width=device-width" />
 	<link th:replace="fragments/header :: links" rel="stylesheet" type="text/css" href="../static/css/jk.css" th:href="@{/css/jk.css}" />
 	<link rel="stylesheet" type="text/css" href="../js/jQuery/jquery-ui.css" th:href="@{/js/jQuery/jquery-ui.css}"></link>
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../../static/css/fullcalendar.css" th:href="@{/css/calendar.css}"></link>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js"></script>
+	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.1.1/fullcalendar.min.js"></script>
 	<script type="text/javascript" th:inline="javascript">
 
 	$(document).ready(function () {
@@ -25,10 +28,65 @@
 		$("#prflH").click(function() {
 			$("#prflTbl").slideToggle('slow');
 		});
+		$("#lclstnH").click(function() {
+			$("#lclstnTbls").toggle(500);
+		});
 		$("#homeH").click(function() {
 			$("#homeTbl").slideToggle('slow');
 		});
-    });
+		$("#clndrH").click(function() {
+			$("#calendar").slideToggle('slow');
+		});
+		$('#calendar').fullCalendar({
+			header: {
+				left: 'prev,next today',
+				center: 'title',
+				right: 'month,agendaWeek,agendaDay'
+			},
+			defaultDate: '2014-06-12',
+			defaultView: 'month',
+			editable: true,
+			events: [
+				{
+					title: 'All Day Event',
+					start: '2014-06-01'
+				},
+				{
+					title: 'Long Event',
+					start: '2014-06-07',
+					end: '2014-06-10'
+				},
+				{
+					id: 999,
+					title: 'Repeating Event',
+					start: '2014-06-09T16:00:00'
+				},
+				{
+					id: 999,
+					title: 'Repeating Event',
+					start: '2014-06-16T16:00:00'
+				},
+				{
+					title: 'Meeting',
+					start: '2014-06-12T10:30:00',
+					end: '2014-06-12T12:30:00'
+				},
+				{
+					title: 'Lunch',
+					start: '2014-06-12T12:00:00'
+				},
+				{
+					title: 'Birthday Party',
+					start: '2014-06-13T07:00:00'
+				},
+				{
+					title: 'Click for Google',
+					url: 'http://google.com/',
+					start: '2014-06-28'
+				}
+			]
+		});
+   });
 	</script>
 </head>
 <body>
@@ -38,7 +96,7 @@
 <form id="imgForm" class="fleft borderB" th:action="@{/user_img_frm}" method="post" th:object="${user}">
 	<table id="img_tbl">
 		<tr>
-			<td><img id="user_img" alt="User Image" src="" /></td>
+			<td><img id="user_img" alt="User Image" src="#" /></td>
 		</tr>
 		<tr>
 			<td><button type="submit" name="submit_user_img"></button></td>
@@ -47,8 +105,9 @@
 </form>
 <form id="userForm" th:action="@{/user}" method="post" th:object="${user}">
 	<div class="fleft">
-	<table th:replace="fragments/user/profile :: profile"></table>
-	<table th:replace="fragments/user/home_address :: home"></table>
+		<table th:replace="fragments/user/profile :: profile"></table>
+		<table th:replace="fragments/user/address :: localisation"></table>
+		<div th:replace="fragments/user/calendar :: calendar"></div>
 	</div>
 </form>
 </div>

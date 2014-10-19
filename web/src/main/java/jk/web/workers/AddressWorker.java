@@ -61,16 +61,9 @@ public class AddressWorker {
 			}
 
 			htmlOptionElements = first;
-			htmlOptionElements.add(new HTMLOptionElement().setInnerHTML(getSeparator(legnth/2)).setValue("disabled").setDisabled(true));
+			htmlOptionElements.add(new HTMLOptionElement().setValue("line").setDisabled(true));
 			htmlOptionElements.addAll(rest);
 		}
-	}
-
-	private String getSeparator(int legnth) {
-		final char separatorChar = '─';
-		char[] buffer = new char[legnth];
-		Arrays.fill(buffer, separatorChar);
-		return new String(buffer);
 	}
 
 	public List<HTMLOptionElement> getCountries(){

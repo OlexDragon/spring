@@ -1,15 +1,24 @@
 package jk.web.user;
 
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import jk.web.user.entities.TitleEntity;
+import jk.web.user.repository.TitleRepository;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.validator.constraints.Email;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class User{
 
 	private final Logger logger = LogManager.getLogger();
+
+	@Autowired
+	private TitleRepository titleRepository;
 
 	public enum Gender{
 		MALE,
@@ -28,6 +37,8 @@ public class User{
     @Size(min=6, max = 64, message="SignUpForm.between_6_and_64_characters")
     private String repassword;
 
+    private Integer titleId;
+    
     @NotNull
     @Size(min=1, max = 164)
     private String firstName;
@@ -69,6 +80,8 @@ public class User{
 
 	private String mapPath;
 
+	public List<TitleEntity> titles;
+
 	public String getUsername() {
 		return username;
 	}
@@ -76,6 +89,14 @@ public class User{
 	public User setUsername(String username) {
 		this.username = username;
 		return this;
+	}
+
+	public Integer getTitleId() {
+		return titleId;
+	}
+
+	public void setTitleId(Integer titleId) {
+		this.titleId = titleId;
 	}
 
 	public String getFirstName() {
@@ -186,6 +207,7 @@ public class User{
 	}
 
 	public void setRegionName(String regionName) {
+		logger.entry(regionName);
 		this.regionName = regionName;
 	}
 
@@ -241,6 +263,15 @@ public class User{
 
 	public void setMapPath(String mapPath) {
 		this.mapPath = mapPath;
+	}
+
+	public List<TitleEntity> getTitles() {
+		return titles;
+	}
+
+	public void setTitles(List<TitleEntity> titles) {
+		logger.entry(titles);
+		this.titles = titles;
 	}
 
 	@Override

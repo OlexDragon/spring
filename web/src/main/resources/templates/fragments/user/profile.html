@@ -27,7 +27,7 @@
 						th:replace="fragments/menu :: jk_button(${edit_username!=null} ? #{user.save} : #{user.edit}, null, 'submit_edit_username')">Edit</button>
 			</td>
 			<th class="w10" th:text="#{login.username}">Username</th>
-			<td class="w13" th:switch="${edit_username}">
+			<td class="w13 clrY" th:switch="${edit_username}">
 				<input th:case="${true}" type="text" name="newUsername" th:field="*{username}" autofocus="autofocus"/>
 				<p th:case="*" th:text="*{username}">Username</p>
 			</td>
@@ -44,7 +44,7 @@
 			<th th:text="#{login.password}">Password</th>
 			<td th:switch="${edit_password==true || edit_username==true}">
 				<input th:case="${true}" type="password" name="oldPassword"  th:field="*{password}" autofocus="autofocus"/>
-				<p th:case="*">********</p>
+				<p th:case="*" class="clrY">********</p>
 			</td>
        		<td class="lft"><p class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"
        		>Password Error</p></td>
@@ -77,9 +77,26 @@
 			<th th:text="#{signup.eMail}">e-mail</th>
 			<td th:switch="${edit_eMail}">
 				<input th:case="${true}" type="text" name="eMail" th:field="*{eMail}"  autofocus="autofocus"/>
-				<p th:case="*" th:text="*{eMail}">e-mail</p>
+				<p th:case="*" th:text="*{eMail}" class="clrY">e-mail</p>
 			</td>
        		<td><p class="error" th:if="${#fields.hasErrors('eMail')}" th:errors="*{eMail}">E-Mail Error</p></td>
+		</tr>
+		<tr class="borderBB">
+			<td><button type="submit"
+						name="submit_edit_title"
+						th:id="${edit_title!=null ? 'activeButton'}"
+						th:text="${edit_title!=null} ? #{user.save} : #{user.edit}"
+						th:replace="fragments/menu :: jk_button(${edit_profile!=null} ? #{user.save} : #{user.edit}, ${edit_title!=null ? 'activeButton' : null}, 'submit_edit_title')">Edit</button>
+			</td>
+			<th th:text="#{signup.title}">Title</th>
+			<td th:switch="${edit_title}">
+				<select th:case="${true}" th:field="*{titleId}">
+					<option th:value="null" th:text="#{Select}">Select</option>
+					<option th:each="t : *{titles}" th:value="${t.id}" th:text="#{__('profile.title'+${t.id})__}" ></option>
+				</select>
+				<p th:case="*" th:text="*{titleId}!=null ? #{__('profile.title'+*{titleId})__}" class="clrY"></p>
+			</td>
+			<td></td>
 		</tr>
 		<tr class="borderBB">
 			<td><button type="submit"
@@ -90,7 +107,7 @@
 			<th th:text="#{signup.firstName}">First Name</th>
 			<td th:switch="${edit_firstName}">
 				<input th:case="${true}" type="text" name="firstName" th:field="*{firstName}"  autofocus="autofocus"/>
-				<p th:case="*" th:text="*{firstName}">First Name</p>
+				<p th:case="*" th:text="*{firstName}" class="clrY">First Name</p>
 			</td>
        		<td><p class="error" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">First Name error</p></td>
 		</tr>
@@ -103,7 +120,7 @@
 			<th th:text="#{signup.lastName}">Last Name</th>
 			<td th:switch="${edit_lastName}">
 				<input th:case="${true}" type="text" name="lastName" th:field="*{lastName}"  autofocus="autofocus"/>
-				<p th:case="*" th:text="*{lastName}">Last Name</p>
+				<p th:case="*" th:text="*{lastName}" class="clrY">Last Name</p>
 			</td>
        		<td><p class="error" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Last Name</p></td>
 		</tr>
@@ -121,7 +138,7 @@
 						<label th:for="${#ids.prev('sex')}" th:text="#{${sex}}">Gender</label>
 					</li>
 				</ul>
-				<p th:case="*" th:text="*{sex} ? #{__*{sex}__}">Gender</p>
+				<p th:case="*" th:text="*{sex} ? #{__*{sex}__}" class="clrY">Gender</p>
 			</td>
 			<td><p class="error" th:if="${#fields.hasErrors('sex')}" th:errors="*{sex}">Sex Error</p></td>
 		</tr>
@@ -136,7 +153,7 @@
 				<th:block th:case="${true}">
 					<input th:replace="signup :: birthday"/>
 				</th:block>
-				<p th:case="*" th:text="*{birthYear!=null and birthMonth!=null and birthDay!=null} ? *{#calendars.format(#calendars.create(birthYear, birthMonth, birthDay), 'yyyy MMM d') }">Birthday</p>
+				<p th:case="*" th:text="*{birthYear!=null and birthMonth!=null and birthDay!=null} ? *{#calendars.format(#calendars.create(birthYear, birthMonth, birthDay), 'yyyy MMM d') }" class="clrY">Birthday</p>
 			</td>
        		<td><p class="error" th:if="${#fields.hasErrors('birthYear')}" th:errors="*{birthYear}">Birthday error</p></td>
 		</tr>

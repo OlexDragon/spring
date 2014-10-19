@@ -13,6 +13,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -45,6 +46,10 @@ public class UserEntity implements Serializable {
     @Basic(optional = false)
     @Column(name = "logins_loginID", nullable = false)
     private Long id;
+
+    @ManyToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name="title_id")
+    private TitleEntity title;
 
     @Size(min = 1, max = 164)
     @Column(name = "first_name", length = 164)
@@ -115,7 +120,15 @@ public class UserEntity implements Serializable {
         this.id = id;
     }
 
-    public String getFirstName() {
+    public TitleEntity getTitle() {
+		return title;
+	}
+
+	public void setTitle(TitleEntity title) {
+		this.title = title;
+	}
+
+	public String getFirstName() {
         return firstName;
     }
 

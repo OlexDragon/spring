@@ -160,9 +160,17 @@
 							<td>
 								<table>
 									<tr  th:if="${#fields.hasErrors('sex')}" >
-										<td colspan="2" class="error"><span  th:errors="*{sex}">Sex Error</span></td>
+										<td></td>
+										<td class="error"><span  th:errors="*{sex}">Sex Error</span></td>
+										<td></td>
 									</tr>
 									<tr>
+										<td>
+											<select th:field="*{titleId}">
+												<option th:value="null" th:text="#{signup.title}">Select</option>
+												<option th:each="t : *{titles}" th:value="${t.id}" th:text="#{__('profile.title'+${t.id})__}" ></option>
+											</select>
+										</td>
 										<td>
 											<ul th:class="${#fields.hasErrors('sex')}? error">
 												<li th:each="sex : ${T(jk.web.user.User.Gender).values()}" >

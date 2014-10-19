@@ -42,7 +42,7 @@ input, button, label{
 #tables form{
 	margin: .5em;
 }
-#login, #signup, #userForm table{
+#login, #signup{
 	margin-top: .5em;
 	margin-bottom: .5em;
 	background-color: #5C514D;
@@ -50,6 +50,9 @@ input, button, label{
 }
 .bclr{
 	background-color: #5C514D;
+}
+.clrY{
+	color: yellow;
 }
 button, checkbox, label, .pntr{
 	cursor: pointer;
