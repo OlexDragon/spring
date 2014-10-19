@@ -15,6 +15,7 @@ import jk.web.user.entities.EMailEntity;
 import jk.web.user.entities.EMailEntity.EMailStatus;
 import jk.web.user.entities.LoginEntity;
 import jk.web.user.entities.UserEntity;
+import jk.web.user.repository.TitleRepository;
 import jk.web.user.repository.LoginRepository.Permission;
 import jk.web.user.validators.SignUpFormValidator;
 import jk.web.workers.EMailWorker;
@@ -24,6 +25,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -57,6 +59,9 @@ public class SignupController {
     @Autowired
     protected AuthenticationManager authenticationManager;
 
+	@Autowired
+	private TitleRepository titleRepository;
+
 
 	@Value("${main.url}")
 	private String mainURL;
@@ -67,6 +72,7 @@ public class SignupController {
 	@RequestMapping(value="/signup", method=RequestMethod.GET)
 	public String signup(User user, Model model){
 		logger.entry(RequestMethod.GET);
+		user.setTitles(titleRepository.findAll(new Sort("id")));
 		model.addAttribute("yearsList", getYearsList());
 		return "home";
 	}

@@ -10,6 +10,7 @@ import jk.web.user.User;
 import jk.web.user.User.Gender;
 import jk.web.user.entities.AddressEntity;
 import jk.web.user.entities.CountryEntity;
+import jk.web.user.repository.TitleRepository;
 import jk.web.user.validators.SignUpFormValidator;
 import jk.web.workers.AddressWorker;
 import jk.web.workers.FileWorker;
@@ -18,6 +19,7 @@ import jk.web.workers.UserWorker;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,6 +44,8 @@ public class UserController {
 	private AddressWorker addressWorker;
 	@Autowired
 	private FileWorker fileWorker;
+	@Autowired
+	private TitleRepository titleRepository;
 
 	@RequestMapping(value="/user", method=RequestMethod.GET)
 	public String user(User user, Principal principal){
@@ -49,6 +53,7 @@ public class UserController {
 		String username = principal.getName();
 		logger.entry(username);
 
+		user.setTitles(titleRepository.findAll(new Sort("id")));
 		userWorker.setUser(username, user);
 		return "user";
 	}
@@ -135,6 +140,26 @@ public class UserController {
 			else
 				model.addAttribute(attributeName, true);
 		}
+
+		userWorker.fillUser(user);
+		userWorker.fillUserAddress(user);
+		model.addAttribute("showP", true);
+		return "user";
+	}
+
+	@RequestMapping(value="/user", method=RequestMethod.POST, params = "submit_edit_title")
+	public String editTitlee(User user, Principal principal, Model model, BindingResult bindingResults){
+
+		String username = principal.getName();
+
+		Integer titleId = user.getTitleId();
+		final String attributeName = "edit_title";
+		if(titleId==null)
+			model.addAttribute(attributeName, true);
+		else if(userWorker.isValid())
+			userWorker.saveTitle(username, titleId);
+		else
+			userWorker.setTitle(username, titleId);
 
 		userWorker.fillUser(user);
 		userWorker.fillUserAddress(user);
@@ -307,16 +332,16 @@ public class UserController {
 
 		//Country
 		String countryCode = user.getCountry();
-		String region = user.getRegion();
+		String regionCode = user.getRegion();
 		AddressEntity ae = userWorker.getAddressEntity();
 		String uwCountryCode = ae!=null ? ae.getCountryCode() : null;
 		CountryEntity ce = null;
-		if(countryCode==null){
+		if(countryCode==null || countryCode.isEmpty()){
 			if(ae!=null)
 				ce = ae.getCountryEntity();
 			addressWorker.setCountryCode(uwCountryCode);
 			edit = true;
-			if(addressEntity==null || addressEntity.getCountryCode()==null)
+			if(addressEntity==null || addressEntity.getCountryCode()==null || addressEntity.getCountryCode().isEmpty())
 				bindingResults.rejectValue("country", "UserController.select_country");
 		}else{
 			addressWorker.setCountryCode(countryCode);
@@ -326,29 +351,43 @@ public class UserController {
 			ce = addressWorker.getCountryEntity(countryCode);
 
 			if(ce!=null && ce.getRegionName()!=null){
-				if(region==null){
+				if(regionCode==null || regionCode.isEmpty()){
 					edit = true;
-					if(addressEntity==null || addressEntity.getRegionsCode()==null)
+					if(addressEntity==null || addressEntity.getRegionsCode()==null || addressEntity.getRegionsCode().isEmpty()){
 						bindingResults.rejectValue("region", "UserController.select_"+ce.getRegionName());
+						edit = true;
+					}
 				}else{
 					String uwRegionCode = ae!=null ? ae.getRegionsCode() : null;
-					if(uwRegionCode!=null && !region.equals(uwRegionCode))
+					if(uwRegionCode!=null && !regionCode.equals(uwRegionCode))
 						edit = true;
 				}
+			}else{
+				edit = true;
 			}
 		}
 
 		logger.trace("\n\t"
+				+ "username\t{}\n\t"
+				+ "addressEntity\t{}\n\t"
 				+ "address:\t'{}'\n\t"
 				+ "city:\t'{}'\n\t"
 				+ "postalCode:\t'{}'\n\t"
-				+ "region:\t'{}'\n\t"
-				+ "countryCode:\t'{}'",
+				+ "regionCode:\t'{}'\n\t"
+				+ "countryCode:\t'{}'\n\t"
+				+ "ae:\t'{}'\n\t"
+				+ "ce:\t'{}'\n\t"
+				+ "edit:\t{}",
+				username,
+				addressEntity,
 				address,
 				city,
 				postalCode,
-				region,
-				countryCode);
+				regionCode,
+				countryCode,
+				ae,
+				ce,
+				edit);
 
 		fileWorker.saveMap(userWorker.getUserEntity().getId(), user.getAddress(), user.getCity(), user.getRegion(), ce!=null ? ce.getCountryName() : null, user.getPostalCode());
 		user.setRegionName(ce!=null ? ce.getRegionName() : null);
@@ -356,12 +395,13 @@ public class UserController {
 		if(edit){
 			model.addAttribute(attributeName, true);
 		}else{
-			userWorker.saveAddress(new AddressEntity()
+			if(!userWorker.saveAddress(new AddressEntity()
 										.setAddress(address)
 										.setCity(city)
 										.setCountryCode(addressWorker.getCountryCode())
 										.setPostalCode(postalCode)
-										.setRegionsCode(region));
+										.setRegionsCode(regionCode)))
+				bindingResults.rejectValue("address", "UserController.fill_profile", "Fill Profile");
 		}
 
 		userWorker.fillUser(user);

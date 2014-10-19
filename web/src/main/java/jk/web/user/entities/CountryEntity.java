@@ -78,27 +78,17 @@ public class CountryEntity implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (countryCode != null ? countryCode.hashCode() : 0);
-        return hash;
+        return countryCode != null ? countryCode.hashCode() : 0;
     }
 
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof CountryEntity)) {
-            return false;
-        }
-        CountryEntity other = (CountryEntity) object;
-        if ((this.countryCode == null && other.countryCode != null) || (this.countryCode != null && !this.countryCode.equals(other.countryCode))) {
-            return false;
-        }
-        return true;
+    public boolean equals(Object obj) {
+        return obj!=null ? obj.hashCode()==hashCode() : false;
     }
 
-    @Override
-    public String toString() {
-        return "jk.web.user.entities.CountryEntity[ countryCode=" + countryCode + " ]";
-    }
+	@Override
+	public String toString() {
+		return "CountryEntity [countryCode=" + countryCode + ", countryName=" + countryName + ", regionName=" + regionName + "]";
+	}
 
 }
