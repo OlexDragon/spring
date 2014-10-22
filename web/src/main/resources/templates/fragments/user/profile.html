@@ -19,6 +19,7 @@
 	<div class="btnBrdr"></div>
     <h2 id="prflH" th:text="#{profile}" class="cntr pntr">Profile</h2>
     <div id="prflTbl" th:class="${showP==null} ? 'dn'">
+   	<form th:action="@{/user}" method="post" th:object="${user}">
 	<table class="th_right borderB wth100">
 		<tr class="borderBB">
 			<td class="w5"><button type="submit"
@@ -43,7 +44,7 @@
 			</td>
 			<th th:text="#{login.password}">Password</th>
 			<td th:switch="${edit_password==true || edit_username==true}">
-				<input th:case="${true}" type="password" name="oldPassword"  th:field="*{password}" autofocus="autofocus"/>
+				<input th:case="${true}" type="password" th:field="*{password}" autofocus="autofocus"/>
 				<p th:case="*" class="clrY">********</p>
 			</td>
        		<td class="lft"><p class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"
@@ -133,7 +134,7 @@
 			<th th:text="#{signup.sex}">Gender</th>
 			<td th:switch="${edit_gender}">
 				<ul th:case="${true}">
-					<li th:each="sex : ${T(jk.web.user.User.Gender).values()}">
+					<li th:each="sex : ${T(jk.web.user.User.Gender).values()}" class="inlineB">
 						<input type="radio" th:field="*{sex}" th:value="${sex}" />
 						<label th:for="${#ids.prev('sex')}" th:text="#{${sex}}">Gender</label>
 					</li>
@@ -158,6 +159,7 @@
        		<td><p class="error" th:if="${#fields.hasErrors('birthYear')}" th:errors="*{birthYear}">Birthday error</p></td>
 		</tr>
 	</table>
+	</form>
 	</div>
 	<div class="btnBrdr"></div>
     </div>

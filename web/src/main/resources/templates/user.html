@@ -103,13 +103,13 @@
 		</tr>
 	</table>
 </form>
-<form id="userForm" th:action="@{/user}" method="post" th:object="${user}">
+<div>
 	<div class="fleft">
 		<table th:replace="fragments/user/profile :: profile"></table>
 		<table th:replace="fragments/user/address :: localisation"></table>
 		<div th:replace="fragments/user/calendar :: calendar"></div>
 	</div>
-</form>
+</div>
 </div>
 <div th:replace="fragments/footer :: footer">Footer</div>
 </body>

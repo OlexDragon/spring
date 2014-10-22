@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import jk.web.user.Address;
 import jk.web.user.User;
 import jk.web.user.User.Gender;
 import jk.web.user.entities.AddressEntity;
@@ -243,10 +244,37 @@ public class UserWorker extends LoginWorker{
 
 	public void setUser(String username, User user) {
 		setUser(username);
-		if(userEntity!=null){
+		if(userEntity!=null)
 			fillUser(user);
-			fillUserAddress(user);
+	}
+
+	public void setHomeAddress(String username, Address homeAddress) {
+		logger.trace("\n\t{}\n\t{}", username, homeAddress);
+		setUser(username);
+		if(userEntity!=null){
+			fillUserAddress(homeAddress);
 		}
+		List<AddressEntity> addressEntities = userEntity.getAddressEntities();
+		if(addressEntities!=null){
+			for(AddressEntity ae:addressEntities)
+				if(ae.getStatus()==null || ae.getStatus()==AddressStatus.ACTIVE){
+					logger.trace("\n\t{}",ae);
+					homeAddress.setAddress(ae.getAddress());
+					homeAddress.setCity(ae.getCity());
+					homeAddress.setRegionCode(ae.getRegionsCode());
+					homeAddress.setCountryCode(ae.getCountryCode());
+					homeAddress.setPostalCode(ae.getPostalCode());
+					break;
+				}
+		}else{
+			homeAddress.setAddress(null);
+			homeAddress.setCity(null);
+			homeAddress.setRegionCode(null);
+			homeAddress.setCountryCode(null);
+			homeAddress.setPostalCode(null);
+		}
+		homeAddress.setMapPath(fileWorker.getMapPath(userEntity.getId()));
+		logger.exit(homeAddress);
 	}
 
 	public void fillUser(User user) {
@@ -272,48 +300,39 @@ public class UserWorker extends LoginWorker{
 			user.setBirthMonth(calendar.get(Calendar.MONTH));
 			user.setBirthDay(calendar.get(Calendar.DAY_OF_MONTH));
 		}
-		List<AddressEntity> addressEntities = userEntity.getAddressEntities();
-		if(addressEntities!=null){
-			for(AddressEntity ae:addressEntities)
-				if(ae.getStatus()==null || ae.getStatus()==AddressStatus.ACTIVE){
-					logger.trace("\n\t{}",ae);
-					user.setAddress(ae.getAddress());
-					user.setCity(ae.getCity());
-					user.setRegion(ae.getRegionsCode());
-					user.setCountry(ae.getCountryCode());
-					user.setPostalCode(ae.getPostalCode());
-					break;
-				}
-		}
-		user.setMapPath(fileWorker.getMapPath(userEntity.getId()));
 
 		user.setTitles(titleRepository.findAll());
 
 		logger.trace("EXIT\n\t{}\n\t{}", user, userEntity);
 	}
 
-	public void fillUserAddress(User user){
+	public void fillUserAddress(Address homeAddress){
+
+		homeAddress.setTitle("home");
+		homeAddress.setButtonName("submit_home_address");
+
 		AddressEntity addressEntity = getAddressEntity();
 		if(addressEntity!=null) {
+
 			CountryEntity countryEntity = addressEntity.getCountryEntity();
 			RegionEntity regionEntity = addressEntity.getRegionEntity();
 
 			if(countryEntity!=null){
-				user.setCountry(countryEntity.getCountryCode());
-				user.setRegionName(countryEntity.getRegionName());
+				homeAddress.setCountryCode(countryEntity.getCountryCode());
+				homeAddress.setRegionName(countryEntity.getRegionName());
 			}
-			user.setAddress(addressEntity.getAddress());
-			user.setCity(addressEntity.getCity());
-			user.setPostalCode(addressEntity.getPostalCode());
+			homeAddress.setAddress(addressEntity.getAddress());
+			homeAddress.setCity(addressEntity.getCity());
+			homeAddress.setPostalCode(addressEntity.getPostalCode());
 			if(regionEntity!=null) {
 				RegionEntityPK regionEntityPK = regionEntity.getRegionEntityPK();
 				if(regionEntityPK!=null){
-					user.setRegion(regionEntityPK.getRegionCode());
+					homeAddress.setRegionCode(regionEntityPK.getRegionCode());
 				}
 			} else
-				user.setRegion(null);
+				homeAddress.setRegionCode(null);
 		}else
-			user.setRegion(null);
+			homeAddress.setRegionCode(null);
 	}
 
 	private String getUsername() {

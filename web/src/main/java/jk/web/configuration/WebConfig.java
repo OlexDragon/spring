@@ -54,5 +54,4 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 		logger.trace("\n\tmapsPth =\t{}", mapsPth);
 		registry.addResourceHandler(MAPES_RESOURCE+"**").addResourceLocations("file:"+mapsPth);
 	}
-
 }
