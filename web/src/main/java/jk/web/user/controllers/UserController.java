@@ -6,6 +6,7 @@ import java.text.ParseException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import jk.web.user.Address;
 import jk.web.user.User;
 import jk.web.user.User.Gender;
 import jk.web.user.entities.AddressEntity;
@@ -47,15 +48,24 @@ public class UserController {
 	@Autowired
 	private TitleRepository titleRepository;
 
+	private User user = new User();
+	private Address homeAddress = new Address();
+
 	@RequestMapping(value="/user", method=RequestMethod.GET)
-	public String user(User user, Principal principal){
+	public String user(Principal principal, Model model){
 
 		String username = principal.getName();
 		logger.entry(username);
 
-		user.setTitles(titleRepository.findAll(new Sort("id")));
+//		user.setTitles(titleRepository.findAll(new Sort("id")));
 		userWorker.setUser(username, user);
-		return "user";
+		model.addAttribute("user", user);
+
+		homeAddress.setEditAddress(false);
+		homeAddress.setShowAddress(false);
+		userWorker.setHomeAddress(username, homeAddress);
+		model.addAttribute("homeAddress", homeAddress);
+		return logger.exit("user");
 	}
 
 	@RequestMapping(value="/user", method=RequestMethod.POST, params = "submit_edit_username")
@@ -88,10 +98,11 @@ public class UserController {
 			}
 		}
 
-		userWorker.fillUser(user);
-		userWorker.fillUserAddress(user);
 		model.addAttribute("showP", true);
-		return "user";
+		userWorker.fillUser(user);
+		userWorker.setHomeAddress(username, homeAddress);
+		model.addAttribute("homeAddress", homeAddress);
+		return logger.exit("user");
 	}
 
 	@RequestMapping(value="/user", method=RequestMethod.POST, params = "submit_edit_password")
@@ -113,9 +124,10 @@ public class UserController {
 		}
 
 		userWorker.fillUser(user);
-		userWorker.fillUserAddress(user);
+		userWorker.setHomeAddress(username, homeAddress);
+		model.addAttribute("homeAddress", homeAddress);
 		model.addAttribute("showP", true);
-		return "user";
+		return logger.exit("user");
 	}
 
 	@RequestMapping(value="/user", method=RequestMethod.POST, params = "submit_edit_firstName")
@@ -142,13 +154,14 @@ public class UserController {
 		}
 
 		userWorker.fillUser(user);
-		userWorker.fillUserAddress(user);
+		userWorker.setHomeAddress(username, homeAddress);
+		model.addAttribute("homeAddress", homeAddress);
 		model.addAttribute("showP", true);
 		return "user";
 	}
 
 	@RequestMapping(value="/user", method=RequestMethod.POST, params = "submit_edit_title")
-	public String editTitlee(User user, Principal principal, Model model, BindingResult bindingResults){
+	public String editTitlee(User user, Principal principal, Model model){
 
 		String username = principal.getName();
 
@@ -162,9 +175,10 @@ public class UserController {
 			userWorker.setTitle(username, titleId);
 
 		userWorker.fillUser(user);
-		userWorker.fillUserAddress(user);
+		userWorker.setHomeAddress(username, homeAddress);
+		model.addAttribute("homeAddress", homeAddress);
 		model.addAttribute("showP", true);
-		return "user";
+		return logger.exit("user");
 	}
 
 	@RequestMapping(value="/user", method=RequestMethod.POST, params = "submit_edit_lastName")
@@ -190,9 +204,10 @@ public class UserController {
 		}
 
 		userWorker.fillUser(user);
-		userWorker.fillUserAddress(user);
+		userWorker.setHomeAddress(username, homeAddress);
+		model.addAttribute("homeAddress", homeAddress);
 		model.addAttribute("showP", true);
-		return "user";
+		return logger.exit("user");
 	}
 
 	@RequestMapping(value="/user", method=RequestMethod.POST, params = "submit_edit_eMail")
@@ -219,9 +234,10 @@ public class UserController {
 		}
 
 		userWorker.fillUser(user);
-		userWorker.fillUserAddress(user);
+		userWorker.setHomeAddress(username, homeAddress);
+		model.addAttribute("homeAddress", homeAddress);
 		model.addAttribute("showP", true);
-		return "user";
+		return logger.exit("user");
 	}
 
 	@RequestMapping(value="/user", method=RequestMethod.POST, params = "submit_edit_gender")
@@ -247,9 +263,10 @@ public class UserController {
 		}
 
 		userWorker.fillUser(user);
-		userWorker.fillUserAddress(user);
+		userWorker.setHomeAddress(username, homeAddress);
+		model.addAttribute("homeAddress", homeAddress);
 		model.addAttribute("showP", true);
-		return "user";
+		return logger.exit("user");
 	}
 
 	@RequestMapping(value="/user", method=RequestMethod.POST, params = "submit_edit_birthday")
@@ -284,9 +301,10 @@ public class UserController {
 		}
 
 		userWorker.fillUser(user);
-		userWorker.fillUserAddress(user);
+		userWorker.setHomeAddress(username, homeAddress);
+		model.addAttribute("homeAddress", homeAddress);
 		model.addAttribute("showP", true);
-		return "user";
+		return logger.exit("user");
 	}
 
 	private boolean saveIfValid(){
@@ -296,125 +314,148 @@ public class UserController {
 		return saved;
 	}
 
-	@RequestMapping(value="/user", method=RequestMethod.POST, params = "submit_edit_address")
-	public String editAddress(User user, Principal principal, Model model, BindingResult bindingResults, HttpServletRequest request){
+	@RequestMapping(value="/user", method=RequestMethod.POST, params = "submit_home_address")
+	public String editAddress(Address address, Principal principal, Model model, HttpServletRequest request){
 
 		String username = principal.getName();
 		AddressEntity addressEntity = userWorker.getAddressEntity(username);
 
-		String attributeName = "edit_address";
-
-		boolean edit = false;
-
 		//Address
-		String address = user.getAddress();
-		if(address == null || address.isEmpty()){
-			edit = true;
-			if(addressEntity==null || addressEntity.getAddress()==null)
-				bindingResults.rejectValue("address", "UserController.enter_address");
-		}
+		checkAdress(addressEntity, address, homeAddress);
 
 		//City
-		String city = user.getCity();
-		if(city == null || city.isEmpty()){
-			edit = true;
-			if(addressEntity==null || addressEntity.getCity()==null)
-				bindingResults.rejectValue("city", "UserController.enter_city");
-		}
+		checkCity(addressEntity, address, homeAddress);
 
 		//Postal code
-		String postalCode = user.getPostalCode();
-		if(postalCode == null || postalCode.isEmpty()){
-			edit = true;
-			if(addressEntity==null || addressEntity.getPostalCode()==null)
-				bindingResults.rejectValue("postalCode", "UserController.enter_postal_code");
-		}
+		checkPostalCode(addressEntity, address, homeAddress);
 
 		//Country
-		String countryCode = user.getCountry();
-		String regionCode = user.getRegion();
+		String countryCode = address.getCountryCode();
+		String regionCode = address.getRegionCode();
 		AddressEntity ae = userWorker.getAddressEntity();
 		String uwCountryCode = ae!=null ? ae.getCountryCode() : null;
 		CountryEntity ce = null;
+
 		if(countryCode==null || countryCode.isEmpty()){
 			if(ae!=null)
 				ce = ae.getCountryEntity();
 			addressWorker.setCountryCode(uwCountryCode);
-			edit = true;
+			homeAddress.setEditAddress(true);
 			if(addressEntity==null || addressEntity.getCountryCode()==null || addressEntity.getCountryCode().isEmpty())
-				bindingResults.rejectValue("country", "UserController.select_country");
+				homeAddress.setCountryCodeError("address.select_country");
 		}else{
+			homeAddress.setCountryCode(countryCode);
+			homeAddress.setCountryCodeError(null);
 			addressWorker.setCountryCode(countryCode);
 			if(uwCountryCode!=null && !countryCode.equals(uwCountryCode))
-				edit = true;
+				homeAddress.setEditAddress(true);
+			else
+				homeAddress.setRegionCode(regionCode);
 
 			ce = addressWorker.getCountryEntity(countryCode);
 
 			if(ce!=null && ce.getRegionName()!=null){
 				if(regionCode==null || regionCode.isEmpty()){
-					edit = true;
+					homeAddress.setEditAddress(true);
 					if(addressEntity==null || addressEntity.getRegionsCode()==null || addressEntity.getRegionsCode().isEmpty()){
-						bindingResults.rejectValue("region", "UserController.select_"+ce.getRegionName());
-						edit = true;
+						homeAddress.setRegionCode("address.select_"+ce.getRegionName());
+						homeAddress.setEditAddress(true);
 					}
 				}else{
 					String uwRegionCode = ae!=null ? ae.getRegionsCode() : null;
 					if(uwRegionCode!=null && !regionCode.equals(uwRegionCode))
-						edit = true;
+						homeAddress.setEditAddress(true);
+					homeAddress.setRegionCode(null);
 				}
 			}else{
-				edit = true;
+				homeAddress.setEditAddress(true);
 			}
 		}
 
 		logger.trace("\n\t"
 				+ "username\t{}\n\t"
 				+ "addressEntity\t{}\n\t"
-				+ "address:\t'{}'\n\t"
-				+ "city:\t'{}'\n\t"
-				+ "postalCode:\t'{}'\n\t"
 				+ "regionCode:\t'{}'\n\t"
 				+ "countryCode:\t'{}'\n\t"
 				+ "ae:\t'{}'\n\t"
 				+ "ce:\t'{}'\n\t"
-				+ "edit:\t{}",
+				+ "address:\t'{}'\n\t"
+				+ "homeAddress:\t{}",
 				username,
 				addressEntity,
-				address,
-				city,
-				postalCode,
 				regionCode,
 				countryCode,
 				ae,
 				ce,
-				edit);
+				address,
+				homeAddress);
 
-		fileWorker.saveMap(userWorker.getUserEntity().getId(), user.getAddress(), user.getCity(), user.getRegion(), ce!=null ? ce.getCountryName() : null, user.getPostalCode());
-		user.setRegionName(ce!=null ? ce.getRegionName() : null);
+		fileWorker.saveMap(userWorker.getUserEntity().getId(), homeAddress.getAddress(), homeAddress.getCity(), homeAddress.getRegionCode(), ce!=null ? ce.getCountryName() : null, homeAddress.getPostalCode());
+		homeAddress.setRegionName(ce!=null ? ce.getRegionName() : null);
 
-		if(edit){
-			model.addAttribute(attributeName, true);
-		}else{
-			if(!userWorker.saveAddress(new AddressEntity()
-										.setAddress(address)
-										.setCity(city)
-										.setCountryCode(addressWorker.getCountryCode())
-										.setPostalCode(postalCode)
-										.setRegionsCode(regionCode)))
-				bindingResults.rejectValue("address", "UserController.fill_profile", "Fill Profile");
+		if(homeAddress.isEditAddress())
+			model.addAttribute("addressWorker", addressWorker);
+		else if(!userWorker.saveAddress(new AddressEntity()
+												.setAddress(address.getAddress())
+												.setCity(address.getCity())
+												.setCountryCode(addressWorker.getCountryCode())
+												.setPostalCode(address.getPostalCode())
+												.setRegionsCode(regionCode))){
+			homeAddress.setAddressError("address.fill_profile");
 		}
 
 		userWorker.fillUser(user);
-		model.addAttribute("addressWorker", addressWorker);
-		model.addAttribute("showAH", true);
-		return "user";
+		model.addAttribute("user", user);
+		homeAddress.setShowAddress(true);
+
+		homeAddress.setShowAddress(true);
+		userWorker.setHomeAddress(username, homeAddress);
+		model.addAttribute("homeAddress", homeAddress);
+		return logger.exit("user");
+	}
+
+	public void checkPostalCode(AddressEntity addressEntity, Address address, Address modelAddress) {
+		String postalCode = address.getPostalCode();
+		if(postalCode == null || postalCode.isEmpty()){
+			modelAddress.setEditAddress(true);
+			if(addressEntity==null || addressEntity.getPostalCode()==null || addressEntity.getPostalCode().isEmpty())
+				modelAddress.setPostalCodeError("address.enter_postal_code");
+		}else{
+			modelAddress.setPostalCode(postalCode);
+			modelAddress.setPostalCodeError(null);
+		}
+	}
+
+	public void checkCity(AddressEntity addressEntity, Address address, Address modelAddress) {
+		String city = address.getCity();
+		if(city == null || city.isEmpty()){
+			modelAddress.setEditAddress(true);
+			if(addressEntity==null || addressEntity.getCity()==null || addressEntity.getCity().isEmpty()){
+				modelAddress.setCityError("address.enter_city");
+			}
+		}else{
+			modelAddress.setCity(city);
+			modelAddress.setCityError(null);
+		}
+	}
+
+	public void checkAdress(AddressEntity addressEntity, Address address, Address modelAddress) {
+		String addressStr = address.getAddress();
+		if(addressStr == null || addressStr.isEmpty()){
+			modelAddress.setEditAddress(true);
+			if(addressEntity==null || addressEntity.getAddress()==null || addressEntity.getAddress().isEmpty())
+				modelAddress.setAddressError("address.enter_address");
+		}else{
+			modelAddress.setAddress(addressStr);
+			modelAddress.setAddressError(null);
+		}
 	}
 
 	@RequestMapping(value="/user", method=RequestMethod.POST, params = "submit_user_img")
 	public String addUserImage(User user, Principal principal, Model model, BindingResult bindingResults, HttpServletRequest request){
 		
 		model.addAttribute("addressWorker", addressWorker);
-		return "user";
+		return logger.exit("user");
 	}
 
 	private boolean passwordMatches(String username, String password, String attributeName, Model model, BindingResult bindingResults){

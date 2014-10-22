@@ -68,17 +68,6 @@ public class User{
     private Gender sex;
 
 	private String newPassword;
-	private String address;
-	private String region;
-	private String country;
-
-	private String city;
-
-	private String postalCode;
-
-	private String regionName;
-
-	private String mapPath;
 
 	public List<TitleEntity> titles;
 
@@ -161,60 +150,6 @@ public class User{
 		this.sex = sex;
 		return this;
 	}
-
-	public String getCountry() {
-		return country;
-	}
-
-	public User setCountry(String country) {
-		this.country = country;
-		return this;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public User setAddress(String address) {
-		this.address = address;
-		return this;
-	}
-	public String getRegion() {
-		return region;
-	}
-
-	public User setRegion(String region) {
-		this.region = region;
-		return this;
-	}
-
-	public String getCity() {
-		return city;
-	}
-
-	public User setCity(String city) {
-		this.city = city;
-		return this;
-	}
-
-	public String getPostalCode() {
-		return postalCode;
-	}
-
-	public User setPostalCode(String postalCode) {
-		this.postalCode = postalCode;
-		return this;
-	}
-
-	public void setRegionName(String regionName) {
-		logger.entry(regionName);
-		this.regionName = regionName;
-	}
-
-	public String getRegionName() {
-		return regionName;
-	}
-
 	public String getProfessionalSkill() {
 		return professionalSkill;
 	}
@@ -257,14 +192,6 @@ public class User{
 		this.birthDay = day;
 	}
 
-	public String getMapPath() {
-		return mapPath;
-	}
-
-	public void setMapPath(String mapPath) {
-		this.mapPath = mapPath;
-	}
-
 	public List<TitleEntity> getTitles() {
 		return titles;
 	}
@@ -276,9 +203,8 @@ public class User{
 
 	@Override
 	public String toString() {
-		return "User [username=" + username + ", password=" + password + ", repassword=" + repassword + ", firstName=" + firstName + ", lastName=" + lastName + ", eMail=" + eMail
-				+ ", professionalSkill=" + professionalSkill + ", workplace=" + workplace + ", birthYear=" + birthYear + ", birthMonth=" + birthMonth + ", birthDay=" + birthDay
-				+ ", sex=" + sex + ", newPassword=" + newPassword + ", address=" + address + ", region=" + region + ", country=" + country + ", city=" + city + ", postalCode="
-				+ postalCode + ", regionName=" + regionName + ", mapPath=" + mapPath + "]";
+		return "User [username=" + username + ", password=" + password + ", repassword=" + repassword + ", titleId=" + titleId + ", firstName=" + firstName + ", lastName="
+				+ lastName + ", eMail=" + eMail + ", professionalSkill=" + professionalSkill + ", workplace=" + workplace + ", birthYear=" + birthYear + ", birthMonth="
+				+ birthMonth + ", birthDay=" + birthDay + ", sex=" + sex + ", newPassword=" + newPassword + ", titles=" + titles + "]";
 	}
 }

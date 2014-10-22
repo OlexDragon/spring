@@ -113,8 +113,8 @@ public class LoginController {
 			if(loginEntity.getPassword().equals(password)){
 				userWorker.setUser(loginEntity.getUsername());
 			}else{
-				model.addAttribute("title", "LogingController.expired_link_title");
-				model.addAttribute("message", "LogingController.expired_link");
+				model.addAttribute("title", "LoginController.expired_link_title");
+				model.addAttribute("message", "LoginController.expired_link");
 				return "message";
 			}
 

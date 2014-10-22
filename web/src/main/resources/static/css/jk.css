@@ -28,8 +28,7 @@ input, button, label{
 	background-color: #666666;
 	padding-right: .5em;
 }
-#tables td input[type="text"], #tables td input[type="password"], #tables td input[type="email"],
-#userForm input[type="text"], #userForm input[type="password"], #userForm input[type="email"]{
+table td input[type="text"], table td input[type="password"], table td input[type="email"]{
 	width: 99%;
 }
 #tables, button.jk, #contents a{
@@ -70,7 +69,7 @@ button, checkbox, label, .pntr{
 .contents{
 	padding: .5em;
 }
-.btnDiv, #userForm ul li{
+.btnDiv, #userForm ul li, .inlineB{
 	display: inline-block;
 }
 #tables .btnDiv{
@@ -373,14 +372,11 @@ button.jk{
  .wth40{
  	width: 40em;
  }
- .wth100{
- 	width: 100%;
+#userForm .btnDiv, .wth100{
+ width: 100%;
  }
  .borderBB{
  	border-bottom: 1px solid #867771;
- }
-#userForm .btnDiv{
- width: 100%;
  }
  .w5{
  width: 5em;
