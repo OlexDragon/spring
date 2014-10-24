@@ -1,12 +1,13 @@
 package jk.web.workers;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
 import jk.web.html.select.HTMLOptionElement;
+import jk.web.user.Address.AddressStatus;
+import jk.web.user.Address.AddressType;
 import jk.web.user.entities.AddressEntity;
 import jk.web.user.entities.CountryEntity;
 import jk.web.user.entities.RegionEntity;
@@ -24,11 +25,6 @@ public class AddressWorker {
 
 	private static final Logger logger = LogManager.getLogger();
 
-	public enum AddressStatus{
-		ACTIVE,
-		OLD
-	}
-
 	@Autowired
 	private AddressRepository addressRepository;
 	@Autowired
@@ -36,7 +32,6 @@ public class AddressWorker {
 	@Autowired
 	private CountryRepository countryRepository;
 
-	private String countryCode;
 	private List<HTMLOptionElement> htmlOptionElements;
 
 	public AddressWorker(CountryRepository countryRepository, Set<String> countries) {
@@ -71,35 +66,19 @@ public class AddressWorker {
 	}
 
 	public CountryEntity getCountryEntity(String countryCode) {
-		logger.entry();
-		return countryRepository.findOne(countryCode);
-	}
-
-	public String getCountryCode() {
-		return logger.exit(countryCode);
-	}
-
-	public void setCountryCode(String countryCode) {
-		logger.entry(countryCode);
-		this.countryCode = countryCode==null || countryCode.isEmpty() ? null : countryCode;
-	}
-
-	public CountryEntity getCountryEntity() {
 		return countryCode!=null ? countryRepository.findOne(countryCode) : null;
 	}
 
-	public List<HTMLOptionElement> getRegions(){
-		List<HTMLOptionElement> regions = new ArrayList<HTMLOptionElement>();
+	public List<RegionEntity> getRegionEntities(String countryCode){
+		List<RegionEntity> regions;
 		if(countryCode!=null){
-			List<RegionEntity> findByCountryCode = regionRepository.findByCountryCode(countryCode);
-			if(findByCountryCode!=null)
-				for(RegionEntity r:findByCountryCode)
-					regions.add(new HTMLOptionElement().setValue(r.getRegionEntityPK().getRegionCode()).setInnerHTML(r.getRegionName()));
-		}
+			regions = regionRepository.findByCountryCode(countryCode);
+		}else
+			regions = null;
 		return regions;
 	}
 
-	public RegionEntity getRegionEntity(String regionCode) {
+	public RegionEntity getRegionEntity(String countryCode, String regionCode) {
 		logger.entry(regionCode);
 		RegionEntity regionEntity = null;
 
@@ -111,7 +90,7 @@ public class AddressWorker {
 
 	public AddressEntity save(AddressEntity addressEntity) {
 		logger.entry(addressEntity);
-		List<AddressEntity> addresses = addressRepository.findByUserId(addressEntity.getUserId());
+		List<AddressEntity> addresses = addressRepository.findByUserIdAndType(addressEntity.getUserId(), addressEntity.getType());
 		AddressEntity savedEntity = null;
 		if(addresses!=null){
 			savedEntity = getFrom(addresses, addressEntity);
@@ -128,8 +107,8 @@ public class AddressWorker {
 		return savedEntity;
 	}
 
-	public String getRegionName() {
-		CountryEntity countryEntity = getCountryEntity();
+	public String getRegionName(String countryCode) {
+		CountryEntity countryEntity = getCountryEntity(countryCode);
 		logger.trace("\n\t{}", countryEntity);
 		return countryEntity!=null ? countryEntity.getRegionName() : null;
 	}
@@ -176,5 +155,9 @@ public class AddressWorker {
 			}
 		return containsAE;
 		
+	}
+
+	public List<AddressEntity> getAddressEntities(Long userId, AddressType addressType) {
+		return addressRepository.findByUserIdAndType(userId, addressType);
 	}
 }

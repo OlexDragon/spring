@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.List;
 
 import jk.web.user.Address;
+import jk.web.user.Address.AddressStatus;
+import jk.web.user.Address.AddressType;
 import jk.web.user.User;
 import jk.web.user.User.Gender;
 import jk.web.user.entities.AddressEntity;
@@ -27,7 +29,6 @@ import jk.web.user.repository.EMailRepository;
 import jk.web.user.repository.SocialRepository;
 import jk.web.user.repository.TitleRepository;
 import jk.web.user.repository.UserRepository;
-import jk.web.workers.AddressWorker.AddressStatus;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -248,33 +249,33 @@ public class UserWorker extends LoginWorker{
 			fillUser(user);
 	}
 
-	public void setHomeAddress(String username, Address homeAddress) {
-		logger.trace("\n\t{}\n\t{}", username, homeAddress);
+	public void filllAddress(String username, Address address) {
+		logger.trace("\n\t{}\n\t{}", username, address);
 		setUser(username);
 		if(userEntity!=null){
-			fillUserAddress(homeAddress);
+			fillUserAddress(address);
 		}
-		List<AddressEntity> addressEntities = userEntity.getAddressEntities();
+		List<AddressEntity> addressEntities = addressWorker.getAddressEntities(userEntity.getId(), address.getAddressType());
 		if(addressEntities!=null){
 			for(AddressEntity ae:addressEntities)
-				if(ae.getStatus()==null || ae.getStatus()==AddressStatus.ACTIVE){
+				if((ae.getType()==null || ae.getType()==AddressType.HOME) && (ae.getStatus()==null || ae.getStatus()==AddressStatus.ACTIVE)){
 					logger.trace("\n\t{}",ae);
-					homeAddress.setAddress(ae.getAddress());
-					homeAddress.setCity(ae.getCity());
-					homeAddress.setRegionCode(ae.getRegionsCode());
-					homeAddress.setCountryCode(ae.getCountryCode());
-					homeAddress.setPostalCode(ae.getPostalCode());
+					address.setAddress(ae.getAddress());
+					address.setCity(ae.getCity());
+					address.setRegionCode(ae.getRegionsCode());
+					address.setCountryCode(ae.getCountryCode());
+					address.setPostalCode(ae.getPostalCode());
 					break;
 				}
 		}else{
-			homeAddress.setAddress(null);
-			homeAddress.setCity(null);
-			homeAddress.setRegionCode(null);
-			homeAddress.setCountryCode(null);
-			homeAddress.setPostalCode(null);
+			address.setAddress(null);
+			address.setCity(null);
+			address.setRegionCode(null);
+			address.setCountryCode(null);
+			address.setPostalCode(null);
 		}
-		homeAddress.setMapPath(fileWorker.getMapPath(userEntity.getId()));
-		logger.exit(homeAddress);
+		address.setMapPath(fileWorker.getMapPath(userEntity.getId()));
+		logger.exit(address);
 	}
 
 	public void fillUser(User user) {
@@ -306,33 +307,32 @@ public class UserWorker extends LoginWorker{
 		logger.trace("EXIT\n\t{}\n\t{}", user, userEntity);
 	}
 
-	public void fillUserAddress(Address homeAddress){
+	public void fillUserAddress(Address address){
 
-		homeAddress.setTitle("home");
-		homeAddress.setButtonName("submit_home_address");
+		AddressEntity addressEntity = getAddressEntity(address.getAddressType());
+		logger.trace("\n\t{}", addressEntity);
 
-		AddressEntity addressEntity = getAddressEntity();
 		if(addressEntity!=null) {
 
 			CountryEntity countryEntity = addressEntity.getCountryEntity();
 			RegionEntity regionEntity = addressEntity.getRegionEntity();
 
 			if(countryEntity!=null){
-				homeAddress.setCountryCode(countryEntity.getCountryCode());
-				homeAddress.setRegionName(countryEntity.getRegionName());
+				address.setCountryCode(countryEntity.getCountryCode());
+				address.setRegionName(countryEntity.getRegionName());
 			}
-			homeAddress.setAddress(addressEntity.getAddress());
-			homeAddress.setCity(addressEntity.getCity());
-			homeAddress.setPostalCode(addressEntity.getPostalCode());
+			address.setAddress(addressEntity.getAddress());
+			address.setCity(addressEntity.getCity());
+			address.setPostalCode(addressEntity.getPostalCode());
 			if(regionEntity!=null) {
 				RegionEntityPK regionEntityPK = regionEntity.getRegionEntityPK();
 				if(regionEntityPK!=null){
-					homeAddress.setRegionCode(regionEntityPK.getRegionCode());
+					address.setRegionCode(regionEntityPK.getRegionCode());
 				}
 			} else
-				homeAddress.setRegionCode(null);
+				address.setRegionCode(null);
 		}else
-			homeAddress.setRegionCode(null);
+			address.setRegionCode(null);
 	}
 
 	private String getUsername() {
@@ -557,18 +557,18 @@ public class UserWorker extends LoginWorker{
 		return userEntity.getLoginEntity();
 	}
 
-	public AddressEntity getAddressEntity(String username) {
+	public AddressEntity getAddressEntity(String username, AddressType addressType) {
 		setUser(username);
-		return getAddressEntity();
+		return getAddressEntity(addressType);
 	}
 
-	public AddressEntity getAddressEntity() {
+	public AddressEntity getAddressEntity(AddressType addressType) {
 		AddressEntity addressEntity = null;
 		if(userEntity!=null) {
 			List<AddressEntity> aes = userEntity.getAddressEntities();
 			if(aes!=null)
 				for(AddressEntity a:aes){
-					if(a.getStatus()==AddressStatus.ACTIVE){
+					if(a.getType()==addressType && a.getStatus()==AddressStatus.ACTIVE){
 						addressEntity = a;
 						break;
 					}
@@ -610,8 +610,8 @@ public class UserWorker extends LoginWorker{
 		return logger.exit(calendar.getTime());
 	}
 
-	public String getCountryCode() {
-		AddressEntity addressEntity = getAddressEntity();
+	public String getCountryCode(AddressType addressType) {
+		AddressEntity addressEntity = getAddressEntity(addressType);
 		return addressEntity!=null ? addressEntity.getCountryCode() : null;
 	}
 }

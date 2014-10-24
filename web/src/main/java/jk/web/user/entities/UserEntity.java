@@ -47,8 +47,8 @@ public class UserEntity implements Serializable {
     @Column(name = "logins_loginID", nullable = false)
     private Long id;
 
-    @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name="title_id")
+    @ManyToOne(fetch=FetchType.EAGER, optional=true)
+    @JoinColumn(name="title_id", updatable=false, insertable=false, nullable=true)
     private TitleEntity title;
 
     @Size(min = 1, max = 164)
@@ -191,22 +191,14 @@ public class UserEntity implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
+         return id != null ? id.hashCode() : 0;
     }
 
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof UserEntity)) {
-            return false;
-        }
-        UserEntity other = (UserEntity) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+    public boolean equals(Object obj) {
+        return obj!=null	? obj.hashCode()!=0 ? obj.hashCode()==hashCode()
+        										: obj==this
+        					: false;
     }
 
 	public List<ProfessionalSkillEntity> getProfessionalSkills() {
@@ -227,7 +219,8 @@ public class UserEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "UserEntity [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", birthday=" + birthday + ", emails=" + emails + ", addressEntities="
-				+ addressEntities + ", gender=" + gender + ", professionalSkills=" + professionalSkills + ", workplaces=" + workplaces + ", loginEntity=" + loginEntity + "]";
+		return "UserEntity [id=" + id + ", title=" + title + ", firstName=" + firstName + ", lastName=" + lastName + ", birthday=" + birthday + ", emails=" + emails
+				+ ", addressEntities=" + addressEntities + ", gender=" + gender + ", professionalSkills=" + professionalSkills + ", workplaces=" + workplaces + ", loginEntity="
+				+ loginEntity + "]";
 	}
 }

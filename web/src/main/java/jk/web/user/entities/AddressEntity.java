@@ -28,7 +28,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import jk.web.workers.AddressWorker.AddressStatus;
+import jk.web.user.Address.AddressStatus;
+import jk.web.user.Address.AddressType;
 
 /**
  * @author Oleksandr Potomkin
@@ -48,6 +49,11 @@ public class AddressEntity implements Serializable {
     @Basic(optional = false)
     @Column(name = "logins_loginID")
     private Long userId;
+
+    @Basic
+    @Column(name = "type")
+    @Enumerated(EnumType.ORDINAL)
+    private AddressType type;
 
     @Basic(optional = false)
     @NotNull
@@ -125,6 +131,15 @@ public class AddressEntity implements Serializable {
 
 	public void setUserId(Long userId) {
 		this.userId = userId;
+	}
+
+	public AddressType getType() {
+		return type;
+	}
+
+	public AddressEntity setType(AddressType type) {
+		this.type = type;
+		return this;
 	}
 
 	public String getAddress() {
