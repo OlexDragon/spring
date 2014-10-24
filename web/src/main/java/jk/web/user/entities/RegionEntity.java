@@ -31,15 +31,19 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 public class RegionEntity implements Serializable {
     private static final long serialVersionUID = 1L;
+
     @EmbeddedId
     protected RegionEntityPK regionEntityPK;
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 145)
     @Column(name = "region_name")
     private String regionName;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "regionEntity")
     private List<AddressEntity> addressEntityList;
+
     @JoinColumn(name = "country_code", referencedColumnName = "country_code", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private CountryEntity countryEntity;

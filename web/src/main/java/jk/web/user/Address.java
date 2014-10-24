@@ -6,12 +6,18 @@ import jk.web.user.entities.RegionEntity;
 
 public class Address {
 
-	private static List<RegionEntity> regions;
+	public enum AddressType{
 
-	private String title;
-	private boolean showAddress;
-	private String buttonName;
-	private boolean editAddress;
+		HOME,
+		WORK;
+	}
+
+	public enum AddressStatus{
+		ACTIVE,
+		OLD
+	}
+
+	private AddressType addressType;
 
 	//thymeleaf fields
 	private String address;
@@ -32,20 +38,28 @@ public class Address {
 	private String mapPath;
 	private String regionCodeError;
 
-	public static List<RegionEntity> getRegions() {
+	private List<RegionEntity> regions;
+
+	private boolean showAddress;
+
+	private boolean editAddress;
+
+	public Address() { }
+
+	public Address(AddressType addressType) {
+		this.addressType = addressType;
+	}
+
+	public AddressType getAddressType() {
+		return addressType;
+	}
+
+	public  List<RegionEntity> getRegions() {
 		return regions;
 	}
 
-	public static void setRegions(List<RegionEntity> regions) {
-		Address.regions = regions;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
+	public void setRegions(List<RegionEntity> regions) {
+		this.regions = regions;
 	}
 
 	public boolean isShowAddress() {
@@ -54,14 +68,6 @@ public class Address {
 
 	public void setShowAddress(boolean showAddress) {
 		this.showAddress = showAddress;
-	}
-
-	public String getButtonName() {
-		return buttonName;
-	}
-
-	public void setButtonName(String buttonName) {
-		this.buttonName = buttonName;
 	}
 
 	public boolean isEditAddress() {
@@ -170,9 +176,9 @@ public class Address {
 
 	@Override
 	public String toString() {
-		return "Address [title=" + title + ", showAddress=" + showAddress + ", buttonName=" + buttonName + ", editAddress=" + editAddress + ", address=" + address
-				+ ", addressError=" + addressError + ", city=" + city + ", cityError=" + cityError + ", regionName=" + regionName + ", regionCode=" + regionCode + ", countryCode="
-				+ countryCode + ", countryCodeError=" + countryCodeError + ", postalCode=" + postalCode + ", postalCodeError=" + postalCodeError + ", mapPath=" + mapPath
-				+ ", regionCodeError=" + regionCodeError + "]";
+		return "Address [addressType=" + addressType + ", address=" + address + ", addressError=" + addressError + ", city=" + city + ", cityError=" + cityError + ", regionName="
+				+ regionName + ", regionCode=" + regionCode + ", countryCode=" + countryCode + ", countryCodeError=" + countryCodeError + ", postalCode=" + postalCode
+				+ ", postalCodeError=" + postalCodeError + ", mapPath=" + mapPath + ", regionCodeError=" + regionCodeError + ", regions=" + regions + ", showAddress="
+				+ showAddress + ", editAddress=" + editAddress + "]";
 	}
 }

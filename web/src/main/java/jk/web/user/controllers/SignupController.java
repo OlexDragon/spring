@@ -72,9 +72,18 @@ public class SignupController {
 	@RequestMapping(value="/signup", method=RequestMethod.GET)
 	public String signup(User user, Model model){
 		logger.entry(RequestMethod.GET);
-		user.setTitles(titleRepository.findAll(new Sort("id")));
-		model.addAttribute("yearsList", getYearsList());
+		signupAttributes(model, user, titleRepository);
 		return "home";
+	}
+
+	public static void signupAttributes(Model model, User user, TitleRepository titleRepository) {
+
+		if(	SecurityContextHolder.getContext().getAuthentication() == null ||
+				!SecurityContextHolder.getContext().getAuthentication().isAuthenticated()){
+
+			user.setTitles(titleRepository.findAll(new Sort("title_id")));
+			model.addAttribute("yearsList", getYearsList());
+		}
 	}
 
 	@RequestMapping(value="/signup", method=RequestMethod.POST)

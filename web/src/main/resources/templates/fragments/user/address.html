@@ -14,6 +14,9 @@
 			$("#homeH").click(function() {
 				$("#homeTbl").toggle(500);
 			});
+			$("#workH").click(function() {
+				$("#workTbl").toggle(500);
+			});
 		});
 </script>
 </head>
@@ -22,25 +25,26 @@
 	<div class="bttm5 bclr wth40" th:fragment="localisation">
 		<div class="btnBrdr"></div>
     	<h2 id="lclstnH" th:text="#{localisation}" class="cntr pntr">Profile</h2>
-    	<div id="lclstnTbls" th:class="${homeAddress.showAddress}==false ? 'dn'">
- 			<div th:replace="fragments/user/address :: address(${homeAddress})"></div>
+    	<div id="lclstnTbls" th:class="${HOME_Addr.showAddress}==${WORK_Addr.showAddress} ? 'dn'">
+ 			<div th:replace="fragments/user/address :: address(${HOME_Addr})"></div>
+  			<div th:replace="fragments/user/address :: address(${WORK_Addr})"></div>
  		</div>
 		<div class="btnBrdr"></div>
  	</div>
 
-    <div id="homeLclstn" class="bttm5 wth100" th:fragment="address(addr)">
+    <div class="bttm5 wth100" th:fragment="address(addr)">
  		<div class="btnBrdr"></div>
-    	<h2 id="homeH" th:text="#{__'address.'+${addr.title}__}" class="cntr pntr clrY">Title</h2>
-  		<div id="homeTbl"  th:class="${addr.showAddress}==false ? 'dn'">
+    	<h2 th:id="${addr.addressType+'_H'}" th:text="#{__'address.'+${addr.addressType}__}" class="cntr pntr clrY">Title</h2>
+  		<div th:id="${addr.addressType+'_Tbl'}"  th:class="${addr.showAddress}==false ? 'dn'">
    			<form action="user" th:action="@{/user}" method="post">
 			<table class="wth100 th_right">
 				<tr>
 					<td class="w5">
 						<button type="submit"
-							name="${addr.buttonName}"
+							name="${'sbmt_addr_'+addr.addressType}"
 							th:id="${addr.editAddress ? 'activeButton'}"
 							th:text="${addr.editAddress ? #{user.save} : #{user.edit}"
-							th:replace="fragments/menu :: jk_button(${addr.editAddress} ? #{user.save} : #{user.edit}, ${addr.editAddress ? 'activeButton' : null}, ${addr.buttonName})">Edit</button></td>
+							th:replace="fragments/menu :: jk_button(${addr.editAddress} ? #{user.save} : #{user.edit}, ${addr.editAddress ? 'activeButton' : null}, ${'sbmt_addr_'+addr.addressType})">Edit</button></td>
 					<th class="w10" th:text="#{address.address}">Address</th>
 					<td class="w13" th:switch="${addr.editAddress}">
 						<input th:case="${true}" type="text" th:field="${address.address}" th:value="${addr.address}" autofocus="autofocus"/>
@@ -63,7 +67,7 @@
 			<td th:switch="${addr.editAddress}">
 				<select th:case="${true}" th:field="${address.regionCode}">
 					<option th:value="null" th:text="#{Select}">Select</option>
-					<option th:each="region : ${addr.regions}" th:value="${region.id}" th:text="#{__(${addr.region.countryCode}+'.'+${region.id})__}" />
+					<option th:each="r : ${addr.regions}" th:value="${r.regionEntityPK.regionCode}" th:text="#{__${r.regionEntityPK.countryCode}+'.'+${r.regionEntityPK.regionCode}__}" />
 				</select>
 				<p th:case="*" th:text="#{__(${addr.countryCode}+'.'+${addr.regionCode})__}" class="clrY">Region</p>
 			</td>
@@ -88,7 +92,7 @@
 				<input th:case="${true}" type="text" th:field="${address.postalCode}" th:value="${addr.postalCode}"/>
 				<p th:case="*" th:text="${addr.postalCode}" class="clrY">Postal code</p>
 			</td>
-       		<td><p class="error" th:if="${addr.postalCode}!=null" th:text="${addr.postalCode}">Postal code error</p></td>
+       		<td><p class="error" th:if="${addr.postalCodeError}!=null" th:text="#{__${addr.postalCodeError}__}">Postal code error</p></td>
 		</tr>
 		<tr>
 			<td colspan="4" class="cntr "><img th:if="${addr.mapPath}!=null" alt="Map" th:src="${addr.mapPath}" /></td>

@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.NoSuchMessageException;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -54,9 +53,9 @@ public class LoginController {
 	private String mainURL;
 
 	@RequestMapping
-	public String login(User user) {
+	public String login(User user, Model model) {
 		logger.entry(user);
-		user.setTitles(titleRepository.findAll(new Sort("id")));
+		SignupController.signupAttributes(model, user, titleRepository);
 		return "home";
 	}
 
