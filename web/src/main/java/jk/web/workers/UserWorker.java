@@ -249,33 +249,39 @@ public class UserWorker extends LoginWorker{
 			fillUser(user);
 	}
 
-	public void filllAddress(String username, Address address) {
+	public void filllUserAddress(String username, Address address) {
 		logger.trace("\n\t{}\n\t{}", username, address);
 		setUser(username);
-		if(userEntity!=null){
-			fillUserAddress(address);
-		}
-		List<AddressEntity> addressEntities = addressWorker.getAddressEntities(userEntity.getId(), address.getAddressType());
-		if(addressEntities!=null){
-			for(AddressEntity ae:addressEntities)
-				if((ae.getType()==null || ae.getType()==AddressType.HOME) && (ae.getStatus()==null || ae.getStatus()==AddressStatus.ACTIVE)){
-					logger.trace("\n\t{}",ae);
-					address.setAddress(ae.getAddress());
-					address.setCity(ae.getCity());
-					address.setRegionCode(ae.getRegionsCode());
-					address.setCountryCode(ae.getCountryCode());
-					address.setPostalCode(ae.getPostalCode());
-					break;
-				}
-		}else{
-			address.setAddress(null);
-			address.setCity(null);
-			address.setRegionCode(null);
-			address.setCountryCode(null);
-			address.setPostalCode(null);
-		}
-		address.setMapPath(fileWorker.getMapPath(userEntity.getId()));
+		fillUserAddress(address);
 		logger.exit(address);
+	}
+
+	public void fillUserAddress(Address address){
+
+		AddressEntity addressEntity = getAddressEntity(address.getAddressType());
+		logger.trace("\n\t{}", addressEntity);
+
+		if(addressEntity!=null) {
+
+			CountryEntity countryEntity = addressEntity.getCountryEntity();
+
+			if(countryEntity!=null){
+				address.setCountryCode(countryEntity.getCountryCode());
+				address.setRegionName(countryEntity.getRegionName());
+			}
+			address.setAddress(addressEntity.getAddress());
+			address.setCity(addressEntity.getCity());
+			address.setPostalCode(addressEntity.getPostalCode());
+
+			RegionEntity regionEntity = addressEntity.getRegionEntity();
+			if(regionEntity!=null) {
+				RegionEntityPK regionEntityPK = regionEntity.getRegionEntityPK();
+				if(regionEntityPK!=null){
+					address.setRegionCode(regionEntityPK.getRegionCode());
+				}
+			} 
+		}
+		address.setMapPath(fileWorker.getMapFileUrl(address.getAddressType(), userEntity.getId()));
 	}
 
 	public void fillUser(User user) {
@@ -305,34 +311,6 @@ public class UserWorker extends LoginWorker{
 		user.setTitles(titleRepository.findAll());
 
 		logger.trace("EXIT\n\t{}\n\t{}", user, userEntity);
-	}
-
-	public void fillUserAddress(Address address){
-
-		AddressEntity addressEntity = getAddressEntity(address.getAddressType());
-		logger.trace("\n\t{}", addressEntity);
-
-		if(addressEntity!=null) {
-
-			CountryEntity countryEntity = addressEntity.getCountryEntity();
-			RegionEntity regionEntity = addressEntity.getRegionEntity();
-
-			if(countryEntity!=null){
-				address.setCountryCode(countryEntity.getCountryCode());
-				address.setRegionName(countryEntity.getRegionName());
-			}
-			address.setAddress(addressEntity.getAddress());
-			address.setCity(addressEntity.getCity());
-			address.setPostalCode(addressEntity.getPostalCode());
-			if(regionEntity!=null) {
-				RegionEntityPK regionEntityPK = regionEntity.getRegionEntityPK();
-				if(regionEntityPK!=null){
-					address.setRegionCode(regionEntityPK.getRegionCode());
-				}
-			} else
-				address.setRegionCode(null);
-		}else
-			address.setRegionCode(null);
 	}
 
 	private String getUsername() {
@@ -565,10 +543,10 @@ public class UserWorker extends LoginWorker{
 	public AddressEntity getAddressEntity(AddressType addressType) {
 		AddressEntity addressEntity = null;
 		if(userEntity!=null) {
-			List<AddressEntity> aes = userEntity.getAddressEntities();
+			List<AddressEntity> aes = addressWorker.getAddressEntities(userEntity.getId(), addressType);
 			if(aes!=null)
 				for(AddressEntity a:aes){
-					if(a.getType()==addressType && a.getStatus()==AddressStatus.ACTIVE){
+					if(a.getStatus()==AddressStatus.ACTIVE){
 						addressEntity = a;
 						break;
 					}

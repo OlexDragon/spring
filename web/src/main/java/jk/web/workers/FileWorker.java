@@ -7,7 +7,7 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 
-import jk.web.configuration.WebConfig;
+import jk.web.user.Address.AddressType;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,7 +21,7 @@ public class FileWorker {
 	public final static String GOOGLE_MAP_SIZE_PARAM = "&size=";
 	public final static String GOOGLE_API_KEY_PARAM = "&key=";
 	public final static String GOOGLE_MAP_MARKERS ="&markers=size:mid%7Ccolor:red%7C";
-	public final static String MAPS_RELATIVE_PATH = File.separator+"images"+File.separator+"maps"+File.separator;
+	public final static String MAPS_URL = "/images/maps/";
 
 	private final String FILES_PATH;
 	private final String GOOGLE_API_KEY;
@@ -33,14 +33,14 @@ public class FileWorker {
 		FILES_PATH = filesPath;
 		GOOGLE_API_KEY = GOOGLE_API_KEY_PARAM+googleApiKey;
 		GOOGLE_MAP_SIZE = GOOGLE_MAP_SIZE_PARAM+googleMapSize;
-		MAPS_FULL_PATH = FILES_PATH+MAPS_RELATIVE_PATH;
+		MAPS_FULL_PATH = FILES_PATH+MAPS_URL;
 
 		File file = new File(MAPS_FULL_PATH);
 		if(!(file.exists() || file.isDirectory()))
 				file.mkdirs();
 	}
 
-	public void saveMap(Long userId, String address, String city, String regionsCode, String country, String postalCode) {
+	public void saveMap(File file, String address, String city, String regionsCode, String country, String postalCode) {
 		StringBuilder sb = new StringBuilder();
 		if(address!=null && !address.isEmpty())
 			sb.append(address);
@@ -71,11 +71,11 @@ public class FileWorker {
 			sb.append(GOOGLE_MAP_SIZE);
 			sb.append(GOOGLE_API_KEY);
 			String url = sb.toString().trim().replaceAll(" ", "+");
-			logger.trace("\n\t{}", url);
+			logger.trace("\n\t{}\n\t{}", url, file);
 
-			if(userId!=null){
+			if(file!=null){
 				try {
-					urlToFile(MAPS_FULL_PATH+userId+".png", url);
+					urlToFile(file, url);
 				} catch (IOException e) {
 					logger.catching(e);
 				}
@@ -83,23 +83,32 @@ public class FileWorker {
 		}
 	}
 
-	private void urlToFile(String fileName, String url) throws IOException {
+	private void urlToFile(File file, String url) throws IOException {
+		logger.trace("\n\t"
+				+ "fileName -\t{}",
+				file);
 		URL website = new URL(url);
 		ReadableByteChannel rbc = Channels.newChannel(website.openStream());
-		try(FileOutputStream fos = new FileOutputStream(fileName);){
+		try(FileOutputStream fos = new FileOutputStream(file);){
 			fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
 		}
 	}
 
-	public String getMapPath(Long userId){
-		logger.entry(userId);
-		String fileName = userId+".png";
-		File f = new File(MAPS_FULL_PATH, fileName);
-		String pathname;
-		if(f.exists())
-			pathname = WebConfig.MAPES_RESOURCE+fileName;
+	public File getMapFile(Long userId, AddressType addressType){
+		return new File(MAPS_FULL_PATH, getMapFileName(addressType, userId));
+	}
+
+	public String getMapFileUrl(AddressType addressType, Long userId) {
+		File mapFile = getMapFile(userId, addressType);
+		String url;
+		if(mapFile.exists())
+			url = MAPS_URL+getMapFileName(addressType, userId);
 		else
-			pathname = null;
-		return logger.exit(pathname);
+			url = null;
+		return url;
+	}
+
+	public String getMapFileName(AddressType addressType, Long userId) {
+		return "map"+addressType+userId+".png";
 	}
 }
