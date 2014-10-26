@@ -181,4 +181,8 @@ public class Address {
 				+ ", postalCodeError=" + postalCodeError + ", mapPath=" + mapPath + ", regionCodeError=" + regionCodeError + ", regions=" + regions + ", showAddress="
 				+ showAddress + ", editAddress=" + editAddress + "]";
 	}
+
+	public void setAddressType(AddressType addressType) {
+		this.addressType = addressType;
+	}
 }

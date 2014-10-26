@@ -369,15 +369,6 @@ button.jk{
 .borderB{
 	border: 1px solid black;
 }
- .wth40{
- 	width: 40em;
- }
-#userForm .btnDiv, .wth100{
- width: 100%;
- }
- .borderBB{
- 	border-bottom: 1px solid #867771;
- }
  .w5{
  width: 5em;
  }
@@ -389,6 +380,15 @@ button.jk{
  }
  .w13{
  width: 16em;
+ }
+ .w40{
+ 	width: 40em;
+ }
+#userForm .btnDiv, .w100{
+ width: 100%;
+ }
+ .borderBB{
+ 	border-bottom: 1px solid #867771;
  }
  caption {
 	font-size: 150%;

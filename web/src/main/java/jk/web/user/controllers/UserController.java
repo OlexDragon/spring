@@ -53,9 +53,14 @@ public class UserController {
 
 		String username = principal.getName();
 
-		fillUser(model);
+		User user = new User();
+		userWorker.fillUser(user);
+		model.addAttribute("user", user);
+
 		Address homeAddress = resetAddress(username, model, AddressType.HOME);
+		homeAddress.setEditAddress(false);
 		Address workAddress = resetAddress(username, model, AddressType.WORK);
+		workAddress.setShowAddress(false);
 
 		logger.trace("\n\thomeAddress = {}\n\tworkAddress = {}", homeAddress, workAddress);
 		return "user";
@@ -63,11 +68,26 @@ public class UserController {
 
 	public Address resetAddress(String username, Model model, AddressType addressType) {
 		Address address = new Address(addressType);
-		address.setEditAddress(false);
-		address.setShowAddress(false);
-		userWorker.filllAddress(username, address);
+		userWorker.filllUserAddress(username, address);
 		model.addAttribute(addressType+"_Addr", address);
 		return address;
+	}
+
+	@RequestMapping(value="/user", method=RequestMethod.POST, params = "cancel_profile")
+	public String cancelProfile(Principal principal, Model model){
+
+		String username = principal.getName();
+
+		User user = new User();
+		userWorker.fillUser(user);
+		model.addAttribute("user", user);
+		model.addAttribute("showP", true);
+
+		Address homeAddress = resetAddress(username, model, AddressType.HOME);
+		Address workAddress = resetAddress(username, model, AddressType.WORK);
+
+		logger.trace("\n\thomeAddress = {}\n\tworkAddress = {}", homeAddress, workAddress);
+		return "user";
 	}
 
 	@RequestMapping(value="/user", method=RequestMethod.POST, params = "submit_edit_username")
@@ -104,11 +124,11 @@ public class UserController {
 		userWorker.fillUser(user);
 
 		Address homeAddress = new Address(AddressType.HOME);
-		userWorker.filllAddress(username, homeAddress);
+		userWorker.filllUserAddress(username, homeAddress);
 		model.addAttribute(AddressType.HOME+"_Addr", homeAddress);
 
 		Address workAddress = new Address(AddressType.WORK);
-		userWorker.filllAddress(username, workAddress);
+		userWorker.filllUserAddress(username, workAddress);
 		model.addAttribute(AddressType.WORK+"_Addr", workAddress);
 
 		return logger.exit("user");
@@ -134,11 +154,11 @@ public class UserController {
 
 		userWorker.fillUser(user);
 		Address homeAddress = new Address(AddressType.HOME);
-		userWorker.filllAddress(username, homeAddress);
+		userWorker.filllUserAddress(username, homeAddress);
 		model.addAttribute(AddressType.HOME+"_Addr", homeAddress);
 
 		Address workAddress = new Address(AddressType.WORK);
-		userWorker.filllAddress(username, workAddress);
+		userWorker.filllUserAddress(username, workAddress);
 		model.addAttribute(AddressType.WORK+"_Addr", workAddress);
 
 		model.addAttribute("showP", true);
@@ -161,11 +181,11 @@ public class UserController {
 
 		userWorker.fillUser(user);
 		Address homeAddress = new Address(AddressType.HOME);
-		userWorker.filllAddress(username, homeAddress);
+		userWorker.filllUserAddress(username, homeAddress);
 		model.addAttribute(AddressType.HOME+"_Addr", homeAddress);
 
 		Address workAddress = new Address(AddressType.WORK);
-		userWorker.filllAddress(username, workAddress);
+		userWorker.filllUserAddress(username, workAddress);
 		model.addAttribute(AddressType.WORK+"_Addr", workAddress);
 
 		model.addAttribute("showP", true);
@@ -197,11 +217,11 @@ public class UserController {
 
 		userWorker.fillUser(user);
 		Address homeAddress = new Address(AddressType.HOME);
-		userWorker.filllAddress(username, homeAddress);
+		userWorker.filllUserAddress(username, homeAddress);
 		model.addAttribute(AddressType.HOME+"_Addr", homeAddress);
 
 		Address workAddress = new Address(AddressType.WORK);
-		userWorker.filllAddress(username, workAddress);
+		userWorker.filllUserAddress(username, workAddress);
 		model.addAttribute(AddressType.WORK+"_Addr", workAddress);
 
 		model.addAttribute("showP", true);
@@ -232,11 +252,11 @@ public class UserController {
 
 		userWorker.fillUser(user);
 		Address homeAddress = new Address(AddressType.HOME);
-		userWorker.filllAddress(username, homeAddress);
+		userWorker.filllUserAddress(username, homeAddress);
 		model.addAttribute(AddressType.HOME+"_Addr", homeAddress);
 
 		Address workAddress = new Address(AddressType.WORK);
-		userWorker.filllAddress(username, workAddress);
+		userWorker.filllUserAddress(username, workAddress);
 		model.addAttribute(AddressType.WORK+"_Addr", workAddress);
 
 		model.addAttribute("showP", true);
@@ -268,11 +288,11 @@ public class UserController {
 
 		userWorker.fillUser(user);
 		Address homeAddress = new Address(AddressType.HOME);
-		userWorker.filllAddress(username, homeAddress);
+		userWorker.filllUserAddress(username, homeAddress);
 		model.addAttribute(AddressType.HOME+"_Addr", homeAddress);
 
 		Address workAddress = new Address(AddressType.WORK);
-		userWorker.filllAddress(username, workAddress);
+		userWorker.filllUserAddress(username, workAddress);
 		model.addAttribute(AddressType.WORK+"_Addr", workAddress);
 
 		model.addAttribute("showP", true);
@@ -303,11 +323,11 @@ public class UserController {
 
 		userWorker.fillUser(user);
 		Address homeAddress = new Address(AddressType.HOME);
-		userWorker.filllAddress(username, homeAddress);
+		userWorker.filllUserAddress(username, homeAddress);
 		model.addAttribute(AddressType.HOME+"_Addr", homeAddress);
 
 		Address workAddress = new Address(AddressType.WORK);
-		userWorker.filllAddress(username, workAddress);
+		userWorker.filllUserAddress(username, workAddress);
 		model.addAttribute(AddressType.WORK+"_Addr", workAddress);
 
 		model.addAttribute("showP", true);
@@ -348,11 +368,11 @@ public class UserController {
 		userWorker.fillUser(user);
 
 		Address homeAddress = new Address(AddressType.HOME);
-		userWorker.filllAddress(username, homeAddress);
+		userWorker.filllUserAddress(username, homeAddress);
 		model.addAttribute(AddressType.HOME+"_Addr", homeAddress);
 
 		Address workAddress = new Address(AddressType.WORK);
-		userWorker.filllAddress(username, workAddress);
+		userWorker.filllUserAddress(username, workAddress);
 		model.addAttribute(AddressType.WORK+"_Addr", workAddress);
 
 		model.addAttribute("showP", true);
@@ -366,16 +386,51 @@ public class UserController {
 		return saved;
 	}
 
+	@RequestMapping(value="/user", method=RequestMethod.POST, params = "cancel_addr_WORK")
+	public String cancelWorkAddress(Address address, Principal principal, Model model){
+
+		String username = principal.getName();
+
+		User user = new User();
+		userWorker.fillUser(user);
+		model.addAttribute("user", user);
+
+		Address homeAddress = resetAddress(username, model, AddressType.HOME);
+		Address workAddress = resetAddress(username, model, AddressType.WORK);
+		workAddress.setShowAddress(true);
+
+		logger.trace("\n\thomeAddress = {}\n\tworkAddress = {}", homeAddress, workAddress);
+		return "user";
+	}
+
+	@RequestMapping(value="/user", method=RequestMethod.POST, params = "cancel_addr_HOME")
+	public String cancelHomeAddress(Address address, Principal principal, Model model){
+
+		String username = principal.getName();
+
+		User user = new User();
+		userWorker.fillUser(user);
+		model.addAttribute("user", user);
+
+		Address homeAddress = resetAddress(username, model, AddressType.HOME);
+		Address workAddress = resetAddress(username, model, AddressType.WORK);
+		homeAddress.setShowAddress(true);
+
+		logger.trace("\n\thomeAddress = {}\n\tworkAddress = {}", homeAddress, workAddress);
+		return "user";
+	}
+
 	@RequestMapping(value="/user", method=RequestMethod.POST, params = "sbmt_addr_WORK")
 	public String editWorkAddress(Address address, Principal principal, Model model){
 
 		String username = principal.getName();
 
 		Address homeAddress = new Address(AddressType.HOME);
-		userWorker.filllAddress(username, homeAddress);
+		userWorker.filllUserAddress(username, homeAddress);
 		model.addAttribute(AddressType.HOME+"_Addr", homeAddress);
 
 		AddressEntity addressEntity = userWorker.getAddressEntity(username, AddressType.WORK);
+		address.setAddressType(AddressType.WORK);
 
 		return editAddress(username, addressEntity, address, new Address(AddressType.WORK), model);
 	}
@@ -386,170 +441,153 @@ public class UserController {
 		String username = principal.getName();
 
 		Address workAddress = new Address(AddressType.WORK);
-		userWorker.filllAddress(username, workAddress);
+		userWorker.filllUserAddress(username, workAddress);
 		model.addAttribute(AddressType.WORK+"_Addr", workAddress);
 
 		AddressEntity addressEntity = userWorker.getAddressEntity(username, AddressType.HOME);
-		
+		address.setAddressType(AddressType.HOME);
+
 		return editAddress(username, addressEntity, address, new Address(AddressType.HOME), model);
 	}
 
 	public String editAddress(String username, AddressEntity addressEntity, Address address, Address modelAddress, Model model){
 
-		//Address
-		checkAdress(addressEntity, address, modelAddress);
-
-		//City
-		checkCity(addressEntity, address, modelAddress);
-
-		//Postal code
-		checkPostalCode(addressEntity, address, modelAddress);
-
-		//Country
-		String countryCode = address.getCountryCode();
-		String regionCode = address.getRegionCode();
-		AddressEntity ae = userWorker.getAddressEntity(modelAddress.getAddressType());
-		String uwCountryCode = ae!=null ? ae.getCountryCode() : null;
-		CountryEntity ce = null;
-
-		if(countryCode==null || countryCode.isEmpty()){
-			if(ae!=null)
-				ce = ae.getCountryEntity();
-			modelAddress.setRegions(addressWorker.getRegionEntities(uwCountryCode));
-			countryCode = uwCountryCode;
+		String aeStr = addressEntity!=null ? addressEntity .getAddress() : null;
+		String addressStr = address.getAddress();
+		Boolean isError = checkAdress(aeStr, addressStr);
+		if(isError!=null){
 			modelAddress.setEditAddress(true);
-			if(addressEntity==null || addressEntity.getCountryCode()==null || addressEntity.getCountryCode().isEmpty())
+			if(isError)
+				modelAddress.setAddressError("address.enter_address");
+			else if(addressStr==null)
+				address.setAddress(aeStr);
+		}
+
+		aeStr = addressEntity!=null ? addressEntity.getCity() : null;
+		addressStr = address.getCity();
+		isError = checkAdress(aeStr, addressStr);
+		if(isError!=null){
+			modelAddress.setEditAddress(true);
+			if(isError)
+				modelAddress.setCityError("address.enter_city");
+			else if(addressStr==null)
+				address.setCity(aeStr);
+		}
+
+		aeStr = addressEntity!=null ? addressEntity.getPostalCode() : null;
+		addressStr = address.getPostalCode();
+		isError = checkAdress(aeStr, addressStr);
+		if(isError!=null){
+			modelAddress.setEditAddress(true);
+			if(isError)
+				modelAddress.setPostalCodeError("address.enter_postal_code");
+			else if(addressStr==null)
+				address.setPostalCode(aeStr);
+		}
+
+		aeStr = addressEntity!=null ? addressEntity.getCountryCode() : null;
+		addressStr = address.getCountryCode();
+		isError = checkAdress(aeStr, addressStr);
+		if(isError!=null){
+			modelAddress.setEditAddress(true);
+			if(isError)
 				modelAddress.setCountryCodeError("address.select_country");
-			modelAddress.setRegionCode(null);
-			modelAddress.setCountryCode(null);
-		}else{
-			modelAddress.setCountryCode(countryCode);
-			modelAddress.setRegions(addressWorker.getRegionEntities(countryCode));
-			modelAddress.setCountryCodeError(null);
-			if(uwCountryCode!=null && !countryCode.equals(uwCountryCode))
-				modelAddress.setEditAddress(true);
+			else if(addressStr==null){
+				addressStr = aeStr;
+				address.setCountryCode(aeStr);
+			}
+		}
+		CountryEntity countryEntity = null;
+		if(addressStr!=null && !addressStr.isEmpty()){
+			countryEntity = addressWorker.getCountryEntity(addressStr);
+			if(countryEntity!=null){
+				String regionName = countryEntity.getRegionName();
+				modelAddress.setRegionName(regionName);
+				if(regionName!=null){
+					modelAddress.setRegions(addressWorker.getRegionEntities(addressStr));
 
-			ce = addressWorker.getCountryEntity(countryCode);
-
-			String regionName = ce.getRegionName();
-			if(ce!=null && regionName!=null){
-				if(regionCode==null || regionCode.isEmpty()){
-					modelAddress.setEditAddress(true);
-					if(addressEntity==null || addressEntity.getRegionsCode()==null || addressEntity.getRegionsCode().isEmpty()){
-						modelAddress.setRegionCodeError("address.select_"+regionName);
+					
+					aeStr = addressEntity!=null ? addressEntity.getRegionsCode() : null;
+					addressStr = address.getRegionCode();
+					isError = checkAdress(aeStr, addressStr);
+					if(isError!=null){
 						modelAddress.setEditAddress(true);
+						if(isError)
+							modelAddress.setRegionCodeError("address.select_"+regionName);
+						else if(addressStr==null){
+							address.setRegionCode(aeStr);
+						}
 					}
-				}else{
-					String uwRegionCode = ae!=null ? ae.getRegionsCode() : null;
-					if(uwRegionCode!=null && !regionCode.equals(uwRegionCode))
-						modelAddress.setEditAddress(true);
-					modelAddress.setRegionCode(regionCode);
-					modelAddress.setRegionName(regionName);
 				}
-			}else{
-				modelAddress.setEditAddress(true);
 			}
 		}
 
-		logger.trace("\n\t"
-				+ "username\t{}\n\t"
-				+ "addressEntity\t{}\n\t"
-				+ "regionCode:\t'{}'\n\t"
-				+ "countryCode:\t'{}'\n\t"
-				+ "ae:\t'{}'\n\t"
-				+ "ce:\t'{}'\n\t"
-				+ "address:\t'{}'\n\t"
-				+ "homeAddress:\t{}",
-				username,
-				addressEntity,
-				regionCode,
-				countryCode,
-				ae,
-				ce,
-				address,
-				modelAddress);
-
+		Long userId = userWorker.getUserEntity().getId();
+		AddressType addressType = modelAddress.getAddressType();
 		fileWorker.saveMap(
-						userWorker.getUserEntity().getId(),
-						modelAddress.getAddress(),
-						modelAddress.getCity(),
-						modelAddress.getRegionCode(),
-						ce!=null ? ce.getCountryName() : null,
+						fileWorker.getMapFile(userId, addressType),
+						address.getAddress(),
+						address.getCity(),
+						address.getRegionCode(),
+						countryEntity!=null ? countryEntity.getCountryName() : null,
 						modelAddress.getPostalCode()
 		);
-
-		modelAddress.setRegionName(ce!=null ? regionName : null);
+		modelAddress.setMapPath(fileWorker.getMapFileUrl(addressType, userId));
 
 		if(modelAddress.isEditAddress())
 			model.addAttribute("addressWorker", addressWorker);
-		else if(!userWorker.saveAddress(new AddressEntity()
-												.setType(modelAddress.getAddressType())
+		else{
+			if(!userWorker.saveAddress(new AddressEntity()
+												.setType(address.getAddressType())
 												.setAddress(address.getAddress())
 												.setCity(address.getCity())
-												.setCountryCode(countryCode)
+												.setCountryCode(address.getCountryCode())
 												.setPostalCode(address.getPostalCode())
-												.setRegionsCode(regionCode))){
-			modelAddress.setAddressError("address.fill_profile");
+												.setRegionsCode(address.getRegionCode()))){
+				modelAddress.setAddressError("address.fill_profile");
+			}
+			modelAddress = address;
 		}
 
 		modelAddress.setShowAddress(true);
 
-		fillUser(model);
-
-		userWorker.filllAddress(username, modelAddress);
-		model.addAttribute(modelAddress.getAddressType()+"_Addr", modelAddress);
-
-		return logger.exit("user");
-	}
-
-	public void fillUser(Model model) {
 		User user = new User();
 		userWorker.fillUser(user);
 		model.addAttribute("user", user);
-	}
+		model.addAttribute(addressType+"_Addr", modelAddress);
 
-	public void checkPostalCode(AddressEntity addressEntity, Address address, Address modelAddress) {
-		String postalCode = address.getPostalCode();
-		if(postalCode == null || postalCode.isEmpty()){
-			modelAddress.setEditAddress(true);
-			if(addressEntity==null || addressEntity.getPostalCode()==null || addressEntity.getPostalCode().isEmpty())
-				modelAddress.setPostalCodeError("address.enter_postal_code");
-		}else{
-			modelAddress.setPostalCode(postalCode);
-			modelAddress.setPostalCodeError(null);
-		}
-	}
-
-	public void checkCity(AddressEntity addressEntity, Address address, Address modelAddress) {
-		String city = address.getCity();
-		if(city == null || city.isEmpty()){
-			modelAddress.setEditAddress(true);
-			if(addressEntity==null || addressEntity.getCity()==null || addressEntity.getCity().isEmpty()){
-				modelAddress.setCityError("address.enter_city");
-			}
-		}else{
-			modelAddress.setCity(city);
-			modelAddress.setCityError(null);
-		}
-	}
-
-	public void checkAdress(AddressEntity addressEntity, Address address, Address modelAddress) {
-		logger.trace("\n\t"
-				+ "addressEntity -\t{}\n\t"
-				+ "address - {}\n\t"
-				+ "modelAddress -\t{}",
+		logger.trace("\n\tEXIT\n\t"
+				+ "username\t{}\n\t"
+				+ "addressEntity\t{}\n\t"
+				+ "address:\t'{}'\n\t"
+				+ "modelAddress:\t{}",
+				username,
 				addressEntity,
 				address,
 				modelAddress);
-		String addressStr = address.getAddress();
-		if(addressStr == null || addressStr.isEmpty()){
-			modelAddress.setEditAddress(true);
-			if(addressEntity==null || addressEntity.getAddress()==null || addressEntity.getAddress().isEmpty())
-				modelAddress.setAddressError("address.enter_address");
-		}else{
-			modelAddress.setAddress(addressStr);
-			modelAddress.setAddressError(null);
-		}
+
+		return "user";
+	}
+
+	/**
+	 * 
+	 * @param entityString
+	 * @param modelString
+	 * @return	true if entityString and modelString == null<br>
+	 * 			false if modelString ==null and entityString !=null<br>
+	 * 			null if modelString !=null
+	 */
+	private Boolean checkAdress(String entityString, String modelString) {
+		Boolean isError;
+		if(modelString == null || modelString.isEmpty()){
+			if(entityString==null || entityString.isEmpty())
+				isError = true;
+			else
+				isError = false;
+		}else
+			isError = null;
+
+		return isError;
 	}
 
 	@RequestMapping(value="/user", method=RequestMethod.POST, params = "submit_user_img")

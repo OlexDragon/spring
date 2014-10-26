@@ -15,17 +15,33 @@
 </script>
 </head>
   <body>
-    <div id="profile" class="bttm5 bclr wth40" th:fragment="profile">
+    <div id="profile" class="bttm5 bclr w40" th:fragment="profile">
 	<div class="btnBrdr"></div>
-    <h2 id="prflH" th:text="#{profile}" class="cntr pntr">Profile</h2>
-    <div id="prflTbl" th:class="${showP==null} ? 'dn'">
    	<form th:action="@{/user}" method="post" th:object="${user}">
-	<table class="th_right borderB wth100">
+	<table class="w100">
+		<tr>
+    		<td><h2 id="prflH" th:text="#{profile}" class="cntr pntr">Profile</h2></td>
+    		<td class="w5">
+    			<button th:if="${edit_username}!=null or
+    							${edit_password}!=null or
+    							${edit_eMail}!=null or
+    							${edit_title}!=null or
+    							${edit_firstName}!=null or
+    							${edit_lastName}!=null or
+    							${edit_gender}!=null or
+    							${edit_birthday}!=null"
+						type="submit"
+						name="cancel_profile"
+						th:text="#{cancel}">Cancel</button>
+    		</td>
+    	</tr>
+    </table>
+    <div id="prflTbl" th:class="${showP==null} ? 'dn'">
+	<table class="th_right borderB w100">
 		<tr class="borderBB">
 			<td class="w5"><button type="submit"
 						name="submit_edit_username"
-						th:text="${edit_username!=null} ? #{user.save} : #{user.edit}"
-						th:replace="fragments/menu :: jk_button(${edit_username!=null} ? #{user.save} : #{user.edit}, null, 'submit_edit_username')">Edit</button>
+						th:text="${edit_username}!=null ? #{user.save} : #{user.edit}">Edit</button>
 			</td>
 			<th class="w10" th:text="#{login.username}">Username</th>
 			<td class="w13 clrY" th:switch="${edit_username}">
@@ -39,8 +55,7 @@
 						type="submit"
 						name="submit_edit_password"
 						th:id="${edit_password!=null ? 'activeButton' : null}"
-						th:text="${edit_password!=null} ? #{user.save} : #{user.edit}"
-						th:replace="fragments/menu :: jk_button(${edit_password!=null} ? #{user.save} : #{user.edit}, ${edit_password!=null ? 'activeButton' : null}, 'submit_edit_password')">Edit</button>
+						th:text="${edit_password!=null} ? #{user.save} : #{user.edit}">Edit</button>
 			</td>
 			<th th:text="#{login.password}">Password</th>
 			<td th:switch="${edit_password==true || edit_username==true}">
@@ -72,8 +87,7 @@
 			<td class="w5"><button type="submit"
 						name="submit_edit_eMail"
 						th:id="${edit_eMail!=null ? 'activeButton' : null}"
-						th:text="${edit_eMail!=null} ? #{user.save} : #{user.edit}"
-						th:replace="fragments/menu :: jk_button(${edit_eMail!=null} ? #{user.save} : #{user.edit}, ${edit_eMail!=null ? 'activeButton' : null}, 'submit_edit_eMail')">Edit</button>
+						th:text="${edit_eMail!=null} ? #{user.save} : #{user.edit}">Edit</button>
 			</td>
 			<th th:text="#{signup.eMail}">e-mail</th>
 			<td th:switch="${edit_eMail}">
@@ -85,9 +99,8 @@
 		<tr class="borderBB">
 			<td><button type="submit"
 						name="submit_edit_title"
-						th:id="${edit_title!=null ? 'activeButton'}"
-						th:text="${edit_title!=null} ? #{user.save} : #{user.edit}"
-						th:replace="fragments/menu :: jk_button(${edit_profile!=null} ? #{user.save} : #{user.edit}, ${edit_title!=null ? 'activeButton' : null}, 'submit_edit_title')">Edit</button>
+						th:id="${edit_title}!=null ? 'activeButton'"
+						th:text="${edit_title}!=null ? #{user.save} : #{user.edit}">Edit</button>
 			</td>
 			<th th:text="#{signup.title}">Title</th>
 			<td th:switch="${edit_title}">
@@ -103,8 +116,7 @@
 			<td><button type="submit"
 						name="submit_edit_firstName"
 						th:id="${edit_firstName!=null ? 'activeButton' : null}"
-						th:text="${edit_firstName!=null} ? #{user.save} : #{user.edit}"
-						th:replace="fragments/menu :: jk_button(${edit_firstName!=null} ? #{user.save} : #{user.edit}, ${edit_firstName!=null ? 'activeButton' : null}, 'submit_edit_firstName')">Edit</button></td>
+						th:text="${edit_firstName!=null} ? #{user.save} : #{user.edit}">Edit</button></td>
 			<th th:text="#{signup.firstName}">First Name</th>
 			<td th:switch="${edit_firstName}">
 				<input th:case="${true}" type="text" name="firstName" th:field="*{firstName}"  autofocus="autofocus"/>
@@ -116,8 +128,7 @@
 			<td><button type="submit"
 						name="submit_edit_lastName"
 						th:id="${edit_lastName!=null ? 'activeButton' : null}"
-						th:text="${edit_lastName!=null} ? #{user.save} : #{user.edit}"
-						th:replace="fragments/menu :: jk_button(${edit_lastName!=null} ? #{user.save} : #{user.edit}, ${edit_lastName!=null ? 'activeButton' : null}, 'submit_edit_lastName')">Edit</button></td>
+						th:text="${edit_lastName!=null} ? #{user.save} : #{user.edit}">Edit</button></td>
 			<th th:text="#{signup.lastName}">Last Name</th>
 			<td th:switch="${edit_lastName}">
 				<input th:case="${true}" type="text" name="lastName" th:field="*{lastName}"  autofocus="autofocus"/>
@@ -129,8 +140,7 @@
 			<td><button type="submit"
 						name="submit_edit_gender"
 						th:id="${edit_gender!=null ? 'activeButton' : null}"
-						th:text="${edit_gender!=null} ? #{user.save} : #{user.edit}"
-						th:replace="fragments/menu :: jk_button(${edit_gender!=null} ? #{user.save} : #{user.edit}, ${edit_gender!=null ? 'activeButton' : null}, 'submit_edit_gender')">Edit</button></td>
+						th:text="${edit_gender!=null} ? #{user.save} : #{user.edit}">Edit</button></td>
 			<th th:text="#{signup.sex}">Gender</th>
 			<td th:switch="${edit_gender}">
 				<ul th:case="${true}">
@@ -147,8 +157,7 @@
 			<td><button type="submit"
 						name="submit_edit_birthday"
 						th:id="${edit_birthday!=null ? 'activeButton' : null}"
-						th:text="${edit_birthday!=null} ? #{user.save} : #{user.edit}"
-						th:replace="fragments/menu :: jk_button(${edit_birthday!=null} ? #{user.save} : #{user.edit}, ${edit_birthday!=null ? 'activeButton' : null}, 'submit_edit_birthday')">Edit</button></td>
+						th:text="${edit_birthday!=null} ? #{user.save} : #{user.edit}">Edit</button></td>
 			<th th:text="#{signup.birthday}">Birthday</th>
 			<td th:switch="${edit_birthday}">
 				<th:block th:case="${true}">
@@ -159,8 +168,8 @@
        		<td><p class="error" th:if="${#fields.hasErrors('birthYear')}" th:errors="*{birthYear}">Birthday error</p></td>
 		</tr>
 	</table>
-	</form>
 	</div>
+	</form>
 	<div class="btnBrdr"></div>
     </div>
   </body>
