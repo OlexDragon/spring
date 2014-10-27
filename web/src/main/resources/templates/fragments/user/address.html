@@ -23,7 +23,6 @@
   <body>
 
 	<div class="bttm5 bclr w40" th:fragment="localisation">
-		<div class="btnBrdr"></div>
     	<h2 id="lclstnH" th:text="#{localisation}" class="cntr pntr">Profile</h2>
     	<div id="lclstnTbls" th:class="${HOME_Addr.showAddress}==${WORK_Addr.showAddress} ? 'dn'">
  			<div th:replace="fragments/user/address :: address(${HOME_Addr})"></div>
@@ -105,7 +104,6 @@
 	</div>
 	</form>
 	
-	<div class="btnBrdr"></div>
     </div>
 
   </body>
