@@ -452,6 +452,7 @@ public class UserController {
 
 	public String editAddress(String username, AddressEntity addressEntity, Address address, Address modelAddress, Model model){
 
+		//Address
 		String aeStr = addressEntity!=null ? addressEntity .getAddress() : null;
 		String addressStr = address.getAddress();
 		Boolean isError = checkAdress(aeStr, addressStr);
@@ -463,6 +464,7 @@ public class UserController {
 				address.setAddress(aeStr);
 		}
 
+		//City
 		aeStr = addressEntity!=null ? addressEntity.getCity() : null;
 		addressStr = address.getCity();
 		isError = checkAdress(aeStr, addressStr);
@@ -474,6 +476,7 @@ public class UserController {
 				address.setCity(aeStr);
 		}
 
+		//Postal code
 		aeStr = addressEntity!=null ? addressEntity.getPostalCode() : null;
 		addressStr = address.getPostalCode();
 		isError = checkAdress(aeStr, addressStr);
@@ -485,6 +488,7 @@ public class UserController {
 				address.setPostalCode(aeStr);
 		}
 
+		//Country
 		aeStr = addressEntity!=null ? addressEntity.getCountryCode() : null;
 		addressStr = address.getCountryCode();
 		isError = checkAdress(aeStr, addressStr);
@@ -506,7 +510,7 @@ public class UserController {
 				if(regionName!=null){
 					modelAddress.setRegions(addressWorker.getRegionEntities(addressStr));
 
-					
+					//Region
 					aeStr = addressEntity!=null ? addressEntity.getRegionsCode() : null;
 					addressStr = address.getRegionCode();
 					isError = checkAdress(aeStr, addressStr);
@@ -524,7 +528,7 @@ public class UserController {
 
 		Long userId = userWorker.getUserEntity().getId();
 		AddressType addressType = modelAddress.getAddressType();
-		fileWorker.saveMap(
+		Thread t =fileWorker.saveMap(
 						fileWorker.getMapFile(userId, addressType),
 						address.getAddress(),
 						address.getCity(),
@@ -546,6 +550,7 @@ public class UserController {
 												.setRegionsCode(address.getRegionCode()))){
 				modelAddress.setAddressError("address.fill_profile");
 			}
+			address.setRegionName(modelAddress.getRegionName());
 			modelAddress = address;
 		}
 
@@ -565,6 +570,12 @@ public class UserController {
 				addressEntity,
 				address,
 				modelAddress);
+
+		try {
+			t.join();
+		} catch (InterruptedException e) {
+			logger.catching(e);
+		}
 
 		return "user";
 	}
