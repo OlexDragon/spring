@@ -40,47 +40,63 @@ public class FileWorker {
 				file.mkdirs();
 	}
 
-	public void saveMap(File file, String address, String city, String regionsCode, String country, String postalCode) {
-		StringBuilder sb = new StringBuilder();
-		if(address!=null && !address.isEmpty())
-			sb.append(address);
-		if(city!=null){
-			if(sb.length()>0)
-				sb.append(',');
-			sb.append(city);
-		}
-		if(regionsCode!=null && !regionsCode.isEmpty()){
-			if(sb.length()>0)
-				sb.append(',');
-			sb.append(regionsCode);
-		}
-		if(country!=null && !country.isEmpty()){
-			if(sb.length()>0)
-				sb.append(',');
-			sb.append(country);
-		}
-		if(postalCode!=null && !postalCode.isEmpty()){
-			if(sb.length()>0)
-				sb.append(',');
-			sb.append(postalCode);
-		}
-
-		if(sb.length()>0){
-			sb.insert(0, GOOGLE_MAP_MARKERS);
-			sb.insert(0, GOOGLE_MAP_URL);
-			sb.append(GOOGLE_MAP_SIZE);
-			sb.append(GOOGLE_API_KEY);
-			String url = sb.toString().trim().replaceAll(" ", "+");
-			logger.trace("\n\t{}\n\t{}", url, file);
-
-			if(file!=null){
-				try {
-					urlToFile(file, url);
-				} catch (IOException e) {
-					logger.catching(e);
+	public Thread saveMap(File file, String address, String city, String regionsCode, String country, String postalCode) {
+		logger.entry(file, address, city, regionsCode, country, postalCode);
+		Thread t = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				logger.entry();
+				StringBuilder sb = new StringBuilder();
+				if(address!=null && !address.isEmpty())
+					sb.append(address);
+				if(city!=null){
+					if(sb.length()>0)
+						sb.append(',');
+					sb.append(city);
 				}
+				if(regionsCode!=null && !regionsCode.isEmpty()){
+					if(sb.length()>0)
+						sb.append(',');
+					sb.append(regionsCode);
+				}
+				if(country!=null && !country.isEmpty()){
+					if(sb.length()>0)
+						sb.append(',');
+					sb.append(country);
+				}
+				if(postalCode!=null && !postalCode.isEmpty()){
+					if(sb.length()>0)
+						sb.append(',');
+					sb.append(postalCode);
+				}
+
+				if(sb.length()>0){
+					sb.insert(0, GOOGLE_MAP_MARKERS);
+					sb.insert(0, GOOGLE_MAP_URL);
+					sb.append(GOOGLE_MAP_SIZE);
+					sb.append(GOOGLE_API_KEY);
+					String url = sb.toString().trim().replaceAll(" ", "+");
+					logger.trace("\n\t{}\n\t{}", url, file);
+
+					if(file!=null){
+						try {
+							urlToFile(file, url);
+						} catch (IOException e) {
+							logger.catching(e);
+						}
+					}
+				}
+				logger.exit();
 			}
-		}
+		});
+		t.setDaemon(true);
+		int priority = t.getPriority();
+		if(priority>Thread.MIN_PRIORITY)
+			t.setPriority(priority-1);
+		t.start();
+		logger.exit();
+		return t;
 	}
 
 	private void urlToFile(File file, String url) throws IOException {
