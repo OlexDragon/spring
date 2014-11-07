@@ -11,12 +11,6 @@
 			$("#lclstnH").click(function() {
 				$("#lclstnTbls").toggle(500);
 			});
-			$("#homeH").click(function() {
-				$("#homeTbl").toggle(500);
-			});
-			$("#workH").click(function() {
-				$("#workTbl").toggle(500);
-			});
 		});
 </script>
 </head>
@@ -24,17 +18,16 @@
 
 	<div class="bttm5 bclr w40" th:fragment="localisation">
     	<h2 id="lclstnH" th:text="#{localisation}" class="cntr pntr">Profile</h2>
-    	<div id="lclstnTbls" th:class="${HOME_Addr.showAddress}==${WORK_Addr.showAddress} ? 'dn'">
+    	<div id="lclstnTbls">
  			<div th:replace="fragments/user/address :: address(${HOME_Addr})"></div>
   			<div th:replace="fragments/user/address :: address(${WORK_Addr})"></div>
  		</div>
 		<div class="btnBrdr"></div>
  	</div>
 
-    <div class="bttm5 w100" th:fragment="address(addr)">
- 		<div class="btnBrdr"></div>
+    <div class="w100p" th:fragment="address(addr)">
  		<form action="user" th:action="@{/user}" method="post">
- 		<table class="w100">
+ 		<table class="w100p">
  			<tr>
  				<td>
     				<h2 th:id="${addr.addressType+'_H'}" th:text="#{__'address.'+${addr.addressType}__}" class="cntr pntr clrY">Title</h2>
@@ -49,11 +42,11 @@
 				</td>
  			</tr>
  		</table>
-  		<div th:id="${addr.addressType+'_Tbl'}"  th:class="${addr.showAddress}==false ? 'dn'">
- 			<table class="w100 th_right">
+  		<div>
+ 			<table class="w100p th_right">
 				<tr>
 					<th class="w10" th:text="#{address.address}">Address</th>
-					<td class="w13" th:switch="${addr.editAddress}">
+					<td class="w16" th:switch="${addr.editAddress}">
 						<input th:case="${true}" type="text" th:field="${address.address}" autofocus="autofocus"/>
 						<p th:case="*" th:text="${addr.address}" class="clrY">Address</p>
 					</td>

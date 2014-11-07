@@ -3,117 +3,446 @@
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-	<title th:text="#{menu.user}">User</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<meta name="viewport" content="width=device-width" />
-	<link th:replace="fragments/header :: links" rel="stylesheet" type="text/css" href="../static/css/jk.css" th:href="@{/css/jk.css}" />
-	<link rel="stylesheet" type="text/css" href="../js/jQuery/jquery-ui.css" th:href="@{/js/jQuery/jquery-ui.css}"></link>
-	<link rel="stylesheet" type="text/css" href="../../../static/css/fullcalendar.css" th:href="@{/css/calendar.css}"></link>
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js"></script>
-	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.1.1/fullcalendar.min.js"></script>
-	<script type="text/javascript" th:inline="javascript">
-
-	$(document).ready(function () {
-		$("input").keypress(function (event) {
-            if((event.keyCode ? event.keyCode : (event.which ? event.which : event.charCode)) == 13){
-				document.getElementById('activeButton').click();
-				return false;
-            }
-			return true;
-        });
-		$("select").on('change', function() {
-			document.getElementById('activeButton').click();
-		});
-		$("#prflH").click(function() {
-			$("#prflTbl").slideToggle('slow');
-		});
-		$("#lclstnH").click(function() {
-			$("#lclstnTbls").toggle(500);
-		});
-		$("#HOME_H").click(function() {
-			$("#HOME_Tbl").slideToggle('slow');
-		});
-		$("#WORK_H").click(function() {
-			$("#WORK_Tbl").slideToggle('slow');
-		});
-		$("#clndrH").click(function() {
-			$("#calendar").slideToggle('slow');
-		});
-		$('#calendar').fullCalendar({
-			header: {
-				left: 'prev,next today',
-				center: 'title',
-				right: 'month,agendaWeek,agendaDay'
-			},
-			defaultDate: '2014-06-12',
-			defaultView: 'month',
-			editable: true,
-			events: [
-				{
-					title: 'All Day Event',
-					start: '2014-06-01'
-				},
-				{
-					title: 'Long Event',
-					start: '2014-06-07',
-					end: '2014-06-10'
-				},
-				{
-					id: 999,
-					title: 'Repeating Event',
-					start: '2014-06-09T16:00:00'
-				},
-				{
-					id: 999,
-					title: 'Repeating Event',
-					start: '2014-06-16T16:00:00'
-				},
-				{
-					title: 'Meeting',
-					start: '2014-06-12T10:30:00',
-					end: '2014-06-12T12:30:00'
-				},
-				{
-					title: 'Lunch',
-					start: '2014-06-12T12:00:00'
-				},
-				{
-					title: 'Birthday Party',
-					start: '2014-06-13T07:00:00'
-				},
-				{
-					title: 'Click for Google',
-					url: 'http://google.com/',
-					start: '2014-06-28'
-				}
-			]
-		});
-   });
-	</script>
+<title th:text="#{menu.user}">User</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width" />
+<link th:replace="fragments/header :: links" rel="stylesheet"
+	type="text/css" href="../static/css/jk.css" th:href="@{/css/jk.css}" />
+<link rel="stylesheet" type="text/css"
+	href="../static/js/jQuery/jquery-ui.css"
+	th:href="@{/js/jQuery/jquery-ui.css}"></link>
+<link rel="stylesheet" type="text/css" href="../static/css/calendar.css"
+	th:href="@{/css/calendar.css}"></link>
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script type="text/javascript"
+	src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js"></script>
+<script type="text/javascript"
+	src="http://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.1.1/fullcalendar.min.js"></script>
+<script type="text/javascript" th:inline="javascript">
+	$(document).ready(
+			function() {
+				$("input")
+						.keypress(
+								function(event) {
+									if ((event.keyCode ? event.keyCode
+											: (event.which ? event.which
+													: event.charCode)) == 13) {
+										document.getElementById('activeButton')
+												.click();
+										return false;
+									}
+									return true;
+								});
+				$("select").on('change', function() {
+					document.getElementById('activeButton').click();
+				});
+				$("#prflH").click(function() {
+					$("#prflTbl").slideToggle('slow');
+				});
+				$("#lclstnH").click(function() {
+					$("#lclstnTbls").toggle(500);
+				});
+				$("#clndrH").click(function() {
+					$("#calendar").slideToggle('slow');
+				});
+				$('#calendar').fullCalendar({
+					header : {
+						left : 'prev,next today',
+						center : 'title',
+						right : 'month,agendaWeek,agendaDay'
+					},
+					defaultDate : '2014-06-12',
+					defaultView : 'month',
+					editable : true,
+					events : [ {
+						title : 'All Day Event',
+						start : '2014-06-01'
+					}, {
+						title : 'Long Event',
+						start : '2014-06-07',
+						end : '2014-06-10'
+					}, {
+						id : 999,
+						title : 'Repeating Event',
+						start : '2014-06-09T16:00:00'
+					}, {
+						id : 999,
+						title : 'Repeating Event',
+						start : '2014-06-16T16:00:00'
+					}, {
+						title : 'Meeting',
+						start : '2014-06-12T10:30:00',
+						end : '2014-06-12T12:30:00'
+					}, {
+						title : 'Lunch',
+						start : '2014-06-12T12:00:00'
+					}, {
+						title : 'Birthday Party',
+						start : '2014-06-13T07:00:00'
+					}, {
+						title : 'Click for Google',
+						url : 'http://google.com/',
+						start : '2014-06-28'
+					} ]
+				});
+			});
+</script>
 </head>
 <body>
-<div id="header" th:replace="fragments/header :: pageHeader"><h4>Header</h4></div>
-	<div id="menuDiv" th:replace="fragments/menu :: menu">Menu</div>
-<div id="contents">
-<form id="imgForm" class="fleft borderB" th:action="@{/user_img_frm}" method="post" th:object="${user}">
-	<table id="img_tbl">
-		<tr>
-			<td><img id="user_img" alt="User Image" src="#" /></td>
-		</tr>
-		<tr>
-			<td><button type="submit" name="submit_user_img"></button></td>
-		</tr>
-	</table>
-</form>
-<div>
-	<div class="fleft">
-		<table th:replace="fragments/user/profile :: profile"></table>
-		<table th:replace="fragments/user/address :: localisation"></table>
-		<div th:replace="fragments/user/calendar :: calendar"></div>
+	<!--/* 
+	* Header */-->
+	<div id="header" th:replace="fragments/header :: pageHeader">
+		<h4>Header</h4>
 	</div>
-</div>
-</div>
-<div th:replace="fragments/footer :: footer">Footer</div>
+	<!--/*
+	* Menu */-->
+	<div id="menuDiv" th:replace="fragments/menu :: menu">Menu</div>
+	<!--/*
+	* Contents */-->
+	<div id="contents">
+		<!--/*
+
+	-------- Profile and User Image ------- */-->
+		<div class="clear">
+			<div>
+				<h1 class="borderBD" th:text="#{menu.profile}">Profile</h1>
+			</div>
+			<!--/*
+			* User Image */-->
+			<form class="fright borderB" method="post">
+				<table id="img_tbl">
+					<tr>
+						<td><img alt="User Image"
+							src="../static/images/userDefault.jpg"
+							th:src="@{/images/userDefault.jpg}" /></td>
+					</tr>
+					<tr class="rght">
+						<td><button type="submit" name="submit_user_img">Button</button></td>
+					</tr>
+				</table>
+			</form>
+
+			<!--/*
+
+	------- Profile -------
+*/-->
+			<div class="fleft borderRD w80p">
+				<form action="user" method="post" th:object="${user}">
+					<table class="thRght w100p">
+<!--/*
+
+		* username and email*
+*/-->
+					<th:block th:unless="${s_e_password}">
+						<tr>
+							<th class="w20p" th:text="#{login.username}">Username</th>
+							<td class="w30p">
+								<input th:if="${s_e_username}" type="text" th:field="*{username}" autofocus="autofocus"/>
+<!--/*/							<p th:unless="${s_e_username}" th:text="*{username}" class="clrY">Username</p> /*/-->
+							</td>
+  				     		<td class="lft">
+  				     			<p class="error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username Error</p>
+  				     		</td>
+						</tr>
+						<tr>
+							<th th:text="#{signup.eMail}">e-mail</th>
+							<td>
+								<input th:if="${s_e_username}" type="text" name="eMail" th:field="*{eMail}"/>
+<!--/*/							<p th:unless="${s_e_username}" th:text="*{eMail}" class="clrY">Username</p>	/*/-->
+							</td>
+       						<td>
+       							<p class="error" th:if="${#fields.hasErrors('eMail')}" th:errors="*{eMail}">E-Mail Error</p>
+       						</td>
+						</tr>
+						<tr th:unless="${s_e_username}" class="borderBB">
+							<th></th>
+							<td class="rght">
+								<button type="submit" name="s_e_username" th:text="#{user.edit}">Edit</button>
+							</td>
+							<td>
+							</td>
+						</tr>
+					</th:block>
+						<!--/*
+
+		* Password *
+*/-->
+						<tr>
+							<th th:text="#{login.password}">Password</th>
+							<td>
+								<input th:if="${s_e_username} or ${s_e_password}" type="password" th:field="*{password}" th:autofocus="${s_e_password}" />
+<!--/*/							<p th:unless="${s_e_username} or ${s_e_password}" class="clrY">*******</p>	/*/-->
+							</td>
+        					<td class="lft">
+        						<p class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</p>
+        					</td>
+						</tr>
+<!--/*/
+						<th:block th:if="${s_e_password}" >
+							<tr>
+								<th class="w20p"  th:text="#{user.new_password}">Password</th>
+								<td  class="w30p" >
+									<input type="password" name="newPassword" th:field="*{newPassword}" />
+								</td>
+ 				      			<td class="lft"><p class="error" th:if="${#fields.hasErrors('newPassword')}" th:errors="*{newPassword}">Username as new password</p></td>
+							</tr>
+							<tr>
+ 								<th th:text="#{signup.repassword}">Password</th>
+								<td>
+									<input type="password" name="newUsername" th:field="*{repassword}" />
+								</td>
+      							<td><p class="error" th:if="${#fields.hasErrors('repassword')}" th:errors="*{repassword}">Password Error</p></td>
+							</tr>
+						</th:block>
+/*/-->
+						<tr class="borderBB">
+							<th></th>
+							<td class="rght">
+								<button type="submit"
+										th:id="${s_e_username} or ${s_e_password} ? 'activeButton'"
+										th:name="${s_e_username} ? 's_e_username' : 's_e_password'"
+										th:text="${s_e_username} ? #{user.save} : #{user.edit}">
+									Edit
+								</button>
+							</td>
+							<td class="lft">
+								<button th:if="${s_e_username} or ${s_e_password}" type="submit" name="cancel_profile" th:text="#{cancel}">Cancel</button>
+							</td>
+						</tr>
+<!--/*
+
+		* user data *
+*/-->
+						<tr>
+							<th>Title</th>
+							<td>
+								<select th:if="${s_e_profile}" th:field="*{titleId}">
+									<option th:value="null" th:text="#{Select}">Select</option>
+<!--/*/								<option th:each="t : *{titles}" th:value="${t.id}" th:text="#{__('profile.title'+${t.id})__}" ></option>	  /*/-->
+<!--/*  -->							<option>Mr</option>	<!--*/-->	
+								</select>
+								<p th:unless="${s_e_profile}" th:text="*{titleId}!=null ? #{__('profile.title'+*{titleId})__}" class="clrY"></p>
+							</td>
+							<td></td>
+						</tr>
+						<tr>
+							<th th:text="#{signup.firstName}">First Name</th>
+							<td>
+								<input th:if="${s_e_profile}" type="text" name="firstName" th:field="*{firstName}"  autofocus="autofocus"/>
+<!--/*/							<p th:unless="${s_e_profile}" th:text="*{firstName}" class="clrY">First Name</p>	/*/-->
+							</td>
+							<td><p class="error" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">First Name error</p></td>
+						</tr>
+						<tr>
+							<th th:text="#{signup.lastName}">Last Name</th>
+							<td>
+								<input th:if="${s_e_profile}" type="text" name="lastName" th:field="*{lastName}"  autofocus="autofocus"/>
+<!--/*/							<p th:unless="${s_e_profile}" th:text="*{lastName}" class="clrY">Last Name</p> /*/-->
+							</td>
+       						<td><p class="error" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Last Name</p></td>
+						</tr>
+						<tr>
+							<th th:text="#{signup.sex}">Gender</th>
+							<td>
+								<ul th:if="${s_e_profile}">
+									<li th:each="sex : ${T(jk.web.user.User.Gender).values()}" class="inlineB">
+										<input type="radio" th:field="*{sex}" th:value="${sex}" />
+										<label th:for="${#ids.prev('sex')}" th:text="#{${sex}}">Gender</label>
+									</li>
+								</ul>
+<!--/*/							<p th:unless="${s_e_profile}" th:text="*{sex} ? #{__*{sex}__}" class="clrY">Gender</p>	/*/-->
+							</td>
+							<td><p class="error" th:if="${#fields.hasErrors('sex')}" th:errors="*{sex}">Sex Error</p></td>
+						</tr>
+						<tr>
+							<th th:text="#{signup.birthday}">Birthday</th>
+							<td>
+								<th:block th:if="${s_e_profile}">
+									<input th:replace="signup :: birthday"/>
+								</th:block>
+<!--/*/							<p th:unless="${s_e_profile}" th:text="*{birthYear!=null and birthMonth!=null and birthDay!=null} ? *{#calendars.format(#calendars.create(birthYear, birthMonth, birthDay), 'yyyy MMM d') }" class="clrY">Birthday</p>	/*/-->
+							</td>
+       						<td><p class="error" th:if="${#fields.hasErrors('birthYear')}" th:errors="*{birthYear}">Birthday error</p></td>
+						</tr>
+						<tr class="borderBB">
+							<th></th>
+							<td class="rght">
+								<button type="submit"
+										name="s_e_profile"
+										th:id="${s_e_profile!=null ? 'activeButton' : null}"
+										th:text="${s_e_profile!=null} ? #{user.save} : #{user.edit}">Edit</button>
+							</td>
+							<td class="lft">
+								<button th:if="${s_e_profile}" type="submit" name="cancel_profile" th:text="#{cancel}">Cancel</button>
+							</td>
+						</tr>
+					</table>
+				</form>
+				<!--/* 
+
+			* Professional skills *
+*/-->
+				<table class="thRght">
+					<tr>
+						<th class="w20p" th:text="#{professional.skills}">PROFESSIONAL
+							SKILLS</th>
+						<td class="w30p"><input type="text" /></td>
+						<td class="w50p lft"><p class="error">PROFESSIONAL SKILLS
+								Error</p></td>
+					</tr>
+					<tr>
+						<th th:text="#{professional.work}">WORK</th>
+						<td><input type="text" /></td>
+						<td><p class="error">WORK error</p></td>
+					</tr>
+					<tr>
+						<th th:text="#{professional.work_with}">WORK WITH</th>
+						<td><input type="text" /></td>
+						<td><p class="error">WORK WITH error</p></td>
+					</tr>
+					<tr>
+						<th th:text="#{professional.education}">COLLEGE, UNIVERSITY,
+							PROFESSIONAL SCHOOL</th>
+						<td><input type="text" /></td>
+						<td><p class="error">WORK WITH error</p></td>
+					</tr>
+					<tr>
+						<th></th>
+						<td class="rght">
+							<button type="submit" name="submit_edit_prof_skills">Edit</button>
+						</td>
+						<td class="lft">
+							<button type="submit" name="cancel_edit_prof_skills">Cancel</button>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<!--/* <div class="clear"> - Profile */-->
+		</div>
+<!--/*
+
+	--------- Addresses ---------
+*/-->
+		<div>
+			<h2 id="lclstnH" th:text="#{localisation}" class="cntr pntr borderTB">Addresses</h2>
+			<div class="clear">
+<!--/* Address #2  */-->
+				<div class="w49p inlineB">
+					<form th:replace="fragments/user/address :: address(${HOME_Addr})">
+						<table class="w100p">
+							<tr>
+								<td><h2 class="cntr pntr clrY">Home</h2></td>
+								<td class="w5"><button type="submit">Edit</button></td>
+								<td class="w5"><span><button type="submit">Edit</button></span></td>
+							</tr>
+						</table>
+						<div>
+							<table class="w100p th_right">
+								<tr>
+									<th class="w10">Address</th>
+									<td class="w16"><input type="text" /></td>
+									<td><p class="error">Address error</p></td>
+								</tr>
+								<tr>
+									<th>City</th>
+									<td><input type="text" /></td>
+									<td><p class="error">City error</p></td>
+								</tr>
+								<tr>
+									<th>Region</th>
+									<td><select>
+											<option>Select</option>
+											<option>Quebec</option>
+									</select></td>
+									<td><p class="error">Region error</p></td>
+								</tr>
+								<tr>
+									<th>Country</th>
+									<td><select>
+											<option>Select</option>
+											<option>Canada</option>
+									</select></td>
+								</tr>
+								<tr>
+									<th>City</th>
+									<td><input type="text" /></td>
+									<td><p class="error">Postal code error</p></td>
+								</tr>
+								<tr>
+									<td colspan="4" class="cntr "><img
+										src="C:/jk/images/maps/mapHOME1.png" /></td>
+								</tr>
+							</table>
+						</div>
+					</form>
+				</div>
+<!--/* Address #2  */-->
+				<div class="w49p inlineB">
+					<form th:replace="fragments/user/address :: address(${WORK_Addr})">
+						<table class="w100p">
+							<tr>
+								<td><h2 class="cntr pntr clrY">Work</h2></td>
+								<td class="w5"><button type="submit">Edit</button></td>
+								<td class="w5"><span><button type="submit">Edit</button></span></td>
+							</tr>
+						</table>
+						<div>
+							<table class="w100p th_right">
+								<tr>
+									<th class="w10">Address</th>
+									<td class="w16"><input type="text" /></td>
+									<td><p class="error">Address error</p></td>
+								</tr>
+								<tr>
+									<th>City</th>
+									<td><input type="text" /></td>
+									<td><p class="error">City error</p></td>
+								</tr>
+								<tr>
+									<th>Region</th>
+									<td><select>
+											<option>Select</option>
+											<option>Quebec</option>
+									</select></td>
+									<td><p class="error">Region error</p></td>
+								</tr>
+								<tr>
+									<th>Country</th>
+									<td><select>
+											<option>Select</option>
+											<option>Canada</option>
+									</select></td>
+								</tr>
+								<tr>
+									<th>City</th>
+									<td><input type="text" /></td>
+									<td><p class="error">Postal code error</p></td>
+								</tr>
+								<tr>
+									<td colspan="4" class="cntr "><img
+										src="C:/jk/images/maps/mapWORK1.png" /></td>
+								</tr>
+							</table>
+						</div>
+					</form>
+				</div>
+
+			<!--/* <div class="clear"> - Addresses */-->
+			</div>
+		</div>
+
+		<!--/*
+
+	--------- Calendar ---------
+*/-->
+		<div class="bttm5 bclr w40">
+			<div class="btnBrdr"></div>
+			<h2 id="clndrH" th:text="#{calendar}" class="cntr pntr">Calendar</h2>
+			<div id="calendar"></div>
+			<div class="btnBrdr"></div>
+		</div>
+	</div>
+	<div th:replace="fragments/footer :: footer">Footer</div>
 </body>
 </html>

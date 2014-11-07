@@ -33,6 +33,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class UserController {
 
 
+	private static final String S_E_USERNAME = "s_e_username";
+	private static final String S_E_PASSWORD = "s_e_password";
+	private static final String S_E_PROFILE = "s_e_profile";
+
 	private final Logger logger = LogManager.getLogger();
 
 	@Autowired
@@ -58,55 +62,56 @@ public class UserController {
 		model.addAttribute("user", user);
 
 		Address homeAddress = resetAddress(username, model, AddressType.HOME);
-		homeAddress.setEditAddress(false);
 		Address workAddress = resetAddress(username, model, AddressType.WORK);
-		workAddress.setShowAddress(false);
 
 		logger.trace("\n\thomeAddress = {}\n\tworkAddress = {}", homeAddress, workAddress);
 		return "user";
-	}
-
-	public Address resetAddress(String username, Model model, AddressType addressType) {
-		Address address = new Address(addressType);
-		userWorker.filllUserAddress(username, address);
-		model.addAttribute(addressType+"_Addr", address);
-		return address;
 	}
 
 	@RequestMapping(value="/user", method=RequestMethod.POST, params = "cancel_profile")
 	public String cancelProfile(Principal principal, Model model){
-
-		String username = principal.getName();
-
-		User user = new User();
-		userWorker.fillUser(user);
-		model.addAttribute("user", user);
 		model.addAttribute("showP", true);
-
-		Address homeAddress = resetAddress(username, model, AddressType.HOME);
-		Address workAddress = resetAddress(username, model, AddressType.WORK);
-
-		logger.trace("\n\thomeAddress = {}\n\tworkAddress = {}", homeAddress, workAddress);
-		return "user";
+		return user(principal, model);
 	}
 
-	@RequestMapping(value="/user", method=RequestMethod.POST, params = "submit_edit_username")
+	@RequestMapping(value="/user", method=RequestMethod.POST, params = "cancel_addr")
+	public String cancelWorkAddress(Principal principal, Model model){
+		model.addAttribute("showA", true);
+		return user(principal, model);
+	}
+
+	@RequestMapping(value="/user", method=RequestMethod.POST, params = S_E_USERNAME)
 	public String editUsername(User user, Principal principal, Model model, BindingResult bindingResults, HttpServletRequest request, HttpServletResponse response){
+		final String attributeName = S_E_USERNAME;
 
 		String username = principal.getName();
+		String eMail = userWorker.getEMail();
+		logger.trace("\n\tuserWorker.getEMail():\t'{}'\n\t{}", eMail, user);
 
 		String un = user.getUsername();
-		final String attributeName = "edit_username";
-		if(un==null)
+		String em = user.getEMail();
+
+		if(un==null && em==null)
 			model.addAttribute(attributeName, true);
 		else{
 			String password = user.getPassword();
 			if(passwordMatches(username, password, attributeName, model, bindingResults)){
-				signUpFormValidator.usernameValidation(bindingResults, user);
+
+				if(un==null || !un.equals(username))
+					signUpFormValidator.usernameValidation(bindingResults, user);
+				if(em==null || !em.equals(eMail))
+					signUpFormValidator.eMailValidation(bindingResults, em);
+
 				if(bindingResults.hasErrors()){
 					logger.debug("Username '{}' can not be updated by '{}'.", username, un);
 					model.addAttribute(attributeName, true);
 				}else{
+
+					if(em!=null && !em.equals(eMail)){
+						logger.debug("E-Mail '{}' updated by'{}'.", eMail, em);
+						userWorker.saveEMail(username, em);
+					}
+
 					if(!username.equals(un)){
 						userWorker.saveNewUsername(un);
 						logger.debug("Username '{}' updated by'{}'.", username, un);
@@ -131,15 +136,16 @@ public class UserController {
 		userWorker.filllUserAddress(username, workAddress);
 		model.addAttribute(AddressType.WORK+"_Addr", workAddress);
 
-		return logger.exit("user");
+		return "user";
 	}
 
-	@RequestMapping(value="/user", method=RequestMethod.POST, params = "submit_edit_password")
+	@RequestMapping(value="/user", method=RequestMethod.POST, params = S_E_PASSWORD)
 	public String editPassword(User user, Principal principal, Model model, BindingResult bindingResults, HttpServletRequest request){
+		String attributeName = S_E_PASSWORD;
 
+		logger.trace("\n\t{}", user);
 		String username = principal.getName();
 
-		String attributeName = "edit_password";
 		String password = user.getPassword();
 		if(passwordMatches(username, password, attributeName, model, bindingResults)){
 			if(signUpFormValidator.passwordValidation(bindingResults, user)){
@@ -162,58 +168,23 @@ public class UserController {
 		model.addAttribute(AddressType.WORK+"_Addr", workAddress);
 
 		model.addAttribute("showP", true);
-		return logger.exit("user");
+		return "user";
 	}
 
-	@RequestMapping(value="/user", method=RequestMethod.POST, params = "submit_edit_title")
-	public String editTitlee(User user, Principal principal, Model model){
+	@RequestMapping(value="/user", method=RequestMethod.POST, params = S_E_PROFILE)
+	public String editProfile(User user, Principal principal, Model model, BindingResult bindingResults){
 
 		String username = principal.getName();
+		logger.trace("\n\t{}\n\t{}", user, username);
 
-		Integer titleId = user.getTitleId();
-		final String attributeName = "edit_title";
-		if(titleId==null)
-			model.addAttribute(attributeName, true);
-		else if(userWorker.isValid())
-			userWorker.saveTitle(username, titleId);
-		else
-			userWorker.setTitle(username, titleId);
+		editTitle(user);
+		editFirstName(user, model, bindingResults);
+		editLastName(user, model, bindingResults);
+		editGender(user, model, bindingResults);
+		editBirthday(user,model, bindingResults);
 
-		userWorker.fillUser(user);
-		Address homeAddress = new Address(AddressType.HOME);
-		userWorker.filllUserAddress(username, homeAddress);
-		model.addAttribute(AddressType.HOME+"_Addr", homeAddress);
-
-		Address workAddress = new Address(AddressType.WORK);
-		userWorker.filllUserAddress(username, workAddress);
-		model.addAttribute(AddressType.WORK+"_Addr", workAddress);
-
-		model.addAttribute("showP", true);
-		return logger.exit("user");
-	}
-
-	@RequestMapping(value="/user", method=RequestMethod.POST, params = "submit_edit_firstName")
-	public String editFirstName(User user, Principal principal, Model model, BindingResult bindingResults){
-
-		String username = principal.getName();
-		logger.entry(username);
-
-		final String firstName = user.getFirstName();
-		final String attributeName = "edit_firstName";
-		if(firstName==null)
-			model.addAttribute(attributeName, true);
-		else{
-			if(signUpFormValidator.fieldValidation("firstName", firstName, bindingResults))
-				if(userWorker.isValid())
-					userWorker.saveFirstName(username, firstName);
-				else{
-					userWorker.setFirstName(username, firstName);
-					if(!saveIfValid())
-						bindingResults.rejectValue("firstName", "UserController.fill_missing_fields");
-				}
-			else
-				model.addAttribute(attributeName, true);
-		}
+		if(!bindingResults.hasErrors() && userWorker.isValid())
+			userWorker.save();
 
 		userWorker.fillUser(user);
 		Address homeAddress = new Address(AddressType.HOME);
@@ -228,179 +199,69 @@ public class UserController {
 		return "user";
 	}
 
-	@RequestMapping(value="/user", method=RequestMethod.POST, params = "submit_edit_lastName")
-	public String editLastName(User user, Principal principal, Model model, BindingResult bindingResults){
+	public void editTitle(User user){
+		Integer titleId = user.getTitleId();
+		userWorker.setTitle(titleId);
+	}
 
-		String username = principal.getName();
+	public void editFirstName(User user, Model model, BindingResult bindingResults){
+
+		final String firstName = user.getFirstName();
+		if(firstName==null)
+			model.addAttribute(S_E_PROFILE, true);
+		else{
+			if(signUpFormValidator.fieldValidation("firstName", firstName, bindingResults))
+				userWorker.setFirstName(firstName);
+			else
+				model.addAttribute(S_E_PROFILE, true);
+		}
+	}
+
+	public void editLastName(User user, Model model, BindingResult bindingResults){
 
 		String lastName = user.getLastName();
-		final String attributeName = "edit_lastName";
 		if(lastName==null)
-			model.addAttribute(attributeName, true);
+			model.addAttribute(S_E_PROFILE, true);
 		else{
 			if(signUpFormValidator.fieldValidation("lastName", lastName, bindingResults))
-				if(userWorker.isValid())
-					userWorker.saveLastName(username, lastName);
-				else{
-					userWorker.setLastName(username, lastName);
-					if(!saveIfValid())
-						bindingResults.rejectValue("lastName", "UserController.fill_missing_fields");
-				}
+				userWorker.setLastName(lastName);
 			else
-				model.addAttribute(attributeName, true);
+				model.addAttribute(S_E_PROFILE, true);
 		}
-
-		userWorker.fillUser(user);
-		Address homeAddress = new Address(AddressType.HOME);
-		userWorker.filllUserAddress(username, homeAddress);
-		model.addAttribute(AddressType.HOME+"_Addr", homeAddress);
-
-		Address workAddress = new Address(AddressType.WORK);
-		userWorker.filllUserAddress(username, workAddress);
-		model.addAttribute(AddressType.WORK+"_Addr", workAddress);
-
-		model.addAttribute("showP", true);
-		return logger.exit("user");
 	}
 
-	@RequestMapping(value="/user", method=RequestMethod.POST, params = "submit_edit_eMail")
-	public String editEMail(User user, Principal principal, Model model, Errors bindingResults){
-
-		String username = principal.getName();
-
-		String eMail = user.getEMail();
-		final String attributeName = "edit_eMail";
-		if(eMail==null)
-			model.addAttribute(attributeName, true);
-		else{
-			eMail = eMail.toLowerCase();
-			if(signUpFormValidator.eMailValidation(bindingResults, user.getEMail()))
-				if(userWorker.isValid())
-					userWorker.saveEMail(username, eMail);
-				else{
-					userWorker.setEMail(username, eMail);
-					if(!saveIfValid())
-						bindingResults.rejectValue("eMail", "UserController.fill_missing_fields");
-				}
-			else
-				model.addAttribute(attributeName, true);
-		}
-
-		userWorker.fillUser(user);
-		Address homeAddress = new Address(AddressType.HOME);
-		userWorker.filllUserAddress(username, homeAddress);
-		model.addAttribute(AddressType.HOME+"_Addr", homeAddress);
-
-		Address workAddress = new Address(AddressType.WORK);
-		userWorker.filllUserAddress(username, workAddress);
-		model.addAttribute(AddressType.WORK+"_Addr", workAddress);
-
-		model.addAttribute("showP", true);
-		return logger.exit("user");
-	}
-
-	@RequestMapping(value="/user", method=RequestMethod.POST, params = "submit_edit_gender")
-	public String editGender(User user, Principal principal, Model model, Errors bindingResults){
-
-		String username = principal.getName();
+	public void editGender(User user, Model model, Errors bindingResults){
 
 		Gender gender = user.getSex();
-		final String attributeName = "edit_gender";
 		if(gender==null)
-			model.addAttribute(attributeName, true);
+			model.addAttribute(S_E_PROFILE, true);
 		else{
 			if(signUpFormValidator.genderValidation(bindingResults, user))
-				if(userWorker.isValid())
-					userWorker.saveGender(username, gender);
-				else{
-					userWorker.setGender(username, gender);
-					if(!saveIfValid())
-						bindingResults.rejectValue("sex", "UserController.fill_missing_fields");
-				}
+				userWorker.setGender(gender);
 			else
-				model.addAttribute(attributeName, true);
+				model.addAttribute(S_E_PROFILE, true);
 		}
-
-		userWorker.fillUser(user);
-		Address homeAddress = new Address(AddressType.HOME);
-		userWorker.filllUserAddress(username, homeAddress);
-		model.addAttribute(AddressType.HOME+"_Addr", homeAddress);
-
-		Address workAddress = new Address(AddressType.WORK);
-		userWorker.filllUserAddress(username, workAddress);
-		model.addAttribute(AddressType.WORK+"_Addr", workAddress);
-
-		model.addAttribute("showP", true);
-		return logger.exit("user");
 	}
 
-	@RequestMapping(value="/user", method=RequestMethod.POST, params = "submit_edit_birthday")
-	public String editBirthday(User user, Principal principal, Model model, Errors bindingResults){
-		logger.entry(user);
-
-		String username = principal.getName();
+	public void editBirthday(User user, Model model, Errors bindingResults){
 
 		Integer year = user.getBirthYear();
 		Integer month = user.getBirthMonth();
 		Integer day = user.getBirthDay();
 
 		try{
-			final String attributeName = "edit_birthday";
 			if(year==null && month==null && day==null)
-				model.addAttribute(attributeName, true);
+				model.addAttribute(S_E_PROFILE, true);
 			else{
 				if(signUpFormValidator.birthdayValidation(bindingResults, user))
-					if(userWorker.isValid()){
-						userWorker.saveBirthday(username, year, month, day);
-					}else{
-						userWorker.setBirthday(username, year, month, day);
-						if(!saveIfValid())
-							bindingResults.rejectValue("birthYear", "UserController.fill_missing_fields");
-					}
+					userWorker.setBirthday(year, month, day);
 				else
-					model.addAttribute(attributeName, true);
+					model.addAttribute(S_E_PROFILE, true);
 			}
 		}catch(ParseException ex){
 			bindingResults.rejectValue("birthYear", "UserController.fill_missing_fields");
 			logger.catching(ex);
 		}
-
-		userWorker.fillUser(user);
-
-		Address homeAddress = new Address(AddressType.HOME);
-		userWorker.filllUserAddress(username, homeAddress);
-		model.addAttribute(AddressType.HOME+"_Addr", homeAddress);
-
-		Address workAddress = new Address(AddressType.WORK);
-		userWorker.filllUserAddress(username, workAddress);
-		model.addAttribute(AddressType.WORK+"_Addr", workAddress);
-
-		model.addAttribute("showP", true);
-		return logger.exit("user");
-	}
-
-	private boolean saveIfValid(){
-		boolean saved = false;
-		if(userWorker.isValid())
-			saved = userWorker.save()!=null;
-		return saved;
-	}
-
-	@RequestMapping(value="/user", method=RequestMethod.POST, params = "cancel_addr_WORK")
-	public String cancelWorkAddress(Address address, Principal principal, Model model){
-
-		String username = principal.getName();
-
-		User user = new User();
-		userWorker.fillUser(user);
-		model.addAttribute("user", user);
-
-		Address homeAddress = resetAddress(username, model, AddressType.HOME);
-		Address workAddress = resetAddress(username, model, AddressType.WORK);
-		workAddress.setShowAddress(true);
-
-		logger.trace("\n\thomeAddress = {}\n\tworkAddress = {}", homeAddress, workAddress);
-		return "user";
 	}
 
 	@RequestMapping(value="/user", method=RequestMethod.POST, params = "cancel_addr_HOME")
@@ -414,7 +275,6 @@ public class UserController {
 
 		Address homeAddress = resetAddress(username, model, AddressType.HOME);
 		Address workAddress = resetAddress(username, model, AddressType.WORK);
-		homeAddress.setShowAddress(true);
 
 		logger.trace("\n\thomeAddress = {}\n\tworkAddress = {}", homeAddress, workAddress);
 		return "user";
@@ -448,6 +308,13 @@ public class UserController {
 		address.setAddressType(AddressType.HOME);
 
 		return editAddress(username, addressEntity, address, new Address(AddressType.HOME), model);
+	}
+
+	public Address resetAddress(String username, Model model, AddressType addressType) {
+		Address address = new Address(addressType);
+		userWorker.filllUserAddress(username, address);
+		model.addAttribute(addressType+"_Addr", address);
+		return address;
 	}
 
 	public String editAddress(String username, AddressEntity addressEntity, Address address, Address modelAddress, Model model){
@@ -554,7 +421,7 @@ public class UserController {
 			modelAddress = address;
 		}
 
-		modelAddress.setShowAddress(true);
+		model.addAttribute("showP", true);
 
 		User user = new User();
 		userWorker.fillUser(user);

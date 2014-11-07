@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+	<title th:text="#{menu.user}">User</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="viewport" content="width=device-width" />
+	<link th:replace="fragments/header :: links" rel="stylesheet" type="text/css" href="../static/css/jk.css" th:href="@{/css/jk.css}" />
+	<link rel="stylesheet" type="text/css" href="../static/js/jQuery/jquery-ui.css" th:href="@{/js/jQuery/jquery-ui.css}"></link>
+	<link rel="stylesheet" type="text/css" href="../static/css/calendar.css" th:href="@{/css/calendar.css}"></link>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js"></script>
+	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.1.1/fullcalendar.min.js"></script>
+	<script type="text/javascript" th:inline="javascript">
+
+	$(document).ready(function () {
+		$("input").keypress(function (event) {
+            if((event.keyCode ? event.keyCode : (event.which ? event.which : event.charCode)) == 13){
+				document.getElementById('activeButton').click();
+				return false;
+            }
+			return true;
+        });
+		$("select").on('change', function() {
+			document.getElementById('activeButton').click();
+		});
+		$("#prflH").click(function() {
+			$("#prflTbl").slideToggle('slow');
+		});
+		$("#lclstnH").click(function() {
+			$("#lclstnTbls").toggle(500);
+		});
+		$("#HOME_H").click(function() {
+			$("#HOME_Tbl").slideToggle('slow');
+		});
+		$("#WORK_H").click(function() {
+			$("#WORK_Tbl").slideToggle('slow');
+		});
+		$("#clndrH").click(function() {
+			$("#calendar").slideToggle('slow');
+		});
+		$('#calendar').fullCalendar({
+			header: {
+				left: 'prev,next today',
+				center: 'title',
+				right: 'month,agendaWeek,agendaDay'
+			},
+			defaultDate: '2014-06-12',
+			defaultView: 'month',
+			editable: true,
+			events: [
+				{
+					title: 'All Day Event',
+					start: '2014-06-01'
+				},
+				{
+					title: 'Long Event',
+					start: '2014-06-07',
+					end: '2014-06-10'
+				},
+				{
+					id: 999,
+					title: 'Repeating Event',
+					start: '2014-06-09T16:00:00'
+				},
+				{
+					id: 999,
+					title: 'Repeating Event',
+					start: '2014-06-16T16:00:00'
+				},
+				{
+					title: 'Meeting',
+					start: '2014-06-12T10:30:00',
+					end: '2014-06-12T12:30:00'
+				},
+				{
+					title: 'Lunch',
+					start: '2014-06-12T12:00:00'
+				},
+				{
+					title: 'Birthday Party',
+					start: '2014-06-13T07:00:00'
+				},
+				{
+					title: 'Click for Google',
+					url: 'http://google.com/',
+					start: '2014-06-28'
+				}
+			]
+		});
+   });
+	</script>
+</head>
+<body><!--/* 
+	* Header */-->
+	<div id="header" th:replace="fragments/header :: pageHeader"><h4>Header</h4></div><!--/*
+	* Menu */-->
+	<div id="menuDiv" th:replace="fragments/menu :: menu">Menu</div><!--/*
+	* Contents */-->
+	<div id="contents"><!--/*
+	-------- Profile and User Image ------ */-->
+	<div class="clear">
+		<div><h1 th:text="#{menu.profile}" class="borderBD">Profile</h1></div><!--/*
+			* User Image */-->
+			<form class="fright borderB" method="post">
+				<table id="img_tbl">
+					<tr>
+						<td><img id="user_img" alt="User Image" src="../static/images/userDefault.jpg"/></td>
+					</tr>
+					<tr class="rght">
+						<td><button type="submit" name="submit_user_img">Button</button></td>
+					</tr>
+				</table>
+<!--/*
+			* Profile */-->
+			<div class="fleft borderRD w80p">
+				<table class="thRght w100p"><!--/*
+		* username and email */-->
+		<tr>
+			<th class="w20p">Username</th>
+			<td class="w30p">
+				<input type="text" name="newUsername" autofocus="autofocus"/>
+			</td>
+       		<td class="lft w50p"><p class="error">Username Error</p></td>
+		</tr>
+		<tr>
+			<th th:text="#{signup.eMail}">e-mail</th>
+			<td>
+				<input type="text" name="eMail"  autofocus="autofocus"/>
+			</td>
+       		<td><p class="error">E-Mail Error</p></td>
+			<td></td>
+		</tr>
+		<tr class="borderBB">
+			<th></th>
+			<td class="rght">
+				<button type="submit"
+						name="submit_edit_username">Edit</button>
+			</td>
+			<td class="lft">
+				<button type="submit"
+						name="cancel_edit_username">Cancel</button>
+			</td>
+		</tr>
+<!--/* Password */-->
+		<tr>
+			<th th:text="#{login.password}">Password</th>
+			<td>
+				<input type="password" autofocus="autofocus"/>
+			</td>
+       		<td class="lft"><p class="error">Password Error</p></td>
+		</tr>
+		<tr class="borderBB">
+			<th></th>
+			<td class="rght">
+				<button type="submit"
+						name="submit_edit_password">Edit</button>
+			</td>
+			<td class="lft">
+				<button type="submit"
+						name="cancel_edit_password">Cancel</button>
+			</td>
+		</tr>
+<!--/* user data */-->
+		<tr>
+			<th>Title</th>
+			<td>
+				<select>
+					<option>Select</option>
+					<option>Mr</option>
+				</select>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<th th:text="#{signup.firstName}">First Name</th>
+			<td>
+				<input type="text" name="firstName"/>
+			</td>
+       		<td><p class="error">First Name error</p></td>
+		</tr>
+		<tr>
+			<th th:text="#{signup.lastName}">Last Name</th>
+			<td>
+				<input type="text" name="lastName"/>
+			</td>
+       		<td><p class="error">Last Name</p></td>
+		</tr>
+		<tr>
+			<th th:text="#{signup.sex}">Gender</th>
+			<td>
+				<ul>
+					<li class="inlineB">
+						<input type="radio"/>
+						<label>Gender</label>
+					</li>
+				</ul>
+			</td>
+			<td><p class="error">Sex Error</p></td>
+		</tr>
+		<tr>
+			<th th:text="#{signup.birthday}">Birthday</th>
+			<td>
+				<input th:replace="signup :: birthday"/>
+			</td>
+       		<td><p class="error">Birthday error</p></td>
+		</tr>
+		<tr class="borderBB">
+			<th></th>
+			<td class="rght">
+				<button type="submit"
+						name="submit_edit_user_data">Edit</button>
+			</td>
+			<td class="lft">
+				<button type="submit"
+						name="cancel_edit_user_data">Cancel</button>
+			</td>
+		</tr>
+	</table>
+					<table class="thRght">
+						<tr>
+							<th class="w20p" th:text="#{professional.skills}">PROFESSIONAL
+								SKILLS</th>
+							<td class="w30p"><input type="text" /></td>
+							<td class="w50p lft"><p class="error">PROFESSIONAL
+									SKILLS Error</p></td>
+						</tr>
+						<tr>
+							<th th:text="#{professional.work}">WORK</th>
+							<td><input type="text" /></td>
+							<td><p class="error">WORK error</p></td>
+						</tr>
+						<tr>
+							<th th:text="#{professional.work_with}">WORK WITH</th>
+							<td><input type="text" /></td>
+							<td><p class="error">WORK WITH error</p></td>
+						</tr>
+						<tr>
+							<th th:text="#{professional.work_education}">COLLEGE,
+								UNIVERSITY, PROFESSIONAL SCHOOL</th>
+							<td><input type="text" /></td>
+							<td><p class="error">WORK WITH error</p></td>
+						</tr>
+						<tr>
+							<th></th>
+							<td class="rght">
+								<button type="submit" name="submit_edit_prof_skills">Edit</button>
+							</td>
+							<td class="lft">
+								<button type="submit" name="cancel_edit_prof_skills">Cancel</button>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</form>
+</div>
+  	<div class="bttm5 bclr w40" th:fragment="calendar">
+		<div class="btnBrdr"></div>
+	    <h2 id="clndrH" th:text="#{calendar}" class="cntr pntr">Calendar</h2>
+    	<div id="calendar"> </div>
+		<div class="btnBrdr"></div>
+    </div>
+</div>
+<div th:replace="fragments/footer :: footer">Footer</div>
+</body>
+</html>

@@ -10,7 +10,7 @@
 		color: white;
 }
 
-form, div, ul, li, a, p, h2, h6, button.jk {
+form, div, ul, li, a, p, h1, h2, h6, button.jk {
 		margin: 0;
 		padding: 0;
 		border-width: 0;
@@ -28,10 +28,13 @@ input, button, label{
 	background-color: #666666;
 }
 #contents{
-	background-color: #5C514D;
+	background-color: #666666;
 }
 #contents, #contentsFirst {
 	padding-right: .5em;
+}
+table .error{
+	padding-left: .5em;
 }
 table td input[type="text"], table td input[type="password"], table td input[type="email"]{
 	width: 99%;
@@ -80,11 +83,13 @@ button, checkbox, label, .pntr{
 #tables .btnDiv{
 	width: 6em;
 }
-.th_right th, p.rght{
-				text-align: right;
-				padding-right: .5em;
+.th_right th, .rght, table.thRght th{
+	text-align: right;
+	padding-right: .5em;
 }
-
+.lft{
+	text-align: left;
+}
 #loginDiv {	display: block;
      		border-radius: 25px;
 			border:  1px solid;
@@ -106,7 +111,7 @@ button, checkbox, label, .pntr{
 					-o-transform-origin: left top;
 }
 
-#header:AFTER, #contents:AFTER, #contentsFirst:AFTER {	
+#header:AFTER, #contents:AFTER, #contentsFirst:AFTER, .clear:AFTER {	
 					content: ".";
     				display: block;
 					height: 0;
@@ -307,9 +312,6 @@ td.error, p.error{
 .cntr, td.error{
 	text-align: center;
 }
-.lft{
-	text-align: left;
-}
 .pddng3{
 	padding: 3em;
 }
@@ -374,26 +376,68 @@ button.jk{
 .borderB{
 	border: 1px solid black;
 }
- .w5{
+.w5{
  width: 5em;
  }
- .w15{
- width: 15em;
- }
- .w10{
+.w10{
  width: 10em;
  }
- .w13{
+.w15{
+ width: 15em;
+ }
+.w16{
  width: 16em;
  }
- .w40{
+.w40{
  	width: 40em;
  }
-#userForm .btnDiv, .w100{
- width: 100%;
+.w10p{
+ width: 10%;
+}
+.w15p{
+ width: 15%;
+}
+.w20p{
+ width: 20%;
+}
+.w30p{
+ 	width: 30%;
  }
+.w49p{
+ width: 49%;
+}
+.w50p{
+ width: 50%;
+}
+.w60p{
+ width: 60%;
+}
+.w70p{
+ 	width: 70%;
+}
+.w80p{
+ 	width: 80%;
+}
+#userForm .btnDiv, .w100p{
+	width: 100%;
+}
+.mAuto{
+	margin: auto;
+}
  .borderBB{
  	border-bottom: 1px solid #867771;
+ }
+ .borderTB{
+ 	border-top: 1px solid #867771;
+ }
+ .borderRB{
+ 	border-right: 1px solid #867771;
+ }
+ .borderBD{
+ 	border-bottom: 1px dashed rgba(255, 255, 255, 0.5);
+ }
+ .borderRD{
+ 	border-right: 1px dashed rgba(255, 255, 255, 0.5);
  }
  caption {
 	font-size: 150%;

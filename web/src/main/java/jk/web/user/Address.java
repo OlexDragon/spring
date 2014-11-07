@@ -62,14 +62,6 @@ public class Address {
 		this.regions = regions;
 	}
 
-	public boolean isShowAddress() {
-		return showAddress;
-	}
-
-	public void setShowAddress(boolean showAddress) {
-		this.showAddress = showAddress;
-	}
-
 	public boolean isEditAddress() {
 		return editAddress;
 	}

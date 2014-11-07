@@ -10,9 +10,9 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 	@Query("SELECT count(l.id)>0 FROM login l WHERE l.username = ?")
 	public boolean exists(String username);
 
-	@Query("SELECT u FROM user u LEFT JOIN u.emails e JOIN u.loginEntity l WITH l.username = ?")
+	@Query("SELECT u FROM user u JOIN u.loginEntity l LEFT JOIN l.emails e WITH l.username = ?")
 	public UserEntity findByUsername(String username);
 
-	@Query("SELECT u FROM user u LEFT JOIN u.emails e JOIN u.loginEntity l WITH e.eMail = ?")
+	@Query("SELECT u FROM user u JOIN u.loginEntity l LEFT JOIN l.emails e WITH e.eMail = ?")
 	public UserEntity findByEMail(String eMail);
 }

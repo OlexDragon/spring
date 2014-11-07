@@ -19,6 +19,8 @@ import javax.validation.constraints.NotNull;
 
 import jk.web.user.repository.LoginRepository.Permission;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
@@ -52,9 +54,10 @@ public class LoginEntity implements Serializable{
     private Date lastAccessed;
 
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
-    @OneToMany(fetch=FetchType.LAZY)
-    @JoinColumn(name = "logins_loginID", referencedColumnName="loginID", insertable=false, updatable=false)
+    @OneToMany(fetch=FetchType.EAGER)
+    @JoinColumn(name = "logins_loginID", referencedColumnName="loginID")
     @NotFound(action=NotFoundAction.IGNORE)
+    @Cascade(value=CascadeType.ALL)
     private List<EMailEntity> emails;
 
     public LoginEntity() {
@@ -117,17 +120,17 @@ public class LoginEntity implements Serializable{
         this.lastAccessed = lastAccessed;
     }
 
-	@Override
-	public String toString() {
-		return "LoginEntity [id=" + id + ", username=" + username + ", password=" + password + ", permissions=" + permissions + ", createdDate=" + createdDate + ", lastAccessed="
-				+ lastAccessed + "]";
-	}
-
 	public List<EMailEntity> getEmails() {
 		return emails;
 	}
 
 	public void setEmails(List<EMailEntity> emails) {
 		this.emails = emails;
+	}
+
+	@Override
+	public String toString() {
+		return "LoginEntity [id=" + id + ", username=" + username + ", password=" + password + ", permissions=" + permissions + ", createdDate=" + createdDate + ", lastAccessed="
+				+ lastAccessed + ", emails=" + emails + "]";
 	}
 }
