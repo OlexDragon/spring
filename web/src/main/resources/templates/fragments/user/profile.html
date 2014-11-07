@@ -17,7 +17,7 @@
   <body>
     <div id="profile" class="bttm5 bclr w40" th:fragment="profile">
    	<form th:action="@{/user}" method="post" th:object="${user}">
-	<table class="w100">
+	<table class="w100p">
 		<tr>
     		<td><h2 id="prflH" th:text="#{profile}" class="cntr pntr">Profile</h2></td>
     		<td class="w5">
@@ -36,14 +36,15 @@
     	</tr>
     </table>
     <div id="prflTbl" th:class="${showP==null} ? 'dn'">
-	<table class="th_right borderB w100">
+	<table class="th_right borderB w100p">
 		<tr class="borderBB">
-			<td class="w5"><button type="submit"
+			<td class="w5">
+				<button type="submit"
 						name="submit_edit_username"
 						th:text="${edit_username}!=null ? #{user.save} : #{user.edit}">Edit</button>
 			</td>
 			<th class="w10" th:text="#{login.username}">Username</th>
-			<td class="w13 clrY" th:switch="${edit_username}">
+			<td class="w16 clrY" th:switch="${edit_username}">
 				<input th:case="${true}" type="text" name="newUsername" th:field="*{username}" autofocus="autofocus"/>
 				<p th:case="*" th:text="*{username}">Username</p>
 			</td>

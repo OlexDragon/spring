@@ -25,7 +25,6 @@ import jk.web.user.entities.SocialEntity;
 import jk.web.user.entities.TitleEntity;
 import jk.web.user.entities.UserEntity;
 import jk.web.user.entities.WorkplaceEntity;
-import jk.web.user.repository.EMailRepository;
 import jk.web.user.repository.SocialRepository;
 import jk.web.user.repository.TitleRepository;
 import jk.web.user.repository.UserRepository;
@@ -45,8 +44,6 @@ public class UserWorker extends LoginWorker{
 	@Autowired
 	private TitleRepository titleRepository;
 	@Autowired
-	private EMailRepository eMailRepository;
-	@Autowired
 	private AddressWorker addressWorker;
 	@Autowired
 	private SocialRepository socialRepository;
@@ -54,7 +51,6 @@ public class UserWorker extends LoginWorker{
 	private FileWorker fileWorker;
 
 	private UserEntity userEntity;
-	private ConfirmationStaus eMailStatus;
 
 	public enum ConfirmationStaus{
 		NEW_USER,
@@ -91,10 +87,13 @@ public class UserWorker extends LoginWorker{
 	 * @return e-mail to confirm, if not return active e-mail
 	 */
 	public EMailEntity getEmailToConfirm() {
+
 		EMailEntity eMailEntity = null;
-		if(userEntity!=null)
-			if(userEntity.getEmails()!=null)
-				for(EMailEntity em:userEntity.getEmails()) {
+		if(userEntity!=null){
+			LoginEntity loginEntity = userEntity.getLoginEntity();
+			List<EMailEntity> emails = loginEntity.getEmails();
+			if(emails!=null)
+				for(EMailEntity em:emails) {
 					EMailStatus status = em.getStatus();
 					if(status==EMailStatus.ACTIVE)
 						eMailEntity = em;
@@ -103,11 +102,8 @@ public class UserWorker extends LoginWorker{
 						break;
 					}
 				}
+		}
 		return eMailEntity;
-	}
-
-	public boolean existsEMail(String eMail) {
-		return logger.exit(eMailRepository.exists(eMail));
 	}
 
 	public UserEntity createNewUser(User user) throws ParseException {
@@ -137,7 +133,7 @@ public class UserWorker extends LoginWorker{
         setWorkplace(user.getWorkplace());
         setProfessionalSkill(user.getProfessionalSkill());
         eMailStatus = ConfirmationStaus.NEW_USER;
-        setEmail(userEntity, user.getEMail());
+        setEmail(loginEntity, user.getEMail());
 
         userEntity = save();
         userEntity.setLoginEntity(loginEntity);
@@ -147,6 +143,13 @@ public class UserWorker extends LoginWorker{
         user.setTitles(titleRepository.findAll());
         eMailStatus = null;
         return userEntity;
+	}
+
+	@Override
+	public LoginEntity saveEMail(String username, String eMail) {
+		LoginEntity loginEntity = super.saveEMail(username, eMail);
+		userEntity.setLoginEntity(loginEntity);
+		return loginEntity;
 	}
 
 	public void setProfessionalSkill(String professionalSkill) {
@@ -210,7 +213,8 @@ public class UserWorker extends LoginWorker{
 	public String getEMail(){
 		String eMail = "";
 		if(userEntity!=null){
-			List<EMailEntity> emails = userEntity.getEmails();
+			LoginEntity loginEntity = userEntity.getLoginEntity();
+			List<EMailEntity> emails = loginEntity.getEmails();
 			logger.trace("\n\t{}", emails);
 			if(emails!=null)
 				for(EMailEntity eme:emails)
@@ -220,10 +224,6 @@ public class UserWorker extends LoginWorker{
 					}
 		}
 		return eMail;
-	}
-
-	public EMailEntity getEMail(String eMail) {
-		return eMailRepository.findByEMail(eMail);
 	}
 
 	public String getBirthday(){
@@ -332,14 +332,11 @@ public class UserWorker extends LoginWorker{
 		return loginEntity;
 	}
 
-	public UserEntity saveTitle(String username, Integer titleId) {
-		setTitle(username, titleId);
-		return save();
-	}
-
-	public void setTitle(String username, Integer titleId) {
-		setUser(username);
-		userEntity.setTitle(titleRepository.findOne(titleId));
+	public void setTitle(Integer titleId) {
+		if(titleId!=null)
+			userEntity.setTitle(titleRepository.findOne(titleId));
+		else
+			userEntity.setTitle(null);
 	}
 
 	public String getPassword(String username) {
@@ -348,117 +345,15 @@ public class UserWorker extends LoginWorker{
 		return loginEntity!=null ? loginEntity.getPassword() : null;
 	}
 
-	public UserEntity saveFirstName(String username, String firstName) {
-		setFirstName(username, firstName);
-		logger.trace(userEntity);
-		return save();
-	}
-
-	public void setFirstName(String username, String firstName) {
-		logger.entry(username, firstName);
-		setUser(username);
+	public void setFirstName(String firstName) {
 		userEntity.setFirstName(firstName);
 	}
 
-	public UserEntity saveLastName(String username, String lastName) {
-		logger.entry(username, lastName);
-		setLastName(username, lastName);
-		logger.trace(userEntity);
-		return save();
-	}
-
-	public void setLastName(String username, String lastName) {
-		logger.entry(username, lastName);
-		setUser(username);
+	public void setLastName(String lastName) {
 		userEntity.setLastName(lastName);
 	}
 
-	public void saveEMail(EMailEntity eMailEntity) {
-		eMailRepository.save(eMailEntity);
-	}
-
-	public UserEntity saveEMail(String username, String eMail) {
-		setEMail(username, eMail);
-		logger.trace(userEntity);
-		return save();
-	}
-
-	public void setEMail(String username, String eMail) {
-		logger.entry(username, eMail);
-		setUser(username);
-		setEmail(userEntity, eMail);
-	}
-
-	private void setEmail(UserEntity userEntity, String eMail) {
-		logger.entry(userEntity, eMail);
-
-		if(addEMail(userEntity, eMail)){
-			List<EMailEntity> emails = userEntity.getEmails();
-			logger.trace("{}", emails);
-
-			Date time = Calendar.getInstance().getTime();
-			for(EMailEntity eme:userEntity.getEmails()){
-				boolean equals = eme.getEMail().equals(eMail);
-				switch(eme.getStatus()){
-				case ACTIVE:
-					if(equals)
-						eMailStatus = ConfirmationStaus.CONFIRMED_EMAIL;
-					else
-						eme.setStatus(EMailStatus.NOT_ACTIVE).setUpdateDate(time);
-					break;
-				case TO_CONFIRM:
-					if(eMailStatus!=ConfirmationStaus.NEW_USER)
-						if(equals)
-							eMailStatus = ConfirmationStaus.NEW_EMAIL;
-						else
-							eme.setStatus(EMailStatus.NOT_CONFIRMED).setUpdateDate(time);
-					break;
-				case NOT_ACTIVE:
-					if(equals){
-						eme.setStatus(EMailStatus.ACTIVE).setUpdateDate(time);
-						eMailStatus = ConfirmationStaus.CONFIRMED_EMAIL;
-					}
-					break;
-				case NOT_CONFIRMED:
-					if(equals){
-						eme.setStatus(EMailStatus.TO_CONFIRM).setUpdateDate(time);
-						eMailStatus = ConfirmationStaus.NEW_EMAIL;
-					}
-					break;
-				}
-			}
-		}
-	}
-
-	public boolean addEMail(UserEntity userEntity, String eMail) {
-		logger.entry(userEntity, eMail);
-
-		boolean added;
-		EMailEntity eMailEntity = new EMailEntity().setIdUsers(userEntity.getId()).setEMail(eMail);
-
-		List<EMailEntity> emails = userEntity.getEmails();
-		if(emails==null){
-			emails = new ArrayList<>();
-			userEntity.setEmail(emails);
-			added = emails.add(eMailEntity);
-		}else if(!emails.contains(new EMailEntity().setEMail(eMail))){
-			logger.trace("\n\tAdd e-mail: {}", eMail);
-			added = emails.add(eMailEntity);
-		}else
-			added = false;
-
-		return logger.exit(added);
-	}
-
-	public UserEntity saveGender(String username, Gender gender) {
-		setGender(username, gender);		
-		logger.trace(userEntity);
-		return save();
-	}
-
-	public void setGender(String username, Gender gender) {
-		logger.entry(username, gender);
-		setUser(username);
+	public void setGender(Gender gender) {
 		userEntity.setGender(gender);
 	}
 
@@ -474,9 +369,7 @@ public class UserWorker extends LoginWorker{
 		userEntity.setBirthday(birthday);
 	}
 
-	public void setBirthday(String username, Integer year, Integer month, Integer day) throws ParseException {
-		logger.entry(username, year, month, day);
-		setUser(username);
+	public void setBirthday(Integer year, Integer month, Integer day) throws ParseException {
 		userEntity.setBirthday(parseBirthday(year, month, day));
 	}
 
@@ -524,7 +417,6 @@ public class UserWorker extends LoginWorker{
 				&& userEntity.getId()			!=null
 				&& userEntity.getFirstName()	!=null
 				&& userEntity.getFirstName()	!=null
-				&& userEntity.getEmails()		!=null
 				&& userEntity.getBirthday()		!=null
 				&& userEntity.getGender()		!=null;
 	}

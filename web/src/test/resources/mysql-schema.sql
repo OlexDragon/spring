@@ -5,14 +5,17 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 -- -----------------------------------------------------
 -- Schema jk
 -- -----------------------------------------------------
+DROP SCHEMA IF EXISTS `jk` ;
 CREATE SCHEMA IF NOT EXISTS `jk` DEFAULT CHARACTER SET utf8 ;
 USE `jk` ;
 
 -- -----------------------------------------------------
 -- Table `jk`.`logins`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `jk`.`logins` ;
+
 CREATE TABLE IF NOT EXISTS `jk`.`logins` (
-  `loginID` INT(10) UNSIGNED NOT NULL,
+  `loginID` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(65) NOT NULL,
   `password` VARCHAR(65) NOT NULL,
   `permissions` INT(10) UNSIGNED NULL,
@@ -20,32 +23,14 @@ CREATE TABLE IF NOT EXISTS `jk`.`logins` (
   `last_accessed` TIMESTAMP NULL DEFAULT NULL,
   PRIMARY KEY (`loginID`),
   UNIQUE INDEX `username_UNIQUE` (`username` ASC))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8;
-
-
--- -----------------------------------------------------
--- Table `jk`.`users`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `jk`.`users` (
-  `logins_loginID` INT(10) UNSIGNED NOT NULL,
-  `first_name` VARCHAR(164) NOT NULL,
-  `last_name` VARCHAR(164) NOT NULL,
-  `birthday` DATE NOT NULL,
-  `gender` INT UNSIGNED NOT NULL,
-  PRIMARY KEY (`logins_loginID`),
-  CONSTRAINT `fk_users_logins`
-    FOREIGN KEY (`logins_loginID`)
-    REFERENCES `jk`.`logins` (`loginID`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8;
+ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
 -- Table `jk`.`emails`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `jk`.`emails` ;
+
 CREATE TABLE IF NOT EXISTS `jk`.`emails` (
   `emailID` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `logins_loginID` INT(10) UNSIGNED NOT NULL,
@@ -57,16 +42,57 @@ CREATE TABLE IF NOT EXISTS `jk`.`emails` (
   INDEX `fk_id_users_idx` (`logins_loginID` ASC),
   CONSTRAINT `fk_id_users`
     FOREIGN KEY (`logins_loginID`)
-    REFERENCES `jk`.`users` (`logins_loginID`)
+    REFERENCES `jk`.`logins` (`loginID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8;
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `jk`.`titles`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `jk`.`titles` ;
+
+CREATE TABLE IF NOT EXISTS `jk`.`titles` (
+  `title_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `title_name` VARCHAR(10) NOT NULL,
+  PRIMARY KEY (`title_id`),
+  UNIQUE INDEX `title_name_UNIQUE` (`title_name` ASC))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `jk`.`users`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `jk`.`users` ;
+
+CREATE TABLE IF NOT EXISTS `jk`.`users` (
+  `logins_loginID` INT(10) UNSIGNED NOT NULL,
+  `title_id` INT(10) UNSIGNED NULL,
+  `first_name` VARCHAR(164) NOT NULL,
+  `last_name` VARCHAR(164) NOT NULL,
+  `birthday` DATE NOT NULL,
+  `gender` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`logins_loginID`),
+  INDEX `fk_users_titles1_idx` (`title_id` ASC),
+  CONSTRAINT `fk_users_logins`
+    FOREIGN KEY (`logins_loginID`)
+    REFERENCES `jk`.`logins` (`loginID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_users_titles1`
+    FOREIGN KEY (`title_id`)
+    REFERENCES `jk`.`titles` (`title_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
 -- Table `jk`.`countries`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `jk`.`countries` ;
+
 CREATE TABLE IF NOT EXISTS `jk`.`countries` (
   `country_code` CHAR(3) NOT NULL,
   `country_name` CHAR(52) NOT NULL,
@@ -78,6 +104,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `jk`.`regions`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `jk`.`regions` ;
+
 CREATE TABLE IF NOT EXISTS `jk`.`regions` (
   `region_code` VARCHAR(2) NOT NULL,
   `country_code` VARCHAR(3) NOT NULL,
@@ -95,6 +123,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `jk`.`addresses`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `jk`.`addresses` ;
+
 CREATE TABLE IF NOT EXISTS `jk`.`addresses` (
   `addsress_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `logins_loginID` INT UNSIGNED NOT NULL,
@@ -103,9 +133,10 @@ CREATE TABLE IF NOT EXISTS `jk`.`addresses` (
   `postal_code` VARCHAR(10) NOT NULL,
   `regions_code` VARCHAR(2) NULL,
   `country_code` VARCHAR(3) NOT NULL,
+  `type` INT NOT NULL,
+  `create_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `status` INT NULL,
   `status_update_date` TIMESTAMP NULL,
-  `create_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`addsress_id`),
   INDEX `fk_addsresses_countries1_idx` (`country_code` ASC),
   INDEX `fk_addresses_regions1_idx` (`regions_code` ASC, `country_code` ASC),
@@ -128,6 +159,57 @@ CREATE TABLE IF NOT EXISTS `jk`.`addresses` (
 ENGINE = InnoDB;
 
 
+-- -----------------------------------------------------
+-- Table `jk`.`social`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `jk`.`social` ;
+
+CREATE TABLE IF NOT EXISTS `jk`.`social` (
+  `user_key` VARCHAR(45) NOT NULL,
+  `username` VARCHAR(145) NULL,
+  `first_name` VARCHAR(145) NULL,
+  `last_name` VARCHAR(145) NULL,
+  `image_url` VARCHAR(245) NULL,
+  `profile_url` VARCHAR(245) NULL,
+  `email` VARCHAR(145) NULL,
+  PRIMARY KEY (`user_key`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `jk`.`professional_skills`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `jk`.`professional_skills` ;
+
+CREATE TABLE IF NOT EXISTS `jk`.`professional_skills` (
+  `logins_loginID` INT UNSIGNED NOT NULL,
+  `professional_skill` VARCHAR(145) NOT NULL,
+  PRIMARY KEY (`logins_loginID`, `professional_skill`),
+  CONSTRAINT `fk_professional_skills_users1`
+    FOREIGN KEY (`logins_loginID`)
+    REFERENCES `jk`.`users` (`logins_loginID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `jk`.`workplaces`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `jk`.`workplaces` ;
+
+CREATE TABLE IF NOT EXISTS `jk`.`workplaces` (
+  `logins_loginID` INT UNSIGNED NOT NULL,
+  `workplace` VARCHAR(145) NOT NULL,
+  PRIMARY KEY (`logins_loginID`, `workplace`),
+  CONSTRAINT `fk_workplaces_users1`
+    FOREIGN KEY (`logins_loginID`)
+    REFERENCES `jk`.`users` (`logins_loginID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
@@ -138,6 +220,19 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 START TRANSACTION;
 USE `jk`;
 INSERT INTO `jk`.`logins` (`loginID`, `username`, `password`, `permissions`, `created_date`, `last_accessed`) VALUES (1, 'AlexDragon', '$2a$10$Ngs18wBAxxMoBgHW2dikouwCgRExj6ENjOiVk0CjWODYMzJZoriq6', NULL, NULL, NULL);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `jk`.`titles`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `jk`;
+INSERT INTO `jk`.`titles` (`title_id`, `title_name`) VALUES (3, 'Miss.');
+INSERT INTO `jk`.`titles` (`title_id`, `title_name`) VALUES (1, 'Mr.');
+INSERT INTO `jk`.`titles` (`title_id`, `title_name`) VALUES (2, 'Mrs.');
+INSERT INTO `jk`.`titles` (`title_id`, `title_name`) VALUES (4, 'Ms.');
 
 COMMIT;
 
@@ -408,6 +503,57 @@ INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES
 INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('NT', 'CAN', 'Northwest Territories');
 INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('YT', 'CAN', 'Yukon');
 INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('NU', 'CAN', 'Nunavut');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('AK', 'USA', 'Alaska');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('AL', 'USA', 'Alabama');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('AR', 'USA', 'Arkansas');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('AZ', 'USA', 'Arizona');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('CA', 'USA', 'California');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('CO', 'USA', 'Colorado');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('CT', 'USA', 'Connecticut');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('DC', 'USA', 'District of Columbia');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('DE', 'USA', 'Delaware');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('FL', 'USA', 'Florida');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('GA', 'USA', 'Georgia');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('HI', 'USA', 'Hawaii');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('IA', 'USA', 'Iowa');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('ID', 'USA', 'Idaho');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('IL', 'USA', 'Illinois');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('IN', 'USA', 'Indiana');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('KS', 'USA', 'Kansas');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('KY', 'USA', 'Kentucky');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('LA', 'USA', 'Louisiana');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('MA', 'USA', 'Massachusetts');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('MD', 'USA', 'Maryland');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('ME', 'USA', 'Maine');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('MI', 'USA', 'Michigan');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('MN', 'USA', 'Minnesota');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('MO', 'USA', 'Missouri');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('MS', 'USA', 'Mississippi');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('MT', 'USA', 'Montana');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('NC', 'USA', 'North Carolina');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('ND', 'USA', 'North Dakota');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('NE', 'USA', 'Nebraska');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('NH', 'USA', 'New Hampshire');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('NJ', 'USA', 'New Jersey');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('NM', 'USA', 'New Mexico');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('NV', 'USA', 'Nevada');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('NY', 'USA', 'New York');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('OH', 'USA', 'Ohio');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('OK', 'USA', 'Oklahoma');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('OR', 'USA', 'Oregon');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('PA', 'USA', 'Pennsylvania');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('RI', 'USA', 'Rhode Island');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('SC', 'USA', 'South Carolina');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('SD', 'USA', 'South Dakota');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('TN', 'USA', 'Tennessee');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('TX', 'USA', 'Texas');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('UT', 'USA', 'Utah');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('VA', 'USA', 'Virginia');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('VT', 'USA', 'Vermont');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('WA', 'USA', 'Washington');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('WI', 'USA', 'Wisconsin');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('WV', 'USA', 'West Virginia');
+INSERT INTO `jk`.`regions` (`region_code`, `country_code`, `region_name`) VALUES ('WY', 'USA', 'Wyoming');
 
 COMMIT;
 

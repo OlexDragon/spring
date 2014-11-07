@@ -63,13 +63,6 @@ public class UserEntity implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date birthday;
 
-    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
-    @OneToMany(fetch=FetchType.EAGER)
-    @JoinColumn(name = "logins_loginID")
-    @NotFound(action=NotFoundAction.IGNORE)
-    @Cascade(value=CascadeType.ALL)
-    private List<EMailEntity> emails;
-
     @OneToMany(fetch=FetchType.EAGER)
     @JoinColumn(name = "logins_loginID", referencedColumnName = "logins_loginID")
     @NotFound(action=NotFoundAction.IGNORE)
@@ -146,14 +139,6 @@ public class UserEntity implements Serializable {
         this.lastName = lastName;
     }
 
-    public List<EMailEntity> getEmails() {
-        return emails;
-    }
-
-    public void setEmail(List<EMailEntity> emails) {
-        this.emails = emails;
-    }
-
     public List<AddressEntity> getAddressEntities() {
 		return addressEntities;
 	}
@@ -219,7 +204,7 @@ public class UserEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "UserEntity [id=" + id + ", title=" + title + ", firstName=" + firstName + ", lastName=" + lastName + ", birthday=" + birthday + ", emails=" + emails
+		return "UserEntity [id=" + id + ", title=" + title + ", firstName=" + firstName + ", lastName=" + lastName + ", birthday=" + birthday
 				+ ", addressEntities=" + addressEntities + ", gender=" + gender + ", professionalSkills=" + professionalSkills + ", workplaces=" + workplaces + ", loginEntity="
 				+ loginEntity + "]";
 	}
