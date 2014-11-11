@@ -4,13 +4,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.text.ParseException;
-import java.util.Date;
-import java.util.List;
 
 import jk.web.EmbeddedMySqlDataSourceConfig;
 import jk.web.user.User;
 import jk.web.user.User.Gender;
-import jk.web.user.entities.EMailEntity;
 import jk.web.user.entities.UserEntity;
 import jk.web.workers.UserWorker;
 

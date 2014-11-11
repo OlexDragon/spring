@@ -219,7 +219,7 @@
 							<td>
 								<select th:if="${s_e_profile}" th:field="*{titleId}">
 									<option th:value="null" th:text="#{Select}">Select</option>
-<!--/*/								<option th:each="t : *{titles}" th:value="${t.id}" th:text="#{__('profile.title'+${t.id})__}" ></option>	  /*/-->
+<!--/*/								<option th:each="t : ${titles}" th:value="${t.id}" th:text="#{__('profile.title'+${t.id})__}" ></option>	  /*/-->
 <!--/*  -->							<option>Mr</option>	<!--*/-->	
 								</select>
 								<p th:unless="${s_e_profile}" th:text="*{titleId}!=null ? #{__('profile.title'+*{titleId})__}" class="clrY"></p>

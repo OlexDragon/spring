@@ -140,7 +140,6 @@ public class UserWorker extends LoginWorker{
  
         logger.trace("\n\t{}", userEntity);
 
-        user.setTitles(titleRepository.findAll());
         eMailStatus = null;
         return userEntity;
 	}
@@ -307,8 +306,6 @@ public class UserWorker extends LoginWorker{
 			user.setBirthMonth(calendar.get(Calendar.MONTH));
 			user.setBirthDay(calendar.get(Calendar.DAY_OF_MONTH));
 		}
-
-		user.setTitles(titleRepository.findAll());
 
 		logger.trace("EXIT\n\t{}\n\t{}", user, userEntity);
 	}

@@ -55,7 +55,7 @@ public class LoginController {
 	@RequestMapping
 	public String login(User user, Model model) {
 		logger.entry(user);
-		SignupController.signupAttributes(model, user, titleRepository);
+		SignupController.signupAttributes(model, titleRepository);
 		return "home";
 	}
 
