@@ -22,7 +22,7 @@ public class HomeController {
 
 	@RequestMapping({"/", "/home", "/index"})
     public String home(User user, Model model) {
-		SignupController.signupAttributes(model, user, titleRepository);
+		SignupController.signupAttributes(model, titleRepository);
 		return "home";
     }
 

@@ -26,6 +26,7 @@ public class TitleEntity implements Serializable {
     @Basic(optional = false)
     @Column(name = "title_id")
     private Integer id;
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 10)

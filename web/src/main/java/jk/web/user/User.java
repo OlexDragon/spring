@@ -192,15 +192,6 @@ public class User{
 		this.birthDay = day;
 	}
 
-	public List<TitleEntity> getTitles() {
-		return titles;
-	}
-
-	public void setTitles(List<TitleEntity> titles) {
-		logger.entry(titles);
-		this.titles = titles;
-	}
-
 	@Override
 	public String toString() {
 		return "User [username=" + username + ", password=" + password + ", repassword=" + repassword + ", titleId=" + titleId + ", firstName=" + firstName + ", lastName="

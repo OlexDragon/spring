@@ -1,6 +1,5 @@
 package jk.web.user.repository;
 
-import static org.junit.Assert.*;
 import jk.web.EmbeddedMySqlDataSourceConfig;
 import jk.web.workers.AddressWorker;
 
