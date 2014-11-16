@@ -131,8 +131,8 @@ button, checkbox, label, .pntr{
     list-style: none;
 }
 #menu ul{
-    background-color: #111;
-    background-image: linear-gradient(#444, #111);
+    background-color: #5C514D;
+    background-image: linear-gradient(#444, #5C514D);
 }
 #menu ul li , #tables ul li, #langDiv ul li{
     position: relative;
@@ -475,4 +475,7 @@ button.jk{
 	text-align: left;
 	text-indent: 1em;
 	margin-top: .5em;
+}
+bb{
+	border-bottom: 1 solid black;
 }
