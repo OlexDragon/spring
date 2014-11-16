@@ -39,6 +39,9 @@ import org.hibernate.annotations.NotFoundAction;
 public class UserEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    public enum ActivityType{
+    	NEW_USER
+    }
     @Transient
     private final Logger logger = LogManager.getLogger();
 

@@ -11,10 +11,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import jk.web.configuration.EMailConfig.ConfirmStatus;
 import jk.web.user.User;
+import jk.web.user.entities.ActivityEntity;
 import jk.web.user.entities.EMailEntity;
 import jk.web.user.entities.EMailEntity.EMailStatus;
 import jk.web.user.entities.LoginEntity;
 import jk.web.user.entities.UserEntity;
+import jk.web.user.entities.UserEntity.ActivityType;
+import jk.web.user.repository.ActivityRepository;
 import jk.web.user.repository.TitleRepository;
 import jk.web.user.repository.LoginRepository.Permission;
 import jk.web.user.validators.SignUpFormValidator;
@@ -58,6 +61,8 @@ public class SignupController {
 	private UserDetailsService userDetailsService;
     @Autowired
     protected AuthenticationManager authenticationManager;
+    @Autowired
+    private ActivityRepository activityRepository;
 
 	@Autowired
 	private TitleRepository titleRepository;
@@ -75,16 +80,6 @@ public class SignupController {
 		signupAttributes(model, titleRepository);
 		model.addAttribute("user", new User());
 		return "home";
-	}
-
-	public static void signupAttributes(Model model, TitleRepository titleRepository) {
-
-		if(	SecurityContextHolder.getContext().getAuthentication() == null ||
-				!SecurityContextHolder.getContext().getAuthentication().isAuthenticated()){
-
-			model.addAttribute("tiles", titleRepository.findAll(new Sort("id")));
-			model.addAttribute("yearsList", getYearsList());
-		}
 	}
 
 	@RequestMapping(value="/signup", method=RequestMethod.POST)
@@ -112,7 +107,7 @@ public class SignupController {
 		if(newUser.getId()!=null){
 			eMailWorker.sendRegistrationMail(user, mainURL+"/confirm", localeResolver.resolveLocale(request));
 			authenticateUserAndSetSession(user, request);
-
+			activityRepository.save(new ActivityEntity().setUserEntity(newUser).setType(ActivityType.NEW_USER).setUserid(newUser.getId()));
 		}
 		logger.trace("\n\t{}", newUser);
 
@@ -199,5 +194,15 @@ public class SignupController {
 				yearsList.add(String.valueOf(year-i));
 		}
 		return logger.exit(yearsList);
+	}
+
+	public static void signupAttributes(Model model, TitleRepository titleRepository) {
+
+		if(	SecurityContextHolder.getContext().getAuthentication() == null ||
+				!SecurityContextHolder.getContext().getAuthentication().isAuthenticated()){
+
+			model.addAttribute("tiles", titleRepository.findAll(new Sort("id")));
+			model.addAttribute("yearsList", getYearsList());
+		}
 	}
 }
