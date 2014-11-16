@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<title th:text="#{login.forgot_password}">Did you forget your password?</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link th:replace="fragments/header :: links" rel="stylesheet" type="text/css" href="../static/css/jk.css" th:href="@{/css/jk.css}" />
+</head>
+<body>
+	<!--/* 
+	* Header */-->
+	<div id="header" th:replace="fragments/header :: pageHeader">
+		<h4>Header</h4>
+	</div>
+<!--/*
+	* Menu */-->
+	<div id="menuDiv" th:replace="fragments/menu :: menu">Menu</div>
+<!--/*
+	* Contents */-->
+	<div id="contents">
+		<h1 class="p05" th:text="#{activity.resent_news}">Recent news</h1>
+		<th:block th:if="activities" th:each="a : ${activities}">
+			<div class="mb2 clear">
+<!--/* Image */-->
+				<img 	alt="User Image"
+						src="../static/images/userDefault.jpg"
+						th:src="@{/images/userDefault.jpg}"
+						class="fleft m1"/>
+<!--/* Text */-->
+				<div class="fright w80p text">
+					<h3 class="fright m1" th:text="#{'activity.'+${a.activityType}}">New User</h3>
+					<h2 th:text="#{'activity.'+${a.activityType}+'.thank_you'( ${a.title})}">Fashion Pro Finder</h2>
+					<th:block th:if="${a.paragraphs}" th:remove="all-but-first" th:each="p : ${a.paragraphs}">
+						<p th:text="${p}">Fashion PRO Finder is a site designed to find professionals
+							and organizations which operate primarily in the field of fashion
+							and cinema, but also in the field of performance arts in general.
+						</p>
+						<p>The mission of the company · Our mission is to help people
+							find jobs, schools, events; we will also be helping employers to
+							find qualified employees in their area of operation; · The
+							service is international, virtual and is open to all
+							professionals of fashion.</p>
+						<p>The site will be subdivided into many Categories in
+							fashion, cinema and entertainment</p>
+					</th:block>
+				</div>
+			</div>
+		</th:block>
+		<div class="mb2 clear" th:remove="all">
+<!--/* Image */-->
+			<img 	alt="User Image"
+					src="../static/images/userDefault.jpg"
+					th:src="@{/images/userDefault.jpg}"
+					class="fleft m1"/>
+<!--/* Text */-->
+			<div class="fright w80p text">
+				<h2>Fashion Pro Finder</h2>
+				<p>Fashion PRO Finder is a site designed to find professionals
+					and organizations which operate primarily in the field of fashion
+					and cinema, but also in the field of performance arts in general.
+				</p>
+				<p>
+					The mission of the company · Our mission is to help people find
+					jobs, schools, events; we will also be helping employers to find
+					qualified employees in their area of operation; · The service is
+					international, virtual and is open to all professionals of fashion.
+				</p>
+				<p>
+					The site will be subdivided into many Categories in fashion, cinema
+					and entertainment
+				</p>
+			</div>
+		</div>
+	</div>
+<div th:replace="fragments/footer :: footer">Footer</div>
+</body>
+</html>

@@ -15,6 +15,9 @@ form, div, ul, li, a, p, h1, h2, h6, button.jk {
 		padding: 0;
 		border-width: 0;
 }
+a {
+	text-decoration: none;
+}
 table{
 	border-collapse: collapse;
 }
@@ -39,7 +42,7 @@ table .error{
 table td input[type="text"], table td input[type="password"], table td input[type="email"]{
 	width: 99%;
 }
-#tables, button.jk, #contents a{
+#tables, button.jk, #contents a, #contentsFirst a{
 	color:white;
 }
 #contents h3{
@@ -376,6 +379,27 @@ button.jk{
 .borderB{
 	border: 1px solid black;
 }
+.m05{
+	margin: .5em;
+}
+.m1{
+	margin: 1em;
+}
+.mt1{
+	margin-top: 1em;
+}
+.mt2{
+	margin-top: 2em;
+}
+.mb2{
+	margin-bottom: 2em;
+}
+.p05{
+	padding: .5em;
+}
+.p1{
+	padding: 1em;
+}
 .w5{
  width: 5em;
  }
@@ -441,13 +465,14 @@ button.jk{
  }
  caption {
 	font-size: 150%;
-	margin-top: .5em;
-}
- caption {
-	font-size: 150%;
 	font-weight: bold;
 	margin-top: .5em;
 }
 .dn{
 	display: none;
+}
+.text p{
+	text-align: left;
+	text-indent: 1em;
+	margin-top: .5em;
 }
