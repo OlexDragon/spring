@@ -86,4 +86,6 @@ public interface LoginRepository  extends JpaRepository<LoginEntity, Long>  {
 
 	@Query(value="SELECT l FROM login l LEFT JOIN l.emails e WHERE l.username=?1 or e.eMail=?1")
 	public LoginEntity findByUsernameOrEMail(String usernameOrEMail);
+
+	public LoginEntity findById(Long userId);
 }

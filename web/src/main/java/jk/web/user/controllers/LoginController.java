@@ -56,6 +56,7 @@ public class LoginController {
 	public String login(User user, Model model) {
 		logger.entry(user);
 		SignupController.signupAttributes(model, titleRepository);
+		model.addAttribute("text", "LoginController.login.error");
 		return "home";
 	}
 

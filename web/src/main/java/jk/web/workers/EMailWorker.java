@@ -1,15 +1,8 @@
 package jk.web.workers;
 
-import java.util.Calendar;
 import java.util.Locale;
-import java.util.Properties;
 
-import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import jk.web.user.User;
@@ -18,7 +11,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
+@Service
 public class EMailWorker {
 
 	private final Logger logger = LogManager.getLogger();
@@ -26,20 +25,20 @@ public class EMailWorker {
 	@Autowired
 	private ApplicationContext applicationContext;
 
-	private String eMailAddress;
-	private String password;
-	private Properties props;
+	@Autowired
+	private JavaMailSenderImpl mailSender;
+	@Autowired
+	private TemplateEngine templateEngine;
 
-	public EMailWorker(Properties props, String eMailAddress, String password) {
-		logger.entry(eMailAddress, password, props);
-		this.props = props;
-		this.eMailAddress = eMailAddress;
-		this.password = password;
-	}
+//	public EMailWorker(JavaMailSender javaMailSenderImpl, TemplateEngine templateEngine) {
+//
+//		this.javaMailSenderImpl = javaMailSenderImpl;
+//		this.templateEngine = templateEngine;
+//	}
 
 	public void sendRegistrationMail(User user, String url, Locale locale){
 		logger.entry(user);
-		new EMailThread(user, url, locale);
+		new ConfirmationEMail(user, url, locale);
 	}
 
 	public void sendEMail(String eMail, String titleCode, String message) {
@@ -65,32 +64,32 @@ public class EMailWorker {
 		@Override
 		public void run() {
 			for(int i=0; i<5; i++){
-				Session session = Session.getInstance(props, new javax.mail.Authenticator() {
-					@Override
-					protected PasswordAuthentication getPasswordAuthentication() {
-						return new PasswordAuthentication(eMailAddress, password);
-					}
-				});
-
-				MimeMessage mimeMessage = new MimeMessage(session);
-				try {
-					mimeMessage.setFrom(new InternetAddress(eMailAddress));
-					mimeMessage.setRecipients(Message.RecipientType.TO, InternetAddress.parse(eMail));
-					mimeMessage.setSubject(subject, "UTF-8");
-
-					mimeMessage.setSentDate(Calendar.getInstance().getTime());
-					mimeMessage.setContent(message, "text/html; charset=UTF-8" );
-					Transport.send(mimeMessage);
-				} catch (MessagingException e) {
-					logger.catching(e);
-					try {
-						Thread.sleep(3*60*80*1000);
-					} catch (InterruptedException e1) {
-						logger.catching(e);
-					}
-					continue;
-				}
-				break;
+//				Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+//					@Override
+//					protected PasswordAuthentication getPasswordAuthentication() {
+//						return new PasswordAuthentication(eMailAddress, password);
+//					}
+//				});
+//
+//				MimeMessage mimeMessage = new MimeMessage(session);
+//				try {
+//					mimeMessage.setFrom(new InternetAddress(eMailAddress));
+//					mimeMessage.setRecipients(Message.RecipientType.TO, InternetAddress.parse(eMail));
+//					mimeMessage.setSubject(subject, "UTF-8");
+//
+//					mimeMessage.setSentDate(Calendar.getInstance().getTime());
+//					mimeMessage.setContent(message, "text/html; charset=UTF-8" );
+//					Transport.send(mimeMessage);
+//				} catch (MessagingException e) {
+//					logger.catching(e);
+//					try {
+//						Thread.sleep(3*60*80*1000);
+//					} catch (InterruptedException e1) {
+//						logger.catching(e);
+//					}
+//					continue;
+//				}
+//				break;
 			}
 		}
 	
@@ -98,9 +97,9 @@ public class EMailWorker {
 
 	private class MailThreadWorker extends Thread {
 
-		private EMailThread mailThread;
+		private ConfirmationEMail mailThread;
 
-		public MailThreadWorker(EMailThread mailThread) {
+		public MailThreadWorker(ConfirmationEMail mailThread) {
 			this.mailThread = mailThread;
 
 			setPriority(Thread.MIN_PRIORITY);
@@ -121,16 +120,20 @@ public class EMailWorker {
 		}
 	}
 
-	private class EMailThread extends Thread {
+	private class ConfirmationEMail extends Thread {
 
-		private String url;
-		private User user;
-		private Locale locale;
+		private final User user;
+		private final Locale locale;
+		private final Context context;
 
-		public EMailThread(User signUpForm, String url, Locale locale) {
-			this.url = url;
+		public ConfirmationEMail(User signUpForm, String url, Locale locale) {
+
 			this.user = signUpForm;
 			this.locale = locale;
+			context = new Context(locale);
+			context.setVariable("firstName", signUpForm.getFirstName());
+			context.setVariable("lastName", signUpForm.getLastName());
+			context.setVariable("href", url);
 
 			setDaemon(true);
 			setPriority(Thread.MIN_PRIORITY);
@@ -139,33 +142,18 @@ public class EMailWorker {
 
 		@Override
 		public void run() {
-			Session session = Session.getInstance(props, new javax.mail.Authenticator() {
-				@Override
-	            protected PasswordAuthentication getPasswordAuthentication() {
-	                return new PasswordAuthentication(eMailAddress, password);
-	            }
-	        });
 
-	        String firstName = user.getFirstName();
-			String lastName = user.getLastName();
+			final String htmlContent = templateEngine.process("mails/signup_confirmation", context);
 
-			MimeMessage message = new MimeMessage(session);
+			MimeMessage mimeMessage = mailSender.createMimeMessage();
+			final MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
 	        try {
-				message.setFrom(new InternetAddress(eMailAddress));
-		        String eMail = user.getEMail();
-				message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(eMail));
-				message.setSubject(getSubject(firstName, lastName, locale), "UTF-8");
-
-				message.setContent(getMessage(	url,
-												user.getUsername(),
-												firstName,
-												lastName,
-												eMail,
-												user.getNewPassword(),
-												locale),
-						"text/html; charset=UTF-8" );
-		        Transport.send(message);
-			} catch (MessagingException e) {
+	        	message.setFrom(mailSender.getUsername());
+				message.setTo(user.getEMail());
+				message.setSubject(getSubject(user.getFirstName(), user.getLastName(), locale));
+				message.setText(htmlContent, true);
+				mailSender.send(mimeMessage);
+			} catch (Exception e) {
 				logger.catching(e);
 				new MailThreadWorker(this);
 			}
@@ -173,20 +161,8 @@ public class EMailWorker {
 	        logger.info("Email Send Successfully");
 		}
 
-		private String getMessage(String url, String username, String firstName, String lastName, String eMail, String password, Locale locale) {
-			return logger.exit(applicationContext.getMessage(	"EMailWorker.message",
-																new String[]{	firstName,
-																				username,
-																				password,
-																				lastName,
-																				url,
-																				eMail},
-																"Thank you",
-																locale));
-		}
-
 		private String getSubject(String firstName, String lastName, Locale locale) {
-			return logger.exit(applicationContext.getMessage(	"EMailWorker.subject",
+			return logger.exit(applicationContext.getMessage(	"EMailWorker.signup.subject",
 																new String[]{	firstName.toUpperCase(),
 																				lastName.toUpperCase()},
 																				"Thank you",

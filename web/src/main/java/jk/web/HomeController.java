@@ -23,6 +23,7 @@ public class HomeController {
 	@RequestMapping({"/", "/home", "/index"})
     public String home(User user, Model model) {
 		SignupController.signupAttributes(model, titleRepository);
+		model.addAttribute("text", "home.welcome");
 		return "home";
     }
 
