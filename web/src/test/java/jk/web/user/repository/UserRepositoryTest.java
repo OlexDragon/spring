@@ -40,15 +40,15 @@ public class UserRepositoryTest {
 		assertNotNull(userEntity);
 	}
 
-	@Test
-	public void testCreateNewUser() throws ParseException{
-		User user = fillSignUpForm("username");
-		UserEntity newUser = userWorker.createNewUser(user);
-		assertNotNull(newUser);
-		logger.trace("\n\t{}", newUser);
-		assertEquals("username", newUser.getLoginEntity().getUsername());
-	}
-
+//	@Test
+//	public void testCreateNewUser() throws ParseException{
+//		User user = fillSignUpForm("username");
+//		UserEntity newUser = userWorker.createNewUser(user);
+//		assertNotNull(newUser);
+//		logger.trace("\n\t{}", newUser);
+//		assertEquals("username", newUser.getLoginEntity().getUsername());
+//	}
+//
 	@Test
 	public void testUpdateFields() throws ParseException{
 //		logger.entry();

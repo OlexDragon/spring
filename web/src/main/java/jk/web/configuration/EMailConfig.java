@@ -2,11 +2,12 @@ package jk.web.configuration;
 
 import java.util.Properties;
 
-import jk.web.workers.EMailWorker;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.thymeleaf.TemplateEngine;
 
 @Configuration
 public class EMailConfig {
@@ -16,6 +17,9 @@ public class EMailConfig {
 		CONFIRMED,
 		ERROR
 	}
+
+	@Autowired
+	private TemplateEngine templateEngine;
 
 	//Values from application.properties file
 	@Value("${email.username}")
@@ -31,14 +35,21 @@ public class EMailConfig {
 	@Value("${mail.smtp.port}")
 	private String port;
 
-	@Bean(name="emailWorker")
-	public EMailWorker getEMailWorker(){
-		Properties props = new Properties();
-		props.put("mail.smtp.auth", authentication);
-		props.put("mail.smtp.starttls.enable", starttls);
-		props.put("mail.smtp.host", host);
-		props.put("mail.smtp.port", port);
+	@Bean(name="mailSender")
+	public JavaMailSenderImpl mailSender(){
+		JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
 
-		return new EMailWorker(props, username, password);
+		Properties javaMailProperties = new Properties();
+		javaMailProperties.put("mail.smtp.auth", authentication);
+		javaMailProperties.put("mail.smtp.starttls.enable", starttls);
+		javaMailSender.setJavaMailProperties(javaMailProperties);
+
+		javaMailSender.setHost(host);
+		javaMailSender.setPort(Integer.parseInt(port));
+		javaMailSender.setUsername(username);
+		javaMailSender.setPassword(password);
+		javaMailSender.setDefaultEncoding("UTF-8");
+	
+		return javaMailSender;
 	}
 }

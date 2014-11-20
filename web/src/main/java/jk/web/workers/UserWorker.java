@@ -1,5 +1,6 @@
 package jk.web.workers;
 
+import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import jk.web.user.Address;
 import jk.web.user.Address.AddressStatus;
@@ -106,7 +108,7 @@ public class UserWorker extends LoginWorker{
 		return eMailEntity;
 	}
 
-	public UserEntity createNewUser(User user) throws ParseException {
+	public UserEntity createNewUser(User user, String mainURL, Locale locale) throws ParseException, NoSuchAlgorithmException {
 		logger.entry(user, passwordEncoder);
 
         LoginEntity loginEntity = save( new LoginEntity(user.getUsername(), passwordEncoder.encode(user.getNewPassword())));
@@ -137,7 +139,8 @@ public class UserWorker extends LoginWorker{
 
         userEntity = save();
         userEntity.setLoginEntity(loginEntity);
- 
+		eMailWorker.sendRegistrationMail(user, mainURL+"/confirm/"+userEntity.getId()+'/'+getEMailId()+'/'+loginEntity.getPassword().hashCode(), locale);
+
         logger.trace("\n\t{}", userEntity);
 
         eMailStatus = null;
@@ -209,8 +212,18 @@ public class UserWorker extends LoginWorker{
 		return userEntity!=null ? userEntity.getLastName() : "";
 	}
 
+	public Long getEMailId(){
+		EMailEntity eMailEntity = getEMailEntity();
+		return eMailEntity!=null ? eMailEntity.getId() : null;
+	}
+
 	public String getEMail(){
-		String eMail = "";
+		EMailEntity eMailEntity = getEMailEntity();
+		return eMailEntity!=null ? eMailEntity.getEMail() : null;
+	}
+
+	public EMailEntity getEMailEntity(){
+		EMailEntity eMail = null;
 		if(userEntity!=null){
 			LoginEntity loginEntity = userEntity.getLoginEntity();
 			List<EMailEntity> emails = loginEntity.getEmails();
@@ -218,7 +231,7 @@ public class UserWorker extends LoginWorker{
 			if(emails!=null)
 				for(EMailEntity eme:emails)
 					if(eme.getStatus()==null || eme.getStatus()==EMailStatus.ACTIVE || eme.getStatus()==EMailStatus.TO_CONFIRM){
-						eMail = eme.getEMail();
+						eMail = eme;
 						break;
 					}
 		}

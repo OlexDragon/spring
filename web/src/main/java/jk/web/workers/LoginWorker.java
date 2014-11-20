@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Locale;
 
 import jk.web.user.entities.EMailEntity;
+import jk.web.user.entities.UserEntity;
 import jk.web.user.entities.EMailEntity.EMailStatus;
 import jk.web.user.entities.LoginEntity;
 import jk.web.user.repository.EMailRepository;
@@ -39,6 +40,10 @@ public class LoginWorker {
 
 	public LoginEntity getLoginEntity(String username) {
 		return loginRepository.findByUsername(username);
+	}
+
+	public LoginEntity getLoginEntity(Long userId) {
+		return loginRepository.findById(userId);
 	}
 
 	public LoginEntity save(LoginEntity loginEntity) {
@@ -211,7 +216,7 @@ public class LoginWorker {
 			emails = new ArrayList<>();
 			loginEntity.setEmails(emails);
 			added = emails.add(eMailEntity);
-		}else if(!emails.contains(new EMailEntity().setEMail(eMail))){
+		}else if(emails.isEmpty() || !emails.contains(new EMailEntity().setEMail(eMail))){
 			logger.trace("\n\tAdd e-mail: {}", eMail);
 			added = emails.add(eMailEntity);
 		}else
