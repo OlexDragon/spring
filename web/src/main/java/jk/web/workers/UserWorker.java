@@ -1,5 +1,8 @@
 package jk.web.workers;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -23,18 +26,19 @@ import jk.web.user.entities.LoginEntity;
 import jk.web.user.entities.ProfessionalSkillEntity;
 import jk.web.user.entities.RegionEntity;
 import jk.web.user.entities.RegionEntityPK;
-import jk.web.user.entities.SocialEntity;
 import jk.web.user.entities.TitleEntity;
 import jk.web.user.entities.UserEntity;
 import jk.web.user.entities.WorkplaceEntity;
-import jk.web.user.repository.SocialRepository;
 import jk.web.user.repository.TitleRepository;
 import jk.web.user.repository.UserRepository;
+import jk.web.user.social.SocialRepository;
+import jk.web.user.social.entities.SocialEntity;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.connect.ConnectionKey;
+import org.thymeleaf.context.Context;
 
 public class UserWorker extends LoginWorker{
 
@@ -108,7 +112,7 @@ public class UserWorker extends LoginWorker{
 		return eMailEntity;
 	}
 
-	public UserEntity createNewUser(User user, String mainURL, Locale locale) throws ParseException, NoSuchAlgorithmException {
+	public UserEntity createNewUser(User user, String mainURL, Locale locale, Context context) throws ParseException, NoSuchAlgorithmException {
 		logger.entry(user, passwordEncoder);
 
         LoginEntity loginEntity = save( new LoginEntity(user.getUsername(), passwordEncoder.encode(user.getNewPassword())));
@@ -139,7 +143,7 @@ public class UserWorker extends LoginWorker{
 
         userEntity = save();
         userEntity.setLoginEntity(loginEntity);
-		eMailWorker.sendRegistrationMail(user, mainURL+"/confirm/"+userEntity.getId()+'/'+getEMailId()+'/'+loginEntity.getPassword().hashCode(), locale);
+		eMailWorker.sendRegistrationMail(user, mainURL+"/confirm/"+userEntity.getId()+'/'+getEMailId()+'/'+loginEntity.getPassword().hashCode(), locale, context);
 
         logger.trace("\n\t{}", userEntity);
 
@@ -476,14 +480,16 @@ public class UserWorker extends LoginWorker{
 	}
 
 	public SocialEntity getSocialEntity(ConnectionKey connectionKey) {
+		logger.entry(connectionKey);
 		return socialRepository.findOne(connectionKey.toString());
 	}
 
 	public UserEntity getUserEntityByEMail(String eMail) {
+		logger.entry(eMail);
 		return userRepository.findByEMail(eMail);
 	}
 
-	public static Date parseBirthday(Integer year, Integer month, Integer day) throws ParseException {
+	public static Date parseBirthday(Integer year, Integer month, Integer day) {
 		logger.entry(year, month, day);
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(year, month, day);
@@ -493,5 +499,35 @@ public class UserWorker extends LoginWorker{
 	public String getCountryCode(AddressType addressType) {
 		AddressEntity addressEntity = getAddressEntity(addressType);
 		return addressEntity!=null ? addressEntity.getCountryCode() : null;
+	}
+
+	public String getProfileImagge() throws URISyntaxException, MalformedURLException {
+		String imageURL;
+		if(userEntity!=null){
+			Long id = userEntity.getLoginEntity().getId();
+			File file = new File(fileWorker.getProfilePath(id));
+			if(file.exists()){
+				imageURL = FileWorker.IMAGES_UPL + FileWorker.PROFILE_URL + file.getName();
+			}else{
+
+				TitleEntity titleEntity = userEntity.getTitle();
+				if(titleEntity==null)
+					imageURL = FileWorker.IMAGES_UPL + "/default/profile.png";
+				else{
+					Integer titleID = titleEntity.getId();
+					switch(titleID){
+					case TitleEntity.MR:
+						imageURL = FileWorker.IMAGES_UPL + "/default/profile_b.png";
+						break;
+					default:
+						imageURL = FileWorker.IMAGES_UPL + "/default/profile_g.png";
+					}
+				}
+			}
+		}else{
+			//Default image
+			imageURL = FileWorker.IMAGES_UPL + "/default/profile.png";
+		}
+		return logger.exit(imageURL);
 	}
 }

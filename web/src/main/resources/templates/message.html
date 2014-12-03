@@ -11,8 +11,8 @@
 	<div id="header" th:replace="fragments/header :: pageHeader">Header</div>
 	<div id="menuDiv"  th:replace="fragments/menu :: menu" >Menu</div>
 	<div id="contentsDiv" class="cntr pddng3">
-		<p th:text="#{__${message}__}">message</p>
-		<p th:utext="${contents}">contents</p>
+		<p th:text="#{${message}}">message</p>
+		<p th:utext="#{${contents}}">contents</p>
 	</div>
 <div th:replace="fragments/footer :: footer">Footer</div>
 </body>

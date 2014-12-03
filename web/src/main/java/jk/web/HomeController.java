@@ -20,15 +20,14 @@ public class HomeController {
 	@Autowired
 	private TitleRepository titleRepository;
 
-	@RequestMapping({"/", "/home", "/index"})
-    public String home(User user, Model model) {
+	@RequestMapping({ "/", "/home", "/index" })
+	public String home(User user, Model model) {
 		SignupController.signupAttributes(model, titleRepository);
-		model.addAttribute("text", "home.welcome");
+		model.addAttribute("message", "home.welcome");
 		return "home";
-    }
+	}
 
-    public static void main(String[] args) throws Exception {
-        SpringApplication.run(HomeController.class, args);
-    }
+	public static void main(String[] args) throws Exception {
+		SpringApplication.run(HomeController.class, args);
+	}
 }
-

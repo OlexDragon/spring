@@ -14,17 +14,17 @@
     	<a class="fleft" href="../home.html" th:href="@{/}">
 			<img alt="Fashion Pro Finder" src="../../static/images/fpf_gray" th:src="@{/images/fpf_gray.png}" />
 		</a>
-		<th:block th:if="${#authorization.expression('isAuthenticated()')}==false" >
-		<div id="langDiv">
-			<ul>
-				<li id="languageMenu" class="fright">
-					<p th:text="#{__${#locale.displayLanguage}__}">Language</p>
-					<ul>
-						<li th:each="lang : ${@menuLanguages}"><a th:href="'?language='+${lang}" th:text="#{__${lang.displayLanguage}__}"></a></li>
-					</ul>
-				</li>
-			</ul>
-		</div>
+		<th:block th:if="${#authentication}==null or ${#authorization.expression('isAuthenticated()')}==false" >
+			<div id="langDiv">
+				<ul>
+					<li id="languageMenu" class="fright">
+						<p th:text="#{__${#locale.displayLanguage}__}">Language</p>
+						<ul>
+							<li th:each="lang : ${@menuLanguages}"><a th:href="'?language='+${lang}" th:text="#{__${lang.displayLanguage}__}"></a></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
 		</th:block>
 		<p th:replace="fragments/search :: search">Search</p>
 	</div>

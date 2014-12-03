@@ -14,10 +14,15 @@ public abstract class SocialInterceptor<S>  implements ConnectInterceptor<S>{
 
 	protected Logger logger = LogManager.getLogger(getClass());
 
-	@Autowired
 	protected UserWorker userWorker;
+
+	public SocialInterceptor(UserWorker userWorker){
+		
+		this.userWorker = userWorker;
+	}
 
 	@Override
 	public void preConnect(ConnectionFactory<S> connectionFactory, MultiValueMap<String, String> parameters, WebRequest request) {
+		logger.entry(parameters);
 	}
 }

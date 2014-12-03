@@ -110,15 +110,15 @@
 			</div>
 			<!--/*
 			* User Image */-->
-			<form class="fright borderB" method="post">
+			<form class="fright borderB" method="post" action="/upload/uploadProfileImage"  enctype="multipart/form-data">
 				<table id="img_tbl">
 					<tr>
-						<td><img alt="User Image"
+						<td><img alt="Profile Image"
 							src="../static/images/userDefault.jpg"
-							th:src="@{/images/userDefault.jpg}" /></td>
+							th:src="@{${profileImageLink}}" /></td>
 					</tr>
 					<tr class="rght">
-						<td><button type="submit" name="submit_user_img">Button</button></td>
+						<td><input type="file" name="file" /><button type="submit" name="submit_user_img">Button</button></td>
 					</tr>
 				</table>
 			</form>
@@ -310,10 +310,10 @@
 					<tr>
 						<th></th>
 						<td class="rght">
-							<button type="submit" name="submit_edit_prof_skills">Edit</button>
+							<button type="submit" name="s_e_prof_skills" th:text="${s_e_prof_skills!=null} ? #{user.save} : #{user.edit}">Edit</button>
 						</td>
 						<td class="lft">
-							<button type="submit" name="cancel_edit_prof_skills">Cancel</button>
+							<button type="submit" th:if="${s_e_prof_skills}" name="cancel_edit_prof_skills" th:text="#{cancel}">Cancel</button>
 						</td>
 					</tr>
 				</table>

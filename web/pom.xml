@@ -19,7 +19,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.1.8.RELEASE</version>
+		<version>1.1.9.RELEASE</version>
 	</parent>
 
 	<dependencies>
@@ -99,6 +99,26 @@
 			<artifactId>mail</artifactId>
 			<version>1.4.7</version>
 		</dependency>
+
+        <!-- Reactor -->
+        <dependency>
+            <groupId>org.projectreactor</groupId>
+            <artifactId>reactor-net</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectreactor.spring</groupId>
+            <artifactId>reactor-spring-context</artifactId>
+        </dependency>
+
+	<!-- Image Scale -->
+	<dependency>
+		<groupId>org.imgscalr</groupId>
+		<artifactId>imgscalr-lib</artifactId>
+		<version>4.2</version>
+		<type>jar</type>
+		<scope>compile</scope>
+	</dependency>
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>

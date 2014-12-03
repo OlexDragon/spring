@@ -12,9 +12,9 @@
 <body>
 <div id="header" th:replace="fragments/header :: pageHeader">Header</div>
 <div id="menuDiv"  th:replace="fragments/menu :: menu" >Menu</div>
-<div id="contentsFirst" >
-	<div class="fleft" th:utext="#{${text}}"></div>
-	<div th:if="${#authorization.expression('isAuthenticated()')}==false" id="tables" class="fright">
+<div id="contentsFirst">
+	<div class="fleft" th:utext="#{${message}}"></div>
+	<div th:unless="${#authentication} ? ${#authorization.expression('isAuthenticated()')} : ${false}" id="tables" class="fright">
 		<div th:replace="login :: login"></div>
 		<div th:replace="signup :: signup"></div>
 	</div>

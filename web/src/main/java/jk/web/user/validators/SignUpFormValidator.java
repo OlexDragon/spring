@@ -1,6 +1,5 @@
 package jk.web.user.validators;
 
-import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
@@ -155,7 +154,7 @@ public class SignUpFormValidator implements Validator {
 			if(month==null || day==null)
 				errors.rejectValue(fieldName, "SignUpFormValidator.this_field_must_be_filled");
 			else{
-				try {
+//				try {
 					Date birthday = UserWorker.parseBirthday( user.getBirthYear(), user.getBirthMonth(), user.getBirthDay());
 					Calendar cal = Calendar.getInstance();
 					if(birthday.after(cal.getTime()))
@@ -166,10 +165,10 @@ public class SignUpFormValidator implements Validator {
 //						if(birthday.after(cal.getTime()))
 //							errors.rejectValue(fieldName, "SignUpFormValidator.you_are_very_young", "You are very young.");
 //					}
-				} catch (ParseException e) {
-					errors.rejectValue(fieldName, "SignUpFormValidator.this_field_must_be_filled");
-					logger.catching(e);
-				}
+//				} catch (ParseException e) {
+//					errors.rejectValue(fieldName, "SignUpFormValidator.this_field_must_be_filled");
+//					logger.catching(e);
+//				}
 			}
 		}else
 			logger.trace("\n\tThe feald 'Year' is empty.");

@@ -21,19 +21,23 @@ public class FileWorker {
 	public final static String GOOGLE_MAP_SIZE_PARAM = "&size=";
 	public final static String GOOGLE_API_KEY_PARAM = "&key=";
 	public final static String GOOGLE_MAP_MARKERS ="&markers=size:mid%7Ccolor:red%7C";
-	public final static String MAPS_URL = "/images/maps/";
+	public final static String IMAGES_UPL = "/images";
+	public final static String MAPS_URL = "/maps/";
+	public final static String  PROFILE_URL = "/profiles/";
 
 	private final String FILES_PATH;
 	private final String GOOGLE_API_KEY;
 	private final String GOOGLE_MAP_SIZE;
 	private final String MAPS_FULL_PATH;
+	private final String PROFILE_FULL_PATH;
 
 	public FileWorker(String filesPath, String googleApiKey, String googleMapSize) {
 		logger.entry(filesPath, googleApiKey, googleMapSize);
 		FILES_PATH = filesPath;
-		GOOGLE_API_KEY = GOOGLE_API_KEY_PARAM+googleApiKey;
-		GOOGLE_MAP_SIZE = GOOGLE_MAP_SIZE_PARAM+googleMapSize;
-		MAPS_FULL_PATH = FILES_PATH+MAPS_URL;
+		GOOGLE_API_KEY = GOOGLE_API_KEY_PARAM + googleApiKey;
+		GOOGLE_MAP_SIZE = GOOGLE_MAP_SIZE_PARAM + googleMapSize;
+		MAPS_FULL_PATH = FILES_PATH + IMAGES_UPL + MAPS_URL;
+		PROFILE_FULL_PATH = FILES_PATH + IMAGES_UPL + PROFILE_URL;
 
 		File file = new File(MAPS_FULL_PATH);
 		if(!(file.exists() || file.isDirectory()))
@@ -125,6 +129,10 @@ public class FileWorker {
 	}
 
 	public String getMapFileName(AddressType addressType, Long userId) {
-		return "map"+addressType+userId+".png";
+		return "map" + addressType+userId + ".png";
+	}
+
+	public String getProfilePath(Long id) {
+		return PROFILE_FULL_PATH + id + ".png";
 	}
 }

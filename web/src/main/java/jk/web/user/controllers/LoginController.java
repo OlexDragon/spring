@@ -3,9 +3,6 @@ package jk.web.user.controllers;
 import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import jk.web.user.User;
 import jk.web.user.entities.LoginEntity;
 import jk.web.user.entities.UserEntity;
@@ -22,7 +19,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.data.repository.query.Param;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -56,7 +52,7 @@ public class LoginController {
 	public String login(User user, Model model) {
 		logger.entry(user);
 		SignupController.signupAttributes(model, titleRepository);
-		model.addAttribute("text", "LoginController.login.error");
+		model.addAttribute("message", "home.welcome");
 		return "home";
 	}
 
@@ -173,16 +169,10 @@ public class LoginController {
 								locale));
 			}
 		}
-		
-		model.addAttribute("oldPassword", newPassword);
-		model.addAttribute("oldPassword", repassword);
-		return "resetPassword";
-	}
 
-	public static void logout(HttpServletRequest request) {
-		HttpSession session = request.getSession(false);
-		if (session != null) 
-		    session.invalidate();
-		SecurityContextHolder.clearContext();
+		//TODO
+		model.addAttribute("newPassword", newPassword);
+		model.addAttribute("repassword", repassword);
+		return "resetPassword";
 	}
 }

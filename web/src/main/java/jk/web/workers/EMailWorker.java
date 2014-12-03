@@ -1,8 +1,8 @@
 package jk.web.workers;
 
+import java.util.Date;
 import java.util.Locale;
 
-import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import jk.web.user.User;
@@ -36,9 +36,9 @@ public class EMailWorker {
 //		this.templateEngine = templateEngine;
 //	}
 
-	public void sendRegistrationMail(User user, String url, Locale locale){
+	public void sendRegistrationMail(User user, String url, Locale locale, Context context){
 		logger.entry(user);
-		new ConfirmationEMail(user, url, locale);
+		new ConfirmationEMail(user, url, locale, context);
 	}
 
 	public void sendEMail(String eMail, String titleCode, String message) {
@@ -126,11 +126,11 @@ public class EMailWorker {
 		private final Locale locale;
 		private final Context context;
 
-		public ConfirmationEMail(User signUpForm, String url, Locale locale) {
+		public ConfirmationEMail(User signUpForm, String url, Locale locale, Context context) {
 
 			this.user = signUpForm;
 			this.locale = locale;
-			context = new Context(locale);
+			this.context = context;
 			context.setVariable("firstName", signUpForm.getFirstName());
 			context.setVariable("lastName", signUpForm.getLastName());
 			context.setVariable("href", url);
@@ -150,6 +150,7 @@ public class EMailWorker {
 	        try {
 	        	message.setFrom(mailSender.getUsername());
 				message.setTo(user.getEMail());
+				message.setSentDate(new Date());
 				message.setSubject(getSubject(user.getFirstName(), user.getLastName(), locale));
 				message.setText(htmlContent, true);
 				mailSender.send(mimeMessage);
