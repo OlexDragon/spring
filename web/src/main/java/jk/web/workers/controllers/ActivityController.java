@@ -57,12 +57,12 @@ public class ActivityController {
 			activity = new Activity();
 			activity.setTitle(userEntity.getFirstName()+" "+userEntity.getLastName());
 			activity.setActivityType(activityEntity.getType().name());
-			List<String> paragraphs = new ArrayList<String>();
-			paragraphs.add("username - "+userEntity.getLoginEntity().getUsername());
-			List<ProfessionalSkillEntity> professionalSkills = userEntity.getProfessionalSkills();
-			if(professionalSkills!=null)
-				paragraphs.add("professionalSkills - "+professionalSkills);
-			activity.setParagraphs(paragraphs);
+//			List<String> paragraphs = new ArrayList<String>();
+//			paragraphs.add("username - "+userEntity.getLoginEntity().getUsername());
+//			List<ProfessionalSkillEntity> professionalSkills = userEntity.getProfessionalSkills();
+//			if(professionalSkills!=null)
+//				paragraphs.add("professionalSkills - "+professionalSkills);
+//			activity.setParagraphs(paragraphs);
 		}else
 			activity = null;
 

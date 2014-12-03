@@ -5,8 +5,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+import javax.servlet.MultipartConfigElement;
+
 import jk.web.user.repository.CountryRepository;
-import jk.web.user.services.SimpleSocialUsersDetailService;
 import jk.web.user.validators.SignUpFormValidator;
 import jk.web.workers.AddressWorker;
 import jk.web.workers.UserWorker;
@@ -15,10 +16,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.embedded.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.social.security.SocialUserDetailsService;
 
 @Configuration
 public class UserConfig {
@@ -27,8 +27,6 @@ public class UserConfig {
 
 	@Autowired
 	private CountryRepository countryRepository;
-	@Autowired
-	private UserDetailsService userDetailsService;
 
 	@Value("${country.list}")
 	private String countriesCSV;
@@ -63,11 +61,6 @@ public class UserConfig {
 		return new AddressWorker(countryRepository, new HashSet<String>(Arrays.asList(countries)));
 	}
 
-    @Bean
-    public SocialUserDetailsService socialUsersDetailService() {
-        return new SimpleSocialUsersDetailService(userDetailsService);
-    }
-
     @Bean(name="usernameRange")
     public Map<String, Integer> usernameRange(){
     	logger.entry(usernameRange);
@@ -78,6 +71,15 @@ public class UserConfig {
     public Map<String, Integer> passwordRange(){
     	logger.entry(passwordRange);
     	return getRange(passwordRange);
+    }
+
+    /* To upload files with Servlet 3.0 containers, you need to register a MultipartConfigElement class */
+    @Bean
+    public MultipartConfigElement multipartConfigElement() {
+        MultipartConfigFactory factory = new MultipartConfigFactory();
+        factory.setMaxFileSize("128KB");
+        factory.setMaxRequestSize("128KB");
+        return factory.createMultipartConfig();
     }
 
     public static Map<String, Integer> getRange(String rangeStr){

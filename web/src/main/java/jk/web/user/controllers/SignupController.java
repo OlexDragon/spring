@@ -1,6 +1,7 @@
 package jk.web.user.controllers;
 
 import java.security.NoSuchAlgorithmException;
+import java.security.Principal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -8,6 +9,7 @@ import java.util.List;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 import jk.web.user.User;
@@ -15,6 +17,7 @@ import jk.web.user.entities.ActivityEntity;
 import jk.web.user.entities.EMailEntity;
 import jk.web.user.entities.EMailEntity.EMailStatus;
 import jk.web.user.entities.LoginEntity;
+import jk.web.user.entities.TitleEntity;
 import jk.web.user.entities.UserEntity;
 import jk.web.user.entities.UserEntity.ActivityType;
 import jk.web.user.repository.ActivityRepository;
@@ -42,6 +45,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.LocaleResolver;
+import org.thymeleaf.context.Context;
 
 @Controller
 public class SignupController {
@@ -78,48 +82,53 @@ public class SignupController {
 		logger.entry(RequestMethod.GET);
 		signupAttributes(model, titleRepository);
 		model.addAttribute("user", new User());
-		model.addAttribute("text", "SignupController.signup.error");
+		model.addAttribute("message", "home.welcome");
 		return "home";
 	}
 
 	@RequestMapping(value="/signup", method=RequestMethod.POST)
-	public String signup(User user, BindingResult bindingResult, HttpServletRequest request, Model model) throws AddressException, MessagingException{
+	public String signup(User user, BindingResult bindingResult, HttpServletRequest request, Model model, Context context) throws AddressException, MessagingException{
 
 		signUpFormValidator.validate(user, bindingResult);
 
 		if(bindingResult.hasErrors()){
-			model.addAttribute("usernameRange", signUpFormValidator.getUsernameRange());
-			model.addAttribute("passwordRange", signUpFormValidator.getPasswordRange());
-			model.addAttribute("text", "SignupController.signup.error");
+			addUsernamePasswordRange(model);
+			model.addAttribute("message", "home.welcome");
 			return "home";
 		}
 
 		UserEntity newUser;
 		try {
-			newUser = userWorker.createNewUser(user, mainURL, localeResolver.resolveLocale(request));
+			newUser = userWorker.createNewUser(user, mainURL, localeResolver.resolveLocale(request), context);
 		} catch (ParseException | NoSuchAlgorithmException e) {
 			logger.catching(e);
 			bindingResult.rejectValue("year", "SignUpFormValidator.this_field_must_be_filled");
-			model.addAttribute("usernameRange", signUpFormValidator.getUsernameRange());
-			model.addAttribute("passwordRange", signUpFormValidator.getPasswordRange());
-			model.addAttribute("text", "SignupController.signup.error");
+			addUsernamePasswordRange(model);
+			model.addAttribute("message", "home.welcome");
 			return "home";
 		}
 
 		if(newUser.getId()!=null){
-			authenticateUserAndSetSession(user, request);
+			authenticateUserAndSetSession( user.getUsername(), user.getNewPassword(), request);
 			activityRepository.save(new ActivityEntity().setUserEntity(newUser).setType(ActivityType.NEW_USER).setUserid(newUser.getId()));
 		}
 		logger.trace("\n\t{}", newUser);
 
-		model.addAttribute(yearsList);
-		model.addAttribute("text", "SignupController.signup.confirn.sent");
-		return "home";
+		model.addAttribute("title", "SignupController.signup.confirn.title");
+		model.addAttribute("message", "SignupController.signup.confirn.title");
+		model.addAttribute("contents", "SignupController.signup.confirn.sent");
+		return "message";
 	}
 
-	private void authenticateUserAndSetSession(User user, HttpServletRequest request) {
-		logger.entry(user);
-		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken( user.getUsername(), user.getNewPassword());
+	public void addUsernamePasswordRange(Model model) {
+		model.addAttribute("usernameRange", signUpFormValidator.getUsernameRange());
+		model.addAttribute("passwordRange", signUpFormValidator.getPasswordRange());
+		signupAttributes(model, titleRepository);
+	}
+
+	private void authenticateUserAndSetSession(String username, String password, HttpServletRequest request) {
+		logger.entry(username, password);
+		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken( username, password);
 
 		// generate session if one doesn't exist
 		request.getSession();
@@ -131,7 +140,7 @@ public class SignupController {
 	}
 
 	@RequestMapping(value="/signup/clear")
-	public String clear(User signUpForm){
+	public String clear(User signUpForm, Model model){
 		signUpForm.setUsername(null);
 		signUpForm.setFirstName(null);
 		signUpForm.setLastName(null);
@@ -144,7 +153,7 @@ public class SignupController {
 	}
 
 	@RequestMapping(value="/confirm/{userId}/{eMailId}/{passwordHashCode}")
-	public String confirm(@PathVariable Long userId, @PathVariable Long eMailId, @PathVariable Integer passwordHashCode, Model model){
+	public String confirm(@PathVariable Long userId, @PathVariable Long eMailId, @PathVariable Integer passwordHashCode, Model model, Principal principal, HttpServletRequest request){
 		logger.entry(userId, eMailId, passwordHashCode);
 
 		String textCode;
@@ -153,10 +162,21 @@ public class SignupController {
 			logger.trace("\n\ttextCode = {}", textCode = "SignupController.confirm.error");
 		else{
 			LoginEntity loginEntity = userWorker.getLoginEntity(userId);
-			if(loginEntity==null)
+			if(loginEntity==null){
+
 				logger.trace("\n\ttextCode = {}", textCode = "SignupController.confirm.error");
-			else if(loginEntity.getPassword().hashCode()==passwordHashCode){
+				try { request.logout(); } catch (ServletException e) { logger.catching(e); }
+
+			}else if(loginEntity.getPassword().hashCode()==passwordHashCode){
+
 				user.setUsername(loginEntity.getUsername());
+
+				String username = principal.getName();
+				if(username!=null){
+					LoginEntity le = userWorker.getLoginEntity(username);
+					if(le.getId()!=loginEntity.getId())
+						try { request.logout(); } catch (ServletException e) { logger.catching(e); }
+				}
 
 				EMailEntity em = getEmailById(loginEntity, eMailId);
 				if(em!=null){
@@ -175,14 +195,14 @@ public class SignupController {
 						}
 					}else
 						logger.trace("\n\ttextCode = {}", textCode = "SignupController.confirm.confirmed");
+//					authenticateUserAndSetSession( user.getUsername(), user.getNewPassword(), request);
 				}else
 					logger.trace("\n\ttextCode = {}", textCode = "SignupController.confirm.error");
 			}else
 				logger.error("\n\tpassword hash code({})!=@PathVariable({})\n\t{}",loginEntity.getPassword().hashCode(), passwordHashCode, textCode = "SignupController.confirm.error");
 		}
 		model.addAttribute(user);
-		model.addAttribute("text", textCode);
-		SignupController.signupAttributes(model, titleRepository);
+		model.addAttribute("message", textCode);
 		return "home";
 	}
 
@@ -210,12 +230,8 @@ public class SignupController {
 	}
 
 	public static void signupAttributes(Model model, TitleRepository titleRepository) {
-
-		if(	SecurityContextHolder.getContext().getAuthentication() == null ||
-				!SecurityContextHolder.getContext().getAuthentication().isAuthenticated()){
-
-			model.addAttribute("tiles", titleRepository.findAll(new Sort("id")));
-			model.addAttribute("yearsList", getYearsList());
-		}
+		List<TitleEntity> findAll = titleRepository.findAll(new Sort("id"));
+		logger.trace("\n\t{}", findAll);
+		model.addAttribute("titles", findAll);
 	}
 }

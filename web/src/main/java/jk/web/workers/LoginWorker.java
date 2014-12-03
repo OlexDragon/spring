@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Locale;
 
 import jk.web.user.entities.EMailEntity;
-import jk.web.user.entities.UserEntity;
 import jk.web.user.entities.EMailEntity.EMailStatus;
 import jk.web.user.entities.LoginEntity;
 import jk.web.user.repository.EMailRepository;

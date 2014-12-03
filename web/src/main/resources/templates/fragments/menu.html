@@ -8,7 +8,7 @@
 	th:href="@{/css/jk.css}"></link>
 </head>
 <body>
-	<div th:if="${#authorization.expression('isAuthenticated()')}"  id="menu" th:fragment="menu">
+	<div th:if="${#authentication} ? ${#authorization.expression('isAuthenticated()')} : ${false}"  id="menu" th:fragment="menu">
 		<div class="menuBrdr"></div>
 		<ul id="menuUL">
 			<li class="fleft"><a href="/user"

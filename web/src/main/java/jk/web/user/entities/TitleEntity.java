@@ -21,6 +21,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class TitleEntity implements Serializable {
     private static final long serialVersionUID = 1L;
+
+    public static final int MR		= 1;
+    public static final int MRS		= 2;
+    public static final int MISS 	= 3;
+    public static final int MS		= 4;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)

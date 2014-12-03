@@ -4,9 +4,10 @@
  * and open the template in the editor.
  */
 
-package jk.web.user.repository;
+package jk.web.user.social;
 
-import jk.web.user.entities.SocialEntity;
+import jk.web.user.social.entities.SocialEntity;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

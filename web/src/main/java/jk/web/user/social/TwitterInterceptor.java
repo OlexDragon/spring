@@ -2,12 +2,18 @@ package jk.web.user.social;
 
 import java.util.Iterator;
 
+import jk.web.workers.UserWorker;
+
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.UserProfile;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.web.context.request.WebRequest;
 
 public class TwitterInterceptor extends SocialInterceptor<Twitter>{
+
+	public TwitterInterceptor(UserWorker userWorker) {
+		super(userWorker);
+	}
 
 	@Override
 	public void postConnect(Connection<Twitter> connection, WebRequest request) {

@@ -2,22 +2,29 @@ package jk.web.user.social;
 
 import java.util.Iterator;
 
-import jk.web.user.entities.SocialEntity;
+import jk.web.user.social.entities.SocialEntity;
 import jk.web.workers.UserWorker;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.social.SocialException;
 import org.springframework.social.connect.Connection;
+import org.springframework.social.connect.ConnectionKey;
 import org.springframework.social.connect.UserProfile;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.web.context.request.WebRequest;
 
 public class FacebookInterceptor extends SocialInterceptor<Facebook>{
 
+	public FacebookInterceptor(UserWorker userWorker) {
+		super(userWorker);
+	}
+
 	@Override
 	public void postConnect(Connection<Facebook> connection, WebRequest request) {
+		logger.entry();
 
-		SocialEntity socialEntity = userWorker.getSocialEntity(connection.getKey());
+		try{
+		ConnectionKey key = connection.getKey();
+		logger.trace("\n\tkey = {}\n\tuserWorker = {}", key);
+		SocialEntity socialEntity = userWorker.getSocialEntity(key);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("\n\t");
@@ -28,6 +35,8 @@ public class FacebookInterceptor extends SocialInterceptor<Facebook>{
 		sb.append("request.getUserPrincipal()");
 		sb.append("=\t");
 		sb.append(request.getUserPrincipal());
+		logger.trace(sb);
+
 		sb.append("\nParameters:");
 		Iterator<String> parameterNames = request.getParameterNames();
 		while(parameterNames.hasNext()){
@@ -37,6 +46,8 @@ public class FacebookInterceptor extends SocialInterceptor<Facebook>{
 			sb.append("=\t");
 			sb.append(request.getParameter(pn));
 		}
+		logger.trace(sb);
+
 		sb.append("\nHeaders:");
 
 		Iterator<String> headerNames = request.getHeaderNames();
@@ -47,6 +58,8 @@ public class FacebookInterceptor extends SocialInterceptor<Facebook>{
 			sb.append("=\t");
 			sb.append(request.getHeader(hn));
 		}
+		logger.trace(sb);
+
 		sb.append("\n\n\t");
 		sb.append("connection.getDisplayName()");
 		sb.append("=\t");
@@ -66,7 +79,9 @@ public class FacebookInterceptor extends SocialInterceptor<Facebook>{
 		sb.append("\n\t");
 		sb.append("connection.getKey()");
 		sb.append("=\t");
-		sb.append(connection.getKey());
+		sb.append(key);
+		logger.trace(sb);
+
 
 		UserProfile userProfile = connection.fetchUserProfile();
 		sb.append("\n\n\t");
@@ -90,6 +105,8 @@ public class FacebookInterceptor extends SocialInterceptor<Facebook>{
 		sb.append("=\t");
 		sb.append(userProfile.getEmail());
 		sb.append("\n");
+		logger.trace(sb);
+
 		sb.append("\n"+"WebRequest.SCOPE_GLOBAL_SESSION");
 		for(String an:request.getAttributeNames(WebRequest.SCOPE_GLOBAL_SESSION)){
 			sb.append("\n\t");
@@ -98,6 +115,8 @@ public class FacebookInterceptor extends SocialInterceptor<Facebook>{
 			sb.append(request.getAttribute(an, WebRequest.SCOPE_GLOBAL_SESSION));
 		}
 		sb.append("\n");
+		logger.trace(sb);
+
 		sb.append("\n"+"WebRequest.SCOPE_REQUEST");
 		for(String an:request.getAttributeNames(WebRequest.SCOPE_REQUEST)){
 			sb.append("\n\t");
@@ -106,6 +125,8 @@ public class FacebookInterceptor extends SocialInterceptor<Facebook>{
 			sb.append(request.getAttribute(an, WebRequest.SCOPE_REQUEST));
 		}
 		sb.append("\n");
+		logger.trace(sb);
+
 		sb.append("\n"+"WebRequest.SCOPE_SESSION");
 		for(String an:request.getAttributeNames(WebRequest.SCOPE_SESSION)){
 			sb.append("\n\t");
@@ -114,6 +135,9 @@ public class FacebookInterceptor extends SocialInterceptor<Facebook>{
 			sb.append(request.getAttribute(an, WebRequest.SCOPE_SESSION));
 		}
 		logger.trace("{}", sb);
+		}catch(Exception ex){
+			logger.catching(ex);
+		}
 	}
 
 }

@@ -16,6 +16,7 @@ form, div, ul, li, a, p, h1, h2, h6, button.jk {
 		border-width: 0;
 }
 a {
+	color: white;
 	text-decoration: none;
 }
 table{

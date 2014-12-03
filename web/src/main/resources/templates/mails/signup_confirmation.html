@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
-    <title th:remove="all">Template forsign up confirmation</title>
+    <title th:remove="all">Template for sign up confirmation</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   </head>
   <body>
@@ -14,9 +14,9 @@
 	<p th:text="#{EMailWorker.signup.email.welcom}">Welcome to the Fashion Pro Finder community! We're thrilled to have you on board.</p>
 	<p th:text="EMailWorker.signup.email.next_step">Your next step is to verify your email address.</p>
 	<div style="display:inline-block;">
-		<div style="height:10px;background-size:10px;background-image:url('http://fashionprofinder.qc.to/images/join_now.png');"></div>
+		<div style="background-size:10px;height:10px;" th:styleappend="'background:url(\''+ @{http://fashionprofinder.qc.to/images/join_now.png}+'\');'"></div>
 		<a style="color:white;background-color:#5C514D;display:inline-block;padding:10px;cursor:pointer" th:href="${href}" th:text="#{EMailWorker.signup.email.verify}">Verify your email address</a>
-		<div style="height:10px;background-size:10px;background-image:url('http://fashionprofinder.qc.to/images/join_now.png');"></div>
+		<div style="height:10px;background-size:10px;" th:style="'background:url(\''+ @{http://fashionprofinder.qc.to/images/join_now.png}+'\');'"></div>
 	</div>
 	<p th:text="#{EMailWorker.signup.email.confirmation_required}">Confirmation is required to avoid unauthorized use of your e-mail address.</p>
 	<p><span th:text="#{EMailWorker.signup.email.if_problems}">P.S. If you have problems verifying your email, please paste this URL into your web browser:</span><br/>

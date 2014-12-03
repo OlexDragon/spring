@@ -1,10 +1,12 @@
 package jk.web.user.controllers;
 
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.security.Principal;
 import java.text.ParseException;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import jk.web.user.Address;
 import jk.web.user.Address.AddressType;
@@ -60,6 +62,11 @@ public class UserController {
 		User user = new User();
 		userWorker.fillUser(user);
 		model.addAttribute("user", user);
+		try {
+			model.addAttribute("profileImageLink", userWorker.getProfileImagge());
+		} catch (MalformedURLException | URISyntaxException e) {
+			logger.catching(e);
+		}
 
 		Address homeAddress = resetAddress(username, model, AddressType.HOME);
 		Address workAddress = resetAddress(username, model, AddressType.WORK);
@@ -81,7 +88,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value="/user", method=RequestMethod.POST, params = S_E_USERNAME)
-	public String editUsername(User user, Principal principal, Model model, BindingResult bindingResults, HttpServletRequest request, HttpServletResponse response){
+	public String editUsername(User user, Principal principal, Model model, BindingResult bindingResults, HttpServletRequest request){
 		final String attributeName = S_E_USERNAME;
 
 		String username = principal.getName();
@@ -116,7 +123,7 @@ public class UserController {
 						userWorker.saveNewUsername(un);
 						logger.debug("Username '{}' updated by'{}'.", username, un);
 
-						LoginController.logout(request);
+						try { request.logout(); } catch (ServletException e) { logger.catching(e); }
 
 						return "redirect:/login";
 					}else
@@ -151,7 +158,7 @@ public class UserController {
 			if(signUpFormValidator.passwordValidation(bindingResults, user)){
 				userWorker.saveNewPassword(user.getNewPassword());
 
-				LoginController.logout(request);
+				try { request.logout(); } catch (ServletException e) { logger.catching(e); }
 
 				return "redirect:/login";
 			}else
@@ -196,6 +203,7 @@ public class UserController {
 		model.addAttribute(AddressType.WORK+"_Addr", workAddress);
 
 		model.addAttribute("showP", true);
+		SignupController.signupAttributes(model, titleRepository);
 		return "user";
 	}
 

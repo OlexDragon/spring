@@ -7,7 +7,7 @@
 	<link rel="stylesheet" type="text/css" href="../static/css/jk.css" th:href="@{/css/jk.css}"></link>
   </head>
   <body>
-  	<form th:if="${#authorization.expression('isAuthenticated()')}" name="searchForm" action="/search"  th:action="@{/search}" class="fright" th:fragment="search" >
+  	<form th:if="${#authentication} ? ${#authorization.expression('isAuthenticated()')} : ${false}" name="searchForm" action="/search"  th:action="@{/search}" class="fright" th:fragment="search" >
   		<input type="text" name="searchFor"/>
   		<select name="searchDetails">
 			<option th:each="details : ${T(jk.web.workers.SearchClass.SearchDetails).values()}" th:value="${details}" th:text="#{__${details}__}" />
