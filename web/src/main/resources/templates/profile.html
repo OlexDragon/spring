@@ -6,42 +6,43 @@
 <title th:text="#{menu.user}">User</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="viewport" content="width=device-width" />
-<link th:replace="fragments/header :: links" rel="stylesheet"
-	type="text/css" href="../static/css/jk.css" th:href="@{/css/jk.css}" />
-<link rel="stylesheet" type="text/css"
-	href="../static/js/jQuery/jquery-ui.css"
-	th:href="@{/js/jQuery/jquery-ui.css}"></link>
-<link rel="stylesheet" type="text/css" href="../static/css/calendar.css"
-	th:href="@{/css/calendar.css}"></link>
-<script
-	src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script type="text/javascript"
-	src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js"></script>
-<script type="text/javascript"
-	src="http://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.1.1/fullcalendar.min.js"></script>
+<link th:replace="fragments/header :: links" rel="stylesheet" type="text/css" href="../static/css/jk.css" th:href="@{/css/jk.css}" />
+<link rel="stylesheet" type="text/css" href="../static/js/jQuery/jquery-ui.css" th:href="@{/js/jQuery/jquery-ui.css}"></link>
+<link rel="stylesheet" type="text/css" href="../static/css/calendar.css" th:href="@{/css/calendar.css}"></link>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js"></script>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.1.1/fullcalendar.min.js"></script>
 <script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
 	$(document).ready(
 			function() {
-				$("input")
-						.keypress(
+				$("input").keypress(
 								function(event) {
 									if ((event.keyCode ? event.keyCode
 											: (event.which ? event.which
 													: event.charCode)) == 13) {
-										document.getElementById('activeButton')
-												.click();
+										$('activeButton').click();
 										return false;
 									}
 									return true;
-								});
+				});
+				$('#fileSelect').on('change', function () {
+					var text = /*[[#{user.script.tobigfile}]]*/ 'File is to big';
+					var maxFileSize = /*[[${T(jk.web.workers.FileWorker).maxFileSize}]]*/ 1024;
+					var dis = this.files[0].size > maxFileSize;
+					if(dis){
+						alert(text);
+					}
+					$('#change').attr("disabled", ($('#fileSelect').val().length == 0) || dis);
+				});
 				$("select").on('change', function() {
 					document.getElementById('activeButton').click();
 				});
 				$("#prflH").click(function() {
 					$("#prflTbl").slideToggle('slow');
 				});
-				$("#lclstnH").click(function() {
-					$("#lclstnTbls").toggle(500);
+				$("#addrH").click(function() {
+					$("#addrTbls").toggle(500);
 				});
 				$("#clndrH").click(function() {
 					$("#calendar").slideToggle('slow');
@@ -87,6 +88,7 @@
 					} ]
 				});
 			});
+	/*]]>*/
 </script>
 </head>
 <body>
@@ -101,24 +103,35 @@
 	<!--/*
 	* Contents */-->
 	<div id="contents">
-		<!--/*
+<!--/*
 
 	-------- Profile and User Image ------- */-->
 		<div class="clear">
-			<div>
-				<h1 class="borderBD" th:text="#{menu.profile}">Profile</h1>
+			<div id="prflH" class="pntr borderBD">
+				<h1  class="cntr w80p inlineB" th:text="#{menu.profile}">Profile</h1>
+				<a class="inlineB bclr p05" href="/profile/edit" th:href="${edit_profile} ? '/profile' : '/profile/edit'" th:text="${edit_profile} ? #{cancel} : #{user.edit}"> Edit Profile</a>
 			</div>
 			<!--/*
 			* User Image */-->
-			<form class="fright borderB" method="post" action="/upload/uploadProfileImage"  enctype="multipart/form-data">
+			<form class="borderB m05" th:classappend="${edit_profile} ? 'fright' : 'fleft'" method="post" action="/upload/uploadProfileImage"  enctype="multipart/form-data">
 				<table id="img_tbl">
 					<tr>
-						<td><img alt="Profile Image"
-							src="../static/images/userDefault.jpg"
-							th:src="@{${profileImageLink}}" /></td>
+						<td>
+							<img
+								alt="Profile Image"
+								src="../static/images/userDefault.jpg"
+								th:src="@{${profileImageLink}}"
+							/>
+						</td>
 					</tr>
-					<tr class="rght">
-						<td><input type="file" name="file" /><button type="submit" name="submit_user_img">Button</button></td>
+					<tr th:if="${edit_profile}">
+						<td>
+							<div class="fileinput">
+								<input type="file" id="fileSelect" name="fileSelect" accept="image/*" />
+								<label class="bttn" th:text="#{Select}">Select</label>
+							</div>
+							<button type="submit" class="bttn" id="change" name="submit_user_img" th:text="#{change}" disabled="disabled">Button</button>
+						</td>
 					</tr>
 				</table>
 			</form>
@@ -127,9 +140,9 @@
 
 	------- Profile -------
 */-->
-			<div class="fleft borderRD w80p">
-				<form action="user" method="post" th:object="${user}">
-					<table class="thRght w100p">
+			<div id="prflTbl" class="borderRD w80p" th:classappend="${edit_profile} ? 'fleft' : 'fright'">
+				<form action="profile/edit" method="post" th:object="${user}">
+					<table class="rght w100p">
 <!--/*
 
 		* username and email*
@@ -155,7 +168,7 @@
        							<p class="error" th:if="${#fields.hasErrors('eMail')}" th:errors="*{eMail}">E-Mail Error</p>
        						</td>
 						</tr>
-						<tr th:unless="${s_e_username}" class="borderBB">
+						<tr th:if="${edit_profile} and ${s_e_username==null}" class="borderBB">
 							<th></th>
 							<td class="rght">
 								<button type="submit" name="s_e_username" th:text="#{user.edit}">Edit</button>
@@ -196,7 +209,7 @@
 							</tr>
 						</th:block>
 /*/-->
-						<tr class="borderBB">
+						<tr th:if="${edit_profile}" class="borderBB">
 							<th></th>
 							<td class="rght">
 								<button type="submit"
@@ -265,7 +278,7 @@
 							</td>
        						<td><p class="error" th:if="${#fields.hasErrors('birthYear')}" th:errors="*{birthYear}">Birthday error</p></td>
 						</tr>
-						<tr class="borderBB">
+						<tr th:if="${edit_profile}" class="borderBB">
 							<th></th>
 							<td class="rght">
 								<button type="submit"
@@ -283,7 +296,7 @@
 
 			* Professional skills *
 */-->
-				<table class="thRght">
+				<table class="rght">
 					<tr>
 						<th class="w20p" th:text="#{professional.skills}">PROFESSIONAL
 							SKILLS</th>
@@ -307,7 +320,7 @@
 						<td><input type="text" /></td>
 						<td><p class="error">WORK WITH error</p></td>
 					</tr>
-					<tr>
+					<tr th:if="${edit_profile}">
 						<th></th>
 						<td class="rght">
 							<button type="submit" name="s_e_prof_skills" th:text="${s_e_prof_skills!=null} ? #{user.save} : #{user.edit}">Edit</button>
@@ -324,10 +337,10 @@
 
 	--------- Addresses ---------
 */-->
-		<div>
-			<h2 id="lclstnH" th:text="#{localisation}" class="cntr pntr borderTB">Addresses</h2>
-			<div class="clear">
-<!--/* Address #2  */-->
+		<div class="borderBB">
+			<h2 id="addrH" th:text="#{localisation}" class="cntr pntr borderTB">Addresses</h2>
+			<div id="addrTbls" class="clear borderBB" th:classappend="${showA}==null ? 'dn'">
+<!--/* Address #1  */-->
 				<div class="w49p inlineB">
 					<form th:replace="fragments/user/address :: address(${HOME_Addr})">
 						<table class="w100p">
@@ -338,7 +351,7 @@
 							</tr>
 						</table>
 						<div>
-							<table class="w100p th_right">
+							<table class="w100p rght">
 								<tr>
 									<th class="w10">Address</th>
 									<td class="w16"><input type="text" /></td>
@@ -388,7 +401,7 @@
 							</tr>
 						</table>
 						<div>
-							<table class="w100p th_right">
+							<table class="w100p rght">
 								<tr>
 									<th class="w10">Address</th>
 									<td class="w16"><input type="text" /></td>
@@ -436,11 +449,9 @@
 
 	--------- Calendar ---------
 */-->
-		<div class="bttm5 bclr w40">
-			<div class="btnBrdr"></div>
+		<div class="bttm5 bclr">
 			<h2 id="clndrH" th:text="#{calendar}" class="cntr pntr">Calendar</h2>
 			<div id="calendar"></div>
-			<div class="btnBrdr"></div>
 		</div>
 	</div>
 	<div th:replace="fragments/footer :: footer">Footer</div>

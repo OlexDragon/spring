@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-public class UserController {
+public class ProfileController {
 
 
 	private static final String S_E_USERNAME = "s_e_username";
@@ -54,40 +54,52 @@ public class UserController {
 	@Autowired
 	private TitleRepository titleRepository;
 
-	@RequestMapping(value="/user", method=RequestMethod.GET)
-	public String user(Principal principal, Model model){
+	@RequestMapping(value="/profile", method=RequestMethod.GET)
+	public String profile(Principal principal, Model model){
 
 		String username = principal.getName();
 
 		User user = new User();
 		userWorker.fillUser(user);
 		model.addAttribute("user", user);
-		try {
-			model.addAttribute("profileImageLink", userWorker.getProfileImagge());
-		} catch (MalformedURLException | URISyntaxException e) {
-			logger.catching(e);
-		}
+		setProfileImage(username, model);
 
 		Address homeAddress = resetAddress(username, model, AddressType.HOME);
 		Address workAddress = resetAddress(username, model, AddressType.WORK);
 
 		logger.trace("\n\thomeAddress = {}\n\tworkAddress = {}", homeAddress, workAddress);
-		return "user";
+
+		setProfileImage(username, model);
+		return "profile";
 	}
 
-	@RequestMapping(value="/user", method=RequestMethod.POST, params = "cancel_profile")
+	@RequestMapping(value="/profile/edit", method=RequestMethod.GET)
+	public String profileEditPage(Principal principal, Model model){
+		model.addAttribute("edit_profile", true);
+		return profile(principal, model);
+	}
+
+	public void setProfileImage(String username, Model model) {
+		try {
+			model.addAttribute("profileImageLink", fileWorker.getProfileImagge(username));
+		} catch (MalformedURLException | URISyntaxException e) {
+			logger.catching(e);
+		}
+	}
+
+	@RequestMapping(value="/profile/edit", method=RequestMethod.POST, params = "cancel_profile")
 	public String cancelProfile(Principal principal, Model model){
 		model.addAttribute("showP", true);
-		return user(principal, model);
+		return profile(principal, model);
 	}
 
-	@RequestMapping(value="/user", method=RequestMethod.POST, params = "cancel_addr")
+	@RequestMapping(value="/profile/edit", method=RequestMethod.POST, params = "cancel_addr")
 	public String cancelWorkAddress(Principal principal, Model model){
 		model.addAttribute("showA", true);
-		return user(principal, model);
+		return profile(principal, model);
 	}
 
-	@RequestMapping(value="/user", method=RequestMethod.POST, params = S_E_USERNAME)
+	@RequestMapping(value="/profile/edit", method=RequestMethod.POST, params = S_E_USERNAME)
 	public String editUsername(User user, Principal principal, Model model, BindingResult bindingResults, HttpServletRequest request){
 		final String attributeName = S_E_USERNAME;
 
@@ -143,10 +155,11 @@ public class UserController {
 		userWorker.filllUserAddress(username, workAddress);
 		model.addAttribute(AddressType.WORK+"_Addr", workAddress);
 
-		return "user";
+		setProfileImage(username, model);
+		return "profile";
 	}
 
-	@RequestMapping(value="/user", method=RequestMethod.POST, params = S_E_PASSWORD)
+	@RequestMapping(value="/profile/edit", method=RequestMethod.POST, params = S_E_PASSWORD)
 	public String editPassword(User user, Principal principal, Model model, BindingResult bindingResults, HttpServletRequest request){
 		String attributeName = S_E_PASSWORD;
 
@@ -174,11 +187,12 @@ public class UserController {
 		userWorker.filllUserAddress(username, workAddress);
 		model.addAttribute(AddressType.WORK+"_Addr", workAddress);
 
+		setProfileImage(username, model);
 		model.addAttribute("showP", true);
-		return "user";
+		return "profile";
 	}
 
-	@RequestMapping(value="/user", method=RequestMethod.POST, params = S_E_PROFILE)
+	@RequestMapping(value="/profile/edit", method=RequestMethod.POST, params = S_E_PROFILE)
 	public String editProfile(User user, Principal principal, Model model, BindingResult bindingResults){
 
 		String username = principal.getName();
@@ -202,9 +216,10 @@ public class UserController {
 		userWorker.filllUserAddress(username, workAddress);
 		model.addAttribute(AddressType.WORK+"_Addr", workAddress);
 
+		setProfileImage(username, model);
 		model.addAttribute("showP", true);
 		SignupController.signupAttributes(model, titleRepository);
-		return "user";
+		return "profile";
 	}
 
 	public void editTitle(User user){
@@ -272,7 +287,7 @@ public class UserController {
 		}
 	}
 
-	@RequestMapping(value="/user", method=RequestMethod.POST, params = "cancel_addr_HOME")
+	@RequestMapping(value="/profile/edit", method=RequestMethod.POST, params = "cancel_addr_HOME")
 	public String cancelHomeAddress(Address address, Principal principal, Model model){
 
 		String username = principal.getName();
@@ -285,10 +300,12 @@ public class UserController {
 		Address workAddress = resetAddress(username, model, AddressType.WORK);
 
 		logger.trace("\n\thomeAddress = {}\n\tworkAddress = {}", homeAddress, workAddress);
-		return "user";
+
+		setProfileImage(username, model);
+		return "profile";
 	}
 
-	@RequestMapping(value="/user", method=RequestMethod.POST, params = "sbmt_addr_WORK")
+	@RequestMapping(value="/profile", method=RequestMethod.POST, params = "sbmt_addr_WORK")
 	public String editWorkAddress(Address address, Principal principal, Model model){
 
 		String username = principal.getName();
@@ -303,7 +320,7 @@ public class UserController {
 		return editAddress(username, addressEntity, address, new Address(AddressType.WORK), model);
 	}
 
-	@RequestMapping(value="/user", method=RequestMethod.POST, params = "sbmt_addr_HOME")
+	@RequestMapping(value="/profile/edit", method=RequestMethod.POST, params = "sbmt_addr_HOME")
 	public String editHomeAddress(Address address, Principal principal, Model model){
 
 		String username = principal.getName();
@@ -429,7 +446,7 @@ public class UserController {
 			modelAddress = address;
 		}
 
-		model.addAttribute("showP", true);
+		model.addAttribute("showA", true);
 
 		User user = new User();
 		userWorker.fillUser(user);
@@ -452,7 +469,8 @@ public class UserController {
 			logger.catching(e);
 		}
 
-		return "user";
+		setProfileImage(username, model);
+		return "profile";
 	}
 
 	/**
@@ -476,7 +494,7 @@ public class UserController {
 		return isError;
 	}
 
-	@RequestMapping(value="/user", method=RequestMethod.POST, params = "submit_user_img")
+	@RequestMapping(value="/profile", method=RequestMethod.POST, params = "submit_user_img")
 	public String addUserImage(User user, Principal principal, Model model, BindingResult bindingResults, HttpServletRequest request){
 		
 		model.addAttribute("addressWorker", addressWorker);

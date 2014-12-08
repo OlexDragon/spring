@@ -38,23 +38,23 @@
 }
 
 /*Social Buttons*/
-#socialBtns ul{
+##socialBttns ul{
 	display: inline-block;
    -webkit-margin-before: 0;
    -webkit-margin-after: 0;
 	}
-#socialBtns ul li{
+##socialBttns ul li{
 	margin: .1em;
     display: inline-block;
 	width: 1em;
 	height: 1em;
 	border-radius: 2px;
 }
-#socialBtns ul li form{
+##socialBttns ul li form{
 	width: 100%;
 	height: 100%;
 }
-#socialBtns ul li form button{
+##socialBttns ul li form button{
 	border: none;
 	background-color: white;
 	background-image: url('/images/slogin_ico.png');
@@ -64,11 +64,11 @@
 	width: 100%;
 	height: 100%;
 }
-#socialBtns{
+##socialBttns{
 	padding-left: .5em;
 	padding-bottom: .2em;
 }
-#socialBtns button span{
+##socialBttns button span{
 	display: none;
 }
 #fbForm button{

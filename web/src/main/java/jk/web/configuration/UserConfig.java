@@ -10,6 +10,7 @@ import javax.servlet.MultipartConfigElement;
 import jk.web.user.repository.CountryRepository;
 import jk.web.user.validators.SignUpFormValidator;
 import jk.web.workers.AddressWorker;
+import jk.web.workers.FileWorker;
 import jk.web.workers.UserWorker;
 
 import org.apache.logging.log4j.LogManager;
@@ -77,8 +78,8 @@ public class UserConfig {
     @Bean
     public MultipartConfigElement multipartConfigElement() {
         MultipartConfigFactory factory = new MultipartConfigFactory();
-        factory.setMaxFileSize("128KB");
-        factory.setMaxRequestSize("128KB");
+        factory.setMaxFileSize(FileWorker.maxFileSize);
+        factory.setMaxRequestSize(FileWorker.maxFileSize);
         return factory.createMultipartConfig();
     }
 
