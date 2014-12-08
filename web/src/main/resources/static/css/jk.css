@@ -10,7 +10,7 @@
 		color: white;
 }
 
-form, div, ul, li, a, p, h1, h2, h6, button.jk {
+form, div, ul, li, a, p, h1, h2, h6, button.jk{
 		margin: 0;
 		padding: 0;
 		border-width: 0;
@@ -50,7 +50,7 @@ table td input[type="text"], table td input[type="password"], table td input[typ
 	margin-top: .5em;
 	margin-bottom: 0;
 }
-#tables form{
+#tables form, .m05{
 	margin: .5em;
 }
 #login, #signup{
@@ -65,7 +65,7 @@ table td input[type="text"], table td input[type="password"], table td input[typ
 .clrY{
 	color: yellow;
 }
-button, checkbox, label, .pntr{
+button, checkbox, label, input[type=file], .pntr{
 	cursor: pointer;
 }
 
@@ -81,13 +81,16 @@ button, checkbox, label, .pntr{
 .contents{
 	padding: .5em;
 }
-.btnDiv, #userForm ul li, .inlineB{
+.inline{
+	display: inline;
+}
+.bttnDiv, #userForm ul li, .inlineB{
 	display: inline-block;
 }
-#tables .btnDiv{
+#tables .bttnDiv{
 	width: 6em;
 }
-.th_right th, .rght, table.thRght th{
+.rght{
 	text-align: right;
 	padding-right: .5em;
 }
@@ -128,7 +131,7 @@ button, checkbox, label, .pntr{
     width: 100%;
     margin: 0;
 }
-#menu ul, #tables ul, #btns ul, #langDiv ul{
+#menu ul, #tables ul, #bttns ul, #langDiv ul{
     list-style: none;
 }
 #menu ul{
@@ -271,8 +274,6 @@ button, checkbox, label, .pntr{
 * html #menu             { zoom: 1; } /* IE6 */
 *:first-child+html #menu { zoom: 1; } /* IE7 */
 
-li button{margin: 0; padding: 0;}
-
 .error {
 	color: red;
 }
@@ -319,9 +320,6 @@ td.error, p.error{
 .cntr, td.error{
 	text-align: center;
 }
-.pddng3{
-	padding: 3em;
-}
 #footer{
 	border-top: thick solid #444;
 	border-top-width: 1px;
@@ -329,7 +327,7 @@ td.error, p.error{
 .smal{
 	font-size: small;
 }
-.thinFilm, .btnBrdr, .menuBrdr{
+.thinFilm, .bttnBrdr, .menuBrdr{
 	width: 100%;
 	background-image: url('/images/join_now.png');
 }
@@ -337,7 +335,7 @@ td.error, p.error{
 	height: .5em;
 	background-size: .5em;
 }
-.btnBrdr{
+.bttnBrdr{
 	height: .3em;
 	background-size: .3em;
 }
@@ -360,17 +358,17 @@ button.jk{
 	width: 100%;
 	border: 1px solid blck;
 }
-#btns{
+#bttns{
 	width: 100%;
     background-color:#666666;
     text-align: center;
-}#btns ul li{
+}#bttns ul li{
 	margin: 5%;
 	width: 18%;
 	display: inline-block;
     background-color:#5C514D;
 }
-#socialBtns, .bttm5{
+##socialBttns, .bttm5{
 	margin-bottom: .5em;
 }
 #imgForm{
@@ -404,6 +402,9 @@ button.jk{
 .p1{
 	padding: 1em;
 }
+.p3{
+	padding: 3em;
+}
 .w5{
  width: 5em;
  }
@@ -424,6 +425,9 @@ button.jk{
 }
 .w15p{
  width: 15%;
+}
+.w19p{
+ width: 19%;
 }
 .w20p{
  width: 20%;
@@ -446,7 +450,7 @@ button.jk{
 .w80p{
  	width: 80%;
 }
-#userForm .btnDiv, .w100p{
+#userForm .bttnDiv, .w100p{
 	width: 100%;
 }
 .mAuto{
@@ -467,6 +471,10 @@ button.jk{
  .borderRD{
  	border-right: 1px dashed rgba(255, 255, 255, 0.5);
  }
+ .zi10{
+ 	position: relative;
+ 	z-index: 10;
+ }
  caption {
 	font-size: 150%;
 	font-weight: bold;
@@ -485,4 +493,40 @@ bb{
 }
 .fs60p{
 	font-size:60%;
+}
+div.fileinput{
+	position: relative;
+	display: inline-block;
+}
+div.fileinput label{
+	z-index: 1;
+}
+div.fileinput input[type=file]{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	opacity: 0;
+	-moz-opacity:0 ;
+	filter:alpha(opacity: 0);
+	z-index: 2;
+	height: 100%;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+}
+.bttn{
+	color: white;
+	display: inline-block;
+	margin: .2em;
+	padding: .4em;
+	background-color: #5C514D;
+	border: 0;
+}
+div.fileinput input[type=file]:HOVER + label, .bttn:HOVER {
+	color: yellow;
+}
+.bttn:DISABLED{
+	background-color: transparent;
+	color: gray;
+	cursor: default;
 }

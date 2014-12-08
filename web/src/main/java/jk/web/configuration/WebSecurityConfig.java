@@ -5,6 +5,7 @@ import javax.sql.DataSource;
 import jk.web.user.listeners.LoginListener;
 import jk.web.user.repository.LoginRepository;
 import jk.web.user.services.LoginDetailsServiceImpl;
+import jk.web.workers.FileWorker;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -52,7 +53,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/confirm/**",
 				"/css/**",
 				"/js/**",
-				"/images/**")
+				"/images/**",
+				FileWorker.RESOURCE_HANDLER + FileWorker.PROFILE_URL + "**")
 			.permitAll()
 			.anyRequest()
 			.authenticated();

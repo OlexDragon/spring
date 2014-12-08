@@ -1,8 +1,5 @@
 package jk.web.workers;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -65,12 +62,15 @@ public class UserWorker extends LoginWorker{
 	}
 
 	public UserEntity getUserEntity(String username){
-		userEntity = userRepository.findByUsername(username);
-		if(userEntity==null){
-			LoginEntity loginEntity = getLoginEntity(username);
-			if(loginEntity!=null){
-				userEntity = new UserEntity(loginEntity.getId());
-				userEntity.setLoginEntity(loginEntity);
+		logger.entry(username);
+		if(userEntity==null || !userEntity.getLoginEntity().getUsername().equals(username)){
+			userEntity = userRepository.findByUsername(username);
+			if(userEntity==null){
+				LoginEntity loginEntity = getLoginEntity(username);
+				if(loginEntity!=null){
+					userEntity = new UserEntity(loginEntity.getId());
+					userEntity.setLoginEntity(loginEntity);
+				}
 			}
 		}
 		return userEntity;
@@ -499,35 +499,5 @@ public class UserWorker extends LoginWorker{
 	public String getCountryCode(AddressType addressType) {
 		AddressEntity addressEntity = getAddressEntity(addressType);
 		return addressEntity!=null ? addressEntity.getCountryCode() : null;
-	}
-
-	public String getProfileImagge() throws URISyntaxException, MalformedURLException {
-		String imageURL;
-		if(userEntity!=null){
-			Long id = userEntity.getLoginEntity().getId();
-			File file = new File(fileWorker.getProfilePath(id));
-			if(file.exists()){
-				imageURL = FileWorker.IMAGES_UPL + FileWorker.PROFILE_URL + file.getName();
-			}else{
-
-				TitleEntity titleEntity = userEntity.getTitle();
-				if(titleEntity==null)
-					imageURL = FileWorker.IMAGES_UPL + "/default/profile.png";
-				else{
-					Integer titleID = titleEntity.getId();
-					switch(titleID){
-					case TitleEntity.MR:
-						imageURL = FileWorker.IMAGES_UPL + "/default/profile_b.png";
-						break;
-					default:
-						imageURL = FileWorker.IMAGES_UPL + "/default/profile_g.png";
-					}
-				}
-			}
-		}else{
-			//Default image
-			imageURL = FileWorker.IMAGES_UPL + "/default/profile.png";
-		}
-		return logger.exit(imageURL);
 	}
 }

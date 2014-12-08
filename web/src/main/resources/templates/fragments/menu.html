@@ -11,11 +11,11 @@
 	<div th:if="${#authentication} ? ${#authorization.expression('isAuthenticated()')} : ${false}"  id="menu" th:fragment="menu">
 		<div class="menuBrdr"></div>
 		<ul id="menuUL">
-			<li class="fleft"><a href="/user"
+			<li class="fleft"><a href="/profile"
 				th:text="${#authorization.expression('isAuthenticated()')} ? ${#authentication.name} : #{menu.user}">User</a>
 				<ul>
 					<th:block th:if="${#authorization.expression('isAuthenticated()')}">
-						<li><a href="/user" th:text="#{menu.profile}">Profile</a></li>
+						<li><a href="/profile" th:text="#{menu.profile}">Profile</a></li>
 						<li>
 							<form name="loForm" th:action="@{/login?logout}" method="post" th:fragment="logout">
 								<a href="/logout" th:href="@{/logout}" th:text="#{login.logout}" th:onclick="'javascript:document.loForm.submit();'">Logout</a>
@@ -66,7 +66,7 @@
 		<div class="menuBrdr"></div>
 	</div>
 
-	<div id="socialBtns" th:fragment="socialBtns">
+	<div id="#socialBttns" th:fragment="#socialBttns">
 		<small><span th:text="#{menu.login_with}">Login with:</span></small>
 		<ul>
 			<li><form id="fbForm" action="/connect/facebook" method="POST">
@@ -92,10 +92,10 @@
 		</ul>
 	</div>
 
-	<div class="btnDiv" th:fragment="jk_button(textToShow, idName, name)">
-		<div class="btnBrdr"></div>
+	<div class="bttnDiv" th:fragment="jk_button(textToShow, idName, name)">
+		<div class="bttnBrdr"></div>
 			<button type="submit" th:id="${idName}" th:name="${name}" class="jk" th:text="${textToShow}">sign Up</button>
-		<div class="btnBrdr"></div>
+		<div class="bttnBrdr"></div>
 	</div>
 
 </body>

@@ -1,20 +1,32 @@
 package jk.web.workers;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 
+import javax.imageio.ImageIO;
+
 import jk.web.user.Address.AddressType;
+import jk.web.user.User.Gender;
+import jk.web.user.entities.UserEntity;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class FileWorker {
 
 	private final Logger logger= LogManager.getLogger();
+
+	public final static long maxFileSize = 10485760;// 1kB=1024B 1mb=1024kB=1048576B
+
+	public final static String RESOURCE_HANDLER = "/res";
 
 	//https://developers.google.com/maps/documentation/staticmaps/?csw=1#ImplicitPositioning
 	public final static String GOOGLE_MAP_URL = "https://maps.googleapis.com/maps/api/staticmap?format=png32";
@@ -22,22 +34,28 @@ public class FileWorker {
 	public final static String GOOGLE_API_KEY_PARAM = "&key=";
 	public final static String GOOGLE_MAP_MARKERS ="&markers=size:mid%7Ccolor:red%7C";
 	public final static String IMAGES_UPL = "/images";
-	public final static String MAPS_URL = "/maps/";
-	public final static String  PROFILE_URL = "/profiles/";
+	public final static String MAPS_URL = IMAGES_UPL + "/maps/";
+	public final static String  PROFILE_URL = IMAGES_UPL + "/profiles/";
 
 	private final String FILES_PATH;
 	private final String GOOGLE_API_KEY;
 	private final String GOOGLE_MAP_SIZE;
 	private final String MAPS_FULL_PATH;
-	private final String PROFILE_FULL_PATH;
+	private final String PROFILE_IMAGES_FULL_PATH;
+
+
+	private static final String IMAGE_FORMAT_NAME = "png";
+
+	@Autowired
+	private UserWorker userWorker;
 
 	public FileWorker(String filesPath, String googleApiKey, String googleMapSize) {
 		logger.entry(filesPath, googleApiKey, googleMapSize);
 		FILES_PATH = filesPath;
 		GOOGLE_API_KEY = GOOGLE_API_KEY_PARAM + googleApiKey;
 		GOOGLE_MAP_SIZE = GOOGLE_MAP_SIZE_PARAM + googleMapSize;
-		MAPS_FULL_PATH = FILES_PATH + IMAGES_UPL + MAPS_URL;
-		PROFILE_FULL_PATH = FILES_PATH + IMAGES_UPL + PROFILE_URL;
+		MAPS_FULL_PATH = FILES_PATH + MAPS_URL;
+		PROFILE_IMAGES_FULL_PATH = FILES_PATH + PROFILE_URL;
 
 		File file = new File(MAPS_FULL_PATH);
 		if(!(file.exists() || file.isDirectory()))
@@ -122,7 +140,7 @@ public class FileWorker {
 		File mapFile = getMapFile(userId, addressType);
 		String url;
 		if(mapFile.exists())
-			url = MAPS_URL+getMapFileName(addressType, userId);
+			url = RESOURCE_HANDLER + MAPS_URL+getMapFileName(addressType, userId);
 		else
 			url = null;
 		return url;
@@ -133,6 +151,45 @@ public class FileWorker {
 	}
 
 	public String getProfilePath(Long id) {
-		return PROFILE_FULL_PATH + id + ".png";
+		return logger.exit(PROFILE_IMAGES_FULL_PATH + id + "." + IMAGE_FORMAT_NAME);
+	}
+
+	public void saveProfileImage(Long userID, BufferedImage bufferedImage) throws IOException {
+		File outputDir = new File(PROFILE_IMAGES_FULL_PATH);
+		if(!outputDir.exists())
+			outputDir.mkdirs();
+		ImageIO.write(bufferedImage, IMAGE_FORMAT_NAME, new File(outputDir, userID+"."+IMAGE_FORMAT_NAME));
+	}
+
+	public String getProfileImagge(String username) throws URISyntaxException, MalformedURLException {
+		logger.entry(username);
+		UserEntity userEntity = userWorker.getUserEntity(username);
+		String imageURL;
+		if(userEntity!=null){
+			logger.trace(userEntity);
+			Long id = userEntity.getLoginEntity().getId();
+			File file = new File(getProfilePath(id));
+			if(file.exists()){
+				imageURL = RESOURCE_HANDLER + PROFILE_URL + file.getName();
+			}else{
+
+				Gender sex = userEntity.getGender();
+				if(sex==null)
+					imageURL = IMAGES_UPL + "/default/profile.png";
+				else{
+					switch(sex){
+					case MALE:
+						imageURL = IMAGES_UPL + "/default/profile_b.png";
+						break;
+					default:
+						imageURL = IMAGES_UPL + "/default/profile_g.png";
+					}
+				}
+			}
+		}else{
+			//Default image
+			imageURL = IMAGES_UPL + "/default/profile.png";
+		}
+		return logger.exit(imageURL);
 	}
 }

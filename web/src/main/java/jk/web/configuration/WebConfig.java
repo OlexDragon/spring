@@ -49,10 +49,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		super.addResourceHandlers(registry);
-		String resourcePath = FileWorker.MAPS_URL+"**";
-		File f = new File(filesPath, resourcePath);
-		String mapsPth = f.getAbsolutePath();
-		logger.trace("\n\tmapsPth =\t{}", mapsPth);
-		registry.addResourceHandler(resourcePath).addResourceLocations("file:"+mapsPth);
+		logger.trace("\n\tresourcePath =\t{}", filesPath);
+		registry.addResourceHandler(FileWorker.RESOURCE_HANDLER + "/**").addResourceLocations("file:"+filesPath);
 	}
 }

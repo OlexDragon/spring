@@ -11,7 +11,7 @@
 <body>
 	<div id="header" th:replace="fragments/header :: pageHeader">Header</div>
 	<div id="menuDiv" th:replace="fragments/menu :: menu">Menu</div>
-	<div id="contents" class="cntr pddng3">
+	<div id="contents" class="cntr p3">
 		<div th:if="${status}">
 			<h2 th:utext="#{confirm.confirmed(${uname})}">Confirmed</h2>
 		</div>
@@ -53,7 +53,7 @@
 						
 					</table>
 				</form>
-				<div th:replace="fragments/menu :: socialBtns"></div>
+				<div th:replace="fragments/menu :: #socialBttns"></div>
 			</div>
 			<div th:case="${true}">
 				<form th:action="@{/login?logout}" method="post" th:fragment="logout">

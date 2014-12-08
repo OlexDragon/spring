@@ -17,12 +17,12 @@
   <body>
 
 	<div class="bttm5 bclr w40" th:fragment="localisation">
-    	<h2 id="lclstnH" th:text="#{localisation}" class="cntr pntr">Profile</h2>
+    	<h2 id="lclstnH" th:text="#{localisation}" class="cntr pntr">Address</h2>
     	<div id="lclstnTbls">
  			<div th:replace="fragments/user/address :: address(${HOME_Addr})"></div>
   			<div th:replace="fragments/user/address :: address(${WORK_Addr})"></div>
  		</div>
-		<div class="btnBrdr"></div>
+		<div class="bttnBrdr"></div>
  	</div>
 
     <div class="w100p" th:fragment="address(addr)">
@@ -32,18 +32,23 @@
  				<td>
     				<h2 th:id="${addr.addressType+'_H'}" th:text="#{__'address.'+${addr.addressType}__}" class="cntr pntr clrY">Title</h2>
 				</td>
-				<td class="w5">
-					<button type="submit" th:name="${'sbmt_addr_'+addr.addressType}" th:id="${addr.editAddress ? 'activeButton' : null}" th:text="${addr.editAddress} ? #{user.save} : #{user.edit}" >Edit</button>
-				</td>
-				<td class="w5">
-					<span  th:if="${addr.editAddress}">
-						<button type="submit" th:name="${'cancel_addr_'+addr.addressType}" th:text="#{cancel}">Edit</button>
-					</span>
-				</td>
+				<th:block th:if="${edit_profile}">
+					<td class="w5">
+						<button type="submit"
+								th:name="${'sbmt_addr_'+addr.addressType}"
+								th:id="${addr.editAddress ? 'activeButton' : null}"
+								th:text="${addr.editAddress} ? #{user.save} : #{user.edit}" >Edit</button>
+					</td>
+					<td class="w5">
+						<span  th:if="${addr.editAddress}">
+							<button type="submit" th:name="${'cancel_addr_'+addr.addressType}" th:text="#{cancel}">Cancel</button>
+						</span>
+					</td>
+				</th:block>
  			</tr>
  		</table>
   		<div>
- 			<table class="w100p th_right">
+ 			<table class="w100p rght">
 				<tr>
 					<th class="w10" th:text="#{address.address}">Address</th>
 					<td class="w16" th:switch="${addr.editAddress}">
