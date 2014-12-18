@@ -50,9 +50,12 @@ public class UserEntity implements Serializable {
     @Column(name = "logins_loginID", nullable = false)
     private Long id;
 
+    @Column(name = "title_id")
+    private Integer titleID;
+
     @ManyToOne(fetch=FetchType.EAGER, optional=true)
     @JoinColumn(name="title_id", updatable=false, insertable=false, nullable=true)
-    private TitleEntity title;
+    private TitleEntity titleEntity;
 
     @Size(min = 1, max = 164)
     @Column(name = "first_name", length = 164)
@@ -116,12 +119,21 @@ public class UserEntity implements Serializable {
         this.id = id;
     }
 
-    public TitleEntity getTitle() {
-		return title;
+    public TitleEntity getTitleEntity() {
+		return titleEntity;
 	}
 
-	public void setTitle(TitleEntity title) {
-		this.title = title;
+	public void setTitleEntity(TitleEntity titleEntity) {
+		logger.entry(titleEntity);
+		this.titleEntity = titleEntity;
+	}
+
+	public Integer getTitleID() {
+		return titleEntity!=null ? titleEntity.getId() : titleID;
+	}
+
+	public void setTitleID(Integer titleID) {
+		this.titleID = titleID;
 	}
 
 	public String getFirstName() {
@@ -207,7 +219,7 @@ public class UserEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "UserEntity [id=" + id + ", title=" + title + ", firstName=" + firstName + ", lastName=" + lastName + ", birthday=" + birthday
+		return "UserEntity [id=" + id + ", titleID=" + titleID + ", titleEntity=" + titleEntity + ", firstName=" + firstName + ", lastName=" + lastName + ", birthday=" + birthday
 				+ ", addressEntities=" + addressEntities + ", gender=" + gender + ", professionalSkills=" + professionalSkills + ", workplaces=" + workplaces + ", loginEntity="
 				+ loginEntity + "]";
 	}

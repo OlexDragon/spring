@@ -132,9 +132,8 @@ public class UserWorker extends LoginWorker{
         													user.getBirthDay())
         									).getTime()),
         							user.getSex());
-        Integer titleId = user.getTitleId();
-        if(titleId!=null)
-        	userEntity.setTitle(titleRepository.findOne(titleId));
+        TitleEntity titleEntity = user.getTitle();
+        userEntity.setTitleID(titleEntity != null ? titleEntity.getId() : null);
  
         setWorkplace(user.getWorkplace());
         setProfessionalSkill(user.getProfessionalSkill());
@@ -265,7 +264,7 @@ public class UserWorker extends LoginWorker{
 			fillUser(user);
 	}
 
-	public void filllUserAddress(String username, Address address) {
+	public void fillUserAddress(String username, Address address) {
 		logger.trace("\n\t{}\n\t{}", username, address);
 		setUser(username);
 		fillUserAddress(address);
@@ -301,30 +300,25 @@ public class UserWorker extends LoginWorker{
 	}
 
 	public void fillUser(User user) {
-		logger.entry(user);
 		
 		user.setUsername(getUsername());
 		user.setFirstName(userEntity.getFirstName());
 		user.setLastName(userEntity.getLastName());
 		user.setSex(userEntity.getGender());
 		user.setEMail(getEMail());
-		TitleEntity title = userEntity.getTitle();
-		if(title!=null)
-			user.setTitleId(title.getId());
-		else
-			user.setTitleId(null);
+		TitleEntity titleEntity = userEntity.getTitleEntity();
+		user.setTitle(titleEntity);
 
 		Date birthday = userEntity.getBirthday();
 		if(birthday!=null){
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime(birthday);
-			logger.trace("\n\tUserEntityBirthday{}", birthday);
 			user.setBirthYear(calendar.get(Calendar.YEAR));
 			user.setBirthMonth(calendar.get(Calendar.MONTH));
 			user.setBirthDay(calendar.get(Calendar.DAY_OF_MONTH));
 		}
 
-		logger.trace("EXIT\n\t{}\n\t{}", user, userEntity);
+		logger.trace("Filled userEntity:\n\t{}\n\t{}", user, userEntity);
 	}
 
 	private String getUsername() {
@@ -346,11 +340,9 @@ public class UserWorker extends LoginWorker{
 		return loginEntity;
 	}
 
-	public void setTitle(Integer titleId) {
-		if(titleId!=null)
-			userEntity.setTitle(titleRepository.findOne(titleId));
-		else
-			userEntity.setTitle(null);
+	public void setTitle(TitleEntity titleEntity) {
+		userEntity.setTitleEntity(titleEntity);
+		userEntity.setTitleID(titleEntity!=null ? titleEntity.getId() : null);
 	}
 
 	public String getPassword(String username) {

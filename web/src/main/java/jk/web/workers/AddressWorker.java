@@ -32,7 +32,7 @@ public class AddressWorker {
 	@Autowired
 	private CountryRepository countryRepository;
 
-	private List<HTMLOptionElement> htmlOptionElements;
+	private static List<HTMLOptionElement> htmlOptionElements;
 
 	public AddressWorker(CountryRepository countryRepository, Set<String> countries) {
 
@@ -61,7 +61,7 @@ public class AddressWorker {
 		}
 	}
 
-	public List<HTMLOptionElement> getCountries(){
+	public static List<HTMLOptionElement> getCountries(){
 		return htmlOptionElements;
 	}
 
