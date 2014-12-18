@@ -24,10 +24,17 @@
  		</div>
 		<div class="bttnBrdr"></div>
  	</div>
+<!--/*
 
+	--------- Addresses ---------
+*/-->
     <div class="w100p" th:fragment="address(addr)">
- 		<form action="user" th:action="@{/user}" method="post">
+ 		<form action="user" th:action="@{/profile/edit}" method="post" th:object="${address}">
  		<table class="w100p">
+<!--/*
+
+	--------- Header and Buttons ---------
+*/-->
  			<tr>
  				<td>
     				<h2 th:id="${addr.addressType+'_H'}" th:text="#{__'address.'+${addr.addressType}__}" class="cntr pntr clrY">Title</h2>
@@ -35,13 +42,13 @@
 				<th:block th:if="${edit_profile}">
 					<td class="w5">
 						<button type="submit"
-								th:name="${'sbmt_addr_'+addr.addressType}"
+								th:name="${addr.editAddress} ? ${'sv_addr_'+addr.addressType} : ${'sbmt_addr_'+addr.addressType}"
 								th:id="${addr.editAddress ? 'activeButton' : null}"
 								th:text="${addr.editAddress} ? #{user.save} : #{user.edit}" >Edit</button>
 					</td>
 					<td class="w5">
 						<span  th:if="${addr.editAddress}">
-							<button type="submit" th:name="${'cancel_addr_'+addr.addressType}" th:text="#{cancel}">Cancel</button>
+							<button type="submit" th:name="${'cancel_edit_addr'}" th:text="#{cancel}">Cancel</button>
 						</span>
 					</td>
 				</th:block>
@@ -49,52 +56,76 @@
  		</table>
   		<div>
  			<table class="w100p rght">
+<!--/*
+
+	--------- number, street ... ---------
+*/-->
 				<tr>
 					<th class="w10" th:text="#{address.address}">Address</th>
 					<td class="w16" th:switch="${addr.editAddress}">
-						<input th:case="${true}" type="text" th:field="${address.address}" autofocus="autofocus"/>
+						<input th:case="${true}" type="text" th:field="*{address}" autofocus="autofocus"/>
 						<p th:case="*" th:text="${addr.address}" class="clrY">Address</p>
 					</td>
        				<td><p class="error" th:if="${addr.addressError}!=null" th:text="#{__${addr.addressError}__}">Address error</p></td>
 				</tr>
+<!--/*
+
+	--------- City ---------
+*/-->
 				<tr>
 					<th th:text="#{address.city}">City</th>
 					<td th:switch="${addr.editAddress}">
-						<input th:case="${true}" type="text" th:field="${address.city}" th:value="${addr.city}"/>
+						<input th:case="${true}" type="text" th:field="*{city}" th:value="${addr.city}"/>
 						<p th:case="*" th:text="${addr.city}" class="clrY">City</p>
 					</td>
        				<td><p class="error" th:if="${addr.cityError}!=null" th:text="#{__${addr.cityError}__}">City error</p></td>
 				</tr>
+<!--/*
+
+	--------- Region ---------
+*/-->
 				<tr th:if="${addr.editAddress} ? ${addr.regionName}!=null : ${addr.regionName}!=null">
 					<th th:text="#{__${addr.regionName}__}">Region</th>
 					<td th:switch="${addr.editAddress}">
-						<select th:case="${true}" th:field="${address.regionCode}">
+						<select th:case="${true}" th:field="*{regionCode}">
 							<option th:value="null" th:text="#{Select}">Select</option>
-							<option th:each="r : ${addr.regions}" th:value="${r.regionEntityPK.regionCode}" th:text="#{__${r.regionEntityPK.countryCode}+'.'+${r.regionEntityPK.regionCode}__}" />
+							<option th:each="r : ${regions}" th:value="${r.regionEntityPK.regionCode}" th:text="#{__${r.regionEntityPK.countryCode}+'.'+${r.regionEntityPK.regionCode}__}" />
 						</select>
 						<p th:case="*" th:text="#{__(${addr.countryCode}+'.'+${addr.regionCode})__}" class="clrY">Region</p>
 					</td>
       				<td><p class="error" th:if="${addr.regionCodeError}!=null" th:text="#{__${addr.regionCodeError}__}">Region error</p></td>
 				</tr>
+<!--/*
+
+	--------- Country ---------
+*/-->
 				<tr>
 					<th th:text="#{address.country}">Country</th>
 					<td th:switch="${addr.editAddress}">
-						<select th:case="${true}" th:field="${address.countryCode}">
+						<select th:case="${true}" th:field="*{countryCode}">
 							<option th:value="null" th:text="#{Select}">Select</option>
-							<option th:each="c : ${addressWorker.countries}" th:value="${c.value}" th:text="#{__${c.value}__}" th:attr="disabled=${c.disabled ? 'disabled' : null}"></option>
+							<option th:each="c : ${T(jk.web.workers.AddressWorker).countries}" th:value="${c.value}" th:text="#{__${c.value}__}" th:attr="disabled=${c.disabled ? 'disabled' : null}"></option>
 						</select>
 						<p th:case="*" th:text="${addr.countryCode!=null} ? #{__${addr.countryCode}__} : null" class="clrY">Country</p>
 					</td>
        				<td><p class="error" th:if="${addr.countryCodeError}" th:text="#{__${addr.countryCodeError}__}">Country error</p></td>
 				</tr>
+<!--/*
+
+	--------- Postal Code ---------
+*/-->
 				<tr>
 					<th th:text="#{user.postal_code}">City</th>
 					<td th:switch="${addr.editAddress}">
-						<input th:case="${true}" type="text" th:field="${address.postalCode}" />
+						<input th:case="${true}" type="text" th:field="*{postalCode}" />
 						<p th:case="*" th:text="${addr.postalCode}" class="clrY">Postal code</p>
 					</td>
    	    			<td><p class="error" th:if="${addr.postalCodeError}!=null" th:text="#{__${addr.postalCodeError}__}">Postal code error</p></td>
 				</tr>
+<!--/*
+
+	--------- Map ---------
+*/-->
 				<tr>
 					<td colspan="4" class="cntr "><img th:if="${addr.mapPath}!=null" alt="Map" th:src="${addr.mapPath}" /></td>
 				</tr>

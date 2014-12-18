@@ -166,7 +166,7 @@
 									</tr>
 									<tr>
 										<td>
-											<select th:field="*{titleId}">
+											<select th:field="*{title}">
 												<option th:value="null" th:text="#{signup.title}">Select</option>
 												<option th:each="t : ${titles}" th:value="${t.id}" th:text="#{__('profile.title'+${t.id})__}" ></option>
 											</select>

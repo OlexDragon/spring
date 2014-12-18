@@ -1,8 +1,5 @@
 package jk.web.user;
 
-import java.util.List;
-
-import jk.web.user.entities.RegionEntity;
 
 public class Address {
 
@@ -38,8 +35,6 @@ public class Address {
 	private String mapPath;
 	private String regionCodeError;
 
-	private List<RegionEntity> regions;
-
 	private boolean showAddress;
 
 	private boolean editAddress;
@@ -54,12 +49,9 @@ public class Address {
 		return addressType;
 	}
 
-	public  List<RegionEntity> getRegions() {
-		return regions;
-	}
-
-	public void setRegions(List<RegionEntity> regions) {
-		this.regions = regions;
+	public Address setAddressType(AddressType addressType) {
+		this.addressType = addressType;
+		return this;
 	}
 
 	public boolean isEditAddress() {
@@ -170,11 +162,7 @@ public class Address {
 	public String toString() {
 		return "Address [addressType=" + addressType + ", address=" + address + ", addressError=" + addressError + ", city=" + city + ", cityError=" + cityError + ", regionName="
 				+ regionName + ", regionCode=" + regionCode + ", countryCode=" + countryCode + ", countryCodeError=" + countryCodeError + ", postalCode=" + postalCode
-				+ ", postalCodeError=" + postalCodeError + ", mapPath=" + mapPath + ", regionCodeError=" + regionCodeError + ", regions=" + regions + ", showAddress="
+				+ ", postalCodeError=" + postalCodeError + ", mapPath=" + mapPath + ", regionCodeError=" + regionCodeError + ", showAddress="
 				+ showAddress + ", editAddress=" + editAddress + "]";
-	}
-
-	public void setAddressType(AddressType addressType) {
-		this.addressType = addressType;
 	}
 }

@@ -107,7 +107,9 @@ button, checkbox, label, input[type=file], .pntr{
      		position:relative;
 		    overflow: hidden;
 }
-
+.ofHidden{
+	overflow: hidden;
+}
 #loginDiv #login {	zoom: 55%;
 					scale(0.55);
 					-ms-zoom: 0.55;
@@ -406,16 +408,16 @@ button.jk{
 	padding: 3em;
 }
 .w5{
- width: 5em;
+ 	width: 5em;
  }
 .w10{
- width: 10em;
+ 	width: 10em;
  }
 .w15{
- width: 15em;
+ 	width: 15em;
  }
 .w16{
- width: 16em;
+ 	width: 16em;
  }
 .w40{
  	width: 40em;
@@ -522,7 +524,7 @@ div.fileinput input[type=file]{
 	background-color: #5C514D;
 	border: 0;
 }
-div.fileinput input[type=file]:HOVER + label, .bttn:HOVER {
+div.fileinput input[type=file]:HOVER + label, .bttn:HOVER, #profile a:HOVER, .hY:HOVER {
 	color: yellow;
 }
 .bttn:DISABLED{

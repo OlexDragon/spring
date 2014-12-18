@@ -10,7 +10,6 @@ import javax.servlet.MultipartConfigElement;
 import jk.web.user.repository.CountryRepository;
 import jk.web.user.validators.SignUpFormValidator;
 import jk.web.workers.AddressWorker;
-import jk.web.workers.FileWorker;
 import jk.web.workers.UserWorker;
 
 import org.apache.logging.log4j.LogManager;
@@ -37,6 +36,9 @@ public class UserConfig {
 
 	@Value("${user.password.range}")
 	private String passwordRange;
+
+	@Value("${jk.fime.size.maximum}")
+	public long maxFileSize;// in kilobytes
 
 	@Bean
 	public UserWorker getUserWorker(){
@@ -78,8 +80,11 @@ public class UserConfig {
     @Bean
     public MultipartConfigElement multipartConfigElement() {
         MultipartConfigFactory factory = new MultipartConfigFactory();
-        factory.setMaxFileSize(FileWorker.maxFileSize);
-        factory.setMaxRequestSize(FileWorker.maxFileSize);
+ 
+        long maxSize = maxFileSize*1024*8;//in bits
+		factory.setMaxFileSize(maxSize);
+        factory.setMaxRequestSize(maxSize);
+ 
         return factory.createMultipartConfig();
     }
 

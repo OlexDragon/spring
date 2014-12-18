@@ -12,6 +12,10 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js"></script>
 <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.1.1/fullcalendar.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../static/css/strip.css" th:href="@{/css/strip.css}"></link>
+	<script type="text/javascript" src="../../static/js/strip.pkgd.min.js" th:src="@{/js/strip.pkgd.min.js}"></script>
+<link rel="stylesheet" type="text/css" href="../../static/js/slick/slick.css" th:href="@{/js/slick/slick.css}"></link>
+<script type="text/javascript" src="../../static/js/slick/slick.min.js" th:src="@{/js/slick/slick.min.js}"></script>
 <script type="text/javascript" th:inline="javascript">
 /*<![CDATA[*/
 	$(document).ready(
@@ -27,13 +31,29 @@
 									return true;
 				});
 				$('#fileSelect').on('change', function () {
-					var text = /*[[#{user.script.tobigfile}]]*/ 'File is to big';
-					var maxFileSize = /*[[${T(jk.web.workers.FileWorker).maxFileSize}]]*/ 1024;
-					var dis = this.files[0].size > maxFileSize;
-					if(dis){
-						alert(text);
+					var maxFileSize = /*[[${@environment.getProperty('jk.fime.size.maximum')}*1024]]*/ 1024;
+					var text = /*[[#{profile.script.tobigfile(${@environment.getProperty('jk.fime.size.maximum')})}]]*/ 'File is to big';
+					var dis = false;
+					for(var i in this.files){
+						if(this.files[i].name != "item" && typeof this.files[i].name != "undefined"){
+							if( this.files[i].size > maxFileSize){
+								alert(text);
+								dis = true;
+								break;
+							}
+						}
 					}
 					$('#change').attr("disabled", ($('#fileSelect').val().length == 0) || dis);
+				});
+				$('.thumbs_gallery').slick({
+					 infinite: true,
+					 slidesToShow: 3,
+					 slidesToScroll: 1,
+					 centerMode: true,
+					 autoplay: true,
+					 autoplaySpeed: 2000,
+					 fade: false,
+					 variableWidth: true
 				});
 				$("select").on('change', function() {
 					document.getElementById('activeButton').click();
@@ -106,15 +126,15 @@
 <!--/*
 
 	-------- Profile and User Image ------- */-->
-		<div class="clear">
+		<div id="profile" class="clear">
 			<div id="prflH" class="pntr borderBD">
-				<h1  class="cntr w80p inlineB" th:text="#{menu.profile}">Profile</h1>
-				<a class="inlineB bclr p05" href="/profile/edit" th:href="${edit_profile} ? '/profile' : '/profile/edit'" th:text="${edit_profile} ? #{cancel} : #{user.edit}"> Edit Profile</a>
+				<h1  class="cntr w80p inlineB hY" th:text="#{menu.profile}">Profile</h1>
+				<a class="bttn" href="/profile/edit" th:href="${edit_profile} ? '/profile' : '/profile/edit'" th:text="${edit_profile} ? #{cancel} : #{user.edit}"> Edit Profile</a>
 			</div>
 			<!--/*
 			* User Image */-->
-			<form class="borderB m05" th:classappend="${edit_profile} ? 'fright' : 'fleft'" method="post" action="/upload/uploadProfileImage"  enctype="multipart/form-data">
-				<table id="img_tbl">
+			<form class="borderB m05" th:classappend="${edit_profile} ? 'fright' : 'fleft'" method="post" action="/upload/files"  enctype="multipart/form-data">
+				<table id="img_tbl" style="width: 5em">
 					<tr>
 						<td>
 							<img
@@ -127,10 +147,17 @@
 					<tr th:if="${edit_profile}">
 						<td>
 							<div class="fileinput">
-								<input type="file" id="fileSelect" name="fileSelect" accept="image/*" />
+								<input type="file" id="fileSelect" name="fileSelect" accept="image/*,video/*" multiple="multiple"  />
 								<label class="bttn" th:text="#{Select}">Select</label>
 							</div>
-							<button type="submit" class="bttn" id="change" name="submit_user_img" th:text="#{change}" disabled="disabled">Button</button>
+							<button type="submit" class="bttn" id="change" name="s_profile_img" th:text="#{change}" disabled="disabled">Button</button>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div style="width: 10em;">
+								<div th:replace="fragments/imagegallery :: carousel"></div>
+							</div>
 						</td>
 					</tr>
 				</table>
@@ -141,7 +168,7 @@
 	------- Profile -------
 */-->
 			<div id="prflTbl" class="borderRD w80p" th:classappend="${edit_profile} ? 'fleft' : 'fright'">
-				<form action="profile/edit" method="post" th:object="${user}">
+				<form action="/profile/edit" method="post" th:object="${user}">
 					<table class="rght w100p">
 <!--/*
 
@@ -230,12 +257,12 @@
 						<tr>
 							<th>Title</th>
 							<td>
-								<select th:if="${s_e_profile}" th:field="*{titleId}">
+								<select th:if="${s_e_profile}" th:field="*{title}">
 									<option th:value="null" th:text="#{Select}">Select</option>
-<!--/*/								<option th:each="t : ${titles}" th:value="${t.id}" th:text="#{__('profile.title'+${t.id})__}" ></option>	  /*/-->
+<!--/*/								<option th:each="t : ${titles}" th:value="${t.id}" th:text="#{__('profile.title'+${t.id})__}"></option>	  /*/-->
 <!--/*  -->							<option>Mr</option>	<!--*/-->	
 								</select>
-								<p th:unless="${s_e_profile}" th:text="*{titleId}!=null ? #{__('profile.title'+*{titleId})__}" class="clrY"></p>
+								<p th:unless="${s_e_profile}" th:text="*{title}!=null ? #{'profile.title'+*{title.id}}" class="clrY"></p>
 							</td>
 							<td></td>
 						</tr>
@@ -338,9 +365,9 @@
 	--------- Addresses ---------
 */-->
 		<div class="borderBB">
-			<h2 id="addrH" th:text="#{localisation}" class="cntr pntr borderTB">Addresses</h2>
+			<h2 id="addrH" th:text="#{localisation}" class="cntr pntr borderTB hY">Addresses</h2>
 			<div id="addrTbls" class="clear borderBB" th:classappend="${showA}==null ? 'dn'">
-<!--/* Address #1  */-->
+<!--/* Address(map) #1  */-->
 				<div class="w49p inlineB">
 					<form th:replace="fragments/user/address :: address(${HOME_Addr})">
 						<table class="w100p">
@@ -449,7 +476,7 @@
 
 	--------- Calendar ---------
 */-->
-		<div class="bttm5 bclr">
+		<div class="bttm5 bclr hY">
 			<h2 id="clndrH" th:text="#{calendar}" class="cntr pntr">Calendar</h2>
 			<div id="calendar"></div>
 		</div>

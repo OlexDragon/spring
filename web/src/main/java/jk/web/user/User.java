@@ -37,7 +37,7 @@ public class User{
     @Size(min=6, max = 64, message="SignUpForm.between_6_and_64_characters")
     private String repassword;
 
-    private Integer titleId;
+    private TitleEntity title;
     
     @NotNull
     @Size(min=1, max = 164)
@@ -80,12 +80,13 @@ public class User{
 		return this;
 	}
 
-	public Integer getTitleId() {
-		return titleId;
+	public TitleEntity getTitle() {
+		return title;
 	}
 
-	public void setTitleId(Integer titleId) {
-		this.titleId = titleId;
+	public void setTitle(TitleEntity title) {
+		logger.entry(title);
+		this.title = title;
 	}
 
 	public String getFirstName() {
@@ -194,7 +195,7 @@ public class User{
 
 	@Override
 	public String toString() {
-		return "User [username=" + username + ", password=" + password + ", repassword=" + repassword + ", titleId=" + titleId + ", firstName=" + firstName + ", lastName="
+		return "User [username=" + username + ", password=" + password + ", repassword=" + repassword + ", title=" + title + ", firstName=" + firstName + ", lastName="
 				+ lastName + ", eMail=" + eMail + ", professionalSkill=" + professionalSkill + ", workplace=" + workplace + ", birthYear=" + birthYear + ", birthMonth="
 				+ birthMonth + ", birthDay=" + birthDay + ", sex=" + sex + ", newPassword=" + newPassword + ", titles=" + titles + "]";
 	}

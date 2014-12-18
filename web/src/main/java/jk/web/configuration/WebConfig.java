@@ -1,7 +1,5 @@
 package jk.web.configuration;
 
-import java.io.File;
-
 import jk.web.workers.FileWorker;
 
 import org.apache.logging.log4j.LogManager;
