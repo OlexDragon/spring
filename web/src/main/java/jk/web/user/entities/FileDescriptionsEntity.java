@@ -12,8 +12,6 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -25,11 +23,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "file_descriptions", catalog = "jk", schema = "")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "FileDescriptionsEntity.findAll", 				query = "SELECT f FROM FileDescriptionsEntity f"),
-    @NamedQuery(name = "FileDescriptionsEntity.findByfileID", 	query = "SELECT f FROM FileDescriptionsEntity f WHERE f.fileID = :fileID"),
-    @NamedQuery(name = "FileDescriptionsEntity.findByTitle", 			query = "SELECT f FROM FileDescriptionsEntity f WHERE f.title = :title"),
-    @NamedQuery(name = "FileDescriptionsEntity.findByDescription", 		query = "SELECT f FROM FileDescriptionsEntity f WHERE f.description = :description")})
 public class FileDescriptionsEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

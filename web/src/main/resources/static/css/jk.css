@@ -65,7 +65,7 @@ table td input[type="text"], table td input[type="password"], table td input[typ
 .clrY{
 	color: yellow;
 }
-button, checkbox, label, input[type=file], .pntr{
+button, checkbox, label, input[type=checkbox], input[type=file], .pntr{
 	cursor: pointer;
 }
 
@@ -531,4 +531,12 @@ div.fileinput input[type=file]:HOVER + label, .bttn:HOVER, #profile a:HOVER, .hY
 	background-color: transparent;
 	color: gray;
 	cursor: default;
+}
+menu{
+	display: none;
+}
+._00{
+	position: relative;
+	left: 0;
+	top: 0;
 }

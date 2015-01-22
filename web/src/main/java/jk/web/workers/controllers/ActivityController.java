@@ -3,11 +3,10 @@ package jk.web.workers.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import jk.web.data.beans.Activity;
 import jk.web.user.entities.ActivityEntity;
-import jk.web.user.entities.ProfessionalSkillEntity;
 import jk.web.user.entities.UserEntity;
 import jk.web.user.repository.ActivityRepository;
-import jk.web.workers.beans.Activity;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -17,8 +17,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -37,11 +35,6 @@ import org.hibernate.annotations.NotFoundAction;
 @Entity
 @Table(name = "files", catalog = "jk", schema = "")
 @XmlRootElement
-@NamedQueries({ @NamedQuery(name = "FileEntity.findAll", query = "SELECT f FROM FileEntity f"),
-		@NamedQuery(name = "FileEntity.findByFileID", query = "SELECT f FROM FileEntity f WHERE f.fileID = :fileID"),
-		@NamedQuery(name = "FileEntity.findByFileName", query = "SELECT f FROM FileEntity f WHERE f.fileName = :fileName"),
-		@NamedQuery(name = "FileEntity.findBySize", query = "SELECT f FROM FileEntity f WHERE f.size = :size"),
-		@NamedQuery(name = "FileEntity.findByDate", query = "SELECT f FROM FileEntity f WHERE f.date = :date") })
 public class FileEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -55,12 +48,17 @@ public class FileEntity implements Serializable {
 	private Long userID;
 
 	@Size(max = 145)
+	@NotNull
 	@Column(name = "file_name")
 	private String fileName;
 
+	@Size(max = 145)
+	@Column(name = "file_extension")
+	private String fileExtension;
+
 	@Basic(optional = false)
 	@NotNull
-	@Size(min = 1, max = 15)
+	@Size(min = 1, max = 50)
 	@Column(name = "content_type")
 	private String contentType;
 
@@ -73,6 +71,10 @@ public class FileEntity implements Serializable {
 	@Column(name = "date")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date date;
+
+	@Basic
+	@Column(name = "show_to_all", columnDefinition = "BIT", length = 1)
+	private boolean showToAll;
 
     @OneToOne(fetch=FetchType.EAGER)
 	@NotFound(action = NotFoundAction.IGNORE)
@@ -116,7 +118,15 @@ public class FileEntity implements Serializable {
 		this.fileName = fileName;
 	}
 
-	public String getExtension() {
+	public String getFileExtension() {
+		return fileExtension;
+	}
+
+	public void setFileExtension(String fileExtension) {
+		this.fileExtension = fileExtension;
+	}
+
+	public String getContentType() {
 		return contentType;
 	}
 
@@ -162,6 +172,14 @@ public class FileEntity implements Serializable {
 
 	public void setUserID(Long userID) {
 		this.userID = userID;
+	}
+
+	public boolean isShowToAll() {
+		return showToAll;
+	}
+
+	public void setShowToAll(boolean showToAll) {
+		this.showToAll = showToAll;
 	}
 
 	@Override
