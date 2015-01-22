@@ -9,6 +9,10 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface FileRepositiry extends JpaRepository<FileEntity, Long>{
 
-	@Query("SELECT CONCAT('/res/images/', f.userID, '/small/', f.fileID,'.png') FROM FileEntity f WHERE f.userID = ?1")
-	List<String> findFilesPathesByUserId(Long userID);
+	@Query("SELECT f.fileID FROM FileEntity f WHERE f.userID = ?1 and f.contentType like 'image%'")
+	List<Long> findImagesIdsByUserId(Long userID);
+
+	List<FileEntity> findByUserID(Long userID);
+
+	List<FileEntity> findByUserIDAndShowToAll(Long userID, boolean b);
 }

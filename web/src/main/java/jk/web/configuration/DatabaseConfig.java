@@ -11,13 +11,13 @@ import org.springframework.context.annotation.Configuration;
 public class DatabaseConfig {
 
 	//Values from application.properties file
-	@Value("${dump.path}")
+	@Value("${jk.db.dump.path}")
 	private String dumpPath;
 
-	@Value("${dump_time}")
+	@Value("${jk.db.dump.time}")
 	private String dumpTime;
 
-	@Value("${dump_mysql_app}")
+	@Value("${jk.mysql.path}")
 	private String mysqldumpApp;
 
 	@Bean

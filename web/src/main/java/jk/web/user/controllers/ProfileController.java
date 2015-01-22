@@ -2,6 +2,7 @@ package jk.web.user.controllers;
 
 import java.security.Principal;
 import java.text.ParseException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +13,7 @@ import jk.web.user.User;
 import jk.web.user.User.Gender;
 import jk.web.user.entities.AddressEntity;
 import jk.web.user.entities.CountryEntity;
+import jk.web.user.entities.FileEntity;
 import jk.web.user.repository.FileRepositiry;
 import jk.web.user.repository.TitleRepository;
 import jk.web.user.validators.SignUpFormValidator;
@@ -59,7 +61,7 @@ public class ProfileController {
 	public String profile(Principal principal, Model model){
 
 		resetUser(model, principal.getName(), new User());
-		model.addAttribute("images", fileRepositiry.findFilesPathesByUserId(userWorker.getUserEntity().getId()));
+		resetFilesList(model);
 
 		resetAddress(model, new Address(AddressType.HOME));
 		resetAddress(model, new Address(AddressType.WORK));
@@ -365,17 +367,17 @@ public class ProfileController {
 			}
 		}
 
-		Long userId = userWorker.getUserEntity().getId();
+		Long userID = userWorker.getUserEntity().getId();
 		AddressType addressType = modelAddress.getAddressType();
 		Thread t =fileWorker.saveMap(
-						fileWorker.getMapFile(userId, addressType),
+						fileWorker.getMapFile(userID, addressType),
 						address.getAddress(),
 						address.getCity(),
 						address.getRegionCode(),
 						countryEntity!=null ? countryEntity.getCountryName() : null,
 						modelAddress.getPostalCode()
 		);
-		modelAddress.setMapPath(fileWorker.getMapFileUrl(addressType, userId));
+		modelAddress.setMapPath(fileWorker.getMapFileUrl(addressType, userID));
 
 		if(modelAddress.isEditAddress())
 			model.addAttribute("addressWorker", addressWorker);
@@ -413,7 +415,7 @@ public class ProfileController {
 			logger.catching(e);
 		}
 
-		address.setMapPath(fileWorker.getMapFileUrl(address.getAddressType(), userId));
+		address.setMapPath(fileWorker.getMapFileUrl(address.getAddressType(), userID));
 		model.addAttribute("edit_profile", true);
 		return "profile";
 	}
@@ -439,7 +441,7 @@ public class ProfileController {
 		return isError;
 	}
 
-	@RequestMapping(value="/profile", method=RequestMethod.POST, params = "s_profile_img")
+	@RequestMapping(value="/profile", method=RequestMethod.POST, params = "s_upload_img")
 	public String addUserImage(User user, Principal principal, Model model, BindingResult bindingResults, HttpServletRequest request){
 		
 		model.addAttribute("addressWorker", addressWorker);
@@ -470,6 +472,20 @@ public class ProfileController {
 		userWorker.fillUser(user);
 		model.addAttribute("user", user);
 		model.addAttribute("profileImageLink", fileWorker.getProfileImage(userWorker.getUserEntity()));
+	}
+
+	private void resetFilesList(Model model) {
+
+		Long userID = userWorker.getUserEntity().getId();
+		List<FileEntity> fileEntities;
+
+		if(model.containsAttribute("edit_profile"))
+			fileEntities = fileRepositiry.findByUserID(userID);
+		else
+			fileEntities = fileRepositiry.findByUserIDAndShowToAll(userID, true);
+
+		if(fileEntities!=null)
+			model.addAttribute("files", fileEntities);
 	}
 
 	public void editFirstName(User user, Model model, BindingResult bindingResults){

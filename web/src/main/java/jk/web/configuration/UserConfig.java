@@ -37,7 +37,7 @@ public class UserConfig {
 	@Value("${user.password.range}")
 	private String passwordRange;
 
-	@Value("${jk.fime.size.maximum}")
+	@Value("${jk.file.size.maximum}")
 	public long maxFileSize;// in kilobytes
 
 	@Bean

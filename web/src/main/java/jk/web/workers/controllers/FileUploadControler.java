@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,8 +27,14 @@ public class FileUploadControler {
 	@Autowired
 	private FileWorker fileWorker;
 
-	@RequestMapping("/files")
-	public String uploadFiles(@RequestParam("fileSelect") MultipartFile[] files, Principal principal) {
+	@RequestMapping(value="/files")
+	public String get() {
+		return "redirect:/home";
+	}
+
+	@RequestMapping(value="/files", headers = "content-type=multipart/*", method = RequestMethod.POST)
+	public String uploaImages(@RequestParam("fileSelect") MultipartFile[] files, Principal principal) {
+		logger.entry();
 		if (files!=null && files.length>0) {
 			try {
 				String username = principal.getName();

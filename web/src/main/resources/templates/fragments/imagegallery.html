@@ -3,73 +3,363 @@
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-	<title>Strip Image Gallery</title>
+	<title>html5lightbox Image Gallery</title>
 	<link th:replace="fragments/header :: links" rel="stylesheet" type="text/css" href="../../static/css/jk.css" th:href="@{/css/jk.css}" />
-	<link rel="stylesheet" type="text/css" href="../../static/css/strip.css"></link>
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-	<script type="text/javascript" src="../../static/js/strip.pkgd.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="../../static/js/slick/slick.css" th:href="@{/js/slick/slick.css}"></link>
-	<script type="text/javascript" src="../../static/js/slick/slick.min.js" th:src="@{/js/slick/slick.min.js}"></script>
+	<link rel="stylesheet" type="text/css" href="../../static/js/contextMenu/jquery.contextMenu.css" th:href="@{/js/contextMenu/jquery.contextMenu.css}" />
+	<link rel="stylesheet" type="text/css" href="../../static/js/slick/slick.css" th:href="@{/js/slick/slick.css}" />
+	<link rel="stylesheet" type="text/css" href="../../static/js/imgareaselec/css/imgareaselect-default.css" th:href="@{/js/imgareaselec/css/imgareaselect-default.css}" />
+	<script src="../../static/js/jquery-2.1.3.min.js" th:src="@{/js/jquery-2.1.3.min.js}"></script>
 
-		<script type="text/javascript">
-			$(document).ready(
-				function() {
-						$('.thumbs_gallery').slick({
-							  centerMode: true,
-							  slidesToScroll: 1,
-							  autoplay: true,
-							  autoplaySpeed: 2000,
-							  variableWidth: true
-						});
-				});
-		</script>
-	
 </head>
 <body>
-	<div class="thumbs_gallery" th:fragment="carousel">
-		<div th:each="img : ${images}">
-			<a href="C:/jk/images/1/large/2.png"
-				th:href="${#strings.replace(img,'small','large')}"
-				class="strip thumbnail thumbnail-landscape"
-				data-strip-options="side:'right'"
-				data-strip-group="group">
-					<img src="C:/jk/images/1/small/2.png"
-						th:src="${img}"
-						alt="1st image description" />
-			</a>
-		</div>
+	<div id="profImg">
+		<img
+			alt="Profile Image"
+			src="../../static/images/default/profile.png"
+		/>
 	</div>
+	<div id="menu-node" class="thumbs_gallery" th:fragment="carousel">
+		<div th:each="fe : ${files}">
+			<input th:if="${fullAccess}" type="checkbox" th:class="carousel" th:value="@{${'/res/'+fe.userID +'/' + fe.fileID}}" th:checked="${fe.showToAll}" />
+			<a href="file:///C:/jk/resources/BIGGER/2.png"
+				th:href="@{${'/res/BIGGER/'+fe.userID+'/'+fe.fileID+(#strings.startsWith(fe.contentType,'video/') ? '.mp4' : '.png')}}"
+				class="html5lightbox thumbnail thumbnail-landscape"
+				data-thumbnail="file:///C:/jk/resources/MiNI/2.png"
+				th:attr="data-thumbnail=@{${'/res/MINI/'+fe.userID+'/'+fe.fileID+'.png'}}"
+				data-group="group">
+					<img src="file:///C:/jk/resources/MINI/2.png"
+						th:src="@{${'/res/MINI/'+fe.userID+'/'+fe.fileID+'.png'}}"
+						alt="Image" />
+			</a>
+		</div><!--/*
+
+		http://html5box.com/html5lightbox/index.php
+*/-->	<script type="text/javascript" src="../../static/js/html5lightbox/html5lightbox.js" th:src="@{/js/html5lightbox/html5lightbox.js}"></script><!--/*
+
+		http://kenwheeler.github.io/slick/
+*/-->	<script th:if="${files}" type="text/javascript" src="../../static/js/slick/slick.min.js" th:src="@{/js/slick/slick.min.js}"></script><!--/*
+ 
+*/-->	<script type="text/javascript">
+			$(document).ready(function() {
+				$('.thumbs_gallery').slick({
+					centerMode : true,
+					slidesToScroll : 1,
+					autoplay : true,
+					autoplaySpeed : 2000,
+					variableWidth : true
+				});
+			});
+		</script>
+		<th:block th:if="${fullAccess}"><!--/*
+
+			http://odyniec.net/projects/imgareaselect/examples.html
+*/-->		<script th:if="${files}" type="text/javascript" src="../../static/js/imgareaselec/scripts/jquery.imgareaselect.pack.js" th:src="@{/js/imgareaselec/scripts/jquery.imgareaselect.pack.js}"></script><!--/*
+
+*/-->		<script type="text/javascript" src="../../static/js/contextMenu/jquery.contextMenu.js" th:src="@{/js/contextMenu/jquery.contextMenu.js}"></script>
+			<script type="text/javascript" th:inline="javascript">
+				/*<![CDATA[*/
+				$('input[type=checkbox].carousel').on('change', function() {
+					$.ajax({
+						url : this.value + '/' + this.checked,
+						type : 'POST',
+					});
+				});
+				var ias; var imgObj;
+				var lightBoxImgWidth; var lightBoxImgHeight;
+				var profImgSrc;
+				var x1; var y1; var w; var h; var isAllProfileImg;
+				window.onload = function() {
+					$("#menu-node img").mousedown(function() {
+						imgObj = this;
+						removeAreaSelect();
+					});
+					$(document).keydown(function(e) {
+						var key = e.keyCode;
+						if(key == 13){
+							var promise = saveProfileImage($('#html5-image img')[0]);
+							promise.success(function(data){
+								if(data==='true'){
+									location.reload(); 
+								}
+							});
+						}
+					});
+				};
+				window.onresize = function(event){ resize(25); };
+				function resize(times){
+					if(times>0){
+
+						setTimeout(function() {
+							var lightBox = $('#html5-image img')[0];
+							if (lightBox) {
+								var lbw = lightBox.width;
+								var lbh = lightBox.height;
+								if (lbw == lightBoxImgWidth) {
+									resize(--times);
+								} else {
+									var v = ias.getSelection();
+									var factor = lbw / lightBoxImgWidth;
+									lightBoxImgWidth = lbw;
+									lightBoxImgHeight = lbh;
+									x1 = Math.round(v.x1*factor);
+									y1 = Math.round(v.y1*factor);
+									var x2 = Math.round(v.x2*factor);
+									var y2 = Math.round(v.y2*factor);
+									w = x2 - x1;
+									h = y2 - y1;
+									ias.setSelection(x1, y1, x2, y2);
+									ias.update();
+								}
+							}
+						}, 50);
+					} else {
+						alert('exit');
+					}
+				}
+				function removeAreaSelect() {
+					var lightBox = $('#html5-image img');
+					if (lightBox[0]) {
+						lightBox.imgAreaSelect({
+							remove : true
+						});
+					}
+					if (profImgSrc) {
+						var pImg = $('#profImg img');
+						pImg.attr('src', profImgSrc);
+						profImgSrc = undefined;
+						pImg.css({
+							width : '',
+							height : '',
+							marginLeft : '',
+							marginTop : ''
+						});
+						$('#profImg').css({
+							'width' : '',
+							'height' : '',
+							'overflow' : '',
+							'z-index' : ''
+						});
+
+					}
+				}
+				function originalImage() {
+					window.location.href = imgObj.src
+							.replace(
+									/*[[${T(org.springframework.social.twitter.api.ImageSize).MINI.name()}]]*/'MINI',
+									/*[[${T(org.springframework.social.twitter.api.ImageSize).ORIGINAL.name()}]]*/'ORIGINAL');
+				}
+				$(function() {
+					$('#menu-node').contextMenu({
+						selector : 'img',
+						items : $.contextMenu.fromMenu($('#contextMenu'))
+					});
+				});
+				function deleteFie() {
+					$.ajax({
+								url : imgObj.src,
+								type : 'DELETE',
+								success : function(result) {
+									if (result == true) {
+										imgObj.parentNode.removeChild(imgObj)
+										alert(/*[[#{magegallery.script.image_removed}]]*/'Image removed.')
+									}
+								}
+							});
+				}
+
+				function saveProfileImage(lightBox) {
+					if (lightBox) {
+						var factor = lightBox.naturalWidth/lightBox.width;
+						return $.ajax({
+							url : imgObj.src,
+							type : 'POST',
+							data : {
+								x : Math.round(x1*factor),
+								y : Math.round(y1*factor),
+								w : Math.round(w*factor),
+								h : Math.round(h*factor),
+								isAll : isAllProfileImg
+							}
+						});
+					}else{
+						return undefined;
+					}
+				}
+				function setAsProfileImage() {
+					var lightBox = $('#html5-image img')[0];
+					if (lightBox) {
+						html5Lightbox.finish();
+					}
+
+				setTimeout(
+							function() {
+								var imgSrc = imgObj.parentNode.href;
+								var imageCaption = /*[[#{imagegallery.script.profile.image.set}]]*/'Press enter to set profile image';
+								html5Lightbox.showLightbox(0, imgSrc,
+										imageCaption);
+
+								setTimeout(
+
+										function() {
+											lightBox = $('#html5-image img');
+											if (lightBox[0]) {
+												lightBox.on("remove",
+														function() {
+															removeAreaSelect();
+														});
+												lightBoxImgWidth = lightBox[0].width;
+												lightBoxImgHeight = lightBox[0].height;
+												var profDiv = $('#profImg');
+												var profImg = $('#profImg img')[0];
+												var select = /*[[${@environment.getProperty('jk.image.select.area')}]]*/180;
+												if (lightBoxImgWidth > select
+														&& lightBoxImgHeight > select) {
+													var midSelect = select / 2;
+													x1 = lightBoxImgWidth / 2
+															- midSelect;
+													var x2 = lightBoxImgWidth
+															/ 2 + midSelect;
+													y1 = lightBoxImgHeight / 2
+															- midSelect;
+													var y2 = lightBoxImgHeight
+															/ 2 + midSelect;
+													ias = lightBox
+															.imgAreaSelect({
+																x1 : x1,
+																y1 : y1,
+																x2 : x2,
+																y2 : y2,
+																onSelectChange : preview,
+																instance : true
+															});
+												} else {
+													ias = x1 = 0;
+													y1 = 0;
+													lightBox.imgAreaSelect({
+														instance : true
+													});
+												}
+												if (!profImgSrc) {
+													profImgSrc = profImg.src;
+													profImg.src = imgSrc;
+													var imgScale = setProfileDivSize(
+															profDiv, select,
+															select);
+													showSelection(profDiv,
+															imgScale, x1, y1);
+												}
+											}
+										}, 1000);
+							}, lightBox ? 1000 : 1);
+				}
+				function showSelection(profDiv, imgScale, x, y) {
+					x1 = x;
+					y1 = y;
+					if (isAllProfileImg) {
+						x1 = y1 = 0;
+					}
+					profDiv.children().css(
+							{
+								width : Math.round(imgScale * lightBoxImgWidth)
+										+ 'px',
+								height : Math.round(imgScale
+										* lightBoxImgHeight)
+										+ 'px',
+								marginLeft : '-' + Math.round(imgScale * x1)
+										+ 'px',
+								marginTop : '-' + Math.round(imgScale * y1)
+										+ 'px'
+							});
+				}
+				function setProfileDivSize(profDiv, width, height) {
+					w = width;
+					h = height;
+					var maxSize = /*[[${@environment.getProperty('jk.image.profile.size')}]]*/180;
+					var scale;
+					var ratio = width / height;
+					if (width == 0 || height == 0) {
+						width = lightBoxImgWidth;
+						height = lightBoxImgHeight;
+						isAllProfileImg = true;
+					} else {
+						isAllProfileImg = false;
+					}
+					if (width > height) {
+						scale = maxSize / width;
+						width = maxSize;
+						height = Math.round(maxSize / ratio);
+					} else {
+						scale = maxSize / height;
+						height = maxSize;
+						width = Math.round(maxSize * ratio);
+					}
+					profDiv.css({
+						width : width,
+						height : height,
+						overflow : 'hidden'
+					});
+					return scale;
+				}
+				function preview(img, selection) {
+					var profDiv = $('#profImg');
+					var imgScale = setProfileDivSize(profDiv, selection.width,
+							selection.height);
+					showSelection(profDiv, imgScale, selection.x1, selection.y1);
+				}
+				/*]]>*/
+			</script>
+			<menu type="context" id="contextMenu">
+				<menuitem label="#{imagegallery.memu.set_as_profile}"
+							onclick="setAsProfileImage()"></menuitem>
+				<menuitem label="#{imagegallery.memu.delete_Image}"
+							onclick="deleteFie()"></menuitem>
+				<menuitem label="#{imagegallery.memu.show_original}"
+							onclick="originalImage()"></menuitem>
+			</menu>
+		</th:block>
+<!--/* -->
 		<div>
-			<a href="C:/jk/images/1/large/3.png"
-				class="strip thumbnail thumbnail-landscape"
-				data-strip-options="side:'right'"
-				data-strip-group="group">
-					<img src="C:/jk/images/1/small/3.png" alt="2nd image description" />
+			<a href="file:///C:/jk/resources/BIGGER/3.png"
+				class="html5lightbox thumbnail thumbnail-landscape"
+				data-thumbnail="file:///C:/jk/resources/MiNI/3.png"
+				data-group="group">
+					<img src="file:///C:/jk/resources/MiNI/3.png"
+						alt="2nd image description"
+						class="context-menu" />
 			</a>
 		</div>
 		<div>
-			<a href="C:/jk/images/1/large/4.png"
-				class="strip thumbnail thumbnail-landscape"
-				data-strip-options="side:'right'"
-				data-strip-group="group">
-					<img src="C:/jk/images/1/small/4.png" alt="3rd image description" />
+			<a href="file:///C:/jk/resources/BIGGER/4.png"
+				class="html5lightbox thumbnail thumbnail-landscape"
+				data-thumbnail="file:///C:/jk/resources/MiNI/4.png"
+				data-group="group">
+					<img src="file:///C:/jk/resources/MiNI/4.png"
+						alt="3rd image description"
+						class="context-menu"
+						contextmenu="contextMenu" />
 			</a>
 		</div>
 		<div>
-			<a href="C:/jk/images/1/large/5.png"
-				class="strip"
-				data-strip-options="side:'right'"
-				data-strip-group="group">
-					<img src="C:/jk/images/1/small/5.png" alt="4th image description" />
+			<a href="file:///C:/jk/resources/BIGGER/5.png"
+				class="html5lightbox"
+				data-thumbnail="file:///C:/jk/resources/MiNI/5.png"
+				data-group="group">
+					<img src="file:///C:/jk/resources/MiNI/5.png"
+						alt="4th image description"
+						class="context-menu" />
 			</a>
 		</div>
 		<div>
-			<a href="C:/jk/images/1/large/6.png"
-				class="strip"
-				data-strip-options="side:'right'"
-				data-strip-group="group">
-					<img src="C:/jk/images/1/small/6.png" alt="5th image description" />
+			<a href="file:///C:/jk/resources/BIGGER/6.png"
+				class="html5lightbox"
+				data-thumbnail="file:///C:/jk/resources/MiNI/6.png"
+				data-group="group">
+					<img src="file:///C:/jk/resources/MiNI/6.png"
+						alt="5th image description"
+						class="context-menu" />
 			</a>
 		</div>
+		<!-- */-->
+	</div>
 </body>
 </html>

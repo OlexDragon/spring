@@ -17,7 +17,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
 	private final Logger logger = LogManager.getLogger();
 
-	@Value("${files.path}")
+	@Value("${jk.resources.path}")
 	private String filesPath;
 
 	@Value("${google.apiKey}")

@@ -2,75 +2,71 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-  <head>
-	<title>Calendar</title>
-	<link rel="stylesheet" type="text/css" href="../../../static/css/jk.css" th:href="@{/css/jk.css}"></link>
-	<link rel="stylesheet" type="text/css" href="../../../static/css/fullcalendar.css" th:href="@{/css/calendar.css}"></link>
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js"></script>
-	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.1.1/fullcalendar.min.js"></script>
-	<script type="text/javascript">
-	$(document).ready(function() {
-
-		$('#calendar').fullCalendar({
-			header: {
-				left: 'prev,next today',
-				center: 'title',
-				right: 'month,agendaWeek,agendaDay'
-			},
-			defaultDate: '2014-06-12',
-			defaultView: 'month',
-			editable: true,
-			events: [
-				{
-					title: 'All Day Event',
-					start: '2014-06-01'
-				},
-				{
-					title: 'Long Event',
-					start: '2014-06-07',
-					end: '2014-06-10'
-				},
-				{
-					id: 999,
-					title: 'Repeating Event',
-					start: '2014-06-09T16:00:00'
-				},
-				{
-					id: 999,
-					title: 'Repeating Event',
-					start: '2014-06-16T16:00:00'
-				},
-				{
-					title: 'Meeting',
-					start: '2014-06-12T10:30:00',
-					end: '2014-06-12T12:30:00'
-				},
-				{
-					title: 'Lunch',
-					start: '2014-06-12T12:00:00'
-				},
-				{
-					title: 'Birthday Party',
-					start: '2014-06-13T07:00:00'
-				},
-				{
-					title: 'Click for Google',
-					url: 'http://google.com/',
-					start: '2014-06-28'
-				}
-			]
-		});
-		
-	});
-	</script>
+<head>
+<title>Calendar</title>
+<link rel="stylesheet" type="text/css" href="../../../static/css/jk.css"
+	th:href="@{/css/jk.css}"></link>
+<link rel="stylesheet" type="text/css"
+	href="../../../static/css/fullcalendar.css"
+	th:href="@{/css/calendar.css}"></link>
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 </head>
-  <body>
-  	<div class="bttm5 bclr w40" th:fragment="calendar">
+<body>
+	<div class="bttm5 bclr w40" th:fragment="calendar">
 		<div class="bttnBrdr"></div>
-	    <h2 id="clndrH" th:text="#{calendar}" class="cntr pntr">Calendar</h2>
-    	<div id="calendar"> </div>
+		<h2 id="clndrH" th:text="#{calendar}" class="cntr pntr">Calendar</h2>
+		<div id="calendar"></div>
 		<div class="bttnBrdr"></div>
-    </div>
-  </body>
+		<script type="text/javascript"
+			src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js"></script>
+		<script type="text/javascript"
+			src="http://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.1.1/fullcalendar.min.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function() {
+
+				$('#calendar').fullCalendar({
+					header : {
+						left : 'prev,next today',
+						center : 'title',
+						right : 'month,agendaWeek,agendaDay'
+					},
+					defaultDate : '2014-06-12',
+					defaultView : 'month',
+					editable : true,
+					events : [ {
+						title : 'All Day Event',
+						start : '2014-06-01'
+					}, {
+						title : 'Long Event',
+						start : '2014-06-07',
+						end : '2014-06-10'
+					}, {
+						id : 999,
+						title : 'Repeating Event',
+						start : '2014-06-09T16:00:00'
+					}, {
+						id : 999,
+						title : 'Repeating Event',
+						start : '2014-06-16T16:00:00'
+					}, {
+						title : 'Meeting',
+						start : '2014-06-12T10:30:00',
+						end : '2014-06-12T12:30:00'
+					}, {
+						title : 'Lunch',
+						start : '2014-06-12T12:00:00'
+					}, {
+						title : 'Birthday Party',
+						start : '2014-06-13T07:00:00'
+					}, {
+						title : 'Click for Google',
+						url : 'http://google.com/',
+						start : '2014-06-28'
+					} ]
+				});
+			});
+		</script>
+	</div>
+</body>
 </html>

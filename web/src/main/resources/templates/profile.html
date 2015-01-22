@@ -7,15 +7,12 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="viewport" content="width=device-width" />
 <link th:replace="fragments/header :: links" rel="stylesheet" type="text/css" href="../static/css/jk.css" th:href="@{/css/jk.css}" />
-<link rel="stylesheet" type="text/css" href="../static/js/jQuery/jquery-ui.css" th:href="@{/js/jQuery/jquery-ui.css}"></link>
 <link rel="stylesheet" type="text/css" href="../static/css/calendar.css" th:href="@{/css/calendar.css}"></link>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js"></script>
-<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.1.1/fullcalendar.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="../../static/css/strip.css" th:href="@{/css/strip.css}"></link>
-	<script type="text/javascript" src="../../static/js/strip.pkgd.min.js" th:src="@{/js/strip.pkgd.min.js}"></script>
+<link rel="stylesheet" type="text/css" href="../../static/css/strip.css" th:href="@{/css/strip.css}"></link>
 <link rel="stylesheet" type="text/css" href="../../static/js/slick/slick.css" th:href="@{/js/slick/slick.css}"></link>
-<script type="text/javascript" src="../../static/js/slick/slick.min.js" th:src="@{/js/slick/slick.min.js}"></script>
+<link th:if="${edit_profile}" rel="stylesheet" type="text/css" href="../../static/js/contextMenu/jquery.contextMenu.css" th:href="@{/js/contextMenu/jquery.contextMenu.css}" />
+	<link th:if="${edit_profile}" rel="stylesheet" type="text/css" href="../../static/js/imgareaselec/css/imgareaselect-default.css" th:href="@{/js/imgareaselec/css/imgareaselect-default.css}" />
+	<script src="../../static/js/jquery-2.1.3.min.js" th:src="@{/js/jquery-2.1.3.min.js}"></script>
 <script type="text/javascript" th:inline="javascript">
 /*<![CDATA[*/
 	$(document).ready(
@@ -31,8 +28,8 @@
 									return true;
 				});
 				$('#fileSelect').on('change', function () {
-					var maxFileSize = /*[[${@environment.getProperty('jk.fime.size.maximum')}*1024]]*/ 1024;
-					var text = /*[[#{profile.script.tobigfile(${@environment.getProperty('jk.fime.size.maximum')})}]]*/ 'File is to big';
+					var maxFileSize = /*[[${@environment.getProperty('jk.file.size.maximum')}*1024]]*/ 1024;
+					var text = /*[[#{profile.script.tobigfile(${@environment.getProperty('jk.file.size.maximum')})}]]*/ 'File is to big';
 					var dis = false;
 					for(var i in this.files){
 						if(this.files[i].name != "item" && typeof this.files[i].name != "undefined"){
@@ -45,67 +42,14 @@
 					}
 					$('#change').attr("disabled", ($('#fileSelect').val().length == 0) || dis);
 				});
-				$('.thumbs_gallery').slick({
-					 infinite: true,
-					 slidesToShow: 3,
-					 slidesToScroll: 1,
-					 centerMode: true,
-					 autoplay: true,
-					 autoplaySpeed: 2000,
-					 fade: false,
-					 variableWidth: true
-				});
 				$("select").on('change', function() {
-					document.getElementById('activeButton').click();
+					$('#activeButton').click();
 				});
 				$("#prflH").click(function() {
 					$("#prflTbl").slideToggle('slow');
 				});
 				$("#addrH").click(function() {
 					$("#addrTbls").toggle(500);
-				});
-				$("#clndrH").click(function() {
-					$("#calendar").slideToggle('slow');
-				});
-				$('#calendar').fullCalendar({
-					header : {
-						left : 'prev,next today',
-						center : 'title',
-						right : 'month,agendaWeek,agendaDay'
-					},
-					defaultDate : '2014-06-12',
-					defaultView : 'month',
-					editable : true,
-					events : [ {
-						title : 'All Day Event',
-						start : '2014-06-01'
-					}, {
-						title : 'Long Event',
-						start : '2014-06-07',
-						end : '2014-06-10'
-					}, {
-						id : 999,
-						title : 'Repeating Event',
-						start : '2014-06-09T16:00:00'
-					}, {
-						id : 999,
-						title : 'Repeating Event',
-						start : '2014-06-16T16:00:00'
-					}, {
-						title : 'Meeting',
-						start : '2014-06-12T10:30:00',
-						end : '2014-06-12T12:30:00'
-					}, {
-						title : 'Lunch',
-						start : '2014-06-12T12:00:00'
-					}, {
-						title : 'Birthday Party',
-						start : '2014-06-13T07:00:00'
-					}, {
-						title : 'Click for Google',
-						url : 'http://google.com/',
-						start : '2014-06-28'
-					} ]
 				});
 			});
 	/*]]>*/
@@ -137,37 +81,36 @@
 				<table id="img_tbl" style="width: 5em">
 					<tr>
 						<td>
-							<img
-								alt="Profile Image"
-								src="../static/images/userDefault.jpg"
-								th:src="@{${profileImageLink}}"
-							/>
+							<div id="profImg">
+								<img
+									alt="Profile Image"
+									src="../static/images/userDefault.jpg"
+									th:src="@{${profileImageLink}}"
+								/>
+							</div>
 						</td>
 					</tr>
 					<tr th:if="${edit_profile}">
 						<td>
 							<div class="fileinput">
-								<input type="file" id="fileSelect" name="fileSelect" accept="image/*,video/*" multiple="multiple"  />
+								<input type="file" id="fileSelect" name="fileSelect" accept="image/*,video/*" multiple="multiple" />
 								<label class="bttn" th:text="#{Select}">Select</label>
 							</div>
-							<button type="submit" class="bttn" id="change" name="s_profile_img" th:text="#{change}" disabled="disabled">Button</button>
+							<button type="submit" class="bttn" id="change" name="s_upload_img" th:text="#{profile.upload}" disabled="disabled">Button</button>
 						</td>
 					</tr>
 					<tr>
 						<td>
 							<div style="width: 10em;">
-								<div th:replace="fragments/imagegallery :: carousel"></div>
+								<div th:replace="fragments/imagegallery :: carousel(fullAccess=${edit_profile})"></div>
 							</div>
 						</td>
 					</tr>
 				</table>
-			</form>
-
-			<!--/*
+			</form><!--/*
 
 	------- Profile -------
-*/-->
-			<div id="prflTbl" class="borderRD w80p" th:classappend="${edit_profile} ? 'fleft' : 'fright'">
+*/-->	<div id="prflTbl" class="borderRD w80p" th:classappend="${edit_profile} ? 'fleft' : 'fright'">
 				<form action="/profile/edit" method="post" th:object="${user}">
 					<table class="rght w100p">
 <!--/*
@@ -476,10 +419,7 @@
 
 	--------- Calendar ---------
 */-->
-		<div class="bttm5 bclr hY">
-			<h2 id="clndrH" th:text="#{calendar}" class="cntr pntr">Calendar</h2>
-			<div id="calendar"></div>
-		</div>
+		<div  th:replace="fragments/user/calendar :: calendar"></div>
 	</div>
 	<div th:replace="fragments/footer :: footer">Footer</div>
 </body>
