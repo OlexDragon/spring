@@ -7,6 +7,8 @@ import javax.sql.DataSource;
 
 import jk.web.database.EmbeddedMysqlDataSource;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.dialect.MySQLDialect;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -32,15 +34,18 @@ import com.mysql.jdbc.Driver;
 @EnableJpaRepositories
 public class EmbeddedMySqlDataSourceConfig{
 
-    @Bean
+	private static final Logger logger = LogManager.getLogger();
+
+	@Bean
     public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory( entityManagerFactory );
-        return transactionManager;
+        return logger.exit(transactionManager);
     }
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+		logger.entry();
         LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         localContainerEntityManagerFactoryBean.setDataSource( mySqlDataSource() );
 //        localContainerEntityManagerFactoryBean.setPackagesToScan(new String[] { "com.touchcorp.touchppoint.model" });
@@ -49,15 +54,16 @@ public class EmbeddedMySqlDataSourceConfig{
         localContainerEntityManagerFactoryBean.setJpaVendorAdapter(vendorAdapter);
         localContainerEntityManagerFactoryBean.setJpaProperties( buildHibernateProperties() );
 
-       return localContainerEntityManagerFactoryBean;
+       return logger.exit(localContainerEntityManagerFactoryBean);
     }
 
 	@Bean(destroyMethod="shutdown")
 	public DataSource mySqlDataSource() {
-		return EmbeddedMysqlDataSource.getInstance();
+		return logger.exit(EmbeddedMysqlDataSource.getInstance());
 	}
 
 	public Properties buildHibernateProperties() {
+		logger.entry();
 		Properties hibernateProperties = new Properties();
 		hibernateProperties.setProperty("hibernate.dialect", MySQLDialect.class.getName());
 		hibernateProperties.setProperty("hibernate.connection.driver_class", Driver.class.getName());
@@ -66,6 +72,6 @@ public class EmbeddedMySqlDataSourceConfig{
 		hibernateProperties.setProperty("hibernate.connection.password", "");
 		hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "create");
 		hibernateProperties.setProperty("hibernate.hbm2ddl.import_files", "mysql-schema.sql, mysql-data.sql");
-		return hibernateProperties;
+		return logger.exit(hibernateProperties);
 	}
 }

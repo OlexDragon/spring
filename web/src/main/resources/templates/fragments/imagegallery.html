@@ -20,7 +20,7 @@
 	</div>
 	<div id="menu-node" class="thumbs_gallery" th:fragment="carousel">
 		<div th:each="fe : ${files}">
-			<input th:if="${fullAccess}" type="checkbox" th:class="carousel" th:value="@{${'/res/'+fe.userID +'/' + fe.fileID}}" th:checked="${fe.showToAll}" />
+			<input th:if="${fullAccess}" type="checkbox" th:class="carousel" th:value="@{${'/res/ajax/'+fe.userID +'/' + fe.fileID}}" th:checked="${fe.showToAll}" />
 			<a href="file:///C:/jk/resources/BIGGER/2.png"
 				th:href="@{${'/res/BIGGER/'+fe.userID+'/'+fe.fileID+(#strings.startsWith(fe.contentType,'video/') ? '.mp4' : '.png')}}"
 				class="html5lightbox thumbnail thumbnail-landscape"
@@ -40,6 +40,7 @@
 */-->	<script th:if="${files}" type="text/javascript" src="../../static/js/slick/slick.min.js" th:src="@{/js/slick/slick.min.js}"></script><!--/*
  
 */-->	<script type="text/javascript">
+			/*<![CDATA[*/
 			$(document).ready(function() {
 				$('.thumbs_gallery').slick({
 					centerMode : true,
@@ -49,6 +50,7 @@
 					variableWidth : true
 				});
 			});
+			/*]]>*/
 		</script>
 		<th:block th:if="${fullAccess}"><!--/*
 
@@ -62,6 +64,7 @@
 					$.ajax({
 						url : this.value + '/' + this.checked,
 						type : 'POST',
+						success : function(result) {}
 					});
 				});
 				var ias; var imgObj;

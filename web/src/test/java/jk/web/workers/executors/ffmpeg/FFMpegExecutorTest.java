@@ -1,7 +1,6 @@
 package jk.web.workers.executors.ffmpeg;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.awt.Dimension;
 import java.io.File;
@@ -15,7 +14,7 @@ import org.junit.Test;
 
 public class FFMpegExecutorTest {
 
-	private static final String RESULT1 = "00:03:52.053";
+	private static final String RESULT1 = "00:03:52";
 	private final String VIDEO1 = "C:/Users/Alex/Videos/Sweet Memories Sasha & Ira.wmv";
 	private final String VIDEO = "C:/Users/Alex/Videos/20141207162603.m2ts";
 	private final String toFile = "thumb";
@@ -24,7 +23,7 @@ public class FFMpegExecutorTest {
 	public void getInfoTest() throws IOException, InterruptedException {
 		VideoProperties properties = FFMpegExecutor.getVideoProperties(VIDEO1);
 		System.out.println(properties);
-		assertEquals(RESULT1, properties.getDuration().toString());
+		assertEquals(RESULT1, properties.getDuration().toString().substring(0, 8));
 	}
 
 
