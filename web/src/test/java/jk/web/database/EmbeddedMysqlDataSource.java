@@ -20,90 +20,86 @@ import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import com.mysql.management.MysqldResourceI;
 import com.mysql.management.driverlaunched.ServerLauncherSocketFactory;
 
-public class EmbeddedMysqlDataSource extends MysqlDataSource{
+public class EmbeddedMysqlDataSource extends MysqlDataSource {
 	private static final long serialVersionUID = 6002111388136790533L;
-private String port;
-  private String socket;
-  private String url;
-  private File basedir;
-  private File datadir;
-  private Connection connection;
 
-  private static Logger logger = LogManager.getLogger();
+	private static final Logger logger = LogManager.getLogger();
 
-  public static EmbeddedMysqlDataSource getInstance()
-  {
-    EmbeddedMysqlDataSource dataSource = null;
-    try {
-      dataSource = new EmbeddedMysqlDataSource("4000");
-      dataSource.setUrl( dataSource.getEmbeddedUrl() );
-      dataSource.setUser( "root" );
-      dataSource.setPassword( "" );
-    } catch( Exception e2 ) {
-      dataSource = null;
-      logger.info( "Could not create embedded server.  Skipping tests. (%s)", e2.getMessage() );
-      e2.printStackTrace();
-    }
-    return dataSource;
-  }
+	private final String socket;
+	private final File basedir;
+	private final File datadir;
+	private Connection connection;
 
-  public static void shutdown( EmbeddedMysqlDataSource ds )
-  {
-    try {
-      ds.shutdown();
-    } catch( IOException e ) {
-      logger.info( "Could not shutdown embedded server. (%s)", e.getMessage() );
-      e.printStackTrace();
-    }
-  }
+	private static EmbeddedMysqlDataSource dataSource;
 
-  public EmbeddedMysqlDataSource( String port ) throws IOException{
-	  super();
-	  logger.entry(port);
-    this.port = port;
-    socket = "sock" + System.currentTimeMillis();
+	public static EmbeddedMysqlDataSource getInstance() {
+		if(dataSource==null)
+		try {
+			dataSource = new EmbeddedMysqlDataSource("4000");
+			dataSource.setUrl(dataSource.getEmbeddedUrl());
+			dataSource.setUser("root");
+			dataSource.setPassword("");
+		} catch (Exception e2) {
+			dataSource = null;
+			logger.info("Could not create embedded server.  Skipping tests. (%s)", e2.getMessage());
+		}
+		return logger.exit(dataSource);
+	}
 
-    // We need to set our own base/data dirs as we must
-    // pass those values to the shutdown() method later
-    basedir = File.createTempFile( "mysqld-base", null );
-    datadir = File.createTempFile( "mysqld-data", null );
+	public static void shutdown(EmbeddedMysqlDataSource ds) {
+		try {
+			ds.shutdown();
+		} catch (IOException e) {
+			logger.info("Could not shutdown embedded server. (%s)", e.getMessage());
+		}
+	}
 
-    // Wish there was a better way to make temp folders!
-    basedir.delete();
-    datadir.delete();
-    basedir.mkdir();
-    datadir.mkdir();
-    basedir.deleteOnExit();
-    datadir.deleteOnExit();
+	private EmbeddedMysqlDataSource(String port) throws IOException {
+		logger.entry(port);
+		socket = "sock" + System.currentTimeMillis();
 
-    StringBuilder sb = new StringBuilder();
-    sb.append( String.format( "jdbc:mysql:mxj://localhost:%s/test", port ));
-    sb.append( "?createDatabaseIfNotExist=true" );
-    sb.append( "&server.basedir=" ).append( basedir.getPath() );
-    sb.append( "&sessionVariables=wait_timeout=" ).append( 28000 );
-    url = sb.toString();
-  }
+		// We need to set our own base/data dirs as we must
+		// pass those values to the shutdown() method later
+		basedir = File.createTempFile("mysqld-base", null);
+		datadir = File.createTempFile("mysqld-data", null);
 
-  public String getEmbeddedUrl(){
-    return url;
-  }
+		// Wish there was a better way to make temp folders!
+		basedir.delete();
+		datadir.delete();
+		basedir.mkdir();
+		datadir.mkdir();
+		basedir.deleteOnExit();
+		datadir.deleteOnExit();
 
-  @Override
-  protected java.sql.Connection getConnection( Properties props ) throws SQLException {
-	  logger.entry(props);
-    if( connection == null || connection.isClosed()) {
-      props.put( MysqldResourceI.PORT, port);
-      props.put( MysqldResourceI.SOCKET, socket );
-      props.put( MysqldResourceI.BASEDIR, basedir.getPath() );
-      props.put( MysqldResourceI.DATADIR, datadir.getPath() );
-       connection = super.getConnection( props );
-    }
-    logger.trace("\n\t{}\n\t{}",props, connection);
-   return connection;
-  }
+		StringBuilder sb = new StringBuilder();
+		sb.append(String.format("jdbc:mysql:mxj://localhost:%s/test", port));
+		sb.append("?createDatabaseIfNotExist=true");
+		sb.append("&server.basedir=").append(basedir.getPath());
+		sb.append("&sessionVariables=wait_timeout=").append(28000);
+		url = sb.toString();
+	}
 
-  public void shutdown() throws IOException{
-	  logger.entry();
-    ServerLauncherSocketFactory.shutdown( basedir, datadir );
-  }
+	public String getEmbeddedUrl() {
+		return url;
+	}
+
+	@Override
+	protected java.sql.Connection getConnection(Properties props) throws SQLException {
+		logger.entry(props);
+		if (connection == null || connection.isClosed()) {
+			props.put(MysqldResourceI.PORT, port);
+			props.put(MysqldResourceI.SOCKET, socket);
+			props.put(MysqldResourceI.BASEDIR, basedir.getPath());
+			props.put(MysqldResourceI.DATADIR, datadir.getPath());
+			logger.trace("\n\t{}", props);
+			connection = super.getConnection(props);
+		}
+		logger.trace("\n\t{}", connection);
+		return connection;
+	}
+
+	public void shutdown() throws IOException {
+		logger.entry();
+		ServerLauncherSocketFactory.shutdown(basedir, datadir);
+	}
 }

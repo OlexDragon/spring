@@ -13,7 +13,7 @@
     <div id="header" th:fragment="pageHeader">
     	<a class="fleft" href="../home.html" th:href="@{/}">
 			<img alt="Fashion Pro Finder" src="../../static/images/fpf_gray" th:src="@{/images/fpf_gray.png}" />
-		</a>
+		</a><!--/*
 		<th:block th:if="${#authentication}==null or ${#authorization.expression('isAuthenticated()')}==false" >
 			<div id="langDiv">
 				<ul>
@@ -26,7 +26,7 @@
 				</ul>
 			</div>
 		</th:block>
-		<p th:replace="fragments/search :: search">Search</p>
+		<p th:replace="fragments/search :: search">Search</p>   */-->
 	</div>
   </body>
 </html>

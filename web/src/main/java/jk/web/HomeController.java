@@ -24,7 +24,7 @@ public class HomeController {
 	public String home(User user, Model model) {
 		SignupController.signupAttributes(model, titleRepository);
 		model.addAttribute("message", "home.welcome");
-		return "home";
+		return "search";
 	}
 
 	public static void main(String[] args) throws Exception {

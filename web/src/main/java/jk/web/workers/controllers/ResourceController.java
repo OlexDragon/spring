@@ -103,8 +103,8 @@ public class ResourceController {
 		return new ResponseEntity<String>(Boolean.toString(set),  headers, HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value="/{userID}/{imageID}/{show}", method = RequestMethod.POST)
-	public ResponseEntity<String> saveProfileImage(	Principal principal, @PathVariable long userID, @PathVariable long imageID, @PathVariable boolean show){
+	@RequestMapping(value="/ajax/{userID}/{imageID}/{show}", method = RequestMethod.POST)
+	public ResponseEntity<String> setShow(	Principal principal, @PathVariable long userID, @PathVariable long imageID, @PathVariable boolean show){
 		logger.entry( userID, imageID, show);
 
 		String username = principal.getName();

@@ -3,16 +3,16 @@
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
   <head>
-    <title>Header</title>
+    <title>Search</title>
 	<link rel="stylesheet" type="text/css" href="../static/css/jk.css" th:href="@{/css/jk.css}"></link>
   </head>
   <body>
-  	<form th:if="${#authentication} ? ${#authorization.expression('isAuthenticated()')} : ${false}" name="searchForm" action="/search"  th:action="@{/search}" class="fright" th:fragment="search" >
-  		<input type="text" name="searchFor"/>
-  		<select name="searchDetails">
-			<option th:each="details : ${T(jk.web.workers.SearchClass.SearchDetails).values()}" th:value="${details}" th:text="#{__${details}__}" />
-  		</select>
-  		<button type="submit" th:text="#{search}" >Search</button>
-  	</form>
+  	<form name="searchForm" action="#"  th:action="@{/search}" th:fragment="search" >
+		<input type="text" name="searchFor"/>
+		<button type="submit" th:text="#{search}" >Search</button>
+	</form>
+	<p><span>Fashion pro finder search by :</span> <a>a</a> <a>b</a> <a>c</a> <a>d</a> <a>e</a> <a>f</a> <a>g</a> <a>h</a> <a>j</a> <a>k</a> 
+	<a>l</a> <a>m</a> <a>n</a> <a>o</a> <a>p</a> <a>q</a> <a>r</a> <a>s</a> <a>t</a> <a>u</a> <a>v</a> <a>w</a> <a>x</a> <a>y</a> <a>z</a>
+	</p>
   </body>
 </html>

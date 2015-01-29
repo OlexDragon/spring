@@ -36,6 +36,7 @@ input, button, label{
 }
 #contents, #contentsFirst {
 	padding-right: .5em;
+	min-height: 15em
 }
 table .error{
 	padding-left: .5em;
@@ -535,8 +536,16 @@ div.fileinput input[type=file]:HOVER + label, .bttn:HOVER, #profile a:HOVER, .hY
 menu{
 	display: none;
 }
-._00{
+.mh15m{
+	min-height: 15em;
+}
+div.search{
+	text-align: center;
+}
+div.search form{
 	position: relative;
-	left: 0;
-	top: 0;
+	top: 4em;
+}
+div.search form input[type=text]{
+	width: 50%;
 }
