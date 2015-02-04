@@ -116,6 +116,5 @@ public class ResourceController {
 		}
 
 		return new ResponseEntity<String>(Boolean.toString(true),  HttpStatus.CREATED);
-		
 	}
 }
