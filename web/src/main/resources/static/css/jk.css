@@ -44,7 +44,7 @@ table .error{
 table td input[type="text"], table td input[type="password"], table td input[type="email"]{
 	width: 99%;
 }
-#tables, button.jk, #contents a, #contentsFirst a{
+#tables, button.jk, #contentsFirst a{
 	color:white;
 }
 #contents h3{
@@ -90,6 +90,9 @@ button, checkbox, label, input[type=checkbox], input[type=file], .pntr{
 }
 #tables .bttnDiv{
 	width: 6em;
+}
+.arght{
+	align: right;
 }
 .rght{
 	text-align: right;
@@ -277,7 +280,7 @@ button, checkbox, label, input[type=checkbox], input[type=file], .pntr{
 * html #menu             { zoom: 1; } /* IE6 */
 *:first-child+html #menu { zoom: 1; } /* IE7 */
 
-.error {
+.error, .rd {
 	color: red;
 }
 .error span, p.error{
@@ -539,13 +542,27 @@ menu{
 .mh15m{
 	min-height: 15em;
 }
-div.search{
-	text-align: center;
+div.search {
+	width: 40em;
+	margin: auto;
+	text-align: left;
+	min-height: 10em;
+	-webkit-transform-style: preserve-3d;
+	-moz-transform-style: preserve-3d;
+	transform-style: preserve-3d;
 }
-div.search form{
-	position: relative;
-	top: 4em;
+.search_contaner {
+	padding-top: 3em;
 }
-div.search form input[type=text]{
-	width: 50%;
+.search_contaner ul{
+	margin: 1em;
+}
+#search {
+	width: 39em;
+}
+.search a.active{
+	color: yellow;
+	text-transform: uppercase;
+	font-weight: bold;
+	text-decoration: underline;
 }

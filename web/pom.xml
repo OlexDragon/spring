@@ -133,6 +133,11 @@
 			<artifactId>spring-context-support</artifactId>
 			<type>jar</type>
 		</dependency>
+<dependency>
+	<groupId>com.maxmind.geoip</groupId>
+	<artifactId>geoip-api</artifactId>
+	<version>1.2.14</version>
+</dependency>
 	</dependencies>
 
 	<build>

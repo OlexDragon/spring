@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta charset="UTF-8">
+<title>add your site to Fashion Pro Finder</title>
+<link rel="stylesheet" type="text/css" href="../static/css/jk.css" th:href="@{/css/jk.css}" />
+</head>
+<body>
+	<div id="header" th:replace="fragments/header :: pageHeader">Header</div>
+	<div id="contents">
+		<h3>Please complete the form below to add your site to Fashion Pro Finder</h3>
+		<form action="add_site">
+			<table>
+				<col class="arght" /><col />
+				<tr><td >Site Address<span class="rd">*</span></td><td><input type="text" placeholder="http://..." /></td></tr>
+				<tr><td></td><td>Example: http://www.fprof.com/</td></tr>
+				<tr><td >Main countries of activity<span class="rd">*</span></td><td><select><option>Countries</option></select></td></tr>
+				<tr><td>Personal data</td><td></td></tr>
+				<tr><td>First Name<span class="rd">*</span></td><td><input type="text" /></td></tr>
+				<tr><td>Last Name<span class="rd">*</span></td><td><input type="text" /></td></tr>
+				<tr><td>Post<span class="rd">*</span></td><td><input type="text" /></td></tr>
+				<tr><td>Email<span class="rd">*</span></td><td><input type="email" /></td></tr>
+				<tr><td>Confirm your email<span class="rd">*</span></td><td><input type="email" /></td></tr>
+				<tr><td>Your business</td><td></td></tr>
+				<tr><td>Company name<span class="rd">*</span></td><td><input type="text" /></td></tr>
+				<tr><td>Address<span class="rd">*</span></td><td><input type="text" /></td></tr>
+				<tr><td></td><td><input type="text" /></td></tr>
+				<tr><td>City<span class="rd">*</span></td><td><input type="text" /></td></tr>
+				<tr><td>Postal code<span class="rd">*</span></td><td><input type="text" /></td></tr>
+				<tr><td>Condition</td><td><input type="text" /></td></tr>
+				<tr><td>VAT number</td><td><input type="text" /></td></tr>
+				<tr><td >Country</td><td><select><option>Countries</option></select></td></tr>
+				<tr><td>Phone<span class="rd">*</span></td><td><input type="text" /></td></tr>
+			</table>
+		</form>
+	</div>
+	<div th:replace="fragments/footer :: footer">Footer</div>
+</body>
+</html>
