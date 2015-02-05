@@ -566,3 +566,6 @@ div.search {
 	font-weight: bold;
 	text-decoration: underline;
 }
+tr.spaceUnder>td {
+	padding-bottom: 1em;
+}

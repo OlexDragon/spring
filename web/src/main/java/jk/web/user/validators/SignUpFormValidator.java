@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import jk.web.user.Business;
 import jk.web.user.User;
 import jk.web.user.entities.EMailEntity;
 import jk.web.user.entities.EMailEntity.EMailStatus;
@@ -56,6 +57,19 @@ public class SignUpFormValidator implements Validator {
 		professionalSkillValidation(errors, user.getWorkplace(), "workplace");
 		eMailValidation(errors, user.getEMail());
 		genderValidation(errors, user);
+		if(target instanceof Business)
+			validate((Business)target, errors);
+	}
+
+	private void validate(Business business, Errors errors){
+		siteAddrValidation(business.getSite(), errors);
+	}
+
+	private void siteAddrValidation(String site, Errors errors) {
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "site", "SignUpFormValidator.this_field_must_be_filled.between_min_and_max_characters");
+
+		if(site.startsWith("http") || site.length()<7)
+			errors.rejectValue("site", "SignUpFormValidator.this_field_must_be_filled.between_min_and_max_characters");
 	}
 
 	private void professionalSkillValidation(Errors errors, String fieldValue, String fieldName) {
