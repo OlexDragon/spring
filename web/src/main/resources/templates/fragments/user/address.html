@@ -103,8 +103,10 @@
 					<th th:text="#{address.country}">Country</th>
 					<td th:switch="${addr.editAddress}">
 						<select th:case="${true}" th:field="*{countryCode}">
-							<option th:value="null" th:text="#{Select}">Select</option>
-							<option th:each="c : ${T(jk.web.workers.AddressWorker).countries}" th:value="${c.value}" th:text="#{__${c.value}__}" th:attr="disabled=${c.disabled ? 'disabled' : null}"></option>
+							<th:block th:fragment="countries_options">
+								<option th:value="null" th:text="#{Select}">Select</option>
+								<option th:each="c : ${T(jk.web.workers.AddressWorker).countries}" th:value="${c.value}" th:text="#{__${c.value}__}" th:attr="disabled=${c.disabled ? 'disabled' : null}"></option>
+							</th:block>
 						</select>
 						<p th:case="*" th:text="${addr.countryCode!=null} ? #{__${addr.countryCode}__} : null" class="clrY">Country</p>
 					</td>

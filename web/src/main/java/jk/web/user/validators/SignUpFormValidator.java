@@ -26,7 +26,8 @@ public class SignUpFormValidator implements Validator {
 	private Map<String, Integer>  passwordRange;
 
 	private String USERNAME_PATTERN;
-	private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+	private static final String EMAIL_PATTERN = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
+											//  "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 	private Pattern emailPattern = Pattern.compile(EMAIL_PATTERN);
 
 	@Autowired
@@ -63,18 +64,36 @@ public class SignUpFormValidator implements Validator {
 
 	private void validate(Business business, Errors errors){
 		siteAddrValidation(business.getSite(), errors);
+		eMailValidation(errors, business);
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "post", "SignUpFormValidator.this_field_must_be_filled");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "city", "SignUpFormValidator.this_field_must_be_filled");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "address1", "SignUpFormValidator.this_field_must_be_filled");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "postalcode", "SignUpFormValidator.this_field_must_be_filled");
+	}
+
+	private void eMailValidation(Errors errors, Business business) {
+		String eMail = business.getEMail();
+		String confirmEmail = business.getConfirmEmail();
+		logger.trace("\n\t eMail = {}\n\t confirmEmail = {}", eMail, confirmEmail);
+		if(errors.getFieldError("eMail")==null && !eMail.equals(confirmEmail)){
+			errors.rejectValue("eMail", "SignUpFormValidator.these_X_dont_match", new String[]{"e-mails"}, "These passwords do not match.");
+			errors.rejectValue("confirmEmail", "SignUpFormValidator.these_X_dont_match", new String[]{"e-mails"}, "These passwords do not match.");
+		}
 	}
 
 	private void siteAddrValidation(String site, Errors errors) {
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "site", "SignUpFormValidator.this_field_must_be_filled.between_min_and_max_characters");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "site", "SignUpFormValidator.this_field_must_be_filled");
 
-		if(site.startsWith("http") || site.length()<7)
-			errors.rejectValue("site", "SignUpFormValidator.this_field_must_be_filled.between_min_and_max_characters");
+		if(errors.getFieldError("professionalSkill")==null){
+			site = site.toLowerCase();
+			if(site.startsWith("http") || site.length()<10)
+				errors.rejectValue("site", "SignUpFormValidator.this_field_must_be_filled");
+		}
 	}
 
 	private void professionalSkillValidation(Errors errors, String fieldValue, String fieldName) {
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, fieldName, "SignUpFormValidator.between_min_and_max_characters", new Integer[]{1, 164});
-	
+
 		if(errors.getFieldError("professionalSkill")==null){
 			if(fieldValue.length()>164)
 				errors.rejectValue(fieldName, "SignUpFormValidator.between_min_and_max_characters", new Integer[]{1, 164}, "Between {0} and {1} characters.");
@@ -133,8 +152,8 @@ public class SignUpFormValidator implements Validator {
 				errors.rejectValue(fieldNamePassword, "SignUpFormValidator.between_min_and_max_characters", new Integer[]{min, max}, "Between {0} and {1} characters.");
 
 		if(errors.getFieldError(fieldNameConfirm)==null && !newPassword.equals(repassword)){
-			errors.rejectValue(fieldNameConfirm, "SignUpFormValidator.these_passwords_dont_match", new Integer[]{min, max}, "Between {0} and {1} characters.");
-			errors.rejectValue(fieldNamePassword, "SignUpFormValidator.these_passwords_dont_match", new Integer[]{min, max}, "Between {0} and {1} characters.");
+			errors.rejectValue(fieldNameConfirm, "SignUpFormValidator.these_X_dont_match", new String[]{"passwords"}, "These passwords do not match.");
+			errors.rejectValue(fieldNamePassword, "SignUpFormValidator.these_X_dont_match", new String[]{"passwords"}, "These passwords do not match.");
 		}
 		return logger.exit(errors.getFieldError(fieldNamePassword)==null && errors.getFieldError(fieldNameConfirm)==null);// no error
 	}
@@ -145,13 +164,14 @@ public class SignUpFormValidator implements Validator {
 		final String fieldName = "eMail";
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, fieldName, "SignUpFormValidator.please_write_a_valid_email_address");
 		if(errors.getFieldError(fieldName)==null){
-			logger.entry(eMail);
 			if(emailPattern.matcher(eMail).matches()){
 				EMailEntity eMailEntity = userWorker.getEMail(eMail);
 				if(eMailEntity!=null && (eMailEntity.getStatus()==EMailStatus.ACTIVE || eMailEntity.getStatus()==EMailStatus.TO_CONFIRM))
 					errors.rejectValue(fieldName, "SignUpFormValidator.this_email_already_exists", "Exists");
-			}else
+			}else{
+				logger.trace("\n\t email '{}' does not mach the patern:\n\t{}", eMail, emailPattern);
 				errors.rejectValue(fieldName, "SignUpFormValidator.please_write_a_valid_email_address", "Not valid");
+			}
 		}
 		return logger.exit(errors.getFieldError(fieldName)==null);// no error
 	}
