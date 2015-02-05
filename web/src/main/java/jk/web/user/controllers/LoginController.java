@@ -158,14 +158,14 @@ public class LoginController {
 				model.addAttribute(
 						"errorPassword",
 						applicationContext.getMessage(
-								"SignUpFormValidator.these_passwords_dont_match",
-								null,
+								"SignUpFormValidator.these_X_dont_match",
+								new String[]{"passwords"},
 								locale));
 				model.addAttribute(
 						"errorRepassword",
 						applicationContext.getMessage(
-								"SignUpFormValidator.these_passwords_dont_match",
-								null,
+								"SignUpFormValidator.these_X_dont_match",
+								new String[]{"passwords"},
 								locale));
 			}
 		}

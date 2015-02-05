@@ -22,13 +22,13 @@
 				<tr>
 					<td>Password</td>
 					<td class="rd">*</td>
-					<td><input type="text" th:field="*{newPassword}"  required="required" /></td>
+					<td><input type="password" th:field="*{newPassword}"  required="required" /></td>
 					<td class="error"><span th:if="${#fields.hasErrors('newPassword')}" th:errors="*{newPassword}">Password Error</span></td>
 				</tr>
 				<tr class="spaceUnder">
 					<td>Confirm</td>
-					<td class="rd">*</td>class="spaceUnder">
-					<td><input type="text" th:field="*{repassword}"  required="required" /></td>
+					<td class="rd">*</td>
+					<td><input type="password" th:field="*{repassword}"  required="required" /></td>
 					<td class="error"><span th:if="${#fields.hasErrors('repassword')}" th:errors="*{repassword}">Confirm password Error</span></td>
 				</tr>
 				<tr>
@@ -41,9 +41,9 @@
 					<td /><td /><td>Example: http://www.fprof.com/</td><td />
 				</tr>
 				<tr>
-					<td>Main countries of activity</td>
+					<td>Main country of activity</td>
 					<td class="rd">*</td>
-					<td><select><option>Countries</option></select></td>
+					<td><select th:field="*{countriesOfActivity}"><option th:replace="fragments/user/address :: countries_options">Countries</option></select></td>
 					<td class="error">Error</td>
 				</tr>
 				<tr>
@@ -64,8 +64,8 @@
 				<tr>
 					<td>Post</td>
 					<td class="rd">*</td>
-					<td><input type="text" required="required" /></td>
-					<td class="error">Error</td>
+					<td><input type="text" th:field="*{post}" required="required" /></td>
+					<td class="error"><span th:if="${#fields.hasErrors('post')}" th:errors="*{post}">Last name Error</span></td>
 				</tr>
 				<tr>
 					<td th:text="#{signup.eMail}">Email</td>
@@ -76,61 +76,62 @@
 				<tr class="spaceUnder">
 					<td>Confirm your email</td>
 					<td class="rd">*</td>
-					<td><input type="email" required="required" /></td>
+					<td><input type="email" th:field="*{confirmEmail}" required="required" /></td>
+					<td class="error"><span th:if="${#fields.hasErrors('confirmEmail')}" th:errors="*{confirmEmail}">email Error</span></td>
 				</tr>
 				<tr>
-					<th class="clrY">Your business</th><td /><td />
+					<th class="clrY">Your business</th><td /><td /><td />
 				</tr>
 				<tr>
 					<td>Company name</td>
 					<td class="rd">*</td>
-					<td><input type="text" required="required" /></td>
-					<td class="error">Error</td>
+					<td><input type="text" th:field="*{company}" required="required" /></td>
+					<td class="error"><span th:if="${#fields.hasErrors('company')}" th:errors="*{company}">email Error</span></td>
 				</tr>
 				<tr>
 					<td>Address</td>
 					<td class="rd">*</td>
-					<td><input type="text" required="required" /></td>
-					<td class="error">Error</td>
+					<td><input type="text" th:field="*{address1}" required="required" /></td>
+					<td class="error"><span th:if="${#fields.hasErrors('address1')}" th:errors="*{address1}">email Error</span></td>
 				</tr>
 				<tr>
-					<td /><td /><td><input type="text" /></td><td />
+					<td /><td /><td><input type="text" th:field="*{address2}" /></td><td />
 				</tr>
 				<tr>
 					<td>City</td>
 					<td class="rd">*</td>
-					<td><input type="text" required="required" /></td>
-					<td class="error">Error</td>
+					<td><input type="text" th:field="*{city}" required="required" /></td>
+					<td class="error"><span th:if="${#fields.hasErrors('city')}" th:errors="*{city}">email Error</span></td>
 				</tr>
 				<tr>
 					<td>Postal code</td>
 					<td class="rd">*</td>
-					<td><input type="text" required="required" /></td>
-					<td class="error">Error</td>
+					<td><input type="text" th:field="*{postalcode}" required="required" /></td>
+					<td class="error"><span th:if="${#fields.hasErrors('postalcode')}" th:errors="*{postalcode}">email Error</span></td>
 				</tr>
 				<tr>
 					<td>Condition</td>
 					<td />
-					<td><input type="text" /></td>
+					<td><input type="text" th:field="*{condition}" /></td>
 					<td />
 				</tr>
 				<tr>
 					<td>VAT number</td>
 					<td />
-					<td><input type="text" /></td>
+					<td><input type="text" th:field="*{vatNumber}" /></td>
 					<td />
 				</tr>
 				<tr>
 					<td>Country</td>
 					<td />
-					<td><select><option>Countries</option></select></td>
+					<td><select th:field="*{country}"><option th:replace="fragments/user/address :: countries_options">Countries</option></select></td>
 					<td />
 				</tr>
 				<tr>
 					<td>Phone</td>
 					<td class="rd">*</td>
-					<td><input type="text" required="required" /></td>
-					<td class="error">Error</td>
+					<td><input type="text" th:field="*{phone}" required="required" /></td>
+					<td class="error"><span th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">email Error</span></td>
 				</tr>
 				<tr>
 					<td /><td /><td><button type="submit" th:text="#{login.join_now}" >Submit</button></td><td />
