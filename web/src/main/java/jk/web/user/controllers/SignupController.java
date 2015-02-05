@@ -12,6 +12,7 @@ import javax.mail.internet.AddressException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
+import jk.web.user.Business;
 import jk.web.user.User;
 import jk.web.user.entities.ActivityEntity;
 import jk.web.user.entities.EMailEntity;
@@ -118,6 +119,28 @@ public class SignupController {
 		model.addAttribute("message", "SignupController.signup.confirn.title");
 		model.addAttribute("contents", "SignupController.signup.confirn.sent");
 		return "message";
+	}
+
+	@RequestMapping(value="/signup/business", method=RequestMethod.GET)
+	public String signupBusiness(Business business, Model model){
+		logger.entry(RequestMethod.GET);
+		signupAttributes(model, titleRepository);
+
+		return "signup_business";
+	}
+
+	@RequestMapping(value="/signup/business", method=RequestMethod.POST)
+	public String signupBusiness(Business business, BindingResult bindingResult, HttpServletRequest request, Model model, Context context){
+		logger.entry(business);
+
+		signUpFormValidator.validate(business, bindingResult);
+
+		if(bindingResult.hasErrors()){
+			addUsernamePasswordRange(model);
+			return "signup_business";
+		}
+
+		return "signup_business";
 	}
 
 	public void addUsernamePasswordRange(Model model) {

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta charset="UTF-8" />
+<title>add your site to Fashion Pro Finder</title>
+<link rel="stylesheet" type="text/css" href="../static/css/jk.css" th:href="@{/css/jk.css}" />
+</head>
+<body>
+	<div id="header" th:replace="fragments/header :: pageHeader">Header</div>
+	<div id="contents">
+		<h3 class="clrY">Please complete the form below to add your site to Fashion Pro Finder</h3>
+		<form method="post" th:object="${business}">
+			<table>
+				<tr>
+					<td>Username</td>
+					<td class="rd">*</td>
+					<td><input type="text"  th:field="*{username}" required="required" /></td>
+					<td class="error"><span  th:if="${#fields.hasErrors('username')}" th:errors="*{username}">User name Error</span></td>
+				</tr>
+				<tr>
+					<td>Password</td>
+					<td class="rd">*</td>
+					<td><input type="text" th:field="*{newPassword}"  required="required" /></td>
+					<td class="error"><span th:if="${#fields.hasErrors('newPassword')}" th:errors="*{newPassword}">Password Error</span></td>
+				</tr>
+				<tr class="spaceUnder">
+					<td>Confirm</td>
+					<td class="rd">*</td>class="spaceUnder">
+					<td><input type="text" th:field="*{repassword}"  required="required" /></td>
+					<td class="error"><span th:if="${#fields.hasErrors('repassword')}" th:errors="*{repassword}">Confirm password Error</span></td>
+				</tr>
+				<tr>
+					<td>Site Address</td>
+					<td class="rd">*</td>
+					<td><input type="text" th:field="*{site}" placeholder="http://..."  required="required" /></td>
+					<td class="error"><span th:if="${#fields.hasErrors('site')}" th:errors="*{site}">Confirm password Error</span></td>
+				</tr>
+				<tr>
+					<td /><td /><td>Example: http://www.fprof.com/</td><td />
+				</tr>
+				<tr>
+					<td>Main countries of activity</td>
+					<td class="rd">*</td>
+					<td><select><option>Countries</option></select></td>
+					<td class="error">Error</td>
+				</tr>
+				<tr>
+					<td>Personal data</td><td /><td /><td />
+				</tr>
+				<tr>
+					<td th:text="#{signup.firstName}">First Name</td>
+					<td class="rd">*</td>
+					<td><input type="text" th:field="*{firstName}" required="required" /></td>
+					<td class="error"><span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">First name Error</span></td>
+				</tr>
+				<tr>
+					<td th:text="#{signup.lastName}">Last Name</td>
+					<td class="rd">*</td>
+					<td><input type="text" th:field="*{lastName}" required="required" /></td>
+					<td class="error"><span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Last name Error</span></td>
+				</tr>
+				<tr>
+					<td>Post</td>
+					<td class="rd">*</td>
+					<td><input type="text" required="required" /></td>
+					<td class="error">Error</td>
+				</tr>
+				<tr>
+					<td th:text="#{signup.eMail}">Email</td>
+					<td class="rd">*</td>
+					<td><input type="email" th:field="*{eMail}" required="required" /></td>
+					<td class="error"><span th:if="${#fields.hasErrors('eMail')}" th:errors="*{eMail}">email Error</span></td>
+				</tr>
+				<tr class="spaceUnder">
+					<td>Confirm your email</td>
+					<td class="rd">*</td>
+					<td><input type="email" required="required" /></td>
+				</tr>
+				<tr>
+					<th class="clrY">Your business</th><td /><td />
+				</tr>
+				<tr>
+					<td>Company name</td>
+					<td class="rd">*</td>
+					<td><input type="text" required="required" /></td>
+					<td class="error">Error</td>
+				</tr>
+				<tr>
+					<td>Address</td>
+					<td class="rd">*</td>
+					<td><input type="text" required="required" /></td>
+					<td class="error">Error</td>
+				</tr>
+				<tr>
+					<td /><td /><td><input type="text" /></td><td />
+				</tr>
+				<tr>
+					<td>City</td>
+					<td class="rd">*</td>
+					<td><input type="text" required="required" /></td>
+					<td class="error">Error</td>
+				</tr>
+				<tr>
+					<td>Postal code</td>
+					<td class="rd">*</td>
+					<td><input type="text" required="required" /></td>
+					<td class="error">Error</td>
+				</tr>
+				<tr>
+					<td>Condition</td>
+					<td />
+					<td><input type="text" /></td>
+					<td />
+				</tr>
+				<tr>
+					<td>VAT number</td>
+					<td />
+					<td><input type="text" /></td>
+					<td />
+				</tr>
+				<tr>
+					<td>Country</td>
+					<td />
+					<td><select><option>Countries</option></select></td>
+					<td />
+				</tr>
+				<tr>
+					<td>Phone</td>
+					<td class="rd">*</td>
+					<td><input type="text" required="required" /></td>
+					<td class="error">Error</td>
+				</tr>
+				<tr>
+					<td /><td /><td><button type="submit" th:text="#{login.join_now}" >Submit</button></td><td />
+				</tr>
+			</table>
+		</form>
+	</div>
+	<div th:replace="fragments/footer :: footer">Footer</div>
+</body>
+</html>

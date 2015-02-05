@@ -46,7 +46,7 @@
 										 th:errorclass="error" />
 							</td>
 						</tr>
-						<tr  th:if="${#fields.hasErrors('repassword')}" >
+						<tr th:if="${#fields.hasErrors('repassword')}" >
 							<td class="error"><span  th:errors="*{repassword}">Confirm password Error</span></td>
 						</tr>
 						<tr>
@@ -60,7 +60,7 @@
 										 th:errorclass="error" />
 							</td>
 						</tr>
-						<tr  th:if="${#fields.hasErrors('firstName')}" >
+						<tr th:if="${#fields.hasErrors('firstName')}" >
 							<td class="error"><span  th:errors="*{firstName}">First name Error</span></td>
 						</tr>
 						<tr>
