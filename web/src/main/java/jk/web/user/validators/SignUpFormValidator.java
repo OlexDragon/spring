@@ -3,6 +3,7 @@ package jk.web.user.validators;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import jk.web.user.Business;
@@ -65,10 +66,24 @@ public class SignUpFormValidator implements Validator {
 	private void validate(Business business, Errors errors){
 		siteAddrValidation(business.getSite(), errors);
 		eMailValidation(errors, business);
+		phoneValidation(errors, business);
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "countriesOfActivity", "address.select_country");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "post", "SignUpFormValidator.this_field_must_be_filled");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "city", "SignUpFormValidator.this_field_must_be_filled");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "address1", "SignUpFormValidator.this_field_must_be_filled");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "postalcode", "SignUpFormValidator.this_field_must_be_filled");
+	}
+
+	public static final String PHONE_REDEX = "^\\(?([0-9]{3})\\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$";
+	private void phoneValidation(Errors errors, Business business) {
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "phone", "SignUpFormValidator.this_field_must_be_filled");
+		if(errors.getFieldError("phone")==null){
+			String phone = business.getPhone();
+			Pattern pattern = Pattern.compile(PHONE_REDEX);  
+			Matcher matcher = pattern.matcher(phone);  
+			if(!matcher.matches())
+				errors.rejectValue("phone", "SignUpFormValidator.this_field_must_be_filled", new String[]{"email address"}, "not valid");
+		}
 	}
 
 	private void eMailValidation(Errors errors, Business business) {
@@ -162,7 +177,7 @@ public class SignUpFormValidator implements Validator {
 		logger.entry("\n\t", eMail, "\n\t", userWorker);
 
 		final String fieldName = "eMail";
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, fieldName, "SignUpFormValidator.please_write_a_valid_email_address");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, fieldName, "SignUpFormValidator.please_write_a_valid_X");
 		if(errors.getFieldError(fieldName)==null){
 			if(emailPattern.matcher(eMail).matches()){
 				EMailEntity eMailEntity = userWorker.getEMail(eMail);
@@ -170,7 +185,7 @@ public class SignUpFormValidator implements Validator {
 					errors.rejectValue(fieldName, "SignUpFormValidator.this_email_already_exists", "Exists");
 			}else{
 				logger.trace("\n\t email '{}' does not mach the patern:\n\t{}", eMail, emailPattern);
-				errors.rejectValue(fieldName, "SignUpFormValidator.please_write_a_valid_email_address", "Not valid");
+				errors.rejectValue(fieldName, "SignUpFormValidator.please_write_a_valid_X", "Not valid");
 			}
 		}
 		return logger.exit(errors.getFieldError(fieldName)==null);// no error

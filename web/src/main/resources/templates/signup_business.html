@@ -44,7 +44,7 @@
 					<td>Main country of activity</td>
 					<td class="rd">*</td>
 					<td><select th:field="*{countriesOfActivity}"><option th:replace="fragments/user/address :: countries_options">Countries</option></select></td>
-					<td class="error">Error</td>
+					<td class="error"><span th:if="${#fields.hasErrors('countriesOfActivity')}" th:errors="*{countriesOfActivity}">Confirm password Error</span></td>
 				</tr>
 				<tr>
 					<td>Personal data</td><td /><td /><td />

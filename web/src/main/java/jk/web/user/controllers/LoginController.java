@@ -66,9 +66,9 @@ public class LoginController {
 	public String resetPassword(@Param(value = "eMail") String eMail, Model model) throws NoSuchMessageException, UnsupportedEncodingException{
 		logger.entry(eMail);
 		eMail = eMail.toLowerCase();
+		Locale locale = userWorker.getLocale();
 		if(eMail.matches("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")){
 			UserEntity userEntity = userWorker.getUserEntityByEMail(eMail);
-			Locale locale = userWorker.getLocale();
 			if(userEntity!=null) {
 				eMailWorker.sendEMail(
 									eMail,
@@ -90,7 +90,15 @@ public class LoginController {
 				model.addAttribute("errorMessage", "LoginController.email_not_exists");
 		}else{
 			model.addAttribute("eMail", eMail);
-			model.addAttribute("errorMessage", "SignUpFormValidator.please_write_a_valid_email_address");
+			model.addAttribute(
+					"errorMessage",
+					applicationContext.getMessage(
+												"SignUpFormValidator.please_write_a_valid_X",
+												new String[]{"email address"},
+												"Not valid",
+												locale
+					)
+			);
 		}
 
 		return "forgot_password";
