@@ -324,7 +324,7 @@ td.error, p.error{
      outline-color: transparent;
 }
 .cntr, td.error{
-	text-align: center;
+	text-align: left;
 }
 #footer{
 	border-top: thick solid #444;
