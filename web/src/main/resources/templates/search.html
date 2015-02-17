@@ -15,8 +15,8 @@
 	<div id="contents">
 		<div class="search">
 			<div class="search_contaner">
-				<form name="searchForm" action="#">
-					<input type="text" id="keywords" placeholder="Search..." th:placeholder="#{search}+'...'" />
+				<form id="searchForm" action="#">
+					<input type="text" id="keywords" placeholder="Search..." th:placeholder="#{search}+'...'" required="required" />
 					<input type="text" id="location" placeholder="location..." th:placeholder="#{location}+'...'" />
 					<button type="submit" th:text="#{search}">Search</button>
 				</form>
@@ -33,32 +33,61 @@
 				<ul id="srcg_rslt"></ul>
 			</div>
 			<script type="text/javascript">
-				$('.search a').click(
-						function() {
-							$('.active').removeClass('active');
-							$(this).addClass('active');
-							$('#srch_count').empty();
-							$('#srcg_rslt> li').remove();
-							$.ajax({
-								url : '/search/' + this.text,
-								type : 'POST',
 
-								success : function(data) {
-									$.each(data, function(index, value) {
-										if (value.categoryId == 0) {
-											$('#srch_count').text(
-													value.categoryName);
-										} else {
-											$('<li></li>').text(
-													value.categoryName)
-													.appendTo('#srcg_rslt');
-										}
-									});
+				$('.search a').on('click', function(e) {
 
+					e.preventDefault();
+					$('.active').removeClass('active');
+					$(this).addClass('active');
+					$('#srch_count').empty();
+					$('#srcg_rslt> li').remove();
+					$.ajax({
+						url : '/search/' + this.text,
+						type : 'POST',
+
+						success : function(data) {
+							$.each(data, function(index, value) {
+								if (value.categoryId == 0) {
+									$('#srch_count').text(
+											value.categoryName);
+								} else {
+									$('<li></li>').text(
+											value.categoryName)
+											.appendTo('#srcg_rslt');
 								}
 							});
-							return false;
-						});
+						}
+					});
+				});
+
+				$('#searchForm').on('submit', function(e){
+
+					e.preventDefault();
+					var keywords = $('#keywords').val();
+					if(keywords){
+						keywords = $.trim(keywords);
+						if(keywords.length!=0){
+							var data = 'keywords:'+keywords;
+							var location = $('#location').val();
+							if(location){
+								location = $.trim(location);
+								if(location.length!=0){
+									data = data + ',location:'+location;
+								}
+							}
+							alert(data);
+							$.ajax({
+								url : '/careerjet',
+								type : 'POST',
+								data : data ,
+
+								success : function(data) {
+									alert(data);
+								}
+							});
+						}
+					};
+				});
 			</script>
 		</div>
 	</div>

@@ -1,4 +1,4 @@
-package jk.web.workers.controllers;
+package jk.web.workers.search.controllers;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,24 +42,24 @@ public class CareerjetAPIController {
 		   if(location!=null)
 			   args.put("location", location);
 
-		   JSONObject results = (JSONObject) c.search(args);
-
-		   String type = (String)results.get("type");
-		   switch(type){
-		   case "JOBS":
-			   JSONArray jobs = (JSONArray) results.get("jobs");
-			   logger.trace("\n\t{}", jobs);
-			   break;
-		   case "LOCATIONS":
-		       JSONArray solvelocations = (JSONArray) results.get("solveLocations");
-			   logger.trace("\n\t{}", solvelocations);
-			   break;
-		   case "ERROR":
-			   logger.error("\n\t Error: {}", results.get("ERROR"));
-			   break;
-		   default:
-			   logger.trace("\n\t Type: {}", type);
-		   }
+//		   JSONObject results = (JSONObject) c.search(args);
+//
+//		   String type = (String)results.get("type");
+//		   switch(type){
+//		   case "JOBS":
+//			   JSONArray jobs = (JSONArray) results.get("jobs");
+//			   logger.trace("\n\t{}", jobs);
+//			   break;
+//		   case "LOCATIONS":
+//		       JSONArray solvelocations = (JSONArray) results.get("solveLocations");
+//			   logger.trace("\n\t{}", solvelocations);
+//			   break;
+//		   case "ERROR":
+//			   logger.error("\n\t Error: {}", results.get("ERROR"));
+//			   break;
+//		   default:
+//			   logger.trace("\n\t Type: {}", type);
+//		   }
 
 		return null;
 	}
