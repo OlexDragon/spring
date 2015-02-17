@@ -18,7 +18,8 @@ public interface LoginRepository  extends JpaRepository<LoginEntity, Long>  {
 		CREDENTIALS_EXPIRED	(1<<3),
 		DISABLED			(1<<4),
 		ACCOUNT_EXPIRED		(1<<5),
-		NEW					(1<<6);
+		NEW					(1<<6),
+		BUSINESS			(1<<7);
 
 		private long permission;
 

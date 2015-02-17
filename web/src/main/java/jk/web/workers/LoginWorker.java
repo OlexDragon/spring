@@ -11,6 +11,7 @@ import jk.web.user.entities.EMailEntity.EMailStatus;
 import jk.web.user.entities.LoginEntity;
 import jk.web.user.repository.EMailRepository;
 import jk.web.user.repository.LoginRepository;
+import jk.web.user.repository.LoginRepository.Permission;
 import jk.web.workers.UserWorker.ConfirmationStaus;
 
 import org.apache.logging.log4j.LogManager;
@@ -36,6 +37,14 @@ public class LoginWorker {
 
 	protected Locale locale;
 	protected ConfirmationStaus eMailStatus;
+
+	public LoginEntity createNewLoginEntity(String username, String password, Permission permission) {
+		LoginEntity le = new LoginEntity();
+		le.setPassword(passwordEncoder.encode(password));
+		le.setUsername(username);
+		le.setPermissions(permission);
+		return save(le);
+	}
 
 	public LoginEntity getLoginEntity(String username) {
 		return loginRepository.findByUsername(username);
@@ -98,8 +107,8 @@ public class LoginWorker {
 		return eMailRepository.findByEMail(eMail);
 	}
 
-	public void saveEMail(EMailEntity eMailEntity) {
-		eMailRepository.save(eMailEntity);
+	public EMailEntity saveEMail(EMailEntity eMailEntity) {
+		return eMailRepository.save(eMailEntity);
 	}
 
 	public LoginEntity saveEMail(String username, String eMail) {
@@ -208,7 +217,7 @@ public class LoginWorker {
 		logger.entry(loginEntity, eMail);
 
 		boolean added;
-		EMailEntity eMailEntity = new EMailEntity().setIdUsers(loginEntity.getId()).setEMail(eMail);
+		EMailEntity eMailEntity = new EMailEntity().setUserId(loginEntity.getId()).setEMail(eMail);
 
 		List<EMailEntity> emails = loginEntity.getEmails();
 		if(emails==null){

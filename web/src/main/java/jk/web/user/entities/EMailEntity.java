@@ -69,7 +69,7 @@ public class EMailEntity implements Serializable {
         return idUsers;
     }
 
-    public EMailEntity setIdUsers(Long idUsers) {
+    public EMailEntity setUserId(Long idUsers) {
         this.idUsers = idUsers;
         return this;
     }

@@ -137,8 +137,8 @@ public class AddressEntity implements Serializable {
 		return type;
 	}
 
-	public AddressEntity setType(AddressType type) {
-		this.type = type;
+	public AddressEntity setType(AddressType addressType) {
+		this.type = addressType;
 		return this;
 	}
 

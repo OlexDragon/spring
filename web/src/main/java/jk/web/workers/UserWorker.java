@@ -10,12 +10,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import javax.xml.bind.PropertyException;
+
 import jk.web.user.Address;
 import jk.web.user.Address.AddressStatus;
 import jk.web.user.Address.AddressType;
 import jk.web.user.User;
 import jk.web.user.User.Gender;
 import jk.web.user.entities.AddressEntity;
+import jk.web.user.entities.BusinessEntity;
 import jk.web.user.entities.CountryEntity;
 import jk.web.user.entities.EMailEntity;
 import jk.web.user.entities.EMailEntity.EMailStatus;
@@ -26,6 +29,8 @@ import jk.web.user.entities.RegionEntityPK;
 import jk.web.user.entities.TitleEntity;
 import jk.web.user.entities.UserEntity;
 import jk.web.user.entities.WorkplaceEntity;
+import jk.web.user.repository.BusinessRepository;
+import jk.web.user.repository.LoginRepository.Permission;
 import jk.web.user.repository.TitleRepository;
 import jk.web.user.repository.UserRepository;
 import jk.web.user.social.SocialRepository;
@@ -44,6 +49,8 @@ public class UserWorker extends LoginWorker{
 
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private BusinessRepository bisinessRepository;
 	@Autowired
 	private TitleRepository titleRepository;
 	@Autowired
@@ -74,6 +81,14 @@ public class UserWorker extends LoginWorker{
 			}
 		}
 		return userEntity;
+	}
+
+	@Override
+	public LoginEntity save(LoginEntity loginEntity) {
+		LoginEntity le = super.save(loginEntity);
+		userEntity = new UserEntity(le.getId());
+		userEntity.setLoginEntity(loginEntity);
+		return le;
 	}
 
 	public UserEntity getUserEntity() {
@@ -155,6 +170,25 @@ public class UserWorker extends LoginWorker{
 		LoginEntity loginEntity = super.saveEMail(username, eMail);
 		userEntity.setLoginEntity(loginEntity);
 		return loginEntity;
+	}
+
+	public void saveEMail(String eMail){
+		if(userEntity!=null) {
+			LoginEntity loginEntity = userEntity.getLoginEntity();
+			List<EMailEntity> emails = loginEntity.getEmails();
+			EMailEntity ee = new EMailEntity().setEMail(eMail);
+			if(emails==null){
+				emails = new ArrayList<>();
+				loginEntity.setEmails(emails);
+			}
+			if(emails.isEmpty() || !emails.contains(ee)){
+				ee.setUserId(userEntity.getId());
+				ee.setStatus(EMailStatus.TO_CONFIRM);
+				saveEMail(ee);
+			}else
+				logger.trace("\n\tE-mail {} already exists.", eMail);
+		}else
+			throw new NullPointerException("The Field 'userEntity' is null");
 	}
 
 	public void setProfessionalSkill(String professionalSkill) {
@@ -491,5 +525,17 @@ public class UserWorker extends LoginWorker{
 	public String getCountryCode(AddressType addressType) {
 		AddressEntity addressEntity = getAddressEntity(addressType);
 		return addressEntity!=null ? addressEntity.getCountryCode() : null;
+	}
+
+	public void saveBusinessEntity(BusinessEntity businessEntity) throws PropertyException {
+		logger.entry(businessEntity);
+		if(userEntity!=null && businessEntity!=null){
+			BusinessEntity be = userEntity.getBusinessEntity();
+			if(be==null)
+				userEntity.setBusinessEntity(bisinessRepository.save(businessEntity.setUserID(userEntity.getId())));
+			else
+				throw new PropertyException("businessEntity for this user olready exist");
+		}else
+			throw new NullPointerException("'userEntity' or 'businessEntity' equals null");
 	}
 }
