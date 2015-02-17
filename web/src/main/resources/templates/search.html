@@ -67,15 +67,15 @@
 					if(keywords){
 						keywords = $.trim(keywords);
 						if(keywords.length!=0){
-							var data = 'keywords:'+keywords;
+							var data = {};
+							data['keywords'] = keywords;
 							var location = $('#location').val();
 							if(location){
 								location = $.trim(location);
 								if(location.length!=0){
-									data = data + ',location:'+location;
+									data['location'] = location;
 								}
 							}
-							alert(data);
 							$.ajax({
 								url : '/careerjet',
 								type : 'POST',
