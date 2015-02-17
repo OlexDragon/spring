@@ -95,6 +95,10 @@ public class UserEntity implements Serializable {
     @JoinColumn(name = "logins_loginID", referencedColumnName = "loginID", nullable = false, insertable = false, updatable = false)
     private LoginEntity loginEntity;
 
+    @OneToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "logins_loginID", nullable = true, insertable = true, updatable = true)
+    private BusinessEntity businessEntity;
+
     public UserEntity() {
     }
 
@@ -215,6 +219,14 @@ public class UserEntity implements Serializable {
 
 	public void setWorkplaces(List<WorkplaceEntity> workplaces) {
 		this.workplaces = workplaces;
+	}
+
+	public BusinessEntity getBusinessEntity() {
+		return businessEntity;
+	}
+
+	public void setBusinessEntity(BusinessEntity businessEntity) {
+		this.businessEntity = businessEntity;
 	}
 
 	@Override

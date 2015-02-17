@@ -3,7 +3,7 @@
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-<title th:text="#{__${title}__}">Message</title>
+<title th:text="${title}">Message</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<link th:replace="fragments/header :: links" rel="stylesheet" type="text/css" href="../static/css/jk.css" th:href="@{/css/jk.css}" />
 </head>
@@ -11,8 +11,8 @@
 	<div id="header" th:replace="fragments/header :: pageHeader">Header</div>
 	<div id="menuDiv"  th:replace="fragments/menu :: menu" >Menu</div>
 	<div id="contentsDiv" class="cntr p3">
-		<p th:text="#{${message}}">message</p>
-		<p th:utext="#{${contents}}">contents</p>
+		<p th:text="${message}">message</p>
+		<p th:utext="${contents}">contents</p>
 	</div>
 <div th:replace="fragments/footer :: footer">Footer</div>
 </body>

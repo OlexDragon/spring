@@ -1,9 +1,18 @@
 package jk.web.user;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 public class Business extends User {
 
+	public static final int POST_MAX_SIZE = 250;
+	@NotNull
+	@Size(min=8, max = 245)
 	private String site;
-	private String countriesOfActivity;
+	@NotNull
+	@Size(max=3, min=3)
+	private String countryOfActivity;
+	@Size(max = POST_MAX_SIZE, message="SignUpForm.between_6_and_64_characters")
 	private String post;
 	private String condition;
 	private String address1;
@@ -12,7 +21,7 @@ public class Business extends User {
 	private String country;
 	private String postalcode;
 	private String confirmEmail;
-	private String vatNumber;
+	private Long vatNumber;
 	private String company;
 	private String phone;
 
@@ -22,11 +31,11 @@ public class Business extends User {
 	public void setSite(String site) {
 		this.site = site;
 	}
-	public String getCountriesOfActivity() {
-		return countriesOfActivity;
+	public String getCountryOfActivity() {
+		return countryOfActivity;
 	}
-	public void setCountriesOfActivity(String countriesOfActivity) {
-		this.countriesOfActivity = countriesOfActivity;
+	public void setcountryOfActivity(String countryOfActivity) {
+		this.countryOfActivity = countryOfActivity;
 	}
 	public String getPost() {
 		return post;
@@ -70,10 +79,10 @@ public class Business extends User {
 	public void setCountry(String country) {
 		this.country = country;
 	}
-	public String getVatNumber() {
+	public Long getVatNumber() {
 		return vatNumber;
 	}
-	public void setVatNumber(String vatNumber) {
+	public void setVatNumber(Long vatNumber) {
 		this.vatNumber = vatNumber;
 	}
 	public String getPhone() {
@@ -96,7 +105,7 @@ public class Business extends User {
 	}
 	@Override
 	public String toString() {
-		return "Business [site=" + site + ", countriesOfActivity=" + countriesOfActivity + ", post=" + post + ", condition=" + condition + ", address1=" + address1
+		return "Business [site=" + site + ", countryOfActivity=" + countryOfActivity + ", post=" + post + ", condition=" + condition + ", address1=" + address1
 				+ ", address2=" + address2 + ", city=" + city + ", country=" + country + ", postalcode=" + postalcode + ", confirmEmail=" + confirmEmail + ", vatNumber="
 				+ vatNumber + ", company=" + company + ", phone=" + phone + ", getUsername()=" + getUsername() + ", getTitle()=" + getTitle() + ", getFirstName()="
 				+ getFirstName() + ", getLastName()=" + getLastName() + ", getPassword()=" + getPassword() + ", getRepassword()=" + getRepassword()

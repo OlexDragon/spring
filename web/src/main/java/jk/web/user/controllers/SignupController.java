@@ -11,10 +11,15 @@ import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.bind.PropertyException;
 
+import jk.web.user.Address.AddressStatus;
+import jk.web.user.Address.AddressType;
 import jk.web.user.Business;
 import jk.web.user.User;
 import jk.web.user.entities.ActivityEntity;
+import jk.web.user.entities.AddressEntity;
+import jk.web.user.entities.BusinessEntity;
 import jk.web.user.entities.EMailEntity;
 import jk.web.user.entities.EMailEntity.EMailStatus;
 import jk.web.user.entities.LoginEntity;
@@ -136,11 +141,55 @@ public class SignupController {
 		signUpFormValidator.validate(business, bindingResult);
 
 		if(bindingResult.hasErrors()){
-			addUsernamePasswordRange(model);
+			logger.trace("\n\tbindingResult.hasErrors() == true\n\t{}", bindingResult.getAllErrors());
 			return "signup_business";
 		}
 
-		return "signup_business";
+		//save Login Entity
+		LoginEntity le = userWorker.createNewLoginEntity(business.getUsername(), business.getNewPassword(), Permission.BUSINESS);
+
+		if(le.getId()!=null){
+
+			//save e-mail Entity
+			userWorker.saveEMail(business.getEMail());
+
+			//Fill User Entity
+			UserEntity ue = userWorker.getUserEntity();
+			ue.setFirstName(business.getFirstName());
+			ue.setLastName(business.getLastName());
+			userWorker.save();
+
+			//Create Business Entity
+			BusinessEntity be = new BusinessEntity();
+			be.setCompanyName(business.getCompany());
+			be.setCondition(business.getCondition());
+			be.setCountryOfActivity(business.getCountryOfActivity());
+			be.setSiteAddress(business.getSite());
+			be.setVATnumber(business.getVatNumber());
+			try {
+				userWorker.saveBusinessEntity(be);
+			} catch (PropertyException e) {
+				logger.catching(e);
+			}
+
+			//create Address Entity
+			AddressEntity ae = new AddressEntity();
+			ae.setUserId(le.getId());
+			String a = business.getAddress1();
+			if(business.getAddress2()!=null)
+				a += "\n"+business.getAddress2();
+			ae.setAddress(a);
+			ae.setCity(business.getCity());
+			ae.setCountryCode(business.getCountry());
+			ae.setPostalCode(business.getPostalcode());
+			ae.setType(AddressType.WORK);
+			ae.setStatus(AddressStatus.ACTIVE);
+			userWorker.saveAddress(ae);
+
+			logger.trace("\n\t{}\n\t{}\n\t{}", le, ue, ae);
+		}
+
+		return "message";
 	}
 
 	public void addUsernamePasswordRange(Model model) {

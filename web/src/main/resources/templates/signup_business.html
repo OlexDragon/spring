@@ -12,14 +12,20 @@
 	<div id="contents">
 		<h3 class="clrY">Please complete the form below to add your site to Fashion Pro Finder</h3>
 		<form method="post" th:object="${business}">
-			<table>
-				<tr>
+			<table><!--/*
+
+	--------- User name ---------
+
+			*/--><tr>
 					<td>Username</td>
 					<td class="rd">*</td>
 					<td><input type="text"  th:field="*{username}" required="required" /></td>
 					<td class="error"><span  th:if="${#fields.hasErrors('username')}" th:errors="*{username}">User name Error</span></td>
-				</tr>
-				<tr>
+				</tr><!--/*
+
+	--------- Posword ---------
+
+			*/--><tr>
 					<td>Password</td>
 					<td class="rd">*</td>
 					<td><input type="password" th:field="*{newPassword}"  required="required" /></td>
@@ -30,44 +36,67 @@
 					<td class="rd">*</td>
 					<td><input type="password" th:field="*{repassword}"  required="required" /></td>
 					<td class="error"><span th:if="${#fields.hasErrors('repassword')}" th:errors="*{repassword}">Confirm password Error</span></td>
-				</tr>
-				<tr>
+				</tr><!--/*
+
+	--------- Site Address ---------
+
+			*/--><tr>
 					<td>Site Address</td>
 					<td class="rd">*</td>
-					<td><input type="text" th:field="*{site}" placeholder="http://..."  required="required" /></td>
+					<td><input type="text" th:field="*{site}" placeholder="http://..." required="required" /></td>
 					<td class="error"><span th:if="${#fields.hasErrors('site')}" th:errors="*{site}">Confirm password Error</span></td>
 				</tr>
 				<tr>
 					<td /><td /><td>Example: http://www.fprof.com/</td><td />
-				</tr>
-				<tr>
+				</tr><!--/*
+
+	--------- Country of activity ---------
+
+			*/--><tr class="spaceUnder">
 					<td>Main country of activity</td>
 					<td class="rd">*</td>
-					<td><select th:field="*{countriesOfActivity}"><option th:replace="fragments/user/address :: countries_options">Countries</option></select></td>
-					<td class="error"><span th:if="${#fields.hasErrors('countriesOfActivity')}" th:errors="*{countriesOfActivity}">Confirm password Error</span></td>
+					<td>
+						<select th:field="*{countryOfActivity}">
+							<option th:value="null" th:text="#{Select}">Select</option>
+							<option th:each="c : ${T(jk.web.workers.AddressWorker).countries}" th:value="${c.value}" th:text="#{${c.value}}" th:attr="disabled=${c.disabled ? 'disabled' : null}"></option>
+						</select>
+					</td>
+					<td class="error"><span th:if="${#fields.hasErrors('countryOfActivity')}" th:errors="*{countryOfActivity}">Confirm password Error</span></td>
 				</tr>
 				<tr>
-					<td>Personal data</td><td /><td /><td />
-				</tr>
-				<tr>
+					<th class="clrY">Personal data</th><td /><td /><td />
+				</tr><!--/*
+
+	--------- First Name ---------
+
+			*/--><tr>
 					<td th:text="#{signup.firstName}">First Name</td>
 					<td class="rd">*</td>
 					<td><input type="text" th:field="*{firstName}" required="required" /></td>
 					<td class="error"><span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">First name Error</span></td>
-				</tr>
-				<tr>
+				</tr><!--/*
+
+	--------- Last name ---------
+
+			*/--><tr>
 					<td th:text="#{signup.lastName}">Last Name</td>
 					<td class="rd">*</td>
 					<td><input type="text" th:field="*{lastName}" required="required" /></td>
 					<td class="error"><span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Last name Error</span></td>
-				</tr>
-				<tr>
+				</tr><!--/*
+
+	--------- Post ---------
+
+			*/--><tr>
 					<td>Post</td>
-					<td class="rd">*</td>
-					<td><input type="text" th:field="*{post}" required="required" /></td>
+					<td />
+					<td><textarea rows="5" placeholder="Enter information about ..." style="width: 100%;" th:field="*{post}" th:maxlength="250"></textarea></td>
 					<td class="error"><span th:if="${#fields.hasErrors('post')}" th:errors="*{post}">Last name Error</span></td>
-				</tr>
-				<tr>
+				</tr><!--/*
+
+	--------- Email ---------
+
+			*/--><tr>
 					<td th:text="#{signup.eMail}">Email</td>
 					<td class="rd">*</td>
 					<td><input type="email" th:field="*{eMail}" required="required" /></td>
@@ -81,14 +110,20 @@
 				</tr>
 				<tr>
 					<th class="clrY">Your business</th><td /><td /><td />
-				</tr>
-				<tr>
+				</tr><!--/*
+
+	--------- Company name ---------
+
+			*/--><tr>
 					<td>Company name</td>
 					<td class="rd">*</td>
 					<td><input type="text" th:field="*{company}" required="required" /></td>
 					<td class="error"><span th:if="${#fields.hasErrors('company')}" th:errors="*{company}">email Error</span></td>
-				</tr>
-				<tr>
+				</tr><!--/*
+
+	--------- Address ---------
+
+			*/--><tr>
 					<td>Address</td>
 					<td class="rd">*</td>
 					<td><input type="text" th:field="*{address1}" required="required" /></td>
@@ -96,42 +131,65 @@
 				</tr>
 				<tr>
 					<td /><td /><td><input type="text" th:field="*{address2}" /></td><td />
-				</tr>
-				<tr>
+				</tr><!--/*
+
+	--------- City ---------
+
+			*/--><tr>
 					<td>City</td>
 					<td class="rd">*</td>
 					<td><input type="text" th:field="*{city}" required="required" /></td>
 					<td class="error"><span th:if="${#fields.hasErrors('city')}" th:errors="*{city}">email Error</span></td>
-				</tr>
-				<tr>
+				</tr><!--/*
+
+	--------- Postal code ---------
+
+			*/--><tr>
 					<td>Postal code</td>
 					<td class="rd">*</td>
 					<td><input type="text" th:field="*{postalcode}" required="required" /></td>
 					<td class="error"><span th:if="${#fields.hasErrors('postalcode')}" th:errors="*{postalcode}">email Error</span></td>
-				</tr>
-				<tr>
-					<td>Condition</td>
-					<td />
-					<td><input type="text" th:field="*{condition}" /></td>
-					<td />
-				</tr>
-				<tr>
-					<td>VAT number</td>
-					<td />
-					<td><input type="text" th:field="*{vatNumber}" /></td>
-					<td />
-				</tr>
-				<tr>
+				</tr><!--/*
+
+	--------- Country ---------
+
+			*/--><tr>
 					<td>Country</td>
+					<td class="rd">*</td>
+					<td>
+						<select th:field="*{country}">
+							<option th:value="null" th:text="#{Select}">Select</option>
+							<option th:each="c : ${T(jk.web.workers.AddressWorker).countries}" th:value="${c.value}" th:text="#{${c.value}}" th:attr="disabled=${c.disabled ? 'disabled' : null}"></option>
+						</select>
+					</td>
 					<td />
-					<td><select th:field="*{country}"><option th:replace="fragments/user/address :: countries_options">Countries</option></select></td>
-					<td />
-				</tr>
-				<tr>
+				</tr><!--/*
+
+	--------- Phone ---------
+
+			*/--><tr>
 					<td>Phone</td>
 					<td class="rd">*</td>
 					<td><input type="text" th:field="*{phone}" required="required" /></td>
 					<td class="error"><span th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">email Error</span></td>
+				</tr><!--/*
+
+	--------- Condition ---------
+
+			*/--><tr>
+					<td>Condition</td>
+					<td />
+					<td><input type="text" th:field="*{condition}" /></td>
+					<td />
+				</tr><!--/*
+
+	--------- VAT Number ---------
+
+			*/--><tr>
+					<td>VAT number</td>
+					<td />
+					<td><input type="number" th:field="*{vatNumber}" /></td>
+					<td />
 				</tr>
 				<tr>
 					<td /><td /><td><button type="submit" th:text="#{login.join_now}" >Submit</button></td><td />

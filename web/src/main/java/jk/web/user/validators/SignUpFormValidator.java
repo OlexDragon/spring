@@ -54,39 +54,37 @@ public class SignUpFormValidator implements Validator {
 		fieldValidation("firstName", user.getFirstName(), errors);
 		fieldValidation("lastName", user.getLastName(), errors);
 		passwordValidation(errors, user);
-		birthdayValidation(errors, user);
-		professionalSkillValidation(errors, user.getProfessionalSkill(), "professionalSkill");
-		professionalSkillValidation(errors, user.getWorkplace(), "workplace");
+//		birthdayValidation(errors, user);
+//		professionalSkillValidation(errors, user.getProfessionalSkill(), "professionalSkill");
+//		professionalSkillValidation(errors, user.getWorkplace(), "workplace");
 		eMailValidation(errors, user.getEMail());
-		genderValidation(errors, user);
+//		genderValidation(errors, user);
 		if(target instanceof Business)
 			validate((Business)target, errors);
 	}
 
 	private void validate(Business business, Errors errors){
-		siteAddrValidation(business.getSite(), errors);
-		eMailValidation(errors, business);
-		phoneValidation(errors, business);
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "countriesOfActivity", "address.select_country");
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "post", "SignUpFormValidator.this_field_must_be_filled");
+		siteAddrValidation("site", business.getSite(), errors);
+		eMailValidation(business, errors);
+		phoneValidation("phone", business.getPhone(), errors);
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "countryOfActivity", "address.select_country");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "city", "SignUpFormValidator.this_field_must_be_filled");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "address1", "SignUpFormValidator.this_field_must_be_filled");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "postalcode", "SignUpFormValidator.this_field_must_be_filled");
 	}
 
-	public static final String PHONE_REDEX = "^\\(?([0-9]{3})\\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$";
-	private void phoneValidation(Errors errors, Business business) {
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "phone", "SignUpFormValidator.this_field_must_be_filled");
-		if(errors.getFieldError("phone")==null){
-			String phone = business.getPhone();
+	public static final String PHONE_REDEX = "^\\(?(\\d{3})\\)?[-. ]?(\\d{3})[-. ]?(\\d{4})$";
+	private void phoneValidation(String fieldName, String phoneNumber, Errors errors) {
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, fieldName, "SignUpFormValidator.this_field_must_be_filled");
+		if(errors.getFieldError(fieldName)==null){
 			Pattern pattern = Pattern.compile(PHONE_REDEX);  
-			Matcher matcher = pattern.matcher(phone);  
+			Matcher matcher = pattern.matcher(phoneNumber);  
 			if(!matcher.matches())
-				errors.rejectValue("phone", "SignUpFormValidator.this_field_must_be_filled", new String[]{"email address"}, "not valid");
+				errors.rejectValue(fieldName, "SignUpFormValidator.please_write_a_valid_X", new String[]{"phone number"}, "not valid");
 		}
 	}
 
-	private void eMailValidation(Errors errors, Business business) {
+	private void eMailValidation(Business business, Errors errors) {
 		String eMail = business.getEMail();
 		String confirmEmail = business.getConfirmEmail();
 		logger.trace("\n\t eMail = {}\n\t confirmEmail = {}", eMail, confirmEmail);
@@ -96,13 +94,32 @@ public class SignUpFormValidator implements Validator {
 		}
 	}
 
-	private void siteAddrValidation(String site, Errors errors) {
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "site", "SignUpFormValidator.this_field_must_be_filled");
+	public boolean eMailValidation(Errors errors, String eMail) {
+		logger.entry("\n\t", eMail, "\n\t", userWorker);
 
-		if(errors.getFieldError("professionalSkill")==null){
-			site = site.toLowerCase();
-			if(site.startsWith("http") || site.length()<10)
-				errors.rejectValue("site", "SignUpFormValidator.this_field_must_be_filled");
+		final String fieldName = "eMail";
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, fieldName, "SignUpFormValidator.please_write_a_valid_X", new String[]{"e-mail"});
+		if(errors.getFieldError(fieldName)==null){
+			if(emailPattern.matcher(eMail).matches()){
+				EMailEntity eMailEntity = userWorker.getEMail(eMail);
+				if(eMailEntity!=null && (eMailEntity.getStatus()==EMailStatus.ACTIVE || eMailEntity.getStatus()==EMailStatus.TO_CONFIRM))
+					errors.rejectValue(fieldName, "SignUpFormValidator.this_email_already_exists", "Exists");
+			}else{
+				logger.trace("\n\t email '{}' does not mach the patern:\n\t{}", eMail, emailPattern);
+				errors.rejectValue(fieldName, "SignUpFormValidator.please_write_a_valid_X", new String[]{"e-mail"}, "Not valid");
+			}
+		}
+		return logger.exit(errors.getFieldError(fieldName)==null);// no error
+	}
+
+	public static final Pattern URL_PATTERN = Pattern.compile("\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
+	private void siteAddrValidation(String fieldName, String siteAddress, Errors errors) {
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, fieldName, "SignUpFormValidator.this_field_must_be_filled");
+
+		if(errors.getFieldError(fieldName)==null){
+			
+			if(!URL_PATTERN.matcher(siteAddress).matches())
+				errors.rejectValue(fieldName, "SignUpFormValidator.please_write_a_valid_X", new String[]{"site address"}, "Not Valid");
 		}
 	}
 
@@ -171,24 +188,6 @@ public class SignUpFormValidator implements Validator {
 			errors.rejectValue(fieldNamePassword, "SignUpFormValidator.these_X_dont_match", new String[]{"passwords"}, "These passwords do not match.");
 		}
 		return logger.exit(errors.getFieldError(fieldNamePassword)==null && errors.getFieldError(fieldNameConfirm)==null);// no error
-	}
-
-	public boolean eMailValidation(Errors errors, String eMail) {
-		logger.entry("\n\t", eMail, "\n\t", userWorker);
-
-		final String fieldName = "eMail";
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, fieldName, "SignUpFormValidator.please_write_a_valid_X");
-		if(errors.getFieldError(fieldName)==null){
-			if(emailPattern.matcher(eMail).matches()){
-				EMailEntity eMailEntity = userWorker.getEMail(eMail);
-				if(eMailEntity!=null && (eMailEntity.getStatus()==EMailStatus.ACTIVE || eMailEntity.getStatus()==EMailStatus.TO_CONFIRM))
-					errors.rejectValue(fieldName, "SignUpFormValidator.this_email_already_exists", "Exists");
-			}else{
-				logger.trace("\n\t email '{}' does not mach the patern:\n\t{}", eMail, emailPattern);
-				errors.rejectValue(fieldName, "SignUpFormValidator.please_write_a_valid_X", "Not valid");
-			}
-		}
-		return logger.exit(errors.getFieldError(fieldName)==null);// no error
 	}
 
 	public boolean birthdayValidation(Errors errors, User user){
