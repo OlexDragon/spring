@@ -52,6 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/signup/**",
 				"/confirm/**",
 				"/search/**",
+				"/careerjet/**",
 				"/css/**",
 				"/js/**",
 				"/images/**",
