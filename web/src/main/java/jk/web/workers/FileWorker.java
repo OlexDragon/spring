@@ -155,7 +155,7 @@ public class FileWorker {
 			file.mkdirs();
 	}
 
-	public Thread saveMap(File file, String address, String city, String regionsCode, String country, String postalCode) {
+	public Thread saveMap(final File file, final String address, final String city, final String regionsCode, final String country, final String postalCode) {
 		logger.entry(file, address, city, regionsCode, country, postalCode);
 		Thread t = new Thread(new Runnable() {
 			
