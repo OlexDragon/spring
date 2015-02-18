@@ -17,7 +17,7 @@
 			<div class="search_contaner">
 				<form id="searchForm" action="#">
 					<input type="text" id="keywords" placeholder="Search..." th:placeholder="#{search}+'...'" required="required" />
-					<input type="text" id="location" placeholder="location..." th:placeholder="#{location}+'...'" />
+					<input type="text" id="location" placeholder="location..." th:placeholder="#{location}+'...'" th:value="${location}" />
 					<button type="submit" th:text="#{search}">Search</button>
 				</form>
 				<p id="abc" class="search">
@@ -48,12 +48,9 @@
 						success : function(data) {
 							$.each(data, function(index, value) {
 								if (value.categoryId == 0) {
-									$('#srch_count').text(
-											value.categoryName);
+									$('#srch_count').text( value.categoryName);
 								} else {
-									$('<li></li>').text(
-											value.categoryName)
-											.appendTo('#srcg_rslt');
+									$('<li></li>').text( value.categoryName).appendTo('#srcg_rslt');
 								}
 							});
 						}
@@ -82,7 +79,10 @@
 								data : data ,
 
 								success : function(data) {
-									alert(data);
+									switch(data.type){
+									case "JOBS":
+										alert(data.type);
+									}
 								}
 							});
 						}
