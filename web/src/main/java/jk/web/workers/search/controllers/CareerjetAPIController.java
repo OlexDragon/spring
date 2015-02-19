@@ -33,6 +33,7 @@ public class CareerjetAPIController {
 	public ResponseEntity<JSONObject> search(
 									@RequestParam(value = "keywords") String keywords,
 									@RequestParam(value = "location", required=false) String location,
+									@RequestParam(value = "page", required=false) String page,
 									HttpServletRequest request,
 									HttpServletResponse response) throws JsonParseException, JsonMappingException, IOException{
 
