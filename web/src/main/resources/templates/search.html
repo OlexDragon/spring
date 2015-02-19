@@ -30,37 +30,11 @@
 					<a href="#">w</a> <a href="#">x</a> <a href="#">y</a> <a href="#">z</a>
 				</p>
 				<p id="srch_count"></p>
-				<ul id="srcg_rslt"></ul>
+				<ul id="srch_rslt"></ul>
 			</div>
 			<script type="text/javascript">
 			/*<![CDATA[*/
-				$('.search a').on('click', function(e) {
-
-					e.preventDefault();
-					$('.active').removeClass('active');
-					$(this).addClass('active');
-					$('#srch_count').empty();
-					$('#srcg_rslt> li').remove();
-					$.ajax({
-						url : '/search/' + this.text,
-						type : 'POST',
-
-						success : function(data) {
-							$.each(data, function(index, value) {
-								if (value.categoryId == 0) {
-									$('#srch_count').text( value.categoryName);
-								} else {
-									var caregories = $('#srcg_rslt').attr('nane', 'categories');
-									$('<li></li>').append( '<a href="#">'+value.categoryName+"</a>").appendTo(caregories);
-								}
-							});
-						}
-					});
-				});
-				$('ul[name=categories]').on('click', function(e){
-					e.preventDefault();
-					alert('yes');
-				});
+			$(function(){
 				$('#searchForm').on('submit', function(e){
 
 					e.preventDefault();
@@ -83,12 +57,14 @@
 								data : data ,
 
 								success : function(data) {
+									$('jobs').remove();
+									$('#srch_rslt> li').remove();
 									switch(data.type){
 									case "JOBS":
 										jobs(data);
 										break;
 									case "LOCATIONS":
-										alert(data);
+										locations(data.solveLocations);
 										break;
 									case "ERROR":
 										alert(data);
@@ -101,22 +77,51 @@
 						}
 					};
 				});
+				$('.search a').on('click', function(e) {
+
+					e.preventDefault();
+					$('.active').removeClass('active');
+					$(this).addClass('active');
+					$('#srch_count').empty();
+					$('#srch_rslt> li').remove();
+					$.ajax({
+						url : '/search/' + this.text,
+						type : 'POST',
+
+						success : function(data) {
+							$.each(data, function(index, value) {
+								if (value.categoryId == 0) {
+									$('#srch_count').text( value.categoryName);
+								} else {
+									var caregories = $('#srch_rslt').attr('name', 'categories');
+									$('<li></li>').append( '<a href="#">'+value.categoryName+"</a>").appendTo(caregories);
+								}
+							});
+							$('ul[name="categories"] a').on('click', function(e){
+								e.preventDefault();
+								$('#keywords').val(this.text);
+								$('#searchForm').submit();
+							});
+						}
+					});
+				});
 				function jobs(data){
 					jobsCount(data.hits);
 					jobsPages(data.pages);
 					jobsResults(data.jobs);
 				}
 				function jobsCount(hits){
-					if(hits){
-						$('#srch_count').text(hits+" results")
+					if(hits !== undefined){
+						$('#srch_count').attr('name', 'count').text(hits+" results");
 					}
 				}
 				function jobsPages(pages){
-					if(pages){
-						$('#srcg_rslt> li').remove();
-						for(var i=1; i <= pages; i++){
-							var tag = $('#srcg_rslt').attr('nane', 'pages');
-							$('<li></li>').append( '<a href="#">'+i+'</a>').appendTo(tag);
+					if(pages !== undefined){
+						if(pages > 1){
+							for(var i=1; i <= pages; i++){
+								var tag = $('#srch_rslt').attr('name', 'pages');
+								$('<li></li>').append( '<a href="#">'+i+'</a>').appendTo(tag);
+							}
 						}
 					}
 				}
@@ -124,7 +129,7 @@
 					if(jobs){
 						var length = jobs.length;
 						if(length>0){
-							var list = $('<ul></ul>').attr('name', 'jobs').insertAfter('#srcg_rslt');
+							var list = $('<ul></ul>').attr('id', 'jobs').insertAfter('#srch_rslt');
 
 							$.each(jobs, function( index, value) {
 
@@ -157,7 +162,18 @@
 						}
 					}
 				}
-				/*]]>*/
+				function locations(solveLocations){
+					if(solveLocations && solveLocations.length > 0){
+						$('#srch_count').attr('name', 'solveLocations').text('Solve Location');
+						var loc = $('#srch_rslt').attr('name', 'locations');
+						$.each(solveLocations, function( index, value) {
+							$('<li></li>').appendTo(loc).append('<a href="#">'+value.name+'</a>');
+						});
+					}else
+						alert('Impossible to find a location');
+				}
+			});
+			/*]]>*/
 			</script>
 		</div>
 	</div>
