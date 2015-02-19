@@ -8,7 +8,6 @@
 <meta name="viewport" content="width=device-width" />
 <link rel="stylesheet" type="text/css" href="../static/css/jk.css" th:href="@{/css/jk.css}" />
 <script src="../static/js/jquery-2.1.3.min.js" th:src="@{/js/jquery-2.1.3.min.js}"></script>
-<script src="../static/js/jquery-ui.min.js" th:src="@{/js/jquery-ui.min.js}"></script>
 </head>
 <body>
 	<div id="header" th:replace="fragments/header :: pageHeader">Header</div>
@@ -51,13 +50,17 @@
 								if (value.categoryId == 0) {
 									$('#srch_count').text( value.categoryName);
 								} else {
-									$('<li></li>').text( value.categoryName).appendTo('#srcg_rslt');
+									var caregories = $('#srcg_rslt').attr('nane', 'categories');
+									$('<li></li>').append( '<a href="#">'+value.categoryName+"</a>").appendTo(caregories);
 								}
 							});
 						}
 					});
 				});
-
+				$('ul[name=categories]').on('click', function(e){
+					e.preventDefault();
+					alert('yes');
+				});
 				$('#searchForm').on('submit', function(e){
 
 					e.preventDefault();
@@ -112,7 +115,8 @@
 					if(pages){
 						$('#srcg_rslt> li').remove();
 						for(var i=1; i <= pages; i++){
-							$('<li></li>').append( '<a href="#">'+i+'</a>').appendTo('#srcg_rslt');
+							var tag = $('#srcg_rslt').attr('nane', 'pages');
+							$('<li></li>').append( '<a href="#">'+i+'</a>').appendTo(tag);
 						}
 					}
 				}
@@ -125,7 +129,7 @@
 							$.each(jobs, function( index, value) {
 
 								var li = $('<li></li>').appendTo(list);
-								li.append('<a href="'+value.url+'">'+(value.company ? value.company : 'Go to site')+'</a>');
+								li.append('<a href="'+value.url+'" target="_blank">'+(value.company ? value.company : 'Go to site')+'</a>');
 								var sList = $('<ul></ul>').appendTo(li);
 								if(value.title){
 									$('<li></li>').appendTo(sList).append('<span>Title: </span>'+value.title);
@@ -142,8 +146,12 @@
 								if(value.description){
 									$('<li></li>').appendTo(sList).append('<span>Description: </span>'+value.description);
 								}
-								if(value.site){
-									$('<li></li>').appendTo(sList).append('<span>Site: </span><a href="'+value.site+'">'+value.site+'</a>');
+								var site = value.site;
+								if(site){
+									if(site.substr(0,3) != 'http'){
+										site = 'http://'+site;
+									}
+									$('<li></li>').appendTo(sList).append('<span>Site: </span><a href="'+site+'" target="_blank">'+value.site+'</a>');
 								}
 							});
 						}
