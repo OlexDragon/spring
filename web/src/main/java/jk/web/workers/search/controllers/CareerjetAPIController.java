@@ -36,7 +36,7 @@ public class CareerjetAPIController {
 	public ResponseEntity<JSONObject> search(
 									@RequestParam(value = "keywords") String keywords,
 									@RequestParam(value = "location", required=false) String location,
-									@RequestParam(value = "page", required=false) String page,
+									@RequestParam(value = "page", required=false) Integer page,
 									HttpServletRequest request,
 									HttpServletResponse response) throws JsonParseException, JsonMappingException, IOException{
 
@@ -51,6 +51,9 @@ public class CareerjetAPIController {
 			response.addCookie(new Cookie("location", location));
 		}
 
+		if(page != null && page > 0)
+			args.put("page", page);
+			
 		JSONObject results = (JSONObject) c.search(args);
 		logger.trace(results);
 
