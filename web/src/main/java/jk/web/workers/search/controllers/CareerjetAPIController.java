@@ -40,7 +40,7 @@ public class CareerjetAPIController {
 									HttpServletRequest request,
 									HttpServletResponse response) throws JsonParseException, JsonMappingException, IOException{
 
-		logger.entry(keywords, location);
+		logger.entry(keywords, location, page);
 //		Locale locale = localeResolver.resolveLocale(request);
 		Client c = new Client("en_CA");
 		Map<String, String> args = new HashMap<String, String>();
@@ -52,7 +52,7 @@ public class CareerjetAPIController {
 		}
 
 		if(page != null && page > 0)
-			args.put("page", page);
+			args.put("page", page.toString());
 			
 		JSONObject results = (JSONObject) c.search(args);
 		logger.trace(results);
