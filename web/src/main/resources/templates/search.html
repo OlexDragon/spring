@@ -18,7 +18,6 @@
 				<form id="searchForm" action="#">
 					<input type="text" id="keywords" placeholder="Search..." th:placeholder="#{search}+'...'" required="required" />
 					<input type="text" id="location" placeholder="location..." th:placeholder="#{location}+'...'" th:value="${location}" />
-					<input type="hidden" id="page" th:value="${page}" />
 					<button type="submit" th:text="#{search}">Search</button>
 				</form>
 				<p id="abc" class="search">
@@ -35,6 +34,7 @@
 			</div>
 			<script type="text/javascript">
 			/*<![CDATA[*/
+			var page;
 			$(function(){
 				$('#searchForm').on('submit', function(e){
 
@@ -42,7 +42,7 @@
 					var keywords = $('#keywords').val();
 					if(keywords){
 						keywords = $.trim(keywords);
-						if(keywords.length!=0){
+						if(keywords){
 							var data = {};
 							data['keywords'] = keywords;
 							var location = $('#location').val();
@@ -51,6 +51,9 @@
 								if(location.length!=0){
 									data['location'] = location;
 								}
+							}
+							if(page){
+								data[page] = page;
 							}
 							$.ajax({
 								url : '/careerjet',
@@ -123,9 +126,10 @@
 								var tag = $('#srch_rslt').attr('name', 'pages');
 								$('<li></li>').append( '<a href="#">'+i+'</a>').appendTo(tag);
 							}
-							$('ui[name="pages"] a').on('click', function(e){
+							$('ul[name="pages"] a').on('click', function(e){
 								e.preventDefault();
-								
+								page = this.text;
+								$('#searchForm').submit();
 							});
 						}
 					}
