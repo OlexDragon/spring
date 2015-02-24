@@ -1,206 +1,152 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	lang="en">
 <head>
-<title>Fashion PRO Finder</title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="viewport" content="width=device-width" />
-<link rel="stylesheet" type="text/css" href="../static/css/jk.css" th:href="@{/css/jk.css}" />
-<script src="../static/js/jquery-2.1.3.min.js" th:src="@{/js/jquery-2.1.3.min.js}"></script>
+<meta charset="UTF-8" />
+<title>FashionProFinder</title>
+
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+<link rel="stylesheet" href="../static/css/general.css"
+	th:href="@{css/general.css}" />
+<link rel="stylesheet" href="../static/css/normalize.css"
+	th:href="@{css/normalize.css}" />
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="../static/js/search.js" th:src="@{/js/search.js}"
+	type="text/javascript"></script>
 </head>
+<!--
+comments: 
+IE 11
+-->
 <body>
-	<div id="header" th:replace="fragments/header :: pageHeader">Header</div>
-	<div id="menuDiv" th:replace="fragments/menu :: menu">Menu</div>
-	<div id="contents">
+	<div class="container-fluid">
+		<div class="brand">FashionProFinder</div>
 		<div class="search">
-			<div class="search_contaner">
-				<form id="searchForm" action="#">
-					<input type="text" id="keywords" placeholder="Search..." th:placeholder="#{search}+'...'" required="required" />
-					<input type="text" id="location" placeholder="location..." th:placeholder="#{location}+'...'" th:value="${location}" />
-					<input type="hidden" id="page" />
-					<button type="submit" th:text="#{search}">Search</button>
-				</form>
-				<p id="abc" class="search">
-					<span>Fashion pro finder search by :</span> <a href="#">All</a> <a href="#">a</a> <a
-						href="#">b</a> <a href="#">c</a> <a href="#">d</a> <a href="#">e</a>
-					<a href="#">f</a> <a href="#">g</a> <a href="#">h</a> <a href="#">j</a>
-					<a href="#">k</a> <a href="#">l</a> <a href="#">m</a> <a href="#">n</a>
-					<a href="#">o</a> <a href="#">p</a> <a href="#">q</a> <a href="#">r</a>
-					<a href="#">s</a> <a href="#">t</a> <a href="#">u</a> <a href="#">v</a>
-					<a href="#">w</a> <a href="#">x</a> <a href="#">y</a> <a href="#">z</a>
-				</p>
-				<p id="srch_count"></p>
-				<ul id="srch_rslt"></ul>
+			<form action="#" class="form-inline">
+				<div class="form-group">
+					<input type="text" id="keywords" placeholder="Keywords..." /> <input
+						type="text" id="location" placeholder="Location..." />
+					<button type="submit" class="glyphicon glyphicon-search"></button>
+				</div>
+			</form>
+			<div id="abc" class="search">
+				<span>Fashion pro finder search by:</span> <a href="#">All</a>
+				 <a href="#">a</a> <a href="#">b</a> <a href="#">c</a> <a href="#">d</a>
+				<a href="#">e</a> <a href="#">f</a> <a href="#">g</a> <a href="#">h</a>
+				<a href="#">j</a> <a href="#">k</a> <a href="#">l</a> <a href="#">m</a>
+				<a href="#">n</a> <a href="#">o</a> <a href="#">p</a> <a href="#">q</a>
+				<a href="#">r</a> <a href="#">s</a> <a href="#">t</a> <a href="#">u</a>
+				<a href="#">v</a> <a href="#">w</a> <a href="#">x</a> <a href="#">y</a>
+				<a href="#">z</a>
 			</div>
-			<script type="text/javascript">
-			/*<![CDATA[*/
-			var page;
-			$(function(){
-				$('#searchForm').on('submit', function(e){
+			<div class="advance_search">
+				<div class="advance_search_btn">Advance Search</div>
+				<div class="clear"></div>
+				<div class="advance_search_panel">
+					<form id="" class="searchFormAdvance" action="#">
+						<select name="gender" id="gender">
+							<option value="">Any Gender</option>
+							<option value="male">Male</option>
+							<option value="female">Female</option>
+						</select> <select name="age" id="age">
+							<option value="">Any Age</option>
+							<option value="13">13 and Under</option>
+							<option value="14-17">14-17</option>
+							<option value="18-21">18-21</option>
+							<option value="22-34">22-34</option>
+							<option value="35-44">35-44</option>
+							<option value="45-54">45-54</option>
+							<option value="55-64">55-64</option>
+							<option value="65">65 and Over</option>
+						</select> <select name="job" id="job">
+							<option value="">Job Offer/Looking</option>
+							<option value="job-offer">Job Offer</option>
+							<option value="job-looking">Looking for Job</option>
+						</select> <select name="interest" id="environment">
+							<option value="">Any Environment</option>
+							<option value="bars/clubs">Bars/Clubs</option>
+							<option value="cinema">Cinema</option>
+							<option value="circus">Circus</option>
+							<option value="spas/salons">Spas/Salons</option>
+							<option value="out doors">Out Doors</option>
+							<option value="in doors">In Doors</option>
+							<option value="travail">Travail</option>
+						</select> <select name="interest" id="sort-by">
+							<option value="">Sort By</option>
+							<option value="ascending">Ascending</option>
+							<option value="descending">Descending</option>
+							<option value="latest">Latest</option>
+						</select> <select name="interest" id="results-per-page">
+							<option value="">Results Per Page</option>
+							<option value="10">10</option>
+							<option value="50">50</option>
+							<option value="100">100</option>
+							<option value="150">150</option>
+							<option value="200">200</option>
+						</select>
 
-					e.preventDefault();
-					var keywords = $('#keywords').val();
-					if(keywords){
-						keywords = $.trim(keywords);
-						if(keywords){
-							var data = {};
-							data['keywords'] = keywords;
-
-							var location = $('#location').val();
-							if(location){
-								location = $.trim(location);
-								if(location.length!=0){
-									data['location'] = location;
-								}
-							}
-
-							var page = $('#page').val();
-							if(page){
-								data['page'] = page;
-							}
-
-							$.ajax({
-								url : '/careerjet',
-								type : 'POST',
-								data : data ,
-
-								success : function(data) {
-									$('#jobs').remove();
-									$('#srch_rslt> li').remove();
-									switch(data.type){
-									case "JOBS":
-										jobs(data);
-										break;
-									case "LOCATIONS":
-										locations(data.solveLocations);
-										break;
-									case "ERROR":
-										alert(data);
-										break;
-									default:
-										alert(data);
-									}
-								}
-							});
-						}
-					};
-				});
-				function jobs(data){
-					jobsCount(data.hits);
-					jobsPages(data.pages);
-					jobsResults(data.jobs);
-				}
-				function jobsCount(hits){
-					if(hits !== undefined){
-						$('#srch_count').attr('name', 'count').text(hits+" results");
-					}
-				}
-				function jobsPages(pages){
-					if(pages !== undefined){
-						if(pages > 1){
-							for(var i=1; i <= pages; i++){
-								var tag = $('#srch_rslt').attr('name', 'pages');
-								var li = $('<li></li>').append( '<a href="#">'+i+'</a>').appendTo(tag);
-								var page = $('#page').val();
-								if((page && page==i) || (!page && i==1)){
-									li.addClass("selected");
-								}
-							}
-							$('#page').val('');
-							$('ul[name="pages"] a').on('click', function(e){
-								e.preventDefault();
-								$('#page').val(this.text);
-								$('#searchForm').submit();
-							});
-						}
-					}
-				}
-				function jobsResults(jobs){
-					if(jobs){
-						var length = jobs.length;
-						if(length>0){
-							var list = $('<ul></ul>').attr('id', 'jobs').insertAfter('#srch_rslt');
-
-							$.each(jobs, function( index, value) {
-
-								var li = $('<li></li>').appendTo(list);
-								li.append('<a href="'+value.url+'" target="_blank">'+(value.company ? value.company : 'Go to site')+'</a>');
-								var sList = $('<ul></ul>').appendTo(li);
-								if(value.title){
-									$('<li></li>').appendTo(sList).append('<span>Title: </span>'+value.title);
-								}
-								if(value.salary){
-									$('<li></li>').appendTo(sList).append('<span>Salary: </span>'+value.salary);
-								}
-								if(value.salary_currency_code){
-									$('<li></li>').appendTo(sList).append('<span>Salary currency code: </span>'+value.salary_currency_code);
-								}
-								if(value.locations){
-									$('<li></li>').appendTo(sList).append('<span>Locations: </span>'+value.locations);
-								}
-								if(value.description){
-									$('<li></li>').appendTo(sList).append('<span>Description: </span>'+value.description);
-								}
-								var site = value.site;
-								if(site){
-									if(site.substr(0,3) != 'http'){
-										site = 'http://'+site;
-									}
-									$('<li></li>').appendTo(sList).append('<span>Site: </span><a href="'+site+'" target="_blank">'+value.site+'</a>');
-								}
-							});
-						}
-					}
-				}
-				function locations(solveLocations){
-					if(solveLocations && solveLocations.length > 0){
-						$('#srch_count').attr('name', 'solveLocations').text('Select Location');
-						var loc = $('#srch_rslt').attr('name', 'locations');
-						$.each(solveLocations, function( index, value) {
-							$('<li></li>').appendTo(loc).append('<a href="#">'+value.name+'</a>');
-						});
-						$('ul[name="locations"] a').on('click', function(e){
-							e.preventDefault();
-							$('#location').val(this.text);
-							$('#searchForm').submit();
-						});
-					}else
-						alert('Impossible to find a location');
-				}
-			});
-			$('.search a').on('click', function(e) {
-
-				e.preventDefault();
-				$('.active').removeClass('active');
-				$(this).addClass('active');
-				$('#srch_count').empty();
-				$('#srch_rslt> li').remove();
-				$.ajax({
-					url : '/search/' + this.text,
-					type : 'POST',
-
-					success : function(data) {
-						$.each(data, function(index, value) {
-							if (value.categoryId == 0) {
-								$('#srch_count').text( value.categoryName);
-							} else {
-								var caregories = $('#srch_rslt').attr('name', 'categories');
-								$('<li></li>').append( '<a href="#">'+value.categoryName+"</a>").appendTo(caregories);
-							}
-						});
-						$('ul[name="categories"] a').on('click', function(e){
-							e.preventDefault();
-							$('#keywords').val(this.text);
-							$('#searchForm').submit();
-						});
-					}
-				});
-			});
-			/*]]>*/
-			</script>
+						<button type="submit" class="advance_search_submit">Submit
+							search</button>
+						<div class="clear"></div>
+					</form>
+				</div>
+			</div>
+			<p id="srch_count"></p>
+			<ul id="srch_rslt"></ul>
 		</div>
+
+
+		<div id="wrapMainBg"></div>
+		<img src="" id="mainBg" />
+
+		<footer>
+			Fashion PRO Finder® - <a href="#">About us</a> - <a href="#">Help</a>
+			- <a href="#">Search</a> - <a href="#">Sign Up</a>
+		</footer>
 	</div>
-	<div th:replace="fragments/footer :: footer">Footer</div>
+
+	<script th:inline="javascript">
+		$('.advance_search_btn').click(function() {
+			$('.advance_search_panel').toggle("slow");
+		});
+
+		datetoday = new Date();
+		timenow = datetoday.getTime();
+		datetoday.setTime(timenow);
+		thehour = datetoday.getHours();
+
+		if (thehour >= 18) {
+			// evening
+			$('#mainBg').attr('src',/*[[${'/images/background/5.jpg'}]]*/
+					'../static/images/background/5.jpg');
+		} else if (thehour >= 15) {
+			// afternoon
+			$('#mainBg').attr('src',/*[[${'/images/background/1.jpg'}]]*/
+					'../static/images/background/1.jpg');
+		} else if (thehour >= 12) {
+			// noon
+			$('#mainBg').attr('src',/*[[${'/images/background/3.jpg'}]]*/
+					'../static/images/background/3.jpg');
+		} else if (thehour >= 7) {
+			// morning
+			$('#mainBg').attr('src',/*[[${'/images/background/2.jpg'}]]*/
+					'../static/images/background/2.jpg');
+		} else if (thehour >= 0) {
+			// night
+			$('#mainBg').attr('src',/*[[${'/images/background/4.jpg'}]]*/
+					'../static/images/background/4.jpg');
+		} else {
+			// general
+			$('#mainBg').attr('src',/*[[${'/images/background/5.jpg'}]]*/
+					'../static/images/background/5.jpg');
+		}
+	</script>
+
+
+
 </body>
 </html>
