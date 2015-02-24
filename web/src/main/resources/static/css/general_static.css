@@ -1,11 +1,11 @@
 
 @font-face {
   font-family: 'DUBIEL';
-  src: url('/fonts/DUBIEL.eot'); /* IE9 Compat Modes */
-  src: url('/fonts/DUBIEL.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-       url('/fonts/DUBIEL.woff') format('woff'), /* Modern Browsers */
-       url('/fonts/DUBIEL.TTF')  format('truetype'), /* Safari, Android, iOS */
-       url('/fonts/DUBIEL.svg#svgFontName') format('svg'); /* Legacy iOS */
+  src: url('../fonts/DUBIEL.eot'); /* IE9 Compat Modes */
+  src: url('../fonts/DUBIEL.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../fonts/DUBIEL.woff') format('woff'), /* Modern Browsers */
+       url('../fonts/DUBIEL.TTF')  format('truetype'), /* Safari, Android, iOS */
+       url('../fonts/DUBIEL.svg#svgFontName') format('svg'); /* Legacy iOS */
 }
 
 
@@ -37,7 +37,7 @@ body { min-width:865px; }
 	z-index:-5000;
 }
 #wrapMainBg{
-	background-image: url('/images/background/pattern.png');   
+	background-image: url('../images/background/pattern.png');   
 	z-index:-4000; 
 }
 

@@ -30,7 +30,6 @@ import jk.web.user.entities.TitleEntity;
 import jk.web.user.entities.UserEntity;
 import jk.web.user.entities.WorkplaceEntity;
 import jk.web.user.repository.BusinessRepository;
-import jk.web.user.repository.LoginRepository.Permission;
 import jk.web.user.repository.TitleRepository;
 import jk.web.user.repository.UserRepository;
 import jk.web.user.social.SocialRepository;

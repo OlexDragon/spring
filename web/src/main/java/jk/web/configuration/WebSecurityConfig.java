@@ -54,6 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/search/**",
 				"/careerjet/**",
 				"/css/**",
+				"/fonts/**",
 				"/js/**",
 				"/images/**",
 				FileWorker.RESOURCE_HANDLER + FileWorker.PROFILE_URL + "**")
