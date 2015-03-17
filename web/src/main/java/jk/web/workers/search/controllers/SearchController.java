@@ -51,7 +51,7 @@ public class SearchController {
 		return "message";
 	}
 
-	@RequestMapping(value="{startWith}", method = RequestMethod.POST)
+	@RequestMapping(value="categories/{startWith}", method = RequestMethod.POST)
 	public ResponseEntity<List<SearchCatgoriesEntity>> search(	@PathVariable String startWith){
 		logger.entry(startWith);
 
@@ -78,7 +78,7 @@ public class SearchController {
 //			categories.add(new SearchCatgoriesEntity(HTML_UL_LI_TAG, applicationContext.getMessage( "SearchController.find.try.keywords.general", null, "Try more general keywords." , locale)));
 			status = HttpStatus.NOT_FOUND;
 		}else{
-//			categories.add(0, new SearchCatgoriesEntity(HTML_P_TAG, applicationContext.getMessage( "SearchController.find.X_result_s", new String[]{Integer.toString(length)}, "Find "+length+" result" , locale)));
+			categories.add(0, new SearchCatgoriesEntity(0L, startWith));
 			status = HttpStatus.OK;
 		}
 

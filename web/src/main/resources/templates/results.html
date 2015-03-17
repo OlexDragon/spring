@@ -181,7 +181,7 @@ IE11
 
 						<div id="result" th:remove="body">
 							<p id="srch_count" name="count" class="breaker">2 results</p>
-							<ul id="pages" class="list-inline pagination">
+							<ul id="srch_rslt" class="list-inline pagination" name="pages">
 								<li class="active"><a href="#">1</a></li>
 								<li><a href="#">2</a></li>
 								<li><a href="#">3</a></li>
@@ -374,111 +374,105 @@ IE11
 			- <a href="#">Search</a> - <a href="#">Sign Up</a>
 		</footer>
 	</div>
-	<script type="text/javascript" th:inline="javascript">
+	<script type="text/javascript" th:remove="ALL">
+		$(function() {
+			var thehour = new Date().getHours();
+
+			if (thehour >= 18) {
+				// evening
+				$('#mainBg').attr('src','../static/images/background/20.jpg');
+			} else if (thehour >= 15) {
+				// afternoon
+				$('#mainBg').attr('src','../static/images/background/19.jpg');
+			} else if (thehour >= 12) {
+				// noon
+				$('#mainBg').attr('src','../static/images/background/18.jpg');
+			} else if (thehour >= 7) {
+				// morning
+				$('#mainBg').attr('src','../static/images/background/21.jpg');
+			} else if (thehour >= 0) {
+				// night
+				$('#mainBg').attr('src','../static/images/background/20.jpg');
+			} else {
+				// general
+				$('#mainBg').attr('src','../static/images/background/18.jpg');
+			}
+		});
+	</script>
+	<script th:inline="javascript">
 	/*<![CDATA[*/
-	$(function() {
-/*[-*/	var thehour = new Date().getHours();
+/*[-
+	Function to show 'Advance Search Panel'
 
-		if (thehour >= 18) {
-			// evening
-			$('#mainBg').attr('src','../static/images/background/20.jpg');
-		} else if (thehour >= 15) {
-			// afternoon
-			$('#mainBg').attr('src','../static/images/background/19.jpg');
-		} else if (thehour >= 12) {
-			// noon
-			$('#mainBg').attr('src','../static/images/background/18.jpg');
-		} else if (thehour >= 7) {
-			// morning
-			$('#mainBg').attr('src','../static/images/background/21.jpg');
-		} else if (thehour >= 0) {
-			// night
-			$('#mainBg').attr('src','../static/images/background/20.jpg');
-		} else {
-			// general
-			$('#mainBg').attr('src','../static/images/background/18.jpg');
-		}
-
-	//Function to show 'Advance Search Panel'
-
-/*-]*/	var page;
+-]*/$(function() {
+		var page;
 		$('.advance_search_btn').click(function() {
 			$('.advance_search_panel').toggle("slow");
 		});
-/*[-*/
-		//Function for <div id="abc">...</div>
+/*[-
+		Function for <div id="abc">...</div>
 
-/*-]*/$('#abc a')
-		.on(
-			'click',
-			function(e) {
-				$('#categories').hide();
-				e.preventDefault();
-				if($(this).attr('class')=='empty')
-					return;
-				$('#abc .active').removeAttr('class');
-				$(this).addClass('active');
-				/*[-*/$('#categories').show();/*-]*/
-				/*[+ $('#categories').empty();
-				$.ajax({
+-]*/$('#abc a')
+			.on(
+				'click',
+				function(e) {
+					e.preventDefault();
+					if($(this).attr('class')=='empty')
+						return;
+					$('#abc .active').removeAttr('class');
+					$(this).addClass('active');
+					/*[-*/$('#categories').toggle("slow");/*-]*/
+					/*[+ $('#categories').empty();
+					$.ajax({
 						url : '/search/categories/' + this.text,
 						type : 'POST',
 
 					success : function(data) {
-					var uList = $('<ul></ul>').attr('name', 'categories');
-						$.each(data, function(index, value) {
-							if (value.categoryId == 0) {
-								var breaker =$('<p></p>').addClass('breaker').text(value.categoryName);
-								breaker.appendTo($('#categories')).after(uList);
-							} else {
-								uList.append($('<li></li>')
-									.append(
-												$('<a></a>').attr('href', '#').text(value.categoryName)
-									)
-								);
-							}
-						});
-						$('#categories').show();
-						$('#categories a').on('click',
-							function(e) {
-								e.preventDefault();
-								$('#keywords').val(this.text);
-								$('#searchForm').submit();
-						});
-					}
-				}); +]*/
-			});/*[-*/
+					$.each(data, function(index, value) {
+						if (value.categoryId == 0) {
+							var breaker = $('#categories').append('<p></p>').addClass('breaker').text(value.categoryName).after('<ul></ul>');
+						} else {
+							var caregories = $('#srch_rslt').attr(
+									'name', 'categories');
+							$('<li></li>').append(
+									'<a href="#">' + value.categoryName
+											+ "</a>").appendTo(
+									caregories);
+						}
+					}); +]*/
+			});
+		$(function(){
+			$('#searchForm').on('submit', function(e){
 
-				//On Submit
-
-/*-]*/		$('#searchForm').on('submit', function(e){
 				e.preventDefault();
-				var wel =$('.welcome');
-				if(wel[0]!==undefined){
-					wel.removeClass('welcome').addClass('result');
-				}
-/*[+			var keywords = trim($('#keywords').val());
+				var keywords = $('#keywords').val();
 				if(keywords){
-					var data = {};
-					data['keywords'] = keywords;
+					keywords = $.trim(keywords);
+					if(keywords){
+						var data = {};
+						data['keywords'] = keywords;
 
-					var location = trim($('#location').val());
-					if(location.length!=0){
-						data['location'] = location;
-					}
+						var location = $('#location').val();
+						if(location){
+							location = $.trim(location);
+							if(location.length!=0){
+								data['location'] = location;
+							}
+						}
 
-					var page = $('#page').val();
-					if(page){
-						data['page'] = page;
-					}
+						var page = $('#page').val();
+						if(page){
+							data['page'] = page;
+						}
 
-					$.ajax({
-						url : '/careerjet',
-						type : 'POST',
-						data : data ,
+						$.ajax({
+							url : '/careerjet',
+							type : 'POST',
+							data : data ,
 
-						success : function(data) {
-								$('#result').empty();
+							success : function(data) {
+								$('#jobs').remove();
+								$('#srch_rslt> li').remove();
 								switch(data.type){
 								case "JOBS":
 									jobs(data);
@@ -495,7 +489,8 @@ IE11
 							}
 						});
 					}
-+]*/		});
+				}
+			});
 			function jobs(data) {
 				jobsCount(data.hits);
 				jobsPages(data.pages);
@@ -503,7 +498,8 @@ IE11
 			}
 			function jobsCount(hits) {
 				if (hits !== undefined) {
-					$('#result').append($('p').addClass('breaker').text( hits + " results" ));
+					$('#srch_count').attr('name', 'count').text(
+						hits + " results");
 				}
 			}
 			function jobsPages(pages) {
@@ -527,19 +523,128 @@ IE11
 					}
 				}
 			}
-			function trim(text){
-				if(text){
-					text = $.trim(text);
+			function jobsResults(jobs) {
+				if (jobs) {
+					var length = jobs.length;
+					if (length > 0) {
+						var list = $('<ul></ul>').attr('id', 'jobs').insertAfter('#srch_rslt');
+						$.each(	jobs,
+								function(index, value) {
+
+										var li = $('<li></li>').appendTo(
+												list);
+										li
+												.append('<a href="'+value.url+'" target="_blank">'
+														+ (value.company ? value.company
+																: 'Go to site')
+														+ '</a>');
+										var sList = $('<ul></ul>')
+												.appendTo(li);
+										if (value.title) {
+											$('<li></li>')
+													.appendTo(sList)
+													.append(
+															'<span>Title: </span>'
+																	+ value.title);
+										}
+										if (value.salary) {
+											$('<li></li>')
+													.appendTo(sList)
+													.append(
+															'<span>Salary: </span>'
+																	+ value.salary);
+										}
+										if (value.salary_currency_code) {
+											$('<li></li>')
+													.appendTo(sList)
+													.append(
+															'<span>Salary currency code: </span>'
+																	+ value.salary_currency_code);
+										}
+										if (value.locations) {
+											$('<li></li>')
+													.appendTo(sList)
+													.append(
+															'<span>Locations: </span>'
+																	+ value.locations);
+										}
+										if (value.description) {
+											$('<li></li>')
+													.appendTo(sList)
+													.append(
+															'<span>Description: </span>'
+																	+ value.description);
+										}
+										var site = value.site;
+										if (site) {
+											if (site.substr(0, 3) != 'http') {
+												site = 'http://' + site;
+											}
+											$('<li></li>')
+													.appendTo(sList)
+													.append(
+															'<span>Site: </span><a href="'+site+'" target="_blank">'
+																	+ value.site
+																	+ '</a>');
+								}
+						});
+					}
 				}
-				return text;
 			}
-/*[-*/		$('#categories a').on('click',
-				function(e) {
-					e.preventDefault();
-					$('#keywords').val(this.text);
-					$('#searchForm').submit();
+			function locations(solveLocations) {
+				if (solveLocations && solveLocations.length > 0) {
+					$('#srch_count').attr('name', 'solveLocations').text(
+						'Select Location');
+					var loc = $('#srch_rslt').attr('name', 'locations');
+					$.each(solveLocations, function(index, value) {
+						$('<li></li>').appendTo(loc).append(
+							'<a href="#">' + value.name + '</a>');
+					});
+					$('ul[name="locations"] a').on('click', function(e) {
+						e.preventDefault();
+						$('#location').val(this.text);
+						$('#searchForm').submit();
+					});
+				} else
+					alert('Impossible to find a location');
+			}
+		$('#categories a').on(
+			'click',
+			function(e) {
+
+				e.preventDefault();
+				$('#categories .active').removeAttr('class');
+				$(this).addClass('active');/*[-*/
+
+/*-]*/ /*[+ 	$('#srch_count').empty();
+				$('#srch_rslt> li').remove();
+				$.ajax({
+					url : '/search/' + this.text,
+					type : 'POST',
+
+					success : function(data) {
+						$.each(data, function(index, value) {
+							if (value.categoryId == 0) {
+								$('#srch_count').text(value.categoryName);
+							} else {
+								var caregories = $('#srch_rslt').attr(
+										'name', 'categories');
+								$('<li></li>').append(
+										'<a href="#">' + value.categoryName
+												+ "</a>").appendTo(
+										caregories);
+							}
+						});
+						$('ul[name="categories"] a').on('click',
+								function(e) {
+									e.preventDefault();
+									$('#keywords').val(this.text);
+									$('#searchForm').submit();
+								});
+					}
+				}); +]*/
 		});
-/*-]*/});
+	});
 	/*]]>*/
 	</script>
 </body>
