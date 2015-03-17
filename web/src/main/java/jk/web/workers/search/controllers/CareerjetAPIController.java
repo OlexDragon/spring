@@ -1,20 +1,25 @@
 package jk.web.workers.search.controllers;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import jk.web.workers.search.entities.repositories.SearchCatgoriesRepository;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.LocaleResolver;
@@ -22,9 +27,9 @@ import org.springframework.web.servlet.LocaleResolver;
 import com.careerjet.webservices.api.Client;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
+@RequestMapping("careerjet")
 public class CareerjetAPIController {
 
 	private final Logger logger = LogManager.getLogger();
@@ -32,31 +37,12 @@ public class CareerjetAPIController {
 	@Autowired
 	private LocaleResolver localeResolver;
 
-	@RequestMapping("/careerjet")
+	@RequestMapping
 	public ResponseEntity<JSONObject> search(
 									@RequestParam(value = "keywords") String keywords,
 									@RequestParam(value = "location", required=false) String location,
 									@RequestParam(value = "page", required=false) Integer page,
-									HttpServletRequest request,
 									HttpServletResponse response) throws JsonParseException, JsonMappingException, IOException{
-
-		logger.entry(keywords, location, page);
-//		Locale locale = localeResolver.resolveLocale(request);
-		Client c = new Client("en_CA");
-		Map<String, String> args = new HashMap<String, String>();
-		args.put("keywords", keywords);
-		args.put("affid", "14fa3cd725f3bba78dbcbb0ec638b98b");
-
-		if(location!=null){
-			args.put("location", location);
-			response.addCookie(new Cookie("location", location));
-		}
-
-		if(page != null && page > 0)
-			args.put("page", page.toString());
-			
-		JSONObject results = (JSONObject) c.search(args);
-		logger.trace(results);
 
 //		HashMap<?, ?> readValue = new ObjectMapper().readValue(
 //			"{"
@@ -277,6 +263,44 @@ public class CareerjetAPIController {
 //			   logger.trace("\n\t Type: {}", type);
 //		   }
 
+
+		JSONObject results = getSearchResult(keywords, location, page, response);
+
 		return logger.exit(new ResponseEntity<>(results,  HttpStatus.OK));
+	}
+
+	@RequestMapping("results")
+	public String searchResult(
+			@Param(value = "keywords") String keywords,
+			@Param(value = "location") String location,
+			HttpServletResponse response,
+			Model model){
+
+		JSONObject searchResult = getSearchResult(keywords, location, null, response);
+		Collection<?> values = searchResult.values();
+		model.addAttribute(values);
+
+		return "results";
+	}
+
+	private JSONObject getSearchResult(String keywords, String location, Integer page, HttpServletResponse response) {
+		logger.entry(keywords, location, page);
+//		Locale locale = localeResolver.resolveLocale(request);
+		Client c = new Client("en_CA");
+		Map<String, String> args = new HashMap<String, String>();
+		args.put("keywords", keywords);
+		args.put("affid", "14fa3cd725f3bba78dbcbb0ec638b98b");
+
+		if(location!=null){
+			args.put("location", location);
+			response.addCookie(new Cookie("location", location));
+		}
+
+		if(page != null && page > 0)
+			args.put("page", page.toString());
+			
+		JSONObject results = (JSONObject) c.search(args);
+		logger.trace(results);
+		return results;
 	}
 }
