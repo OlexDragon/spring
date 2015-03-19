@@ -3,13 +3,10 @@ package jk.web.workers.search.controllers;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-
-import jk.web.workers.search.entities.repositories.SearchCatgoriesRepository;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -289,7 +286,7 @@ public class CareerjetAPIController {
 		Client c = new Client("en_CA");
 		Map<String, String> args = new HashMap<String, String>();
 		args.put("keywords", keywords);
-		args.put("affid", "14fa3cd725f3bba78dbcbb0ec638b98b");
+//		args.put("affid", "14fa3cd725f3bba78dbcbb0ec638b98b");
 
 		if(location!=null){
 			args.put("location", location);

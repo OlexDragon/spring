@@ -100,7 +100,7 @@ body {
 	min-height: 100%;
 	z-index: -5001;
 }
-.welcome #categories, .welcome #locations, .welcome #result, .welcome #ads{
+.welcome #categories, .welcome #locations, .welcome #result, .welcome #ads, li.dNone{
 	display: none;
 }
 .welcome #categories{
@@ -319,7 +319,7 @@ div.search div#abc a.empty {
 	color: #494f63;
 }
 
-ul[name="categories"] {
+ul.c3 {
 	-moz-column-count: 3;
 	-moz-column-gap: 20px;
 	-webkit-column-count: 3;
