@@ -11,6 +11,18 @@
 <link rel="stylesheet" href="../static/css/general_static.css" th:href="@{css/general.css}" />
 <link rel="stylesheet" href="../static/css/normalize.css" th:href="@{css/normalize.css}" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-60869220-1']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
 </head>
 <!--
 comments: 
@@ -126,7 +138,7 @@ IE11
 
 				 start Categories
 
-	  					*/--><ul name="categories">
+	  					*/--><ul class="c3">
 								<li><a href="#">Acrobats</a></li>
 								<li><a href="#">Actors(stagecombat)</a></li>
 								<li><a href="#">Animation</a></li>
@@ -169,7 +181,7 @@ IE11
 
 							 start Keywords
 
-					 */--><ul class="list-inline" id="srch_rslt" name="keywords">
+					 */--><ul id="solveLocations" class="c3">
 								<li><a href="#">Montreal, QC</a></li>
 								<li><a href="#">Laval, QC</a></li>
 								<li><a href="#">Toronto, ON</a></li>
@@ -180,19 +192,25 @@ IE11
 				*/--></div>
 
 						<div id="result" th:remove="body">
-							<p id="srch_count" name="count" class="breaker">2 results</p>
+							<p id="count" class="breaker">2 results</p>
 							<ul id="pages" class="list-inline pagination">
-								<li class="active"><a href="#">1</a></li>
+								<li id='prev' class='disabled'><a href="#" aria-label="Previous">
+									<span aria-hidden="true">«</span>
+								</a></li>
+								<li><a href="#">1</a></li>
 								<li><a href="#">2</a></li>
 								<li><a href="#">3</a></li>
-								<li><a href="#">4</a></li>
+								<li class="active"><a href="#">4</a></li>
 								<li><a href="#">5</a></li>
 								<li><a href="#">6</a></li>
 								<li><a href="#">7</a></li>
 								<li><a href="#">8</a></li>
 								<li><a href="#">9</a></li>
-								<li><a href="#">10</a></li>
-								<li><a href="#">11</a></li>
+								<li class='dNone'><a href="#">10</a></li>
+								<li class='dNone'><a href="#">11</a></li>
+								<li id='nxt'><a href="#" aria-label="Next">
+									<span aria-hidden="true">»</span>
+								</a></li>
 							</ul>
 
 
@@ -369,11 +387,11 @@ IE11
 		<div id="wrapMainBg"></div>
 		<img id="mainBg" th:src="@{${bgImage}}"/>
 
+	</div>
 		<footer>
 			Fashion PRO Finder® - <a href="#">About us</a> - <a href="#">Help</a>
 			- <a href="#">Search</a> - <a href="#">Sign Up</a>
 		</footer>
-	</div>
 	<script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
 	$(function() {
@@ -401,14 +419,14 @@ IE11
 
 	//Function to show 'Advance Search Panel'
 
-/*-]*/	var page;
-		$('.advance_search_btn').click(function() {
+/*-]*/	$('.advance_search_btn').click(function() {
 			$('.advance_search_panel').toggle("slow");
 		});
 /*[-*/
 		//Function for <div id="abc">...</div>
 
-/*-]*/$('#abc a')
+/*-]*/	var page;
+		$('#abc a')
 		.on(
 			'click',
 			function(e) {
@@ -425,16 +443,15 @@ IE11
 						type : 'POST',
 
 					success : function(data) {
-					var uList = $('<ul></ul>').attr('name', 'categories');
+						var uList = $('<ul></ul>').addClass('c3');
 						$.each(data, function(index, value) {
 							if (value.categoryId == 0) {
-								var breaker =$('<p></p>').addClass('breaker').text(value.categoryName);
-								breaker.appendTo($('#categories')).after(uList);
+								$('<p></p>').addClass('breaker').text(value.categoryName).appendTo($('#categories')).after(uList);
 							} else {
-								uList.append($('<li></li>')
-									.append(
+								uList.append(
+										$('<li></li>').append(
 												$('<a></a>').attr('href', '#').text(value.categoryName)
-									)
+										)
 								);
 							}
 						});
@@ -457,17 +474,17 @@ IE11
 				if(wel[0]!==undefined){
 					wel.removeClass('welcome').addClass('result');
 				}
-/*[+			var keywords = trim($('#keywords').val());
+/*[+			$('#result').empty();
+   				var keywords = trim($('#keywords').val());
 				if(keywords){
 					var data = {};
 					data['keywords'] = keywords;
 
 					var location = trim($('#location').val());
-					if(location.length!=0){
+					if(location){
 						data['location'] = location;
 					}
 
-					var page = $('#page').val();
 					if(page){
 						data['page'] = page;
 					}
@@ -478,7 +495,6 @@ IE11
 						data : data ,
 
 						success : function(data) {
-								$('#result').empty();
 								switch(data.type){
 								case "JOBS":
 									jobs(data);
@@ -503,43 +519,212 @@ IE11
 			}
 			function jobsCount(hits) {
 				if (hits !== undefined) {
-					$('#result').append($('p').addClass('breaker').text( hits + " results" ));
+					$('#result').append(
+							$('<p></p>').addClass('breaker').attr('id', 'count').addClass('breaker').text( hits + " results" )
+					);
 				}
 			}
-			function jobsPages(pages) {
-				if (pages !== undefined) {
-					if (pages > 1) {
-						for (var i = 1; i <= pages; i++) {
-							var tag = $('#srch_rslt').attr('name', 'pages');
-							var li = $('<li></li>').append(
-								'<a href="#">' + i + '</a>').appendTo(tag);
-							var page = $('#page').val();
-							if ((page && page == i) || (!page && i == 1)) {
-								li.addClass("selected");
-							}
-						}
-						$('#page').val('');
-						$('ul[name="pages"] a').on('click', function(e) {
-							e.preventDefault();
-							$('#page').val(this.text);
-							$('#searchForm').submit();
+function jobsPages(pages) {	
+	var li;
+	if (pages && pages > 1) {
+		var className = 'dozen';
+		var p = $('<ul></ul>')
+				.insertAfter($('#count'))
+				.attr('id', 'pages')
+				.addClass('list-inline pagination')
+				.append(/*[-
+
+			              Preview button
+
+-]*/				$('<li></li>')
+						.attr('id', 'prev')
+						.append(
+								$('<a></a>')
+								.attr('href', '#')
+								.attr('aria-label', 'Previous')
+								.append(
+										$('<span></span>')
+										.attr('aria-hidden', 'true')
+										.text('«')
+								)
+						)
+				);/*[-
+
+	              pages creation
+
+-]*/	var activeDozen;
+		for (var i = 1; i <= pages; i++) {
+			var cn = className + Math.ceil(i/10);
+			li = $('<li></li>')
+			.appendTo(p)
+			.append(
+					$('<a></a>').attr('href', '#').text(i)
+					).addClass(cn+' dNone');/*[-
+
+            set active pages
+
+-]*/	if ((page && page == i) || (!page && i == 1)) {
+				li.addClass("active");
+				activeDozen = Math.ceil(i/10);
+			}
+		}/*[-
+					    
+					    Next Button
+					    
+-]*/	li = $('<li></li>')
+			.attr('id', 'nxt')
+			.appendTo(p)
+			.append(
+					$('<a></a>')
+					.attr('href', '#')
+					.attr('aria-label', 'Next')
+					.append(
+							$('<span></span>')
+							.attr('aria-hidden', 'true')
+							.text('»')
+					)
+			);/*[-
+
+					Disable next if first dozen
+
+-]*/	if(pages && activeDozen == Math.ceil(pages/10)){
+			$('#nxt').addClass('dNone');
+		}/*[-
+
+		              Disable preview if first dozen
+
+-]*/	if(activeDozen == 1){
+			$('#prev').addClass('disabled');
+		}/*[-
+
+					Show 10 buttons
+
+-]*/	$('.' + className + activeDozen).removeClass('dNone');
+			page = undefined;/*[-
+
+********          OnClick funktion       ********
+
+-]*/	$('#pages a').on('click', function(e) {
+			e.preventDefault();
+			var attr = $(this).attr('aria-label');
+			if(attr){
+				if(!$(this).parent().hasClass('disabled')){
+					$('.'+className+activeDozen).addClass('dNone');
+					if(attr=='Previous'){
+						activeDozen--;
+					}else{
+						activeDozen++;
+					}
+					$('.'+className+activeDozen).removeClass('dNone');
+					if(activeDozen == 1){
+						$('#prev').addClass('disabled');
+					}else{
+						$('#prev').removeClass('disabled');
+					}
+					if(pages && activeDozen == Math.ceil(pages/10)){
+						$('#nxt').addClass('dNone');
+					}else{
+						$('#nxt').removeClass('dNone');
+					}
+				}
+			}else{
+				page = this.text;
+				$('#searchForm').submit();
+			}
+		});
+	}
+}
+			function jobsResults(jobs) {
+				if (jobs) {
+					var length = jobs.length;
+					if (length > 0) {
+						var list = $('<ul></ul>').attr('id', 'jobs').appendTo('#result');
+						$.each(	jobs,
+								function(index, value) {
+										var ul = $('<ul></ul>')
+										$('<li></li>')
+											.appendTo(list)
+											.append(ul);
+										$('<li></li>')
+											.appendTo(ul)
+											.append(
+												$('<a></a>').attr('href', value.url).text(value.company ? value.company : 'Go to site')
+											);
+
+										if (value.title) {
+											$('<li></li>')
+												.appendTo(ul)
+												.append('<span>Title: </span>' + value.title);
+										}
+										if (value.salary) {
+											$('<li></li>')
+												.appendTo(ul)
+												.append('<span>Salary: </span>' + value.salary);
+										}
+										if (value.salary_currency_code) {
+											$('<li></li>')
+												.appendTo(ul)
+												.append('<span>Salary currency code: </span>' + value.salary_currency_code);
+										}
+										if (value.locations) {
+											$('<li></li>')
+												.appendTo(ul)
+												.append('<span>Locations: </span>' + value.locations);
+										}
+										if (value.description) {
+											$('<li></li>')
+												.appendTo(ul)
+												.append('<span>Description: </span>' + value.description);
+										}
+										var site = value.site;
+										if (site) {
+											if (site.substr(0, 3) != 'http') {
+												site = 'http://' + site;
+											}
+											$('<li></li>')
+												.appendTo(ul)
+												.append('<span>Site: </span><a href="'+site+'" target="_blank">'
+																	+ value.site
+																	+ '</a>');
+								}
 						});
 					}
 				}
 			}
-			function trim(text){
-				if(text){
+			function locations(solveLocations) {
+				if (solveLocations && solveLocations.length > 0) {
+					$('#locations')
+					.append(
+							$('<p></p>').addClass('breaker').text('Select Location')
+					).append(
+							$('<ul></ul>').attr('id','solveLocations').addClass('c3')
+					);
+					$.each(solveLocations, function(index, value) {
+						$('<li></li>').append(
+							'<a href="#">' + value.name + '</a>'
+						).appendTo($('#solveLocations'));
+					});
+					$('#solveLocations a').on('click', function(e) {
+						e.preventDefault();
+						$('#location').val(this.text);
+						$('#searchForm').submit();
+					});
+				} else
+					alert('Impossible to find a location');
+			}
+			function trim(text) {
+				if (text) {
 					text = $.trim(text);
 				}
 				return text;
 			}
-/*[-*/		$('#categories a').on('click',
-				function(e) {
-					e.preventDefault();
-					$('#keywords').val(this.text);
-					$('#searchForm').submit();
-		});
-/*-]*/});
+/*[-*/		$('#categories a').on('click', function(e) {
+				e.preventDefault();
+				$('#keywords').val(this.text);
+				$('#searchForm').submit();
+			});
+/*-]*/
+	});
 	/*]]>*/
 	</script>
 </body>

@@ -62,7 +62,7 @@ public class HomeController {
 	private String getBgImagePath() {
 		Calendar calendar = Calendar.getInstance();
 		String path;
-		int thehour = calendar.get(Calendar.HOUR);
+		int thehour = calendar.get(Calendar.HOUR_OF_DAY);
 
 		if (thehour >= 18) {
 			// evening
