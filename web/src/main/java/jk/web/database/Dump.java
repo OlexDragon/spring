@@ -53,20 +53,17 @@ public class Dump extends Thread {
 				//Process exec = Runtime.getRuntime().exec(new String[]{"cmd.exe","/c","C:\\Program Files\\MySQL\\MySQL Server 5.6\\bin\\mysqldump "+fisier.getName()+" > C:\\"+fisier.getName()+".sql;"});
 
 				String path = MYSQLDUMP_PATH+sdf.format(Calendar.getInstance().getTime())+".sql";
-				logger.trace(path);
-				Process exec = Runtime.getRuntime().exec(new String[]{"cmd.exe","/c",path});
+				logger.info(path);
+				Process exec = Runtime.getRuntime().exec(new String[]{"cmd.exe","/c", path});
 
-				if(exec.waitFor()==0)
-				{
+				if(exec.waitFor()==0){
 				    //normally terminated, a way to read the output
 				    InputStream inputStream = exec.getInputStream();
 				    byte[] buffer = new byte[inputStream.available()];
 				    inputStream.read(buffer);
 
 				    logger.trace(new String(buffer));
-				}
-				else
-				{
+				}else{
 				    // abnormally terminated, there was some problem
 				                //a way to read the error during the execution of the command
 				    InputStream errorStream = exec.getErrorStream();

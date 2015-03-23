@@ -11,6 +11,6 @@ public interface SearchCatgoriesRepository extends JpaRepository<SearchCatgories
 
 	public List<SearchCatgoriesEntity> findByCategoryNameStartingWith(String startWith);
 
-	@Query("SELECT DISTINCT SUBSTRING(sc.categoryName, 1, 1) FROM SearchCatgoriesEntity sc")
+	@Query(value="SELECT DISTINCT UCASE(IF(SUBSTRING(`category_name`, 1, 1) = '\"', SUBSTRING(`category_name`, 2, 1),  SUBSTRING(`category_name`, 1, 1))) s FROM `jk`.`search_catgories`", nativeQuery = true)
 	public List<String> findAvailableFirstLeters();
 }
