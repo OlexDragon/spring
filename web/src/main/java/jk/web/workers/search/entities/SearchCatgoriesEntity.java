@@ -93,7 +93,6 @@ public class SearchCatgoriesEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "jk.web.workers.earch.entities.SearchCatgoriesEntity[ categoryId=" + categoryId + " ]";
+		return "\n\tSearchCatgoriesEntity [\n\t\tcategoryId=" + categoryId + ",\n\t\tcategoryName=" + categoryName + "]";
 	}
-
 }
