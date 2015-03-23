@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="../static/css/general_static.css" th:href="@{css/general.css}" />
 <link rel="stylesheet" href="../static/css/normalize.css" th:href="@{css/normalize.css}" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <script type="text/javascript">
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-60869220-1']);
@@ -79,7 +80,7 @@ IE11
 				<div class="advance_search_btn">Advance Search</div>
 				<div class="clear"></div>
 				<div class="advance_search_panel">
-					<form id="" class="searchFormAdvance" action="#">
+					<form class="searchFormAdvance" action="#">
 						<select name="gender" id="gender">
 							<option value="">Any Gender</option>
 							<option value="male">Male</option>
@@ -117,13 +118,11 @@ IE11
 							<option value="descending">Descending</option>
 							<option value="latest">Latest</option>
 						</select>
-						<select name="interest" id="results-per-page">
+						<select id="pagesize" name="interest" title="Results Per Page">
 							<option value="">Results Per Page</option>
 							<option value="10">10</option>
+							<option value="" selected="selected">20</option>
 							<option value="50">50</option>
-							<option value="100">100</option>
-							<option value="150">150</option>
-							<option value="200">200</option>
 						</select>
 
 						<button type="submit" class="advance_search_submit">Submit search</button>
@@ -197,17 +196,29 @@ IE11
 								<li id='prev' class='disabled'><a href="#" aria-label="Previous">
 									<span aria-hidden="true">«</span>
 								</a></li>
-								<li><a href="#">1</a></li>
-								<li><a href="#">2</a></li>
-								<li><a href="#">3</a></li>
-								<li class="active"><a href="#">4</a></li>
-								<li><a href="#">5</a></li>
-								<li><a href="#">6</a></li>
-								<li><a href="#">7</a></li>
-								<li><a href="#">8</a></li>
-								<li><a href="#">9</a></li>
-								<li class='dNone'><a href="#">10</a></li>
-								<li class='dNone'><a href="#">11</a></li>
+								<li class="dozen1"><a href="#">1</a></li>
+								<li class="dozen1"><a href="#">2</a></li>
+								<li class="dozen1"><a href="#">3</a></li>
+								<li class="active dozen1"><a href="#">4</a></li>
+								<li class="dozen1"><a href="#">5</a></li>
+								<li class="dozen1"><a href="#">6</a></li>
+								<li class="dozen1"><a href="#">7</a></li>
+								<li class="dozen1"><a href="#">8</a></li>
+								<li class="dozen1"><a href="#">9</a></li>
+								<li class="dozen1"><a href="#">10</a></li>
+								<li class='dNone dozen2'><a href="#">221</a></li>
+								<li class='dNone dozen2'><a href="#">222</a></li>
+								<li class='dNone dozen2'><a href="#">223</a></li>
+								<li class='dNone dozen2'><a href="#">224</a></li>
+								<li class='dNone dozen2'><a href="#">225</a></li>
+								<li class='dNone dozen2'><a href="#">226</a></li>
+								<li class='dNone dozen2'><a href="#">227</a></li>
+								<li class='dNone dozen2'><a href="#">228</a></li>
+								<li class='dNone dozen2'><a href="#">229</a></li>
+								<li class='dNone dozen2'><a href="#">230</a></li>
+								<li class='dNone dozen3'><a href="#">555</a></li>
+								<li class='dNone dozen3'><a href="#">777</a></li>
+								<li class='dNone dozen3'><a href="#">999</a></li>
 								<li id='nxt'><a href="#" aria-label="Next">
 									<span aria-hidden="true">»</span>
 								</a></li>
@@ -217,6 +228,39 @@ IE11
 
 							<ul id="jobs">
 								<li><ul>
+									<li>
+										<a href="http://jobviewtrack.com/en-ca/job-131c414c430d020f531d4f0d48000003454715050c00284f544a44100e0207154e0a05001a0e0a4e765b0d534b4554404c10001c25154e0a05001a0e0a4e765b0d534b4554404c100601497514535d55/fff8a461d9c56b4e601b228fda0287a8.html" target="_blank">Apex Media Corp. (a.k.a. Mark Animation)</a>
+									</li>
+									<li><span>Title: </span>3D animator (for kid's TV
+										animation and digital games)</li>
+									<li><span>Locations: </span>North York, ON</li>
+									<li><span>Description: </span>Apex Media Corp. (a.k.a.
+										Mark <b>Animation</b>) Web Site: Job requirements Languages
+										English Education Completion..., etc.) Not applicable .
+										Experience 5 years or more . Area of Design Specialization <b>Animation</b>;
+										Multimedia . Business...</li>
+									<li><span>Site: </span><a href="http://www.jobbank.gc.ca"
+										target="_blank">www.jobbank.gc.ca</a></li>
+								</ul></li>
+								<li><ul>
+									<li>
+										<a href="http://jobviewtrack.com/en-ca/job-1e4e414443000a1d4e134e611c040f040d45061b6b1a4647485e59160e1a480621505b505c/a00e600da57afc3782aa951b6232660c.html">Go to site</a>
+									</li>
+									<li><span>Title: </span>3D animator (for kid's TV
+										animation and digital games)</li>
+									<li><span>Locations: </span>North York, ON</li>
+									<li><span>Description: </span>Apex Media Corp. (a.k.a.
+										Mark <b>Animation</b>) Web Site: Job requirements Languages
+										English Education Completion..., etc.) Not applicable .
+										Experience 5 years or more . Area of Design Specialization <b>Animation</b>;
+										Multimedia . Business...</li>
+									<li><span>Site: </span><a href="http://www.jobbank.gc.ca"
+										target="_blank">www.jobbank.gc.ca</a></li>
+								</ul></li>
+								<li><ul>
+									<li>
+										<a href="http://jobviewtrack.com/en-ca/job-1b12414c430d020f531d4f0d48530a650c4e071c1b06495f525f2f0501074a15540a070f6c5401001506001e4b5f544243655c5d1646/2d38edadc66a4b4020057f53fd42295b.html" target="_blank">LCI Education</a>
+									</li>
 									<li><span>Title: </span>3D animator (for kid's TV
 										animation and digital games)</li>
 									<li><span>Locations: </span>North York, ON</li>
@@ -241,6 +285,9 @@ IE11
 										target="_blank">www.jobbank.gc.ca</a></li>
 								</ul></li>
 								<li><ul>
+									<li>
+										<a href="http://jobviewtrack.com/en-ca/job-131c414c430d020f531d4f0d48000003454715050c00284f544a44100e0207154e0a05001a0e0a4e765b0d534b4554404c10001c25154e0a05001a0e0a4e765b0d534b4554404c100601497514535d55/fff8a461d9c56b4e601b228fda0287a8.html" target="_blank">Apex Media Corp. (a.k.a. Mark Animation)</a>
+									</li>
 									<li><span>Title: </span>3D animator (for kid's TV
 										animation and digital games)</li>
 									<li><span>Locations: </span>North York, ON</li>
@@ -253,6 +300,9 @@ IE11
 										target="_blank">www.jobbank.gc.ca</a></li>
 								</ul></li>
 								<li><ul>
+									<li>
+										<a href="http://jobviewtrack.com/en-ca/job-131c414c430d020f531d4f0d48000003454715050c00284f544a44100e0207154e0a05001a0e0a4e765b0d534b4554404c10001c25154e0a05001a0e0a4e765b0d534b4554404c100601497514535d55/fff8a461d9c56b4e601b228fda0287a8.html" target="_blank">Apex Media Corp. (a.k.a. Mark Animation)</a>
+									</li>
 									<li><span>Title: </span>3D animator (for kid's TV
 										animation and digital games)</li>
 									<li><span>Locations: </span>North York, ON</li>
@@ -265,6 +315,9 @@ IE11
 										target="_blank">www.jobbank.gc.ca</a></li>
 								</ul></li>
 								<li><ul>
+									<li>
+										<a href="http://jobviewtrack.com/en-ca/job-131c414c430d020f531d4f0d48000003454715050c00284f544a44100e0207154e0a05001a0e0a4e765b0d534b4554404c10001c25154e0a05001a0e0a4e765b0d534b4554404c100601497514535d55/fff8a461d9c56b4e601b228fda0287a8.html" target="_blank">Apex Media Corp. (a.k.a. Mark Animation)</a>
+									</li>
 									<li><span>Title: </span>3D animator (for kid's TV
 										animation and digital games)</li>
 									<li><span>Locations: </span>North York, ON</li>
@@ -277,30 +330,9 @@ IE11
 										target="_blank">www.jobbank.gc.ca</a></li>
 								</ul></li>
 								<li><ul>
-									<li><span>Title: </span>3D animator (for kid's TV
-										animation and digital games)</li>
-									<li><span>Locations: </span>North York, ON</li>
-									<li><span>Description: </span>Apex Media Corp. (a.k.a.
-										Mark <b>Animation</b>) Web Site: Job requirements Languages
-										English Education Completion..., etc.) Not applicable .
-										Experience 5 years or more . Area of Design Specialization <b>Animation</b>;
-										Multimedia . Business...</li>
-									<li><span>Site: </span><a href="http://www.jobbank.gc.ca"
-										target="_blank">www.jobbank.gc.ca</a></li>
-								</ul></li>
-								<li><ul>
-									<li><span>Title: </span>3D animator (for kid's TV
-										animation and digital games)</li>
-									<li><span>Locations: </span>North York, ON</li>
-									<li><span>Description: </span>Apex Media Corp. (a.k.a.
-										Mark <b>Animation</b>) Web Site: Job requirements Languages
-										English Education Completion..., etc.) Not applicable .
-										Experience 5 years or more . Area of Design Specialization <b>Animation</b>;
-										Multimedia . Business...</li>
-									<li><span>Site: </span><a href="http://www.jobbank.gc.ca"
-										target="_blank">www.jobbank.gc.ca</a></li>
-								</ul></li>
-								<li><ul>
+									<li>
+										<a href="http://jobviewtrack.com/en-ca/job-131c414c430d020f531d4f0d48000003454715050c00284f544a44100e0207154e0a05001a0e0a4e765b0d534b4554404c10001c25154e0a05001a0e0a4e765b0d534b4554404c100601497514535d55/fff8a461d9c56b4e601b228fda0287a8.html" target="_blank">Apex Media Corp. (a.k.a. Mark Animation)</a>
+									</li>
 									<li><span>Title: </span>3D animator (for kid's TV
 										animation and digital games)</li>
 									<li><span>Locations: </span>North York, ON</li>
@@ -389,8 +421,7 @@ IE11
 
 	</div>
 		<footer>
-			Fashion PRO Finder® - <a href="#">About us</a> - <a href="#">Help</a>
-			- <a href="#">Search</a> - <a href="#">Sign Up</a>
+			Fashion PRO Finder® - <a id="about" href="#">About us</a> - <a href="/">Search</a> 
 		</footer>
 	<script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
@@ -426,6 +457,7 @@ IE11
 		//Function for <div id="abc">...</div>
 
 /*-]*/	var page;
+		var className = 'dozen';
 		$('#abc a')
 		.on(
 			'click',
@@ -454,21 +486,21 @@ IE11
 										)
 								);
 							}
-						});
-						$('#categories').show();
-						$('#categories a').on('click',
++]*/					});
+/*[+				$('#categories').show();
++]*/				$('#categories a').on('click',
 							function(e) {
 								e.preventDefault();
 								$('#keywords').val(this.text);
 								$('#searchForm').submit();
-						});
-					}
-				}); +]*/
-			});/*[-*/
+					});
+/*[+					}
+				});
+			});+]*//*[-*/
 
 				//On Submit
 
-/*-]*/		$('#searchForm').on('submit', function(e){
+/*-]*/		$('#searchForm, .searchFormAdvance').on('submit', function(e){
 				e.preventDefault();
 				var wel =$('.welcome');
 				if(wel[0]!==undefined){
@@ -489,6 +521,10 @@ IE11
 						data['page'] = page;
 					}
 
+					var pagesize = $('#pagesize').val();
+					if(pagesize){
+						data['pagesize'] = pagesize
+					}
 					$.ajax({
 						url : '/careerjet',
 						type : 'POST',
@@ -527,7 +563,6 @@ IE11
 function jobsPages(pages) {	
 	var li;
 	if (pages && pages > 1) {
-		var className = 'dozen';
 		var p = $('<ul></ul>')
 				.insertAfter($('#count'))
 				.attr('id', 'pages')
@@ -621,7 +656,7 @@ function jobsPages(pages) {
 					}else{
 						$('#prev').removeClass('disabled');
 					}
-					if(pages && activeDozen == Math.ceil(pages/10)){
+					if(pages && activeDozen >= Math.ceil(pages/10)){
 						$('#nxt').addClass('dNone');
 					}else{
 						$('#nxt').removeClass('dNone');
@@ -632,8 +667,8 @@ function jobsPages(pages) {
 				$('#searchForm').submit();
 			}
 		});
-	}
-}
+/*[+	}
+}	+]*/
 			function jobsResults(jobs) {
 				if (jobs) {
 					var length = jobs.length;
@@ -648,7 +683,9 @@ function jobsPages(pages) {
 										$('<li></li>')
 											.appendTo(ul)
 											.append(
-												$('<a></a>').attr('href', value.url).text(value.company ? value.company : 'Go to site')
+												$('<a></a>')
+													.attr('href', value.url).text(value.company ? value.company : 'Go to site')
+													.attr('target', 'blank')
 											);
 
 										if (value.title) {
@@ -690,42 +727,75 @@ function jobsPages(pages) {
 						});
 					}
 				}
-			}
-			function locations(solveLocations) {
-				if (solveLocations && solveLocations.length > 0) {
-					$('#locations')
-					.append(
-							$('<p></p>').addClass('breaker').text('Select Location')
-					).append(
-							$('<ul></ul>').attr('id','solveLocations').addClass('c3')
-					);
-					$.each(solveLocations, function(index, value) {
-						$('<li></li>').append(
-							'<a href="#">' + value.name + '</a>'
-						).appendTo($('#solveLocations'));
-					});
-					$('#solveLocations a').on('click', function(e) {
-						e.preventDefault();
-						$('#location').val(this.text);
-						$('#searchForm').submit();
-					});
-				} else
-					alert('Impossible to find a location');
-			}
-			function trim(text) {
-				if (text) {
-					text = $.trim(text);
-				}
-				return text;
-			}
-/*[-*/		$('#categories a').on('click', function(e) {
-				e.preventDefault();
-				$('#keywords').val(this.text);
-				$('#searchForm').submit();
-			});
+			}/*[-]*/
+
+			   // Location
+
 /*-]*/
-	});
+function locations(solveLocations) {
+	if (solveLocations && solveLocations.length > 0) {
+		$('#locations')
+			.append(
+					$('<p></p>').addClass('breaker').text('Select Location')
+			).append(
+					$('<ul></ul>').attr('id','solveLocations').addClass('c3')
+			);
+		$.each(solveLocations, function(index, value) {
+			$('<li></li>').append(
+							'<a href="#">' + value.name + '</a>'
+			).appendTo($('#solveLocations'));
+		});
+		$('#solveLocations a').on('click', function(e) {
+			e.preventDefault();
+			$('#location').val(this.text);
+			$('#searchForm').submit();
+		});
+	} else
+		alert('Impossible to find a location');
+/*[-*/}/*-]*/
+	$('#solveLocations a').on('click',
+			function(e) {
+				e.preventDefault();
+				$('#location').val(this.text);
+/*[+			$('#searchForm').submit();
++]*/});
+/*[+}+]*/
+	function trim(text) {
+		if (text) {
+			text = $.trim(text);
+		}
+		return text;
+	}
+	});/*[-
+
+	      About Us
+
+-]*/$('#about').on('click',
+		function(){
+			$('#aboutModal').modal('show');
+		}
+	);
+	
 	/*]]>*/
 	</script>
-</body>
+<div id="aboutModal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title">About Us</h4>
+      </div>
+      <div class="modal-body">
+        <p>Fashion Pro Finder is a new research web site specifically oriented towards fashion, cinema, show-business and all that is related with those three categories.</p>
+        <p>For example, you want to find a specific job and your region extends all over Canada, there are numerous sites that will offer jobs in that region because it is wide. Fashion Pro Finder will find all the jobs offered in all the Canadian web sites and list the links for you. ONE SITE AND YOU HAVE THEM ALL. </p>
+		<p>Fashion Pro Finder is design to be USER FRIENDLY. The user can find the information he is looking for simply by clicking on a Keyword &amp; a Location (if more than one) and then press search. He can also use the alphabet list (select the desired categories from A-Z or All). And he will refine his search by using the advance mode (to be more specific)</p>
+		<p>For help or any question, you can always contact us at any time 7/24 and we will reply and assist you within very short delays.</p>
+		<hr/>
+		<p>Contact Us</p>
+		<p>For any questions please contact us <a href="mailto:Info@hotmail.com">Info@hotmail.com</a>
+		</p>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal --></body>
 </html>
