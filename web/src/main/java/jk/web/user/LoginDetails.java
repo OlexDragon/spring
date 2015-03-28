@@ -4,8 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import jk.web.user.repository.LoginRepository;
-import jk.web.user.repository.LoginRepository.Permission;
+import jk.web.entities.user.LoginEntity.Permission;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,7 +19,7 @@ public class LoginDetails implements UserDetails{//or SocialUser
 	private Long id;
 	private String username;
     private String password;
-    private Permission permissions;
+    private Long permissions;
 
   public Long getId() {
 		return logger.exit(id);
@@ -38,33 +37,33 @@ public class LoginDetails implements UserDetails{//or SocialUser
 
 	@Override
 	public boolean isAccountNonExpired() {
-		return logger.exit(!LoginRepository.Permission.hasPermission(permissions, LoginRepository.Permission.ACCOUNT_EXPIRED));
+		return logger.exit(!Permission.hasPermission(permissions, Permission.ACCOUNT_EXPIRED));
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
-		return logger.exit(!LoginRepository.Permission.hasPermission(permissions, LoginRepository.Permission.LOCKED));
+		return logger.exit(!Permission.hasPermission(permissions, Permission.LOCKED));
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		return logger.exit(!LoginRepository.Permission.hasPermission(permissions, LoginRepository.Permission.CREDENTIALS_EXPIRED));
+		return logger.exit(!Permission.hasPermission(permissions, Permission.CREDENTIALS_EXPIRED));
 	}
 
 	@Override
 	public boolean isEnabled() {
-		return logger.exit(!LoginRepository.Permission.hasPermission(permissions, LoginRepository.Permission.DISABLED));
+		return logger.exit(!Permission.hasPermission(permissions, Permission.DISABLED));
 	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return logger.exit(permissions!=null ? LoginRepository.Permission.toPermissions(permissions.toLong()) : getDefaultPermission()); 
+		return logger.exit(permissions!=null ? Permission.toPermissions(permissions) : getDefaultPermission()); 
 	}
 
 	public Set<Permission> getDefaultPermission() {
 		Set<Permission> permissions = new HashSet<>();
 		permissions.add(Permission.NEW);
-		return permissions;
+		return logger.exit(permissions);
 	}
 
 	public static Builder getBuilder() {
@@ -79,7 +78,7 @@ public class LoginDetails implements UserDetails{//or SocialUser
 		private Long id;
 		private String username;
 	    private String password;
-	    private Permission permissions;
+	    private Long permissions;
 
 	    public Builder setId(Long id) {
 	    	logger.entry(id);
@@ -96,7 +95,7 @@ public class LoginDetails implements UserDetails{//or SocialUser
 			this.password = password;
 			return this;
 		}
-		public Builder setPermissions(Permission permission) {
+		public Builder setPermissions(Long permission) {
 	    	logger.entry(permission);
 			this.permissions = permission;
 			return this;
@@ -110,7 +109,7 @@ public class LoginDetails implements UserDetails{//or SocialUser
 			loginDetails.password	= password;
 			loginDetails.permissions= permissions;
 
-			return loginDetails;
+			return logger.exit(loginDetails);
 		}
 	}
 }

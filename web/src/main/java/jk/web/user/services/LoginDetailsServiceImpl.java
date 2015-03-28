@@ -1,8 +1,8 @@
 package jk.web.user.services;
 
+import jk.web.entities.user.LoginEntity;
+import jk.web.repositories.user.LoginRepository;
 import jk.web.user.LoginDetails;
-import jk.web.user.entities.LoginEntity;
-import jk.web.user.repository.LoginRepository;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

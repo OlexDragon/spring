@@ -6,10 +6,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import jk.web.entities.user.EMailEntity;
+import jk.web.entities.user.EMailEntity.EMailStatus;
 import jk.web.user.Business;
 import jk.web.user.User;
-import jk.web.user.entities.EMailEntity;
-import jk.web.user.entities.EMailEntity.EMailStatus;
 import jk.web.workers.UserWorker;
 
 import org.apache.logging.log4j.LogManager;

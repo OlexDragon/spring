@@ -5,9 +5,9 @@ import static org.junit.Assert.assertNotNull;
 import java.text.ParseException;
 
 import jk.web.EmbeddedMySqlDataSourceConfig;
+import jk.web.entities.user.UserEntity;
 import jk.web.user.User;
 import jk.web.user.User.Gender;
-import jk.web.user.entities.UserEntity;
 import jk.web.workers.UserWorker;
 
 import org.apache.logging.log4j.LogManager;

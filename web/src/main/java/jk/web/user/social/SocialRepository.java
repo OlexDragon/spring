@@ -6,7 +6,7 @@
 
 package jk.web.user.social;
 
-import jk.web.user.social.entities.SocialEntity;
+import jk.web.entities.user.social.SocialEntity;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

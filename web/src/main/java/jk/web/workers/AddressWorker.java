@@ -5,16 +5,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import jk.web.entities.user.AddressEntity;
+import jk.web.entities.user.CountryEntity;
+import jk.web.entities.user.RegionEntity;
+import jk.web.entities.user.RegionEntityPK;
 import jk.web.html.select.HTMLOptionElement;
+import jk.web.repositories.user.AddressRepository;
+import jk.web.repositories.user.CountryRepository;
+import jk.web.repositories.user.RegionRepository;
 import jk.web.user.Address.AddressStatus;
 import jk.web.user.Address.AddressType;
-import jk.web.user.entities.AddressEntity;
-import jk.web.user.entities.CountryEntity;
-import jk.web.user.entities.RegionEntity;
-import jk.web.user.entities.RegionEntityPK;
-import jk.web.user.repository.AddressRepository;
-import jk.web.user.repository.CountryRepository;
-import jk.web.user.repository.RegionRepository;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

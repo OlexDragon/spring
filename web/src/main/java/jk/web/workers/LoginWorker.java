@@ -6,12 +6,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import jk.web.user.entities.EMailEntity;
-import jk.web.user.entities.EMailEntity.EMailStatus;
-import jk.web.user.entities.LoginEntity;
-import jk.web.user.repository.EMailRepository;
-import jk.web.user.repository.LoginRepository;
-import jk.web.user.repository.LoginRepository.Permission;
+import jk.web.entities.user.EMailEntity;
+import jk.web.entities.user.EMailEntity.EMailStatus;
+import jk.web.entities.user.LoginEntity;
+import jk.web.entities.user.LoginEntity.Permission;
+import jk.web.repositories.user.EMailRepository;
+import jk.web.repositories.user.LoginRepository;
 import jk.web.workers.UserWorker.ConfirmationStaus;
 
 import org.apache.logging.log4j.LogManager;
@@ -42,7 +42,7 @@ public class LoginWorker {
 		LoginEntity le = new LoginEntity();
 		le.setPassword(passwordEncoder.encode(password));
 		le.setUsername(username);
-		le.setPermissions(permission);
+		le.setPermissions(permission.toLong());
 		return save(le);
 	}
 

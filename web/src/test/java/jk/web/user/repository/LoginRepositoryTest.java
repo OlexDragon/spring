@@ -3,7 +3,8 @@ package jk.web.user.repository;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import jk.web.EmbeddedMySqlDataSourceConfig;
-import jk.web.user.entities.LoginEntity;
+import jk.web.entities.user.LoginEntity;
+import jk.web.repositories.user.LoginRepository;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

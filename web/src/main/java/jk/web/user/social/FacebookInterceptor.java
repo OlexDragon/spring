@@ -2,7 +2,7 @@ package jk.web.user.social;
 
 import java.util.Iterator;
 
-import jk.web.user.social.entities.SocialEntity;
+import jk.web.entities.user.social.SocialEntity;
 import jk.web.workers.UserWorker;
 
 import org.springframework.social.connect.Connection;
