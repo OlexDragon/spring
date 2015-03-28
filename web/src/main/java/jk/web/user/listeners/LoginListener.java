@@ -2,7 +2,7 @@ package jk.web.user.listeners;
 
 import java.util.Date;
 
-import jk.web.user.entities.LoginEntity;
+import jk.web.entities.user.LoginEntity;
 import jk.web.workers.UserWorker;
 
 import org.springframework.beans.factory.annotation.Autowired;

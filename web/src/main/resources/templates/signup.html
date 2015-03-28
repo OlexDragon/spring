@@ -139,7 +139,7 @@
 							<th:block  th:fragment="birthday">
 								<select th:field="*{birthYear}">
     								<option th:text="#{year}" th:value="null">Select</option>
-    								<option th:each="y : ${T(jk.web.user.controllers.SignupController).yearsList}" th:value="${y}" th:text="${y}" />
+    								<option th:each="y : ${T(jk.web.controllers.user.SignupController).yearsList}" th:value="${y}" th:text="${y}" />
 								</select>
 								<select th:field="*{birthMonth}">
     								<option th:text="#{month}" th:value="null">Select</option>

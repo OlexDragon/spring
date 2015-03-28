@@ -6,23 +6,21 @@
 <head>
 <meta charset="UTF-8" />
 <title>FashionProFinder</title>
-
+<link rel="shortcut icon" type="image/vnd.microsoft.icon" href="../static/favicon.ico" th:href="@{/favicon.ico}" />
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
-<link rel="stylesheet" href="../static/css/general_static.css" th:href="@{css/general.css}" />
-<link rel="stylesheet" href="../static/css/normalize.css" th:href="@{css/normalize.css}" />
+<link rel="stylesheet" href="../static/css/general_static.css" th:href="@{/css/general.css}" />
+<link rel="stylesheet" href="../static/css/normalize.css" th:href="@{/css/normalize.css}" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-<script type="text/javascript">
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-60869220-1']);
-  _gaq.push(['_trackPageview']);
-  (function() {
-    var ga = document.createElement('script');
-    ga.type = 'text/javascript';
-    ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60869220-1', 'auto');
+  ga('send', 'pageview');
+
 </script>
 </head>
 <!--
@@ -77,9 +75,9 @@ IE11
 			</div>
 
 			<div class="advance_search">
-				<div class="advance_search_btn">Advance Search</div>
-				<div class="clear"></div>
-				<div class="advance_search_panel">
+				<div class="advance_search_btn" th:remove="ALL">Advance Search</div>
+				<div class="clear" th:remove="ALL"></div>
+				<div class="advance_search_panel" th:remove="ALL">
 					<form class="searchFormAdvance" action="#">
 						<select name="gender" id="gender">
 							<option value="">Any Gender</option>
@@ -348,7 +346,7 @@ IE11
 						</div>
 					</div>
 
-					<div id="ads" name="ads" class="col-md-4 sponsored">
+					<div id="ads" name="ads" class="col-md-4 sponsored" th:remove="body">
 						<span>Sponsored Ads</span>
 						<div class="adds">
 							<!-- start sponsored ads -->
@@ -420,12 +418,31 @@ IE11
 		<img id="mainBg" th:src="@{${bgImage}}"/>
 
 	</div>
+<div id="aboutModal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title">About Us</h4>
+      </div>
+      <div class="modal-body">
+        <p>Fashion Pro Finder is a new research web site specifically oriented towards fashion, cinema, show-business and all that is related with those three categories.</p>
+        <p>For example, you want to find a specific job and your region extends all over Canada, there are numerous sites that will offer jobs in that region because it is wide. Fashion Pro Finder will find all the jobs offered in all the Canadian web sites and list the links for you. ONE SITE AND YOU HAVE THEM ALL. </p>
+		<p>Fashion Pro Finder is design to be USER FRIENDLY. The user can find the information he is looking for simply by clicking on a Keyword &amp; a Location (if more than one) and then press search. He can also use the alphabet list (select the desired categories from A-Z or All). And he will refine his search by using the advance mode (to be more specific)</p>
+		<p>For help or any question, you can always contact us at any time 7/24 and we will reply and assist you within very short delays.</p>
+		<hr/>
+		<p>Contact Us</p>
+		<p>For any questions please contact us <a href="mailto:info@fashionprofinder.com">Info@fashionprofinder.com/</a>
+		</p>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal --></body>
 		<footer>
 			Fashion PRO Finder® - <a id="about" href="#">About us</a> - <a href="/">Search</a> 
 		</footer>
 	<script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
-	$(function() {
 /*[-*/	var thehour = new Date().getHours();
 
 		if (thehour >= 18) {
@@ -458,9 +475,7 @@ IE11
 
 /*-]*/	var page;
 		var className = 'dozen';
-		$('#abc a')
-		.on(
-			'click',
+		$('#abc a').on('click',
 			function(e) {
 				$('#categories').hide();
 				e.preventDefault();
@@ -487,26 +502,26 @@ IE11
 								);
 							}
 +]*/					});
-/*[+				$('#categories').show();
-+]*/				$('#categories a').on('click',
-							function(e) {
+/*[+					$('#categories').show();
++]*/					$('#categories a').on('click', function(e) {
 								e.preventDefault();
 								$('#keywords').val(this.text);
 								$('#searchForm').submit();
-					});
-/*[+					}
+						});
+/*[+				}
 				});
-			});+]*//*[-*/
+			});+]*//*[-
 
 				//On Submit
 
-/*-]*/		$('#searchForm, .searchFormAdvance').on('submit', function(e){
+-]*/		$('#searchForm').on('submit', function(e){
 				e.preventDefault();
 				var wel =$('.welcome');
 				if(wel[0]!==undefined){
 					wel.removeClass('welcome').addClass('result');
 				}
-/*[+			$('#result').empty();
+/*[+		$('#categories').empty();
+			$('#result').empty();
    				var keywords = trim($('#keywords').val());
 				if(keywords){
 					var data = {};
@@ -560,7 +575,8 @@ IE11
 					);
 				}
 			}
-function jobsPages(pages) {	
+function jobsPages(pages) {
+
 	var li;
 	if (pages && pages > 1) {
 		var p = $('<ul></ul>')
@@ -635,11 +651,15 @@ function jobsPages(pages) {
 					Show 10 buttons
 
 -]*/	$('.' + className + activeDozen).removeClass('dNone');
-			page = undefined;/*[-
+			page = undefined;/*[-*/
+	}
+}
 
-********          OnClick funktion       ********
+//********     Page Select OnClick funktion       ********
 
--]*/	$('#pages a').on('click', function(e) {
+var pages = 23;
+var activeDozen = 1;
+/*-]*/	$('#pages a').on('click', function(e) {
 			e.preventDefault();
 			var attr = $(this).attr('aria-label');
 			if(attr){
@@ -766,36 +786,16 @@ function locations(solveLocations) {
 		}
 		return text;
 	}
-	});/*[-
+/*[-
 
 	      About Us
 
--]*/$('#about').on('click',
-		function(){
+-]*/$('#about').on('click', function(){
 			$('#aboutModal').modal('show');
-		}
-	);
-	
+	});
+	$('.brand').on('click', function(){
+		location.reload();
+	});
 	/*]]>*/
 	</script>
-<div id="aboutModal" class="modal fade">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-        <h4 class="modal-title">About Us</h4>
-      </div>
-      <div class="modal-body">
-        <p>Fashion Pro Finder is a new research web site specifically oriented towards fashion, cinema, show-business and all that is related with those three categories.</p>
-        <p>For example, you want to find a specific job and your region extends all over Canada, there are numerous sites that will offer jobs in that region because it is wide. Fashion Pro Finder will find all the jobs offered in all the Canadian web sites and list the links for you. ONE SITE AND YOU HAVE THEM ALL. </p>
-		<p>Fashion Pro Finder is design to be USER FRIENDLY. The user can find the information he is looking for simply by clicking on a Keyword &amp; a Location (if more than one) and then press search. He can also use the alphabet list (select the desired categories from A-Z or All). And he will refine his search by using the advance mode (to be more specific)</p>
-		<p>For help or any question, you can always contact us at any time 7/24 and we will reply and assist you within very short delays.</p>
-		<hr/>
-		<p>Contact Us</p>
-		<p>For any questions please contact us <a href="mailto:Info@hotmail.com">Info@hotmail.com</a>
-		</p>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal --></body>
 </html>

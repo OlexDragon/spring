@@ -2,8 +2,8 @@ package jk.web.configuration;
 
 import javax.sql.DataSource;
 
+import jk.web.repositories.user.LoginRepository;
 import jk.web.user.listeners.LoginListener;
-import jk.web.user.repository.LoginRepository;
 import jk.web.user.services.LoginDetailsServiceImpl;
 import jk.web.workers.FileWorker;
 
@@ -32,7 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	    // @formatter:off
 	    auth
 	        .userDetailsService(userDetailsService())
-	        .passwordEncoder(passwordEncoder()) ;
+	        .passwordEncoder(passwordEncoder());
 //	    auth
 //	    	.jdbcAuthentication().dataSource(dataSource);
 	    // @formatter:on
@@ -45,6 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.authorizeRequests()
 			.antMatchers(
 				"/favicon.ico", 
+				"/google3f524851ab0b98a8.html",
 				"/",
 				"/home",
 				"/login/**",

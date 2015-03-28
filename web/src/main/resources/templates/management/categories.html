@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Categories</title>
+<link rel="shortcut icon" type="image/vnd.microsoft.icon" href="../../static/favicon.ico" th:href="@{/favicon.ico}" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+<link rel="stylesheet" href="../../static/css/general_static.css" th:href="@{/css/general.css}" />
+<link rel="stylesheet" href="../../static/css/normalize.css" th:href="@{/css/normalize.css}" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container-fluid">
+	<ul id="letters" class="list-inline pagination">
+		<li id="addCategory"><a href="#" data-toggle="modal" data-target="#editor">New</a></li>
+		<li th:each="l:${letters}"><a href="#" th:text="${l}">A</a></li>
+	</ul>
+</div>
+<div class="modal fade" id="editor" tabindex="-1" role="dialog" aria-labelledby="editorLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 id="editorLabel" class="modal-title">Modal title</h4>
+      </div>
+      	<div class="modal-body">
+      		<form id="editorForm" action="#" class="form-inline">
+      			<label for="categoryINP">Category:</label>
+      		<div class="input-group">
+				<span class="input-group-addon">
+					<input id="categoryCB" type="checkbox" checked="checked"/>
+      			</span>
+      			<input id="categoryINP" type="text" class="form-control"/>
+        	</div>
+        		<button type="submit" class="btn btn-primary" ><span class="glyphicon glyphicon-floppy-save"></span> Save</button>
+      		</form>
+      	</div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+var id;
+$('#addCategory').on("click", function(e){
+	$('#editorLabel').text('Add New Category');
+	id = undefined;
+});
+$('#editorForm').on('submit', function(){
+	var txt = $('#categoryINP').val();
+	if(txt){
+		var data = {};
+		data['txt'] = txt;
+		data['show'] = $('#categoryCB').is(':checked');
+		if(id){
+			data['id'] = id;
+		}
+		$.ajax({
+			url : '/search/edit/category',
+			type : 'POST',
+			data : data ,
+
+			success : function(data) {
+			
+			}
+		});
+	}else{
+		alert('Input field CATEGORY is empty');
+		return false;
+	}
+});
+</script>
+</body>
+</html>

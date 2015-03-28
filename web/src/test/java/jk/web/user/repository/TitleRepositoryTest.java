@@ -2,6 +2,7 @@ package jk.web.user.repository;
 
 import static org.junit.Assert.*;
 import jk.web.EmbeddedMySqlDataSourceConfig;
+import jk.web.repositories.user.TitleRepository;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

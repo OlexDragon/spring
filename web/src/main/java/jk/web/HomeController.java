@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import jk.web.workers.search.entities.repositories.SearchCatgoriesRepository;
+import jk.web.repositories.workers.search.SearchCatgoriesRepository;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

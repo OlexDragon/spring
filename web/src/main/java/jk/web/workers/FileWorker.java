@@ -22,13 +22,13 @@ import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
 
 import jk.web.data.beans.VideoProperties;
+import jk.web.entities.user.FileEntity;
+import jk.web.entities.user.ImageDetailsEntity;
+import jk.web.entities.user.ImageDetailsEntity.ImageMaxSize;
+import jk.web.entities.user.UserEntity;
+import jk.web.repositories.user.FileRepositiry;
 import jk.web.user.Address.AddressType;
 import jk.web.user.User.Gender;
-import jk.web.user.entities.FileEntity;
-import jk.web.user.entities.ImageDetailsEntity;
-import jk.web.user.entities.ImageDetailsEntity.ImageMaxSize;
-import jk.web.user.entities.UserEntity;
-import jk.web.user.repository.FileRepositiry;
 import jk.web.workers.executors.ffmpeg.FFMpegExecutor;
 
 import org.apache.logging.log4j.LogManager;
@@ -493,10 +493,14 @@ public class FileWorker {
 
 		logger.trace("\n\t {}\n\t {}", headers, fileExtension);
 
-		ByteArrayOutputStream os = new ByteArrayOutputStream();
-			StreamUtils.copy(is, os);
+		byte[] byteArray;
+		try(ByteArrayOutputStream os = new ByteArrayOutputStream();){
 
-			return new ResponseEntity<byte[]>(os.toByteArray(), headers, HttpStatus.OK);
+			StreamUtils.copy(is, os);
+			byteArray = os.toByteArray();
+		}
+
+		return new ResponseEntity<byte[]>(byteArray, headers, HttpStatus.OK);
 	}
 
 	public boolean delete(long imageID, long userID) {
