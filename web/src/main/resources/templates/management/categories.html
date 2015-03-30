@@ -33,28 +33,54 @@
 	</div>
 	<nav class="navbar navbar-default">
 		<div class="container-fluid">
-		
+
 			<div class="navbar-header brand">
 				<a href="/">FashionProFinder</a>
 			</div>
-			<div class="navbar-form navbar-right" role="search">
-				<div class="form-group input-group">
-					<input id="search" type="text" class="form-control" placeholder="Search..." />
-					<span class="input-group-btn">
-						<button id="pnBttn"
-							class="btn btn-default glyphicon glyphicon-search"></button>
-					</span>
+			<form action="/management/search/categories" method="post">
+				<div class="navbar-form navbar-right" role="search">
+					<div class="form-group input-group">
+						<input id="search" name="search" type="text" class="form-control" placeholder="Search..." required="required"/>
+						<span class="input-group-btn">
+							<button name="submitSearch" class="btn btn-default glyphicon glyphicon-search"></button>
+						</span>
+					</div>
 				</div>
-			</div>
+			</form>
 		</div>
 	</nav>
 	<div class="container-fluid">
 		<ul id="letters" class="pagination">
-				<li id="addCategory"><a href="#" data-toggle="modal"
-					data-target="#editor">New</a></li>
-				<li class="firstLetter" th:each="l:${letters}"><a href="#"
-					th:text="${l}">A</a></li>
-			</ul>
+			<li id="addCategory"><a href="#" data-toggle="modal" data-target="#editor">New</a></li>
+			<li class="firstLetter" th:each="l:${letters}"><a href="#" th:text="${l}">A</a></li>
+		</ul>
+		<div th:if="${page!=null}" id="categories" class="panel panel-default">
+			<div class="panel-heading">
+				<h2 class="panel-title" th:text="${title}"></h2>
+			</div>
+			<div class="panel-body">
+				<ul id="ul" class="list-inline">
+					<li th:each="cat:${page.getContent()}" >
+						<a href="#"
+							class="btn"
+							th:id="${cat.categoryId}"
+							th:classappend="${cat.status==T(jk.web.entities.workers.search.SearchCatgoryEntity.CategoryStatus).SHOW ? 'btn-default' : 'btn btn-warning'}"
+							th:text="${cat.categoryName}">
+						</a>
+					</li>
+				</ul>
+			</div>
+			<script type="text/javascript">
+			$('#categories a').on('click', function(e){
+				e.preventDefault();
+				$('#id').val($(this).attr('id'));
+				$('#name').val($(this).text());
+				$('#show').prop('checked', $(this).hasClass( "btn-default" ));
+				$('#editorLabel').text('Edit Category '+$(this).text());
+				$('#editor').modal();
+			})
+			</script>
+		</div>
 	</div>
 	<div class="modal fade" id="editor" tabindex="-1" role="dialog" aria-labelledby="editorLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -97,11 +123,11 @@ $('.firstLetter a').on('click', function(e){
 			$('<div></div>').attr('id','categories').addClass('panel panel-default').insertAfter('#letters').append(
 					$('<div></div>').addClass('panel-heading').append(
 							$('<h2></h2>').addClass('panel-title').text(data[0].categoryName)
-					).append(
-							$('<div></div>').addClass('panel-body').append(
-									$('<ul></ul>').addClass('list-inline').attr('id', 'ul')
-							)
 					)
+			).append(
+						$('<div></div>').addClass('panel-body').append(
+								$('<ul></ul>').addClass('list-inline').attr('id', 'ul')
+						)
 			);
 			$.each(data, function(index, value){
 				if(value.categoryId){
