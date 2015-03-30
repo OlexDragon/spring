@@ -11,6 +11,10 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -126,8 +130,17 @@ public class ManagementSearchController {
 		return name;
 	}
 
-	@RequestMapping(value="categories", method=RequestMethod.POST, params = "search")
-	public String categoriesCoontants(@RequestParam("search") String se){
+	@RequestMapping(value="categories", method=RequestMethod.POST, params = "submitSearch")
+	public String categoriesContains(SearchCategoryView searchCategoryView, @RequestParam("search") String searchFor, Model model){
+		logger.entry(searchFor);
+
+		if(searchFor!=null && !(searchFor=searchFor.trim()).isEmpty()){
+			Page<SearchCatgoryEntity> page = searchCatgoriesRepository.findFirst10ByCategoryNameContaining(searchFor, new PageRequest(0, 20, new Sort(Direction.ASC, "categoryName")));
+			if(page!=null && page.getTotalElements()>0){
+				model.addAttribute("page", page);
+				model.addAttribute("title", searchFor);
+			}
+		}
 		return "management/categories";
 	}
 }
