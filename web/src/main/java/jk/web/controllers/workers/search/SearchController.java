@@ -2,8 +2,8 @@ package jk.web.controllers.workers.search;
 
 import java.util.List;
 
-import jk.web.entities.workers.search.SearchCatgoriesEntity;
-import jk.web.entities.workers.search.SearchCatgoriesEntity.CategoryStatus;
+import jk.web.entities.workers.search.SearchCatgoryEntity;
+import jk.web.entities.workers.search.SearchCatgoryEntity.CategoryStatus;
 import jk.web.html.select.ContentDiv;
 import jk.web.repositories.workers.search.SearchCatgoriesRepository;
 import jk.web.workers.SearchClass;
@@ -20,7 +20,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/search")
@@ -54,10 +53,10 @@ public class SearchController {
 	}
 
 	@RequestMapping(value="categories/{startWith}", method = RequestMethod.POST)
-	public ResponseEntity<List<SearchCatgoriesEntity>> search(	@PathVariable String startWith){
+	public ResponseEntity<List<SearchCatgoryEntity>> search(	@PathVariable String startWith){
 		logger.entry(startWith);
 
-		List<SearchCatgoriesEntity> categories;
+		List<SearchCatgoryEntity> categories;
 		try{
 			if(startWith.equalsIgnoreCase("all"))
 				categories = searchCatgoriesRepository.findByStatus(CategoryStatus.SHOW);
@@ -80,16 +79,10 @@ public class SearchController {
 //			categories.add(new SearchCatgoriesEntity(HTML_UL_LI_TAG, applicationContext.getMessage( "SearchController.find.try.keywords.general", null, "Try more general keywords." , locale)));
 			status = HttpStatus.NOT_FOUND;
 		}else{
-			categories.add(0, new SearchCatgoriesEntity(0L, startWith));
+			categories.add(0, new SearchCatgoryEntity(0L, startWith));
 			status = HttpStatus.OK;
 		}
 
 		return logger.exit(new ResponseEntity<>(categories,  status));
-	}
-
-	@RequestMapping("/edit/category")
-	public ResponseEntity<String> editCategory(@RequestParam(value = "txt")String txt, @RequestParam(value = "show")boolean show, @RequestParam(value = "id", required=false)Integer id){
-		logger.entry(txt, show, id);
-		return null;
 	}
 }

@@ -14,10 +14,20 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 </head>
 <body>
-<div class="container-fluid">
+	<div	th:if="${searchCategoryView.msgStatus!=null}"
+			class="alert alert-dismissible"
+			th:classappend="${searchCategoryView.msgStatus==T(org.apache.logging.log4j.Level).ERROR ? 'alert-danger' :
+							searchCategoryView.msgStatus==T(org.apache.logging.log4j.Level).WARN ? 'alert-warning' :
+							'alert-success'}"
+			role="alert">
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+		<span class="sr-only">Error:</span><span th:text="${searchCategoryView.msg}">Error massage</span>
+	</div>
+	<div class="container-fluid">
 	<ul id="letters" class="list-inline pagination">
 		<li id="addCategory"><a href="#" data-toggle="modal" data-target="#editor">New</a></li>
-		<li th:each="l:${letters}"><a href="#" th:text="${l}">A</a></li>
+		<li class="firstLetter" th:each="l:${letters}"><a href="#" th:text="${l}">A</a></li>
 	</ul>
 </div>
 <div class="modal fade" id="editor" tabindex="-1" role="dialog" aria-labelledby="editorLabel" aria-hidden="true">
@@ -28,14 +38,15 @@
         <h4 id="editorLabel" class="modal-title">Modal title</h4>
       </div>
       	<div class="modal-body">
-      		<form id="editorForm" action="#" class="form-inline">
+      		<form id="editorForm" method="post" action="/management/search/categories/edit" class="form-inline" th:object="${searchCategoryView}">
+      			<input type="hidden" th:field="*{id}"/>
       			<label for="categoryINP">Category:</label>
-      		<div class="input-group">
-				<span class="input-group-addon">
-					<input id="categoryCB" type="checkbox" checked="checked"/>
-      			</span>
-      			<input id="categoryINP" type="text" class="form-control"/>
-        	</div>
+      			<div class="input-group">
+					<span class="input-group-addon">
+						<input type="checkbox" checked="checked" th:field="*{show}"/>
+      				</span>
+      				<input type="text" class="form-control" th:field="*{name}" required="required"/>
+        		</div>
         		<button type="submit" class="btn btn-primary" ><span class="glyphicon glyphicon-floppy-save"></span> Save</button>
       		</form>
       	</div>
@@ -43,33 +54,46 @@
   </div>
 </div>
 <script type="text/javascript">
-var id;
-$('#addCategory').on("click", function(e){
+$('#addCategory').on("click", function(){
 	$('#editorLabel').text('Add New Category');
-	id = undefined;
+	$('#id').val('');
+	$('#name').val('');
+	$('#show').prop('checked', true);
 });
-$('#editorForm').on('submit', function(){
-	var txt = $('#categoryINP').val();
-	if(txt){
-		var data = {};
-		data['txt'] = txt;
-		data['show'] = $('#categoryCB').is(':checked');
-		if(id){
-			data['id'] = id;
-		}
-		$.ajax({
-			url : '/search/edit/category',
-			type : 'POST',
-			data : data ,
+$('.firstLetter a').on('click', function(e){
+	e.preventDefault();
+	$('#categories').remove();
+	$.ajax({
+		url : '/management/search/categories/' + this.text,
+		type : 'POST',
 
-			success : function(data) {
-			
-			}
-		});
-	}else{
-		alert('Input field CATEGORY is empty');
-		return false;
-	}
+		success : function(data) {
+			$('<div></div>').attr('id','categories').addClass('panel panel-default').insertAfter('#letters').append(
+					$('<div></div>').addClass('panel-heading').append(
+							$('<h2></h2>').addClass('panel-title').text(data[0].categoryName)
+					).append(
+							$('<div></div>').addClass('panel-body').append(
+									$('<ul></ul>').addClass('list-inline').attr('id', 'ul')
+							)
+					)
+			);
+			$.each(data, function(index, value){
+				if(value.categoryId){
+					$('<li></li>').appendTo('#ul').append(
+							$('<a></a>').attr('id', value.categoryId).addClass(value.status=='SHOW' ? 'btn btn-default' : 'btn btn-warning').text(value.categoryName)
+					);
+				}
+			});
+			$('#categories a').on('click', function(e){
+				e.preventDefault();
+				$('#id').val($(this).attr('id'));
+				$('#name').val($(this).text());
+				$('#show').prop('checked', $(this).hasClass( "btn-default" ));
+				$('#editorLabel').text('Edit Category '+$(this).text());
+				$('#editor').modal();
+			})
+		}
+	});
 });
 </script>
 </body>

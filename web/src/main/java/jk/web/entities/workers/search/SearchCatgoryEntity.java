@@ -27,14 +27,14 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 
 @Entity
-@Table(name = "search_catgories", catalog = "jk", schema = "", uniqueConstraints = { @UniqueConstraint(columnNames = { "category_name" }) })
+@Table(name = "search_categories", catalog = "jk", schema = "", uniqueConstraints = { @UniqueConstraint(columnNames = { "category_name" }) })
 @XmlRootElement
-public class SearchCatgoriesEntity implements Serializable {
+public class SearchCatgoryEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public enum CategoryStatus{
-		SHOW,
-		DO_NOT_SHOW
+		DO_NOT_SHOW,
+		SHOW
 	}
 
 	@Id
@@ -53,14 +53,14 @@ public class SearchCatgoriesEntity implements Serializable {
     @Enumerated(EnumType.ORDINAL)
 	private CategoryStatus status;
 
-	public SearchCatgoriesEntity() {
+	public SearchCatgoryEntity() {
 	}
 
-	public SearchCatgoriesEntity(Long categoryId) {
+	public SearchCatgoryEntity(Long categoryId) {
 		this.categoryId = categoryId;
 	}
 
-	public SearchCatgoriesEntity(Long categoryId, String categoryName) {
+	public SearchCatgoryEntity(Long categoryId, String categoryName) {
 		this.categoryId = categoryId;
 		this.categoryName = categoryName;
 	}
@@ -100,10 +100,10 @@ public class SearchCatgoriesEntity implements Serializable {
 	public boolean equals(Object object) {
 		// TODO: Warning - this method won't work in the case the id fields are
 		// not set
-		if (!(object instanceof SearchCatgoriesEntity)) {
+		if (!(object instanceof SearchCatgoryEntity)) {
 			return false;
 		}
-		SearchCatgoriesEntity other = (SearchCatgoriesEntity) object;
+		SearchCatgoryEntity other = (SearchCatgoryEntity) object;
 		if ((this.categoryId == null && other.categoryId != null) || (this.categoryId != null && !this.categoryId.equals(other.categoryId))) {
 			return false;
 		}

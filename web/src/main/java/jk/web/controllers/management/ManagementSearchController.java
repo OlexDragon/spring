@@ -1,0 +1,127 @@
+package jk.web.controllers.management;
+
+import java.util.List;
+
+import jk.web.beans.view.management.SearchCategoryView;
+import jk.web.entities.workers.search.SearchCatgoryEntity;
+import jk.web.entities.workers.search.SearchCatgoryEntity.CategoryStatus;
+import jk.web.repositories.workers.search.SearchCatgoriesRepository;
+
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+@Controller
+@PreAuthorize("hasAuthority('MANAGER')")
+@RequestMapping("/management/search")
+public class ManagementSearchController {
+
+	private final Logger logger = LogManager.getLogger();
+
+	@Autowired
+	private SearchCatgoriesRepository searchCatgoriesRepository;
+
+	@ModelAttribute("letters")
+	public List<String>  attrBomView(){
+		return searchCatgoriesRepository.findAvailableFirstCharacters();
+	}
+
+	@RequestMapping(value="categories/**", method=RequestMethod.GET)
+	public String serchCategories(SearchCategoryView searchCategoryView, Model model){
+		logger.entry();
+		return "management/categories";
+	}
+
+	@RequestMapping(value="/categories/edit", method=RequestMethod.POST)
+	public String editCategory(SearchCategoryView searchCategoryView){
+		logger.entry(searchCategoryView);
+
+		String name = validateCategory(searchCategoryView.getName());
+		if(name!=null){
+			SearchCatgoryEntity catgoryEntity = searchCatgoriesRepository.findOneByCategoryName(name);
+			if(catgoryEntity==null){
+				Long id = searchCategoryView.getId();
+				if(id==null || (catgoryEntity = searchCatgoriesRepository.findOne(id))==null){
+
+					catgoryEntity = new SearchCatgoryEntity();
+					catgoryEntity.setCategoryName(name);
+					catgoryEntity.setStatus(searchCategoryView.isShow() ? CategoryStatus.SHOW : CategoryStatus.DO_NOT_SHOW);
+					searchCatgoriesRepository.save(catgoryEntity);
+
+					String msg = "A new category " + name + " has been saved";
+					logger.info(msg);
+					searchCategoryView.setMsg(msg);
+					searchCategoryView.setMsgStatus(Level.INFO);
+
+				}else{
+					catgoryEntity.setCategoryName(name);
+					catgoryEntity.setStatus(searchCategoryView.isShow() ? CategoryStatus.SHOW : CategoryStatus.DO_NOT_SHOW);
+					searchCatgoriesRepository.save(catgoryEntity);
+
+					String msg = "The category " + name + " status " + catgoryEntity.getStatus()+ " has been saved";
+					logger.info(msg);
+					searchCategoryView.setMsg(msg);
+					searchCategoryView.setMsgStatus(Level.INFO);
+				}
+
+			}else if((catgoryEntity.getStatus()==CategoryStatus.SHOW) != searchCategoryView.isShow()){
+				catgoryEntity.setStatus(searchCategoryView.isShow() ? CategoryStatus.SHOW : CategoryStatus.DO_NOT_SHOW);
+				searchCatgoriesRepository.save(catgoryEntity);
+
+				String msg = "The category " + name + " status " + catgoryEntity.getStatus()+ " has been saved";
+				logger.info(msg);
+				searchCategoryView.setMsg(msg);
+				searchCategoryView.setMsgStatus(Level.INFO);
+			}else{
+				String msg = "the category " + name + " has not been changed";
+				logger.warn(msg);
+				searchCategoryView.setMsg(msg);
+				searchCategoryView.setMsgStatus(Level.WARN);
+			}
+		}else{
+			String msg = "The category field is empry";
+			logger.error(msg);
+			searchCategoryView.setMsg(msg);
+			searchCategoryView.setMsgStatus(Level.ERROR);
+		}
+		return "management/categories";
+	}
+
+	@RequestMapping(value="categories/{startWith}", method = RequestMethod.POST)
+	public ResponseEntity<List<SearchCatgoryEntity>> searchByFirstLetter(@PathVariable String startWith){
+		logger.entry(startWith);
+
+		List<SearchCatgoryEntity> categories;
+		try{
+			categories = searchCatgoriesRepository.findByCategoryNameStartingWith(startWith);
+		}catch(Exception ex){
+			logger.catching(ex);
+			categories = null;
+		}
+		logger.trace("\n\t{}", categories);
+
+		HttpStatus status;
+		if(categories==null || categories.size()==0){
+			status = HttpStatus.NOT_FOUND;
+		}else{
+			categories.add(0, new SearchCatgoryEntity(0L, startWith));
+			status = HttpStatus.OK;
+		}
+
+		return logger.exit(new ResponseEntity<>(categories,  status));
+	}
+
+	private String validateCategory(String name) {
+		return name;
+	}
+}
