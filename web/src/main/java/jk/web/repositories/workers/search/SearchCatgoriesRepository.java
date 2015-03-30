@@ -5,6 +5,8 @@ import java.util.List;
 import jk.web.entities.workers.search.SearchCatgoryEntity;
 import jk.web.entities.workers.search.SearchCatgoryEntity.CategoryStatus;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -25,4 +27,6 @@ public interface SearchCatgoriesRepository extends JpaRepository<SearchCatgoryEn
 	public SearchCatgoryEntity findOneByCategoryName(String name);
 
 	public List<SearchCatgoryEntity> findByCategoryNameStartingWith(String startWith);
+
+	public Page<SearchCatgoryEntity> findFirst10ByCategoryNameContaining( String category, Pageable pageable);
 }
