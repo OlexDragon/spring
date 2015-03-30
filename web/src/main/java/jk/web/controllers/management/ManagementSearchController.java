@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @PreAuthorize("hasAuthority('MANAGER')")
@@ -123,5 +124,10 @@ public class ManagementSearchController {
 
 	private String validateCategory(String name) {
 		return name;
+	}
+
+	@RequestMapping(value="categories", method=RequestMethod.POST, params = "search")
+	public String categoriesCoontants(@RequestParam("search") String se){
+		return "management/categories";
 	}
 }

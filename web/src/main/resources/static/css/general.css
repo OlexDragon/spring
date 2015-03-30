@@ -114,7 +114,7 @@ body {
 	text-shadow: 1px 1px rgba(0, 0, 0, 0.7);
 }
 
-.result header .brand {
+.result header .brand{
 	color: #494f63;
 	padding: 3% 0 0 5%;
 	background-attachment: fixed;
@@ -124,7 +124,7 @@ body {
 	margin-bottom: 5px;
 }
 
-.brand {
+.brand{
 	font-size: 35px;
 	font-family: "DUBIEL", Arial, Helvetica, sans-serif;
 	cursor: pointer;

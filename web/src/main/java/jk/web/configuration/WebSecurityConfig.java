@@ -49,6 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/",
 				"/home",
 				"/login/**",
+				"/autocomplete/**",
 				"/connect/**",
 				"/signup/**",
 				"/confirm/**",
