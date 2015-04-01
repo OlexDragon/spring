@@ -2,7 +2,6 @@ package jk.web.controllers.workers.search;
 
 import java.util.List;
 
-import jk.web.beans.view.management.SearchCategoryView;
 import jk.web.entities.workers.search.SearchCatgoryEntity;
 import jk.web.entities.workers.search.SearchCatgoryEntity.CategoryStatus;
 import jk.web.html.select.ContentDiv;
@@ -13,10 +12,6 @@ import jk.web.workers.SearchClass.SearchDetails;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +20,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/search")

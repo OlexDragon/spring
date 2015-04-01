@@ -48,17 +48,73 @@
 				</div>
 			</form>
 		</div>
-	</nav>
-	<div class="container-fluid">
+	</nav><!--/*
+
+Letters
+
+*/--><div class="container-fluid">
 		<ul id="letters" class="pagination">
 			<li id="addCategory"><a href="#" data-toggle="modal" data-target="#editor">New</a></li>
 			<li class="firstLetter" th:each="l:${letters}"><a href="#" th:text="${l}">A</a></li>
-		</ul>
-		<div th:if="${page!=null}" id="categories" class="panel panel-default">
+		</ul><!--/*
+
+Result
+
+*/--><div th:if="${page!=null}" id="categories" class="panel panel-default">
 			<div class="panel-heading">
-				<h2 class="panel-title" th:text="${title}"></h2>
-			</div>
-			<div class="panel-body">
+				<ul class="list-inline">
+					<li>
+						<h2 class="panel-title">
+							<span th:text="${title} + ' ( '"></span>
+							<small th:text="${page.totalElements + ' results : ' + page.totalPages + ' pages'}"></small>
+							<span> )</span>
+						</h2>
+					</li><!--/*
+
+					Pagination
+
+			*/--><li>
+					<ul th:if="${page!=null and page.totalPages>1}"
+							id="pages"
+							class="pagination"
+							style="margin: 0;"
+							th:with="active=${T(java.lang.Math).round(T(java.lang.Math).floor(page.number/10))}">
+						<li id='prev' th:class="${active==0 ? 'disabled' : null}">
+							<a href="#" aria-label="Previous">
+								<span aria-hidden="true">&laquo;</span>
+							</a>
+						</li>
+						<li th:each="n:${#numbers.sequence(1,page.totalPages)}"
+								th:with="dozen=${T(java.lang.Math).floor(n/10)}"
+								class="dozen1" th:class="${'dozen' + dozen}"
+								th:classappend="${dozen!=active ? 'dNone' : n-1 == page.number ? 'active' : null}">
+							<a href="#"
+								th:href="${'/management/search/categories/'+title+'/' + (n-1)}"
+								th:text="${n}">1</a>
+						</li>
+						<li id='nxt' th:if="${page.totalPages>10 and T(java.lang.Math).round(T(java.lang.Math).floor(page.totalPages/10))!=active}" >
+							<a href="#" aria-label="Next">
+								<span aria-hidden="true">&raquo;</span>
+							</a>
+							<script type="text/javascript" th:inline="javascript">
+							/*<![CDATA[*/
+								$('#pages a').on('click', function(e){
+									var val = $(this).text()-1;
+									if(val != [[${active}]]){
+										e.preventDefault();
+									}
+								});
+							/*]]>*/
+							</script>
+						</li>
+					</ul>
+				</li>
+			</ul>
+			</div><!--/*
+
+					Body
+
+			*/--><div class="panel-body">
 				<ul id="ul" class="list-inline">
 					<li th:each="cat:${page.getContent()}" >
 						<a href="#"
@@ -71,7 +127,8 @@
 				</ul>
 			</div>
 			<script type="text/javascript">
-			$('#categories a').on('click', function(e){
+			/*<![CDATA[*/
+			$('#ul a').on('click', function(e){
 				e.preventDefault();
 				$('#id').val($(this).attr('id'));
 				$('#name').val($(this).text());
@@ -79,10 +136,14 @@
 				$('#editorLabel').text('Edit Category '+$(this).text());
 				$('#editor').modal();
 			})
+			/*]]>*/
 			</script>
 		</div>
-	</div>
-	<div class="modal fade" id="editor" tabindex="-1" role="dialog" aria-labelledby="editorLabel" aria-hidden="true">
+	</div><!--/*
+
+Modal Editor
+
+*/--><div class="modal fade" id="editor" tabindex="-1" role="dialog" aria-labelledby="editorLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -104,39 +165,87 @@
       	</div>
     </div>
   </div>
-</div>
-<script type="text/javascript">
-$('#addCategory').on("click", function(){
+</div><!--/*
+
+Script
+
+*/--><script type="text/javascript">
+/*<![CDATA[*//*[-
+
+Clear Modal Editor                    
+                                
+-]*/$('#addCategory').on("click", function(){
 	$('#editorLabel').text('Add New Category');
 	$('#id').val('');
 	$('#name').val('');
 	$('#show').prop('checked', true);
-});
-$('.firstLetter a').on('click', function(e){
+});/*[-
+
+On Click one of the letter                    
+                                
+-]*/$('.firstLetter a').on('click', function(e){
 	e.preventDefault();
 	$('#categories').remove();
+	var txt = this.text;
 	$.ajax({
-		url : '/management/search/categories/' + this.text,
+		url : '/management/search/categories/' + txt,
 		type : 'POST',
 
-		success : function(data) {
-			$('<div></div>').attr('id','categories').addClass('panel panel-default').insertAfter('#letters').append(
-					$('<div></div>').addClass('panel-heading').append(
-							$('<h2></h2>').addClass('panel-title').text(data[0].categoryName)
-					)
-			).append(
-						$('<div></div>').addClass('panel-body').append(
-								$('<ul></ul>').addClass('list-inline').attr('id', 'ul')
+		success : function(page) {
+			var li;
+			if(page!=null && page.totalPages>1){
+				var ul 
+				li = $('<li></li>').append(
+					ul = $('<ul></ul>').attr('id', 'pages').addClass('pagination').css('margin', 0).append(
+						$('<li></li>').attr('id', 'prev').addClass(Math.floor(page.number/10) ? 'disabled' : undefined).append(
+							$('<a></a>').attr('href','#').attr('aria-label','Previous').append(
+								$('<span></span>').attr('aria-hidden','true').text('&laquo;')
+							)
 						)
+					)
+				);
+				var active = Math.floor(page.number/10);
+				for(var i=0; i<page.totalPages;){
+					var dozen = Math.floor(i/10);
+					$('<li></li>').addClass('dozen'+dozen).addClass(dozen!=active ? 'dNone' : i == page.number ? 'active' : undefined).append(
+						$('<a></a>').attr('href','/management/search/categories/'+txt+'/' + i).text(++i)
+					).appendTo(ul);
+				}
+				if(page.totalPages>10 && Math.floor(page.totalPages/10)!=active){
+					$('<li></li>').attr('id','nxt').append(
+						$('<a></a>').attr('href','#').attr('aria-label','Next').append(
+							$('<span></span>').attr('aria-hidden','true').text('&raquo;')
+						)
+					).appendTo(ul);
+				}
+			}
+			$('<div></div>').attr('id','categories').addClass('panel panel-default').insertAfter('#letters').append(
+				$('<div></div>').addClass('panel-heading').append(
+					$('<ul></ul>').addClass('list-inline').append(
+						$('<li></li>').append(
+							$('<h2></h2>').addClass('panel-title').append(
+								$('<span></span>').text(txt+' ( ').append(
+									$('<small></small>').text(page.totalElements + ' results : ' + page.totalPages + ' pages')
+								)
+							).append(
+								$('<span></span>').text(' )')
+							)
+						)
+					).append(li)
+				)
+			).append(
+				$('<div></div>').addClass('panel-body').append(
+					$('<ul></ul>').addClass('list-inline').attr('id', 'ul')
+				 )
 			);
-			$.each(data, function(index, value){
+			$.each(page.content, function(index, value){
 				if(value.categoryId){
 					$('<li></li>').appendTo('#ul').append(
 							$('<a></a>').attr('id', value.categoryId).addClass(value.status=='SHOW' ? 'btn btn-default' : 'btn btn-warning').text(value.categoryName)
 					);
 				}
 			});
-			$('#categories a').on('click', function(e){
+			$('#ul a').on('click', function(e){
 				e.preventDefault();
 				$('#id').val($(this).attr('id'));
 				$('#name').val($(this).text());
@@ -146,7 +255,7 @@ $('.firstLetter a').on('click', function(e){
 			})
 		}
 	});
-});
+});/*]]>*/
 </script>
 </body>
 </html>

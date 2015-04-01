@@ -103,27 +103,19 @@ public class ManagementSearchController {
 	}
 
 	@RequestMapping(value="categories/{startWith}", method = RequestMethod.POST)
-	public ResponseEntity<List<SearchCatgoryEntity>> searchByFirstLetter(@PathVariable String startWith){
+	public ResponseEntity<Page<SearchCatgoryEntity>> searchByFirstLetter(@PathVariable String startWith){
 		logger.entry(startWith);
 
-		List<SearchCatgoryEntity> categories;
+		Page<SearchCatgoryEntity> categories;
 		try{
-			categories = searchCatgoriesRepository.findByCategoryNameStartingWith(startWith);
+			categories = searchCatgoriesRepository.findFirst2ByCategoryNameStartingWith(startWith, new PageRequest(0, 2, new Sort(Direction.ASC, "categoryName")));
 		}catch(Exception ex){
 			logger.catching(ex);
 			categories = null;
 		}
 		logger.trace("\n\t{}", categories);
 
-		HttpStatus status;
-		if(categories==null || categories.size()==0){
-			status = HttpStatus.NOT_FOUND;
-		}else{
-			categories.add(0, new SearchCatgoryEntity(0L, startWith));
-			status = HttpStatus.OK;
-		}
-
-		return logger.exit(new ResponseEntity<>(categories,  status));
+		return logger.exit(new ResponseEntity<>(categories,  HttpStatus.OK));
 	}
 
 	private String validateCategory(String name) {
@@ -134,13 +126,21 @@ public class ManagementSearchController {
 	public String categoriesContains(SearchCategoryView searchCategoryView, @RequestParam("search") String searchFor, Model model){
 		logger.entry(searchFor);
 
-		if(searchFor!=null && !(searchFor=searchFor.trim()).isEmpty()){
-			Page<SearchCatgoryEntity> page = searchCatgoriesRepository.findFirst10ByCategoryNameContaining(searchFor, new PageRequest(0, 20, new Sort(Direction.ASC, "categoryName")));
+		if(searchFor!=null && !(searchFor=searchFor.trim()).isEmpty())
+			categoriesContains(searchCategoryView, searchFor, 0, model);
+
+		return "management/categories";
+	}
+
+	@RequestMapping(value="categories/{contains}/{pageNumber}", method=RequestMethod.GET)
+	public String categoriesContains(SearchCategoryView searchCategoryView, @PathVariable String contains, @PathVariable int pageNumber, Model model){
+		logger.entry(contains, pageNumber);
+
+		Page<SearchCatgoryEntity> page = searchCatgoriesRepository.findFirst50ByCategoryNameContaining(contains, new PageRequest(pageNumber, 50, new Sort(Direction.ASC, "categoryName")));
 			if(page!=null && page.getTotalElements()>0){
 				model.addAttribute("page", page);
-				model.addAttribute("title", searchFor);
+				model.addAttribute("title", contains);
 			}
-		}
 		return "management/categories";
 	}
 }
