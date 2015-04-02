@@ -190,8 +190,8 @@ IE11
 
 						<div id="result" th:remove="body">
 							<p id="count" class="breaker">2 results</p>
-							<ul id="pages" class="list-inline pagination">
-								<li id='prev' class='disabled'><a href="#" aria-label="Previous">
+							<ul class="pages list-inline pagination">
+								<li class='prev disabled'><a href="#" aria-label="Previous">
 									<span aria-hidden="true">«</span>
 								</a></li>
 								<li class="dozen1"><a href="#">1</a></li>
@@ -217,7 +217,7 @@ IE11
 								<li class='dNone dozen3'><a href="#">555</a></li>
 								<li class='dNone dozen3'><a href="#">777</a></li>
 								<li class='dNone dozen3'><a href="#">999</a></li>
-								<li id='nxt'><a href="#" aria-label="Next">
+								<li class='nxt'><a href="#" aria-label="Next">
 									<span aria-hidden="true">»</span>
 								</a></li>
 							</ul>
@@ -443,27 +443,7 @@ IE11
 		</footer>
 	<script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
-/*[-*/	var thehour = new Date().getHours();
-
-		if (thehour >= 18) {
-			// evening
-			$('#mainBg').attr('src','../static/images/background/20.jpg');
-		} else if (thehour >= 15) {
-			// afternoon
-			$('#mainBg').attr('src','../static/images/background/19.jpg');
-		} else if (thehour >= 12) {
-			// noon
-			$('#mainBg').attr('src','../static/images/background/18.jpg');
-		} else if (thehour >= 7) {
-			// morning
-			$('#mainBg').attr('src','../static/images/background/21.jpg');
-		} else if (thehour >= 0) {
-			// night
-			$('#mainBg').attr('src','../static/images/background/20.jpg');
-		} else {
-			// general
-			$('#mainBg').attr('src','../static/images/background/18.jpg');
-		}
+/*[-*/
 
 	//Function to show 'Advance Search Panel'
 
@@ -483,8 +463,7 @@ IE11
 					return;
 				$('#abc .active').removeAttr('class');
 				$(this).addClass('active');
-				/*[-*/$('#categories').show();/*-]*/
-				/*[+ $('#categories').empty();
+				$('#categories').empty();
 				$.ajax({
 						url : '/search/categories/' + this.text,
 						type : 'POST',
@@ -501,16 +480,16 @@ IE11
 										)
 								);
 							}
-+]*/					});
-/*[+					$('#categories').show();
-+]*/					$('#categories a').on('click', function(e) {
+					});
+					$('#categories').show();
+					$('#categories a').on('click', function(e) {
 								e.preventDefault();
 								$('#keywords').val(this.text);
 								$('#searchForm').submit();
 						});
-/*[+				}
+				}
 				});
-			});+]*//*[-
+			});/*[-
 
 				//On Submit
 
@@ -520,7 +499,7 @@ IE11
 				if(wel[0]!==undefined){
 					wel.removeClass('welcome').addClass('result');
 				}
-/*[+		$('#categories').empty();
+		$('#categories').empty();
 			$('#result').empty();
    				var keywords = trim($('#keywords').val());
 				if(keywords){
@@ -562,7 +541,7 @@ IE11
 							}
 						});
 					}
-+]*/		});
+		});
 			function jobs(data) {
 				jobsCount(data.hits);
 				jobsPages(data.pages);
@@ -575,20 +554,20 @@ IE11
 					);
 				}
 			}
+var activeDozen;
 function jobsPages(pages) {
 
 	var li;
 	if (pages && pages > 1) {
 		var p = $('<ul></ul>')
 				.insertAfter($('#count'))
-				.attr('id', 'pages')
-				.addClass('list-inline pagination')
+				.addClass('pages list-inline pagination')
 				.append(/*[-
 
 			              Preview button
 
 -]*/				$('<li></li>')
-						.attr('id', 'prev')
+						.addClass('prev')
 						.append(
 								$('<a></a>')
 								.attr('href', '#')
@@ -603,7 +582,7 @@ function jobsPages(pages) {
 
 	              pages creation
 
--]*/	var activeDozen;
+-]*/
 		for (var i = 1; i <= pages; i++) {
 			var cn = className + Math.ceil(i/10);
 			li = $('<li></li>')
@@ -623,7 +602,7 @@ function jobsPages(pages) {
 					    Next Button
 					    
 -]*/	li = $('<li></li>')
-			.attr('id', 'nxt')
+			.addClass('nxt')
 			.appendTo(p)
 			.append(
 					$('<a></a>')
@@ -639,56 +618,21 @@ function jobsPages(pages) {
 					Disable next if first dozen
 
 -]*/	if(pages && activeDozen == Math.ceil(pages/10)){
-			$('#nxt').addClass('dNone');
+			$('.nxt').addClass('dNone');
 		}/*[-
 
 		              Disable preview if first dozen
 
 -]*/	if(activeDozen == 1){
-			$('#prev').addClass('disabled');
+			$('.prev').addClass('disabled');
 		}/*[-
 
 					Show 10 buttons
 
 -]*/	$('.' + className + activeDozen).removeClass('dNone');
-			page = undefined;/*[-*/
+			page = undefined;
 	}
 }
-
-//********     Page Select OnClick funktion       ********
-
-var pages = 23;
-var activeDozen = 1;
-/*-]*/	$('#pages a').on('click', function(e) {
-			e.preventDefault();
-			var attr = $(this).attr('aria-label');
-			if(attr){
-				if(!$(this).parent().hasClass('disabled')){
-					$('.'+className+activeDozen).addClass('dNone');
-					if(attr=='Previous'){
-						activeDozen--;
-					}else{
-						activeDozen++;
-					}
-					$('.'+className+activeDozen).removeClass('dNone');
-					if(activeDozen == 1){
-						$('#prev').addClass('disabled');
-					}else{
-						$('#prev').removeClass('disabled');
-					}
-					if(pages && activeDozen >= Math.ceil(pages/10)){
-						$('#nxt').addClass('dNone');
-					}else{
-						$('#nxt').removeClass('dNone');
-					}
-				}
-			}else{
-				page = this.text;
-				$('#searchForm').submit();
-			}
-		});
-/*[+	}
-}	+]*/
 			function jobsResults(jobs) {
 				if (jobs) {
 					var length = jobs.length;
@@ -744,14 +688,53 @@ var activeDozen = 1;
 																	+ value.site
 																	+ '</a>');
 								}
-						});
+						});/*[-
+
+						   Clone pages                   
+
+						-]*/var pages = $('.pages');
+							if(pages){
+								pages.clone().insertAfter(list);
+							}/*[-*/
+
+							//********     Page Select OnClick funktion       ********
+
+							/*-]*/
+										$('.pages a').on('click', function(e) {
+										e.preventDefault();
+										var attr = $(this).attr('aria-label');
+										if(attr){
+											if(!$(this).parent().hasClass('disabled')){
+												$('.'+className+activeDozen).addClass('dNone');
+												if(attr=='Previous'){
+													activeDozen--;
+												}else{
+													activeDozen++;
+												}
+												$('.'+className+activeDozen).removeClass('dNone');
+												if(activeDozen == 1){
+													$('.prev').addClass('disabled');
+												}else{
+													$('.prev').removeClass('disabled');
+												}
+												if(pages && activeDozen >= Math.ceil(pages/10)){
+													$('.nxt').addClass('dNone');
+												}else{
+													$('.nxt').removeClass('dNone');
+												}
+											}
+										}else{
+											page = this.text;
+											$('#searchForm').submit();
+										}
+									});
 					}
 				}
-			}/*[-]*/
+			}/*[-
 
 			   // Location
 
-/*-]*/
+-]*/
 function locations(solveLocations) {
 	if (solveLocations && solveLocations.length > 0) {
 		$('#locations')
@@ -772,14 +755,13 @@ function locations(solveLocations) {
 		});
 	} else
 		alert('Impossible to find a location');
-/*[-*/}/*-]*/
 	$('#solveLocations a').on('click',
 			function(e) {
 				e.preventDefault();
 				$('#location').val(this.text);
-/*[+			$('#searchForm').submit();
-+]*/});
-/*[+}+]*/
+			$('#searchForm').submit();
+});
+}
 	function trim(text) {
 		if (text) {
 			text = $.trim(text);
