@@ -287,7 +287,7 @@ public class CareerjetAPIController {
 		Client c = new Client("en_CA");
 		Map<String, String> args = new HashMap<String, String>();
 		args.put("keywords", keywords);
-//		args.put("affid", "14fa3cd725f3bba78dbcbb0ec638b98b");
+		args.put("affid", "14fa3cd725f3bba78dbcbb0ec638b98b");
 
 		if(location!=null){
 			args.put("location", location);
