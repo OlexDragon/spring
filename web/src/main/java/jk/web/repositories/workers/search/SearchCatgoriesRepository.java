@@ -27,7 +27,7 @@ public interface SearchCatgoriesRepository extends JpaRepository<SearchCatgoryEn
 	public SearchCatgoryEntity findOneByCategoryName(String name);
 
 	public List<SearchCatgoryEntity> findByCategoryNameStartingWith(String startWith);
-	public Page<SearchCatgoryEntity> findFirst2ByCategoryNameStartingWith(String startWith, Pageable pageable);
+	public Page<SearchCatgoryEntity> findFirst50ByCategoryNameStartingWith(String startWith, Pageable pageable);
 
 	public Page<SearchCatgoryEntity> findFirst10ByCategoryNameContaining( String searchFor, Pageable pageable);
 

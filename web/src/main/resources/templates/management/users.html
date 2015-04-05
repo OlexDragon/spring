@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Users</title>
+<th:block th:replace="search :: head">
+	<link rel="shortcut icon" type="image/vnd.microsoft.icon" href="../static/favicon.ico" th:href="@{/favicon.ico}" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="../static/css/general_static.css" th:href="@{/css/general.css}" />
+	<link rel="stylesheet" href="../static/css/normalize.css" th:href="@{/css/normalize.css}" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+</th:block>
+</head>
+<body th:with="searchFormPath=${'/management/users'}, managementMenu=${true}, usersMenu=${true}">
+	<nav th:replace="management/categories :: managementMenu"></nav>
+	<div class="container-fluid">
+		<table class="table table-striped table-hover table-condensed table-responsive">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Username</th>
+					<th>Permissions</th>
+					<th>Created</th>
+					<th>Accessed</th>
+				</tr>
+			</thead>
+			<tr th:each="u:${usersView.all}">
+				<td th:text="${u.id}">ID</td>
+				<td th:text="${u.username}">Username</td>
+				<td th:text="${u.permissions}">Permissions</td>
+				<td th:text="${#calendars.format(u.createdDate, 'HH:mm dd MMMM yyyy')}">Created</td>
+				<td th:text="${u.lastAccessed!=null ? #calendars.format(u.lastAccessed, 'HH:mm dd MMMM yyyy') : null}">Accessed</td>
+			</tr>
+		</table>
+	</div>
+	<div th:replace="search :: about"></div>
+	<footer th:replace="search :: footer"></footer>
+</body>
+</html>

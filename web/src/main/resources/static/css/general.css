@@ -123,10 +123,11 @@ body {
 	background-size: 100%;
 	margin-bottom: 5px;
 }
-
+.navbar-brand, .brand{
+	font-family: "DUBIEL", Arial, Helvetica, sans-serif;
+}
 .brand{
 	font-size: 35px;
-	font-family: "DUBIEL", Arial, Helvetica, sans-serif;
 	cursor: pointer;
 }
 
@@ -385,4 +386,17 @@ footer a:hover {
 input, option, select, button, div.search div#abc {
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	letter-spacing: 0.01em;
+}
+nav.navbar-fixed-bottom, .navbar-fixed-bottom #navbar, .navbar-fixed-bottom .navbar, .navbar-fixed-bottom .nav>li>a, .navbar-fixed-bottom .navbar-brand{
+	padding: 0 10px;
+	height: 30px;
+	line-height: 30px;
+	min-height: 30px;
+}
+.navbar-fixed-bottom .dropdown-menu>li>a{
+	color: gray;
+}
+.navbar-fixed-bottom .dropdown-menu>li>a:focus, .navbar-fixed-bottom .dropdown-menu>li>a:hover, .navbar-fixed-bottom .dropdown-menu>.active>a, .navbar-fixed-bottom .dropdown-menu>.active>a:focus, .navbar-fixed-bottom .dropdown-menu>.active>a:hover{
+	color: white;
+	background-color: #080808;
 }
