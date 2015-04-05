@@ -36,9 +36,13 @@ public class ManagementSearchController {
 	@Autowired
 	private SearchCatgoriesRepository searchCatgoriesRepository;
 
+	private List<String> findAvailableFirstCharacters;
+
 	@ModelAttribute("letters")
 	public List<String>  attrBomView(){
-		return searchCatgoriesRepository.findAvailableFirstCharacters();
+		if(findAvailableFirstCharacters==null)
+			findAvailableFirstCharacters = searchCatgoriesRepository.findAvailableFirstCharacters();
+		return findAvailableFirstCharacters;
 	}
 
 	@RequestMapping(value="categories/**", method=RequestMethod.GET)
@@ -51,7 +55,7 @@ public class ManagementSearchController {
 	public String editCategory(SearchCategoryView searchCategoryView){
 		logger.entry(searchCategoryView);
 
-		String name = validateCategory(searchCategoryView.getName());
+		String name = searchCategoryView.getName();
 		if(name!=null){
 			SearchCatgoryEntity catgoryEntity = searchCatgoriesRepository.findOneByCategoryName(name);
 			if(catgoryEntity==null){
@@ -78,6 +82,7 @@ public class ManagementSearchController {
 					searchCategoryView.setMsg(msg);
 					searchCategoryView.setMsgStatus(Level.INFO);
 				}
+				findAvailableFirstCharacters = null;
 
 			}else if((catgoryEntity.getStatus()==CategoryStatus.SHOW) != searchCategoryView.isShow()){
 				catgoryEntity.setStatus(searchCategoryView.isShow() ? CategoryStatus.SHOW : CategoryStatus.DO_NOT_SHOW);
@@ -104,22 +109,22 @@ public class ManagementSearchController {
 
 	@RequestMapping(value="categories/{startWith}", method = RequestMethod.POST)
 	public ResponseEntity<Page<SearchCatgoryEntity>> searchByFirstLetter(@PathVariable String startWith){
-		logger.entry(startWith);
-
-		Page<SearchCatgoryEntity> categories;
-		try{
-			categories = searchCatgoriesRepository.findFirst2ByCategoryNameStartingWith(startWith, new PageRequest(0, 2, new Sort(Direction.ASC, "categoryName")));
-		}catch(Exception ex){
-			logger.catching(ex);
-			categories = null;
-		}
-		logger.trace("\n\t{}", categories);
-
-		return logger.exit(new ResponseEntity<>(categories,  HttpStatus.OK));
+		return categoriesStartingWith(startWith, 0);
 	}
 
-	private String validateCategory(String name) {
-		return name;
+	@RequestMapping(value="categories/ajax/{startWith}/{pageNumber}", method=RequestMethod.GET)
+	public ResponseEntity<Page<SearchCatgoryEntity>> categoriesStartingWith(@PathVariable String startWith, @PathVariable int pageNumber){
+		logger.entry(startWith, pageNumber);
+		return logger.exit(
+				new ResponseEntity<>(
+						categoriesStartWith(startWith, pageNumber),
+								HttpStatus.OK));
+	}
+
+	private Page<SearchCatgoryEntity> categoriesStartWith(String startWith, int pageNumber) {
+		return searchCatgoriesRepository.findFirst50ByCategoryNameStartingWith(
+				startWith,
+				new PageRequest(pageNumber, 50, new Sort(Direction.ASC, "categoryName")));
 	}
 
 	@RequestMapping(value="categories", method=RequestMethod.POST, params = "submitSearch")
@@ -132,7 +137,7 @@ public class ManagementSearchController {
 		return "management/categories";
 	}
 
-	@RequestMapping(value="categories/{contains}/{pageNumber}", method=RequestMethod.GET)
+	@RequestMapping(value="categories/contains/{contains}/{pageNumber}", method=RequestMethod.GET)
 	public String categoriesContains(SearchCategoryView searchCategoryView, @PathVariable String contains, @PathVariable int pageNumber, Model model){
 		logger.entry(contains, pageNumber);
 
@@ -140,6 +145,19 @@ public class ManagementSearchController {
 			if(page!=null && page.getTotalElements()>0){
 				model.addAttribute("page", page);
 				model.addAttribute("title", contains);
+				model.addAttribute("for", "contains");
+			}
+		return "management/categories";
+	}
+	@RequestMapping(value="categories/startWith/{startWith}/{pageNumber}", method=RequestMethod.GET)
+	public String categoriesStartWith(SearchCategoryView searchCategoryView, @PathVariable String startWith, @PathVariable int pageNumber, Model model){
+		logger.entry(startWith, pageNumber);
+
+		Page<SearchCatgoryEntity> page = categoriesStartWith(startWith, pageNumber);
+			if(page!=null && page.getTotalElements()>0){
+				model.addAttribute("page", page);
+				model.addAttribute("title", startWith);
+				model.addAttribute("for", "startWith");
 			}
 		return "management/categories";
 	}

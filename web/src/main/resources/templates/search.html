@@ -6,12 +6,14 @@
 <head>
 <meta charset="UTF-8" />
 <title>FashionProFinder</title>
+<th:block th:fragment="head">
 <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="../static/favicon.ico" th:href="@{/favicon.ico}" />
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
 <link rel="stylesheet" href="../static/css/general_static.css" th:href="@{/css/general.css}" />
 <link rel="stylesheet" href="../static/css/normalize.css" th:href="@{/css/normalize.css}" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+</th:block>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -27,7 +29,7 @@
 comments: 
 IE11
 -->
-<body>
+<body th:with="searchMenu=${true}">
 	<div class="container-fluid welcome">
 		<header>
 			<div class="brand">FashionProFinder</div>
@@ -418,7 +420,7 @@ IE11
 		<img id="mainBg" th:src="@{${bgImage}}"/>
 
 	</div>
-<div id="aboutModal" class="modal fade">
+<div id="aboutModal" class="modal fade" th:fragment="about">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -435,12 +437,42 @@ IE11
 		<p>For any questions please contact us <a href="mailto:info@fashionprofinder.com">Info@fashionprofinder.com/</a>
 		</p>
       </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal --></body>
-		<footer>
-			Fashion PRO Finder® - <a id="about" href="#">About us</a> - <a href="/">Search</a> 
-		</footer>
+    </div><!--/* /.modal-content */-->
+  </div><!--/* /.modal-dialog */-->
+</div><!--/* /.modal
+
+	Footer
+
+ */-->
+ 	<nav class="navbar navbar-default navbar-fixed-bottom navbar-inverse" th:fragment="footer">
+ 	<div class="container-fluid">
+ 	<div class="navbar-header">
+ 		<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+ 			<span class="sr-only">Toggle navigation</span>
+ 			<span class="icon-bar"></span>
+ 		</button>
+ 		<a href="/" class="navbar-brand">Fashion PRO Finder®</a>
+ 	</div>
+ 	<div id="navbar" class="collapse navbar-collapse">
+ 		<ul class="nav navbar-nav navbar-right">
+ 			<li><a href="#" data-toggle="modal" data-target="#aboutModal">About us</a></li>
+ 			<li th:classappend="${searchMenu!=null ? 'active' : null}"><a href="/">Search</a></li>
+ 			<li class="dropup" sec:authorize="hasAuthority('MANAGER')" th:classappend="${managementMenu!=null ? 'active' : null}">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Management<span class="caret"></span></a>
+					<ul class="dropdown-menu navbar-inverse" role="menu" aria-labelledby="managementMenu">
+						<li role="presentation" th:classappend="${categoriesMenu!=null ? 'active' : null}"><a role="menuitem" tabindex="-1" href="/management/search/categories">Edit Search Categories</a></li>
+						<li role="presentation" th:classappend="${usersMenu!=null ? 'active' : null}"><a role="menuitem" tabindex="-1" href="/management/users">Users</a></li>
+					</ul>
+			</li>
+		</ul>
+	</div>
+	</div>
+	</nav><!--/*
+
+	End of the body
+
+*/-->
+</body>
 	<script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
 /*[-*/
@@ -768,13 +800,6 @@ function locations(solveLocations) {
 		}
 		return text;
 	}
-/*[-
-
-	      About Us
-
--]*/$('#about').on('click', function(){
-			$('#aboutModal').modal('show');
-	});
 	$('.brand').on('click', function(){
 		location.reload();
 	});
