@@ -420,6 +420,7 @@ IE11
 		<img id="mainBg" th:src="@{${bgImage}}"/>
 
 	</div>
+<th:block th:fragment="footer">
 <div id="aboutModal" class="modal fade" th:fragment="about">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -444,7 +445,7 @@ IE11
 	Footer
 
  */-->
- 	<nav class="navbar navbar-default navbar-fixed-bottom navbar-inverse" th:fragment="footer">
+ 	<nav class="navbar navbar-default navbar-fixed-bottom navbar-inverse">
  	<div class="container-fluid">
  	<div class="navbar-header">
  		<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
@@ -467,7 +468,8 @@ IE11
 		</ul>
 	</div>
 	</div>
-	</nav><!--/*
+	</nav>
+</th:block><!--/*
 
 	End of the body
 

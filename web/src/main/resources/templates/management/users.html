@@ -29,15 +29,57 @@
 				</tr>
 			</thead>
 			<tr th:each="u:${usersView.all}">
-				<td th:text="${u.id}">ID</td>
+				<td th:text="${u.id}" th:class="${usersView.getPermissions(u.permissions)}">ID</td>
 				<td th:text="${u.username}">Username</td>
 				<td th:text="${u.permissions}">Permissions</td>
 				<td th:text="${#calendars.format(u.createdDate, 'HH:mm dd MMMM yyyy')}">Created</td>
 				<td th:text="${u.lastAccessed!=null ? #calendars.format(u.lastAccessed, 'HH:mm dd MMMM yyyy') : null}">Accessed</td>
 			</tr>
 		</table>
-	</div>
-	<div th:replace="search :: about"></div>
+		<script type="text/javascript">
+		var selection;
+		$('tbody tr').on('click', function(){
+			if(selection)
+				selection.removeClass('success');
+			selection = $(this).addClass('success');
+			var firstTd = selection.find('td').eq(0);
+			var id = firstTd.text();
+			$('#id').val(id);
+			$('#editorLabel').text(selection.find('td').eq(1).text());
+			var chBoxes = $('#editorForm input[type=checkbox]');
+			$.each( chBoxes, function(index){
+			    $(this).prop( "checked", firstTd.hasClass($(this).attr('id')));
+			});
+			$('#editor').modal();
+		});
+		</script>
+	</div><!--/*
+
+Modal Editor
+
+*/--><div class="modal fade" id="editor" tabindex="-1" role="dialog" aria-labelledby="editorLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 id="editorLabel" class="modal-title">Modal title</h4>
+      </div>
+      	<div class="modal-body">
+      		<form id="editorForm" method="post" action="/management/users/edit">
+      			<input id="id" name="id" type="hidden"/>
+      			<label for="categoryINP">Permissions:</label>
+      			<div class="container">
+      			<div class="checkbox" th:each="p:${T(jk.web.entities.user.LoginEntity.Permission).values()}" th:classappend="${#authorization.expression('hasRole(''ADMIN'')') ? null : 'disabled'}">
+					<input th:id="${p}" th:name="${p}" type="checkbox" th:disabled="${not #authorization.expression('hasRole(''ADMIN'')')}"/>
+      				<label th:for="${p}" th:text="${p}"></label>
+        		</div>
+        		<button th:if="${#authorization.expression('hasRole(''ADMIN'')')}" type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-floppy-save"></span> Save</button>
+        		</div>
+      		</form>
+      	</div>
+    </div>
+  </div>
+ </div>
 	<footer th:replace="search :: footer"></footer>
 </body>
 </html>

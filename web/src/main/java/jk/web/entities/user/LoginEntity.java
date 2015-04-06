@@ -31,7 +31,7 @@ public class LoginEntity implements Serializable{
 	private static final long serialVersionUID = -884435162021696875L;
 
 	public enum Permission implements GrantedAuthority{
-		ALL					(1	 ),
+		UNDEFINED			(1	 ),
 		DEFAULT				(1<<1),
 		LOCKED				(1<<2),
 		CREDENTIALS_EXPIRED	(1<<3),
