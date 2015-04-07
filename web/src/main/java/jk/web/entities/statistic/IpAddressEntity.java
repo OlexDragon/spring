@@ -61,8 +61,7 @@ public class IpAddressEntity implements Serializable {
         this.ipAddressesId = ipAddressesId;
     }
 
-    public IpAddressEntity(Long ipAddressesId, String ipAddress) {
-        this.ipAddressesId = ipAddressesId;
+    public IpAddressEntity(String ipAddress) {
         this.ipAddress = ipAddress;
     }
 
