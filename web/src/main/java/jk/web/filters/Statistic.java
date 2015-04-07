@@ -8,9 +8,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import jk.web.entities.statistic.IpAddressEntity;
+import jk.web.entities.statistic.RequestUrlEntity;
 import jk.web.entities.statistic.StatisticEntity;
 import jk.web.entities.statistic.UserAgentEntity;
 import jk.web.entities.statistic.VersionEntity;
+import jk.web.repositories.statictic.IpAddressRepository;
+import jk.web.repositories.statictic.RequestUrlRepository;
 import jk.web.repositories.statictic.StatisticRepository;
 import jk.web.repositories.statictic.UserAgendRepository;
 import jk.web.repositories.statictic.VersionRepository;
@@ -37,6 +41,10 @@ public class Statistic extends OncePerRequestFilter {
 	private UserAgendRepository userAgendRepository;
 	@Autowired
 	private VersionRepository versionRepository;
+	@Autowired
+	private IpAddressRepository ipAddressRepository;
+	@Autowired
+	private RequestUrlRepository requestUrlRepository;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -107,9 +115,30 @@ public class Statistic extends OncePerRequestFilter {
 				   			browserVersion,
 				   			operatingSystem);
 
+			try{
 			UserAgentEntity userAgent = gerUserAgent(getVersion());
+			IpAddressEntity ipAddressEntity = getIpAddressEntity();
+			RequestUrlEntity requestUrlEntity = getRequestUrlEntity();
+
 			StatisticEntity statistic = new StatisticEntity();
+			statistic.setLoginId(userId);
+			statistic.setIpAddress(ipAddressEntity);
 			statistic.setUserAgent(userAgent);
+			}catch(Exception e){
+				logger.catching(e);
+			}
+		}
+
+		private RequestUrlEntity getRequestUrlEntity() {
+			RequestUrlEntity ru = requestUrlRepository.getOneByRequestUrl(requestUrl);
+			return null;
+		}
+
+		private IpAddressEntity getIpAddressEntity() {
+			IpAddressEntity ip = ipAddressRepository.findOneByIpAddress(ipAddress);
+			if(ip==null)
+				ip = ipAddressRepository.save(new IpAddressEntity(ipAddress));
+			return ip;
 		}
 
 		private UserAgentEntity gerUserAgent(VersionEntity browserVersion) {
@@ -117,7 +146,7 @@ public class Statistic extends OncePerRequestFilter {
 			UserAgentEntity ua = userAgendRepository.findOneByBrowserAndBrowserVersionAndOperatingSystem(browser, browserVersion, operatingSystem);
 			if(ua == null)
 				ua = userAgendRepository.save(new UserAgentEntity(browser, browserVersion, operatingSystem));
-			return ua;
+			return logger.exit(ua);
 		}
 
 		private VersionEntity getVersion() {

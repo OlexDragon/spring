@@ -37,16 +37,19 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "RequestUrlEntity.findByRequestUrl", query = "SELECT r FROM RequestUrlEntity r WHERE r.requestUrl = :requestUrl")})
 public class RequestUrlEntity implements Serializable {
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "request_url_id")
     private Integer requestUrlId;
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 2048)
     @Column(name = "request_url")
     private String requestUrl;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "requestUrlEntity", fetch = FetchType.EAGER)
     private List<StatisticRequestUrlEntity> statisticRequestUrlEntityList;
 
