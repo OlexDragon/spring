@@ -8,6 +8,7 @@ package jk.web.entities.statistic;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -42,55 +43,60 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "StatisticEntity.findByDate", query = "SELECT s FROM StatisticEntity s WHERE s.date = :date")})
 public class StatisticEntity implements Serializable {
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "statistic_id")
-    private Integer statisticId;
+    private Long statisticId;
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "login_Id")
-    private int loginId;
-    @Basic(optional = false)
-    @NotNull
+    private Long loginId;
+
+    @Basic(optional = true)
     @Column(name = "date")
     @Temporal(TemporalType.DATE)
     private Date date;
+
     @JoinColumn(name = "ip_address_id", referencedColumnName = "ip_addresses_id")
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    private IpAddressEntity ipAddressId;
+    private IpAddressEntity ipAddress;
+
     @JoinColumn(name = "user_agent_id", referencedColumnName = "user_agent_id")
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    private UserAgentEntity userAgentId;
+    private UserAgentEntity userAgent;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "statisticEntity", fetch = FetchType.EAGER)
     private List<StatisticRequestUrlEntity> statisticRequestUrlEntityList;
 
     public StatisticEntity() {
     }
 
-    public StatisticEntity(Integer statisticId) {
+    public StatisticEntity(Long statisticId) {
         this.statisticId = statisticId;
     }
 
-    public StatisticEntity(Integer statisticId, int loginId, Date date) {
+    public StatisticEntity(Long statisticId, Long loginId, Date date) {
         this.statisticId = statisticId;
         this.loginId = loginId;
         this.date = date;
     }
 
-    public Integer getStatisticId() {
+    public Long getStatisticId() {
         return statisticId;
     }
 
-    public void setStatisticId(Integer statisticId) {
+    public void setStatisticId(Long statisticId) {
         this.statisticId = statisticId;
     }
 
-    public int getLoginId() {
+    public Long getLoginId() {
         return loginId;
     }
 
-    public void setLoginId(int loginId) {
+    public void setLoginId(Long loginId) {
         this.loginId = loginId;
     }
 
@@ -102,20 +108,20 @@ public class StatisticEntity implements Serializable {
         this.date = date;
     }
 
-    public IpAddressEntity getIpAddressId() {
-        return ipAddressId;
+    public IpAddressEntity getIpAddress() {
+        return ipAddress;
     }
 
-    public void setIpAddressId(IpAddressEntity ipAddressId) {
-        this.ipAddressId = ipAddressId;
+    public void setIpAddress(IpAddressEntity ipAddress) {
+        this.ipAddress = ipAddress;
     }
 
-    public UserAgentEntity getUserAgentId() {
-        return userAgentId;
+    public UserAgentEntity getUserAgent() {
+        return userAgent;
     }
 
-    public void setUserAgentId(UserAgentEntity userAgentId) {
-        this.userAgentId = userAgentId;
+    public void setUserAgent(UserAgentEntity userAgent) {
+        this.userAgent = userAgent;
     }
 
     @XmlTransient
