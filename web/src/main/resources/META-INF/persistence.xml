@@ -19,6 +19,15 @@
     <class>jk.web.user.entities.FilesEntity</class>
     <class>jk.web.workers.search.entities.SearchCatgoryEntity</class>
     <class>jk.web.user.entities.BusinessEntity</class>
+    <class>jk.web.entities.statistic.VersionsEntity</class>
+    <class>jk.web.entities.statistic.StatisticDayEntity</class>
+    <class>jk.web.entities.statistic.IpAddressesEntity</class>
+    <class>jk.web.entities.statistic.UserAgentEntity</class>
+    <class>jk.web.entities.statistic.StatisticEntity</class>
+    <class>jk.web.entities.statistic.RequestUrlEntity</class>
+    <class>jk.web.entities.statistic.VersionEntity</class>
+    <class>jk.web.entities.statistic.StatisticRequestUrlEntity</class>
+    <class>jk.web.entities.statistic.IpAddressEntity</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/jk?zeroDateTimeBehavior=convertToNull"/>
       <property name="javax.persistence.jdbc.password" value="potomkina"/>
