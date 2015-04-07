@@ -8,10 +8,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import jk.web.entities.statistic.StatisticEntity;
+import jk.web.entities.statistic.UserAgentEntity;
+import jk.web.entities.statistic.VersionEntity;
+import jk.web.repositories.statictic.StatisticRepository;
+import jk.web.repositories.statictic.UserAgendRepository;
+import jk.web.repositories.statictic.VersionRepository;
 import jk.web.user.LoginDetails;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -21,6 +28,15 @@ import eu.bitwalker.useragentutils.UserAgent;
 import eu.bitwalker.useragentutils.Version;
 
 public class Statistic extends OncePerRequestFilter {
+
+	private static final Logger logger = LogManager.getLogger();
+
+	@Autowired
+	private StatisticRepository statisticRepository;
+	@Autowired
+	private UserAgendRepository userAgendRepository;
+	@Autowired
+	private VersionRepository versionRepository;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -56,12 +72,29 @@ public class Statistic extends OncePerRequestFilter {
 		return id;
 	}
 
-	private class DoStatistic{
+	private class DoStatistic extends Thread{
 
-		private final Logger logger = LogManager.getLogger();
+		private Long userId;
+		private String ipAddress, requestUrl;
+		private Browser browser;
+		private Version browserVersion;
+		OperatingSystem operatingSystem;
 
 		public DoStatistic(Long userId, String ipAddress, String requestUrl, Browser browser, Version browserVersion, OperatingSystem operatingSystem) {
-			   logger.trace("\n\tuserId:{}"
+
+				this.userId = userId;
+				this.ipAddress = ipAddress;
+				this.requestUrl = requestUrl;
+				this.browser = browser;
+				this.browserVersion = browserVersion;
+				this.operatingSystem = operatingSystem;
+				setPriority(MIN_PRIORITY);
+				start();
+		}
+
+		@Override
+		public void run() {
+			logger.trace("\n\tuserId:{}"
 			   			+ "\n\tipAddress: {}"
 			   			+ "\n\trequestUrl: {}"
 				   		+ "\n\tbrowser: {}"
@@ -73,6 +106,36 @@ public class Statistic extends OncePerRequestFilter {
 				   			browser,
 				   			browserVersion,
 				   			operatingSystem);
+
+			UserAgentEntity userAgent = gerUserAgent(getVersion());
+			StatisticEntity statistic = new StatisticEntity();
+			statistic.setUserAgent(userAgent);
+		}
+
+		private UserAgentEntity gerUserAgent(VersionEntity browserVersion) {
+			logger.entry(browserVersion);
+			UserAgentEntity ua = userAgendRepository.findOneByBrowserAndBrowserVersionAndOperatingSystem(browser, browserVersion, operatingSystem);
+			if(ua == null)
+				ua = userAgendRepository.save(new UserAgentEntity(browser, browserVersion, operatingSystem));
+			return ua;
+		}
+
+		private VersionEntity getVersion() {
+			String version = browserVersion.getVersion();
+			String majorVersion = browserVersion.getMajorVersion();
+			String minorVersion = browserVersion.getMinorVersion();
+			logger.trace("\n\tversion: {}"
+					+ "\n\tmajorVersion: {},"
+					+ "\n\tminorVersion: {}",
+							version,
+							majorVersion,
+							minorVersion);
+
+			VersionEntity v = versionRepository.findOneByVersionAndMajorVersionAndMinorVersion(version, majorVersion, minorVersion);
+			if(v==null)
+				v =versionRepository.save(new VersionEntity(version, majorVersion, minorVersion));
+
+			return v;
 		}
 		
 	}

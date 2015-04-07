@@ -7,10 +7,13 @@ package jk.web.entities.statistic;
 
 import java.io.Serializable;
 import java.util.List;
+
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,6 +27,9 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+
+import eu.bitwalker.useragentutils.Browser;
+import eu.bitwalker.useragentutils.OperatingSystem;
 
 /**
  *
@@ -39,59 +45,66 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "UserAgentEntity.findByOperatingSystem", query = "SELECT u FROM UserAgentEntity u WHERE u.operatingSystem = :operatingSystem")})
 public class UserAgentEntity implements Serializable {
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "user_agent_id")
-    private Integer userAgentId;
+    private Long userAgentId;
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "browser")
-    private int browser;
+    @Enumerated(EnumType.ORDINAL)
+    private Browser browser;
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "operating_system")
-    private int operatingSystem;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userAgentId", fetch = FetchType.EAGER)
+    @Enumerated(EnumType.ORDINAL)
+    private OperatingSystem operatingSystem;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userAgent", fetch = FetchType.EAGER)
     private List<StatisticEntity> statisticEntityList;
+
     @JoinColumn(name = "browser_version_id", referencedColumnName = "version_id")
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    private VersionEntity browserVersionId;
+    private VersionEntity browserVersion;
 
     public UserAgentEntity() {
     }
 
-    public UserAgentEntity(Integer userAgentId) {
+    public UserAgentEntity(Long userAgentId) {
         this.userAgentId = userAgentId;
     }
 
-    public UserAgentEntity(Integer userAgentId, int browser, int operatingSystem) {
-        this.userAgentId = userAgentId;
+    public UserAgentEntity(Browser browser, VersionEntity browserVersion, OperatingSystem operatingSystem) {
         this.browser = browser;
+        this.browserVersion = browserVersion;
         this.operatingSystem = operatingSystem;
     }
 
-    public Integer getUserAgentId() {
+    public Long getUserAgentId() {
         return userAgentId;
     }
 
-    public void setUserAgentId(Integer userAgentId) {
+    public void setUserAgentId(Long userAgentId) {
         this.userAgentId = userAgentId;
     }
 
-    public int getBrowser() {
+    public Browser getBrowser() {
         return browser;
     }
 
-    public void setBrowser(int browser) {
+    public void setBrowser(Browser browser) {
         this.browser = browser;
     }
 
-    public int getOperatingSystem() {
+    public OperatingSystem getOperatingSystem() {
         return operatingSystem;
     }
 
-    public void setOperatingSystem(int operatingSystem) {
+    public void setOperatingSystem(OperatingSystem operatingSystem) {
         this.operatingSystem = operatingSystem;
     }
 
@@ -104,12 +117,12 @@ public class UserAgentEntity implements Serializable {
         this.statisticEntityList = statisticEntityList;
     }
 
-    public VersionEntity getBrowserVersionId() {
-        return browserVersionId;
+    public VersionEntity getBrowserVersion() {
+        return browserVersion;
     }
 
-    public void setBrowserVersionId(VersionEntity browserVersionId) {
-        this.browserVersionId = browserVersionId;
+    public void setBrowserVersion(VersionEntity browserVersion) {
+        this.browserVersion = browserVersion;
     }
 
     @Override

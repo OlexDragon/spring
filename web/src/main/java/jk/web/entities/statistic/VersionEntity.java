@@ -7,6 +7,7 @@ package jk.web.entities.statistic;
 
 import java.io.Serializable;
 import java.util.List;
+
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -38,69 +39,73 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "VersionEntity.findByMinorVersion", query = "SELECT v FROM VersionEntity v WHERE v.minorVersion = :minorVersion")})
 public class VersionEntity implements Serializable {
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "version_id")
-    private Integer versionId;
+    private Long versionId;
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "version")
-    private int version;
+    private String version;
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "major_version")
-    private int majorVersion;
+    private String majorVersion;
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "minor_version")
-    private int minorVersion;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "browserVersionId", fetch = FetchType.EAGER)
+    private String minorVersion;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "browserVersion", fetch = FetchType.EAGER)
     private List<UserAgentEntity> userAgentEntityList;
 
     public VersionEntity() {
     }
 
-    public VersionEntity(Integer versionId) {
+    public VersionEntity(Long versionId) {
         this.versionId = versionId;
     }
 
-    public VersionEntity(Integer versionId, int version, int majorVersion, int minorVersion) {
-        this.versionId = versionId;
+    public VersionEntity(String version, String majorVersion, String minorVersion) {
         this.version = version;
         this.majorVersion = majorVersion;
         this.minorVersion = minorVersion;
     }
 
-    public Integer getVersionId() {
+    public Long getVersionId() {
         return versionId;
     }
 
-    public void setVersionId(Integer versionId) {
+    public void setVersionId(Long versionId) {
         this.versionId = versionId;
     }
 
-    public int getVersion() {
+    public String getVersion() {
         return version;
     }
 
-    public void setVersion(int version) {
+    public void setVersion(String version) {
         this.version = version;
     }
 
-    public int getMajorVersion() {
+    public String getMajorVersion() {
         return majorVersion;
     }
 
-    public void setMajorVersion(int majorVersion) {
+    public void setMajorVersion(String majorVersion) {
         this.majorVersion = majorVersion;
     }
 
-    public int getMinorVersion() {
+    public String getMinorVersion() {
         return minorVersion;
     }
 
-    public void setMinorVersion(int minorVersion) {
+    public void setMinorVersion(String minorVersion) {
         this.minorVersion = minorVersion;
     }
 

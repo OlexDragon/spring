@@ -7,6 +7,7 @@ package jk.web.entities.statistic;
 
 import java.io.Serializable;
 import java.util.List;
+
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -37,36 +38,39 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "IpAddressEntity.findByIpAddress", query = "SELECT i FROM IpAddressEntity i WHERE i.ipAddress = :ipAddress")})
 public class IpAddressEntity implements Serializable {
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "ip_addresses_id")
-    private Integer ipAddressesId;
+    private Long ipAddressesId;
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
     @Column(name = "ip_address")
     private String ipAddress;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ipAddressId", fetch = FetchType.EAGER)
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ipAddress", fetch = FetchType.EAGER)
     private List<StatisticEntity> statisticEntityList;
 
     public IpAddressEntity() {
     }
 
-    public IpAddressEntity(Integer ipAddressesId) {
+    public IpAddressEntity(Long ipAddressesId) {
         this.ipAddressesId = ipAddressesId;
     }
 
-    public IpAddressEntity(Integer ipAddressesId, String ipAddress) {
+    public IpAddressEntity(Long ipAddressesId, String ipAddress) {
         this.ipAddressesId = ipAddressesId;
         this.ipAddress = ipAddress;
     }
 
-    public Integer getIpAddressesId() {
+    public Long getIpAddressesId() {
         return ipAddressesId;
     }
 
-    public void setIpAddressesId(Integer ipAddressesId) {
+    public void setIpAddressesId(Long ipAddressesId) {
         this.ipAddressesId = ipAddressesId;
     }
 
