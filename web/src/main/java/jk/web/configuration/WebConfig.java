@@ -1,5 +1,6 @@
 package jk.web.configuration;
 
+import jk.web.filters.Statistic;
 import jk.web.workers.FileWorker;
 
 import org.apache.logging.log4j.LogManager;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -51,5 +53,10 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 		super.addResourceHandlers(registry);
 		logger.trace("\n\tresourcePath =\t{}", filesPath);
 		registry.addResourceHandler(FileWorker.RESOURCE_HANDLER + "/**").addResourceLocations("file:"+filesPath);
+	}
+
+	@Bean
+	public OncePerRequestFilter statistic(){
+		return new Statistic();
 	}
 }

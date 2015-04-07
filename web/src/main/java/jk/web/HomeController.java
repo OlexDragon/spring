@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import jk.web.repositories.workers.search.SearchCatgoriesRepository;
 
 import org.apache.logging.log4j.LogManager;
@@ -25,23 +23,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @ComponentScan
 public class HomeController {
 
+	private final Logger logger = LogManager.getLogger();
+
 	private static final List<String> CHARACTERS = new ArrayList<String>();
 	static{
 		for(char ch='A'; ch<='Z'; ch++)
 			CHARACTERS.add(Character.toString(ch));
 	}
 
-	private final Logger logger = LogManager.getLogger();
 	@Autowired
 	private SearchCatgoriesRepository searchCatgoriesRepository;
-
-	@ModelAttribute("clientIpAddress")
-	public String populateClientIpAddress( HttpServletRequest request) {
-		String ipAddress = request.getHeader("X-FORWARDED-FOR");  
-		   if (ipAddress == null)
-			   ipAddress = request.getRemoteAddr();  
-		   return ipAddress;
-	}
 
 	@RequestMapping({ "/", "/home", "/index" })
 	public String home(Model model, @CookieValue(value="location", required=false) String locationCooky, @ModelAttribute("clientIpAddress") String clientIpAddress) {
