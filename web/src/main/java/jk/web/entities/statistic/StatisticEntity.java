@@ -25,7 +25,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -39,8 +38,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "StatisticEntity.findAll", query = "SELECT s FROM StatisticEntity s"),
     @NamedQuery(name = "StatisticEntity.findByStatisticId", query = "SELECT s FROM StatisticEntity s WHERE s.statisticId = :statisticId"),
-    @NamedQuery(name = "StatisticEntity.findByLoginId", query = "SELECT s FROM StatisticEntity s WHERE s.loginId = :loginId"),
-    @NamedQuery(name = "StatisticEntity.findByDate", query = "SELECT s FROM StatisticEntity s WHERE s.date = :date")})
+    @NamedQuery(name = "StatisticEntity.findByLoginId", query = "SELECT s FROM StatisticEntity s WHERE s.loginId = :loginId")})
 public class StatisticEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -50,15 +48,14 @@ public class StatisticEntity implements Serializable {
     @Column(name = "statistic_id")
     private Long statisticId;
 
-    @Basic(optional = false)
-    @NotNull
+    @Basic(optional = true)
     @Column(name = "login_Id")
     private Long loginId;
 
     @Basic(optional = true)
     @Column(name = "date")
     @Temporal(TemporalType.DATE)
-    private Date date;
+    private Date statisticDate;
 
     @JoinColumn(name = "ip_address_id", referencedColumnName = "ip_addresses_id")
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
@@ -78,10 +75,11 @@ public class StatisticEntity implements Serializable {
         this.statisticId = statisticId;
     }
 
-    public StatisticEntity(Long statisticId, Long loginId, Date date) {
-        this.statisticId = statisticId;
+    public StatisticEntity(Long loginId, IpAddressEntity ipAddressEntity, UserAgentEntity userAgent, Date date) {
         this.loginId = loginId;
-        this.date = date;
+        this.ipAddress = ipAddressEntity;
+        this.userAgent = userAgent;
+        this.statisticDate = date;
     }
 
     public Long getStatisticId() {
@@ -100,12 +98,12 @@ public class StatisticEntity implements Serializable {
         this.loginId = loginId;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getStatisticDate() {
+        return statisticDate;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setStatisticDate(Date date) {
+        this.statisticDate = date;
     }
 
     public IpAddressEntity getIpAddress() {

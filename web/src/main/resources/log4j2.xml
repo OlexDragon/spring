@@ -16,7 +16,8 @@
     </Appenders>
 
     <Loggers>
-        <Root level="ALL">
+    <logger name="jk.web.controllers.management.ManagementStatisticController" level="ALL" />
+        <Root level="INFO">
 			<AppenderRef ref="STDOUT" />
 			<AppenderRef ref="FILE" />
          </Root>
