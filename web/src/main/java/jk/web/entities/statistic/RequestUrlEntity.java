@@ -7,6 +7,7 @@ package jk.web.entities.statistic;
 
 import java.io.Serializable;
 import java.util.List;
+
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -42,7 +43,7 @@ public class RequestUrlEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "request_url_id")
-    private Integer requestUrlId;
+    private Long requestUrlId;
 
     @Basic(optional = false)
     @NotNull
@@ -56,20 +57,19 @@ public class RequestUrlEntity implements Serializable {
     public RequestUrlEntity() {
     }
 
-    public RequestUrlEntity(Integer requestUrlId) {
+    public RequestUrlEntity(Long requestUrlId) {
         this.requestUrlId = requestUrlId;
     }
 
-    public RequestUrlEntity(Integer requestUrlId, String requestUrl) {
-        this.requestUrlId = requestUrlId;
+    public RequestUrlEntity(String requestUrl) {
         this.requestUrl = requestUrl;
     }
 
-    public Integer getRequestUrlId() {
+    public Long getRequestUrlId() {
         return requestUrlId;
     }
 
-    public void setRequestUrlId(Integer requestUrlId) {
+    public void setRequestUrlId(Long requestUrlId) {
         this.requestUrlId = requestUrlId;
     }
 

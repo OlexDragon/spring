@@ -6,6 +6,7 @@
 package jk.web.entities.statistic;
 
 import java.io.Serializable;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -17,44 +18,45 @@ import javax.validation.constraints.NotNull;
  */
 @Embeddable
 public class StatisticRequestUrlEntityPK implements Serializable {
-    @Basic(optional = false)
+	private static final long serialVersionUID = 1L;
+	@Basic(optional = false)
     @NotNull
     @Column(name = "statistic_id")
-    private int statisticId;
+    private Long statisticId;
     @Basic(optional = false)
     @NotNull
     @Column(name = "request_url_id")
-    private int requestUrlId;
+    private Long requestUrlId;
 
     public StatisticRequestUrlEntityPK() {
     }
 
-    public StatisticRequestUrlEntityPK(int statisticId, int requestUrlId) {
+    public StatisticRequestUrlEntityPK(Long statisticId, Long requestUrlId) {
         this.statisticId = statisticId;
         this.requestUrlId = requestUrlId;
     }
 
-    public int getStatisticId() {
+    public Long getStatisticId() {
         return statisticId;
     }
 
-    public void setStatisticId(int statisticId) {
+    public void setStatisticId(Long statisticId) {
         this.statisticId = statisticId;
     }
 
-    public int getRequestUrlId() {
+    public Long getRequestUrlId() {
         return requestUrlId;
     }
 
-    public void setRequestUrlId(int requestUrlId) {
+    public void setRequestUrlId(Long requestUrlId) {
         this.requestUrlId = requestUrlId;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (int) statisticId;
-        hash += (int) requestUrlId;
+        hash += statisticId!=null ? statisticId.hashCode() : 0;
+        hash += requestUrlId!=null ? requestUrlId.hashCode() : 0;
         return hash;
     }
 

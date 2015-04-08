@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Alex
  */
 @Entity
-@Table(name = "statistic_request_url")
+@Table(name = "statistic_request_urls")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "StatisticRequestUrlEntity.findAll", query = "SELECT s FROM StatisticRequestUrlEntity s"),
@@ -33,15 +33,19 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "StatisticRequestUrlEntity.findByTimes", query = "SELECT s FROM StatisticRequestUrlEntity s WHERE s.times = :times")})
 public class StatisticRequestUrlEntity implements Serializable {
     private static final long serialVersionUID = 1L;
+
     @EmbeddedId
     protected StatisticRequestUrlEntityPK statisticRequestUrlEntityPK;
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "times")
-    private int times;
+    private Integer times = 1;
+
     @JoinColumn(name = "request_url_id", referencedColumnName = "request_url_id", insertable = false, updatable = false)
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private RequestUrlEntity requestUrlEntity;
+
     @JoinColumn(name = "statistic_id", referencedColumnName = "statistic_id", insertable = false, updatable = false)
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private StatisticEntity statisticEntity;
@@ -58,7 +62,7 @@ public class StatisticRequestUrlEntity implements Serializable {
         this.times = times;
     }
 
-    public StatisticRequestUrlEntity(int statisticId, int requestUrlId) {
+    public StatisticRequestUrlEntity(Long statisticId, Long requestUrlId) {
         this.statisticRequestUrlEntityPK = new StatisticRequestUrlEntityPK(statisticId, requestUrlId);
     }
 
@@ -70,11 +74,11 @@ public class StatisticRequestUrlEntity implements Serializable {
         this.statisticRequestUrlEntityPK = statisticRequestUrlEntityPK;
     }
 
-    public int getTimes() {
+    public Integer getTimes() {
         return times;
     }
 
-    public void setTimes(int times) {
+    public void setTimes(Integer times) {
         this.times = times;
     }
 
