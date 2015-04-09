@@ -183,22 +183,24 @@ public class Statistic extends OncePerRequestFilter {
 		}
 
 		private VersionEntity getVersion() {
-			String version = browserVersion.getVersion();
-			String majorVersion = browserVersion.getMajorVersion();
-			String minorVersion = browserVersion.getMinorVersion();
-			logger.trace("\n\tversion: {}"
+			VersionEntity v = null;
+			if(browserVersion!=null){
+				String version = browserVersion.getVersion();
+				String majorVersion = browserVersion.getMajorVersion();
+				String minorVersion = browserVersion.getMinorVersion();
+				logger.trace("\n\tversion: {}"
 					+ "\n\tmajorVersion: {},"
 					+ "\n\tminorVersion: {}",
 							version,
 							majorVersion,
 							minorVersion);
 
-			VersionEntity v = versionRepository.findOneByVersionAndMajorVersionAndMinorVersion(version, majorVersion, minorVersion);
-			if(v==null)
-				v =versionRepository.save(new VersionEntity(version, majorVersion, minorVersion));
+				v = versionRepository.findOneByVersionAndMajorVersionAndMinorVersion(version, majorVersion, minorVersion);
+				if(v==null)
+					v =versionRepository.save(new VersionEntity(version, majorVersion, minorVersion));
+			}
 
 			return logger.exit(v);
 		}
-		
 	}
 }

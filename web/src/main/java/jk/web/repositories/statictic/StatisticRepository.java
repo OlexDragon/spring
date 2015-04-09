@@ -14,4 +14,6 @@ public interface StatisticRepository extends JpaRepository<StatisticEntity, Long
 	public StatisticEntity findOneByLoginIdAndIpAddressAndUserAgentAndStatisticDate(Long userId, IpAddressEntity ipAddressEntity, UserAgentEntity userAgent, Date date);
 
 	public List<StatisticEntity> findByStatisticDate(Date date);
+
+	public List<StatisticEntity> findByStatisticDateBetween(Date dateToday, Date date);
 }
