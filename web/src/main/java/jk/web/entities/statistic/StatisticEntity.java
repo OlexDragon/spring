@@ -132,26 +132,21 @@ public class StatisticEntity implements Serializable {
     }
 
     @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (statisticId != null ? statisticId.hashCode() : 0);
-        return hash;
-    }
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = ((ipAddress == null) ? 0 : ipAddress.hashCode());
+		result = prime * result + ((loginId == null) ? 0 : loginId.hashCode());
+		result = prime * result + ((userAgent == null) ? 0 : userAgent.hashCode());
+		return result;
+	}
 
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof StatisticEntity)) {
-            return false;
-        }
-        StatisticEntity other = (StatisticEntity) object;
-        if ((this.statisticId == null && other.statisticId != null) || (this.statisticId != null && !this.statisticId.equals(other.statisticId))) {
-            return false;
-        }
-        return true;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof StatisticEntity ? obj.hashCode()==hashCode() : false;
+	}
 
-    @Override
+	@Override
     public String toString() {
         return "jk.web.entities.statistic.StatisticEntity[ statisticId=" + statisticId + " ]";
     }

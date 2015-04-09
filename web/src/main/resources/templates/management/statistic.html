@@ -23,14 +23,14 @@
 		 Nav tabs
 
 */--> <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><a href="#home" aria-controls="day" role="tab" data-toggle="tab">Day</a></li>
-    <li role="presentation"><a href="#profile" aria-controls="week" role="tab" data-toggle="tab">Week</a></li>
-    <li role="presentation"><a href="#messages" aria-controls="year" role="tab" data-toggle="tab">Year</a></li>
+    <li role="presentation" class="active"><a href="#dayTab" aria-controls="dayTab" role="tab" data-toggle="tab">Day</a></li>
+    <li role="presentation"><a href="#weekTab" aria-controls="weekTab" role="tab" data-toggle="tab">Week</a></li>
+    <li role="presentation"><a href="#yearTab" aria-controls="yearTab" role="tab" data-toggle="tab">Year</a></li>
   </ul>
 
   <!-- Tab panes -->
   <div class="tab-content">
-    <div role="tabpanel" class="tab-pane active" id="day">
+    <div role="tabpanel" class="tab-pane active" id="dayTab">
     	<table class="table table-striped table-condensed">
     		<thead>
     		<tr>
@@ -44,21 +44,53 @@
     			<th>Times</th>
     		</tr>
     		</thead>
-    		<tr th:each="st,d:${day}" th:with="t=0">
+    		<tr th:each="st,d:${day}">
     			<td th:text="${d.count}">#</td>
     			<td th:text="${st.loginId}">User ID</td>
     			<td th:text="${st.ipAddress.ipAddress}">IP Address</td>
     			<td th:text="${st.userAgent.operatingSystem}">Operating System</td>
     			<td th:text="${st.userAgent.browser}">Browser</td>
     			<td th:text="${st.userAgent.browserVersion.version}">Br. Version</td>
-    			<td>URL</td>
-    			<td th:text="${t}">Times</td>
+    			<td><table>
+    				<tr th:each="url:${st.statisticRequestUrlEntityList}">
+    					<td th:text="${url.requestUrlEntity.requestUrl}">URL</td>
+    					<td th:text="${url.times}">count</td>
+    				</tr>
+    			</table></td>
     		</tr>
     	</table>
     </div>
-    <div role="tabpanel" class="tab-pane" id="week">
+    <div role="tabpanel" class="tab-pane" id="weekTab">
+    	<table class="table table-striped table-condensed">
+    		<thead>
+    		<tr>
+    			<th>#</th>
+    			<th>User ID</th>
+    			<th>IP Address</th>
+    			<th>Operating System</th>
+    			<th>Browser</th>
+    			<th>Br. Version</th>
+    			<th>URL</th>
+    			<th>Times</th>
+    		</tr>
+    		</thead>
+    		<tr th:each="st,d:${week}">
+    			<td th:text="${d.count}">#</td>
+    			<td th:text="${st.loginId}">User ID</td>
+    			<td th:text="${st.ipAddress.ipAddress}">IP Address</td>
+    			<td th:text="${st.userAgent.operatingSystem}">Operating System</td>
+    			<td th:text="${st.userAgent.browser}">Browser</td>
+    			<td th:text="${st.userAgent.browserVersion.version}">Br. Version</td>
+    			<td><table>
+    				<tr th:each="url:${st.statisticRequestUrlEntityList}">
+    					<td th:text="${url.requestUrlEntity.requestUrl}">URL</td>
+    					<td th:text="${url.times}">count</td>
+    				</tr>
+    			</table></td>
+    		</tr>
+    	</table>
     </div>
-    <div role="tabpanel" class="tab-pane" id="year">
+    <div role="tabpanel" class="tab-pane" id="yearTab">
     </div>
   </div>
 
