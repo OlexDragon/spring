@@ -135,7 +135,7 @@ public class StatisticEntity implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = ((ipAddress == null) ? 0 : ipAddress.hashCode());
+		result = prime + ((ipAddress == null) ? 0 : ipAddress.hashCode());
 		result = prime * result + ((loginId == null) ? 0 : loginId.hashCode());
 		result = prime * result + ((userAgent == null) ? 0 : userAgent.hashCode());
 		return result;
@@ -147,8 +147,9 @@ public class StatisticEntity implements Serializable {
 	}
 
 	@Override
-    public String toString() {
-        return "jk.web.entities.statistic.StatisticEntity[ statisticId=" + statisticId + " ]";
-    }
-    
+	public String toString() {
+		return "StatisticEntity [statisticId=" + statisticId + ", loginId=" + loginId + ", ipAddress=" + ipAddress + ", userAgent=" + userAgent
+				+ ", statisticRequestUrlEntityList=" + statisticRequestUrlEntityList + ", statisticDate=" + statisticDate + "]";
+	}
+
 }

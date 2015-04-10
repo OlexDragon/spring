@@ -91,28 +91,18 @@ public class IpAddressEntity implements Serializable {
     }
 
     @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (ipAddressesId != null ? ipAddressesId.hashCode() : 0);
-        return hash;
-    }
+	public int hashCode() {
+		return 31 + ((ipAddress == null) ? 0 : ipAddressesId.hashCode());
+	}
 
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof IpAddressEntity)) {
-            return false;
-        }
-        IpAddressEntity other = (IpAddressEntity) object;
-        if ((this.ipAddressesId == null && other.ipAddressesId != null) || (this.ipAddressesId != null && !this.ipAddressesId.equals(other.ipAddressesId))) {
-            return false;
-        }
-        return true;
-    }
+	public boolean equals(Object obj) {
+		return obj instanceof IpAddressEntity ? obj.hashCode()==hashCode() : false;
+	}
 
     @Override
     public String toString() {
-        return "jk.web.entities.statistic.IpAddressEntity[ ipAddressesId=" + ipAddressesId + " ]";
+        return "ipAddressesId=" + ipAddressesId;
     }
     
 }

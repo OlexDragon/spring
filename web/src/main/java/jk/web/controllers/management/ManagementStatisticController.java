@@ -42,17 +42,40 @@ public class ManagementStatisticController {
 	    calendar.add(Calendar.WEEK_OF_YEAR, -1);
 	    Date d = new Date(calendar.getTime().getTime());
 
+		List<StatisticEntity> entities = findBetween(dateToday, d);
+
+		return logger.exit(entities);
+	}
+
+	@ModelAttribute("year")
+	public List<StatisticEntity>  attrYearStatistic(){
+	    Date dateToday = Statistic.getDate();
+
+	    Calendar calendar = Calendar.getInstance();
+	    calendar.setTime(dateToday);
+	    calendar.add(Calendar.YEAR, -1);
+	    Date d = new Date(calendar.getTime().getTime());
+
+		List<StatisticEntity> entities = findBetween(dateToday, d);
+
+		return logger.exit(entities);
+	}
+
+	private List<StatisticEntity> findBetween(Date dateToday, Date d) {
 		List<StatisticEntity> entities = statisticRepository.findByStatisticDateBetween(d, dateToday);
 		List<StatisticEntity> es = new ArrayList<>();
 		if(entities!=null)
 			for(StatisticEntity se:entities){
-				if(es.contains(se)){
-					StatisticEntity get = es.get(es.indexOf(se));
+				logger.trace("{}\t{}", se.hashCode(), se);
+				int indexOf = es.indexOf(se);
+				if(indexOf>=0){
+					StatisticEntity get = es.get(indexOf);
 					List<StatisticRequestUrlEntity> sru = get.getStatisticRequestUrlEntityList();
 					List<StatisticRequestUrlEntity> sruFrom = se.getStatisticRequestUrlEntityList();
 					for(StatisticRequestUrlEntity sr:sruFrom){
-						if(sru.contains(sr)){
-							StatisticRequestUrlEntity srTmp = sru.get(sru.indexOf(sr));
+						int iof = sru.indexOf(sr);
+						if(iof>=0){
+							StatisticRequestUrlEntity srTmp = sru.get(iof);
 							srTmp.setTimes(srTmp.getTimes()+sr.getTimes());
 						}else
 							sru.add(sr);
@@ -60,8 +83,7 @@ public class ManagementStatisticController {
 				}else
 					es.add(se);
 			}
-
-		return logger.exit(entities);
+		return entities;
 	}
 
 	@RequestMapping

@@ -29,6 +29,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import eu.bitwalker.useragentutils.Browser;
+import eu.bitwalker.useragentutils.BrowserType;
+import eu.bitwalker.useragentutils.Manufacturer;
 import eu.bitwalker.useragentutils.OperatingSystem;
 
 /**
@@ -68,7 +70,7 @@ public class UserAgentEntity implements Serializable {
     private List<StatisticEntity> statisticEntityList;
 
     @JoinColumn(name = "browser_version_id", referencedColumnName = "version_id")
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @ManyToOne(optional = true, fetch = FetchType.EAGER)
     private VersionEntity browserVersion;
 
     public UserAgentEntity() {
@@ -126,24 +128,19 @@ public class UserAgentEntity implements Serializable {
     }
 
     @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (userAgentId != null ? userAgentId.hashCode() : 0);
-        return hash;
-    }
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime + ((browser == null) ? 0 : browser.getId());
+		result = prime * result + ((browserVersion == null) ? 0 : browserVersion.hashCode());
+		result = prime * result + ((operatingSystem == null) ? 0 : operatingSystem.getId());
+		return result;
+	}
 
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof UserAgentEntity)) {
-            return false;
-        }
-        UserAgentEntity other = (UserAgentEntity) object;
-        if ((this.userAgentId == null && other.userAgentId != null) || (this.userAgentId != null && !this.userAgentId.equals(other.userAgentId))) {
-            return false;
-        }
-        return true;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof UserAgentEntity ? obj.hashCode()==hashCode() : false;
+	}
 
     @Override
     public String toString() {
