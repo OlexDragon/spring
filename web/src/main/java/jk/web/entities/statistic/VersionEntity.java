@@ -119,24 +119,19 @@ public class VersionEntity implements Serializable {
     }
 
     @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (versionId != null ? versionId.hashCode() : 0);
-        return hash;
-    }
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime + ((majorVersion == null) ? 0 : majorVersion.hashCode());
+		result = prime * result + ((minorVersion == null) ? 0 : minorVersion.hashCode());
+		result = prime * result + ((version == null) ? 0 : version.hashCode());
+		return result;
+	}
 
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof VersionEntity)) {
-            return false;
-        }
-        VersionEntity other = (VersionEntity) object;
-        if ((this.versionId == null && other.versionId != null) || (this.versionId != null && !this.versionId.equals(other.versionId))) {
-            return false;
-        }
-        return true;
-    }
+	public boolean equals(Object obj) {
+		return obj instanceof VersionEntity ? obj.hashCode()==hashCode() : false;
+	}
 
     @Override
     public String toString() {
