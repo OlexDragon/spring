@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "IpAddressEntity.findAll", query = "SELECT i FROM IpAddressEntity i"),
-    @NamedQuery(name = "IpAddressEntity.findByIpAddressesId", query = "SELECT i FROM IpAddressEntity i WHERE i.ipAddressesId = :ipAddressesId"),
+    @NamedQuery(name = "IpAddressEntity.findByIpAddressesId", query = "SELECT i FROM IpAddressEntity i WHERE i.ipAddressId = :ipAddressId"),
     @NamedQuery(name = "IpAddressEntity.findByIpAddress", query = "SELECT i FROM IpAddressEntity i WHERE i.ipAddress = :ipAddress")})
 public class IpAddressEntity implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -43,7 +43,7 @@ public class IpAddressEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "ip_addresses_id")
-    private Long ipAddressesId;
+    private Long ipAddressId;
 
     @Basic(optional = false)
     @NotNull
@@ -57,20 +57,20 @@ public class IpAddressEntity implements Serializable {
     public IpAddressEntity() {
     }
 
-    public IpAddressEntity(Long ipAddressesId) {
-        this.ipAddressesId = ipAddressesId;
+    public IpAddressEntity(Long ipAddressId) {
+        this.ipAddressId = ipAddressId;
     }
 
     public IpAddressEntity(String ipAddress) {
         this.ipAddress = ipAddress;
     }
 
-    public Long getIpAddressesId() {
-        return ipAddressesId;
+    public Long getIpAddressId() {
+        return ipAddressId;
     }
 
-    public void setIpAddressesId(Long ipAddressesId) {
-        this.ipAddressesId = ipAddressesId;
+    public void setIpAddressId(Long ipAddressesId) {
+        this.ipAddressId = ipAddressesId;
     }
 
     public String getIpAddress() {
@@ -92,7 +92,7 @@ public class IpAddressEntity implements Serializable {
 
     @Override
 	public int hashCode() {
-		return 31 + ((ipAddress == null) ? 0 : ipAddressesId.hashCode());
+		return 31 + ((ipAddress == null) ? 0 : ipAddress.hashCode());
 	}
 
     @Override
@@ -102,7 +102,7 @@ public class IpAddressEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "ipAddressesId=" + ipAddressesId;
+        return "ipAddressesId=" + ipAddressId;
     }
     
 }
