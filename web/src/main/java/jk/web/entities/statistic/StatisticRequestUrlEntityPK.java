@@ -54,8 +54,7 @@ public class StatisticRequestUrlEntityPK implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += statisticId!=null ? statisticId.hashCode() : 0;
+        int hash = statisticId!=null ? statisticId.hashCode() : 0;
         hash += requestUrlId!=null ? requestUrlId.hashCode() : 0;
         return hash;
     }

@@ -100,9 +100,7 @@ public class StatisticRequestUrlEntity implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (statisticRequestUrlEntityPK != null ? statisticRequestUrlEntityPK.hashCode() : 0);
-        return hash;
+        return 31 + (statisticRequestUrlEntityPK != null ? statisticRequestUrlEntityPK.hashCode() : 0);
     }
 
     @Override
