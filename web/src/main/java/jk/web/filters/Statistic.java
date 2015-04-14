@@ -1,6 +1,7 @@
 package jk.web.filters;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -98,11 +99,12 @@ public class Statistic extends OncePerRequestFilter {
 
 	private class DoStatistic extends Thread{
 
-		private Long userId;
-		private String ipAddress, requestUrl;
-		private Browser browser;
-		private Version browserVersion;
-		OperatingSystem operatingSystem;
+		private final Calendar ACCESS_TIME = Calendar.getInstance();
+		private final Long userId;
+		private final String ipAddress, requestUrl;
+		private final Browser browser;
+		private final Version browserVersion;
+		private final OperatingSystem operatingSystem;
 
 		public DoStatistic(Long userId, String ipAddress, String requestUrl, Browser browser, Version browserVersion, OperatingSystem operatingSystem) {
 
@@ -142,6 +144,7 @@ public class Statistic extends OncePerRequestFilter {
 				StatisticRequestUrlEntity statisticRequestUrlEntity = statisticRequestUrlsRepository.findOne(id);
 				if(statisticRequestUrlEntity!=null){
 					statisticRequestUrlEntity.setTimes(statisticRequestUrlEntity.getTimes()+1);
+					statisticRequestUrlEntity.setAccessTime(new Timestamp(ACCESS_TIME.getTime().getTime()));
 					statisticRequestUrlsRepository.save(statisticRequestUrlEntity);
 				}else
 					statisticRequestUrlsRepository.save(new StatisticRequestUrlEntity(id));
