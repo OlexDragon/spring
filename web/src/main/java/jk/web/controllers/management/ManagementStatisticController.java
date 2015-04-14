@@ -99,7 +99,7 @@ public class ManagementStatisticController {
 	@RequestMapping
 	public String statistic(){
 		try {
-			executorService.awaitTermination(500, TimeUnit.MILLISECONDS);
+			executorService.awaitTermination(1000, TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e) {
 			logger.catching(e);
 			e.printStackTrace();

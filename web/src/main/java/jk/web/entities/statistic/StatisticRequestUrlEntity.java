@@ -6,6 +6,7 @@
 package jk.web.entities.statistic;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Date;
 
 import javax.persistence.Basic;
@@ -18,8 +19,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -54,8 +53,7 @@ public class StatisticRequestUrlEntity implements Serializable {
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private StatisticEntity statisticEntity;
 
-    @Temporal(TemporalType.DATE)
-    private Date accessTime;
+    private Timestamp accessTime;
 
     public StatisticRequestUrlEntity() {
     }
@@ -109,7 +107,7 @@ public class StatisticRequestUrlEntity implements Serializable {
 		return accessTime;
 	}
 
-	public void setAccessTime(Date accessTime) {
+	public void setAccessTime(Timestamp accessTime) {
 		this.accessTime = accessTime;
 	}
 
