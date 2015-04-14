@@ -6,6 +6,8 @@
 package jk.web.entities.statistic;
 
 import java.io.Serializable;
+import java.util.Date;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
@@ -16,6 +18,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -49,6 +53,9 @@ public class StatisticRequestUrlEntity implements Serializable {
     @JoinColumn(name = "statistic_id", referencedColumnName = "statistic_id", insertable = false, updatable = false)
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private StatisticEntity statisticEntity;
+
+    @Temporal(TemporalType.DATE)
+    private Date accessTime;
 
     public StatisticRequestUrlEntity() {
     }
@@ -98,7 +105,15 @@ public class StatisticRequestUrlEntity implements Serializable {
         this.statisticEntity = statisticEntity;
     }
 
-    @Override
+    public Date getAccessTime() {
+		return accessTime;
+	}
+
+	public void setAccessTime(Date accessTime) {
+		this.accessTime = accessTime;
+	}
+
+	@Override
     public int hashCode() {
         return 31 + (statisticRequestUrlEntityPK != null ? statisticRequestUrlEntityPK.hashCode() : 0);
     }
