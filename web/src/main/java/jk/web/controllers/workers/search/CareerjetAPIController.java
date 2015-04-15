@@ -8,6 +8,8 @@ import java.util.Map;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
+import jk.web.data.beans.search.job.AdsIndeedCom;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
@@ -262,6 +264,7 @@ public class CareerjetAPIController {
 		   }
 */
 
+		new RestServiceConsumer (new AdsIndeedCom(), keywords, location, page, pagesize);
 		JSONObject results = getSearchResult(keywords, location, page, pagesize, response);
 
 		return logger.exit(new ResponseEntity<>(results,  HttpStatus.OK));

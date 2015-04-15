@@ -2,11 +2,14 @@ package jk.web.data.beans.search.job;
 
 import java.util.List;
 
+import jk.web.data.beans.search.job.interfaces.SearchDetails;
+
 // https://ads.indeed.com/jobroll/xmlfeed
 // affiliate@fashionprofinder.com 
 //F_pro_F2014
-public class Indeed {
+public class AdsIndeedCom implements SearchDetails{
 
+	private int v;//Version. Which version of the API you wish to use. All publishers should be using version 2. Currently available versions are 1 and 2. This parameter is required. 
 	private String query = "java";
 	private String location;
 	private int totalresults;
@@ -14,18 +17,22 @@ public class Indeed {
 	private int end = 10;
 	private int radius = 25;
 	private int pageNumber = 0;
+	private int limit;
 	private boolean dupefilter;
-	private boolean highlight;
-	private List<IndeedResult> results;
-	public String getQuery() {
+	private int highlight;//Setting this value to 1 will bold terms in the snippet that are also present in q. Default is 0. 
+	private List<AdsIndeedComResult> results;
+
+	public String getKeywords() {
 		return query;
 	}
-	public void setQuery(String query) {
+	@Override
+	public void setKeywords(String query) {
 		this.query = query;
 	}
 	public String getLocation() {
 		return location;
 	}
+	@Override
 	public void setLocation(String location) {
 		this.location = location;
 	}
@@ -53,10 +60,11 @@ public class Indeed {
 	public void setRadius(int radius) {
 		this.radius = radius;
 	}
-	public int getPageNumber() {
+	public int getPage() {
 		return pageNumber;
 	}
-	public void setPageNumber(int pageNumber) {
+	@Override
+	public void setPage(Integer pageNumber) {
 		this.pageNumber = pageNumber;
 	}
 	public boolean isDupefilter() {
@@ -65,16 +73,20 @@ public class Indeed {
 	public void setDupefilter(boolean dupefilter) {
 		this.dupefilter = dupefilter;
 	}
-	public boolean isHighlight() {
+	public int isHighlight() {
 		return highlight;
 	}
-	public void setHighlight(boolean highlight) {
+	public void setHighlight(int highlight) {
 		this.highlight = highlight;
 	}
-	public List<IndeedResult> getResults() {
+	public List<AdsIndeedComResult> getResults() {
 		return results;
 	}
-	public void setResults(List<IndeedResult> results) {
+	public void setResults(List<AdsIndeedComResult> results) {
 		this.results = results;
+	}
+	@Override
+	public void setPagesize(Integer pagesize) {
+		limit = pagesize;
 	}
 }

@@ -3,7 +3,7 @@ package jk.web.data.beans.search.job;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class IndeedResult {
+public class AdsIndeedComResult {
 
 	private String jobtitle;				//Java Developer
 	private String company;					//XYZ Corp.
