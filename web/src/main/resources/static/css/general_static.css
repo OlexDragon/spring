@@ -263,19 +263,19 @@ div.search div#abc a.empty {
 	margin-top: 20px;
 }
 
-.searchFormAdvance .advance_search_submit {
+.searchFormAdvance .advance_search_submit{
 	display: inline-block;
 	font-size: 13px;
 	height: 28px;
-	margin-right: 5px;
-	margin-top: 5px;
+	margin-right:5px;
+	margin-top:5px;
 	text-transform: uppercase;
 	width: 23%;
 	float: right;
 	text-shadow: 1px 1px rgba(0, 0, 0, 0.7);
 }
-
-.searchFormAdvance select {
+ 
+.searchFormAdvance select{
 	float: left;
 	color: #333;
 	width: 150px;
@@ -287,17 +287,14 @@ div.search div#abc a.empty {
 	{
 	margin-left: 0;
 }
-
-.searchFormAdvance option {
+.searchFormAdvance option{
 	color: #333;
 	padding: 5px;
 	border: 0;
 	background-color: none;
 }
 
-.form-inline .form-group {
-	display: inherit;
-}
+.form-inline .form-group { display: inherit; }
 
 .breaker {
 	font-weight: bold;
@@ -361,8 +358,9 @@ dd, dt, li, dl, ol, ul {
 	padding: 10px;
 	background-color: #efefef;
 }
+.form-inline .form-group { display: inherit; }
 
-footer {
+footer{
 	position: fixed;
 	bottom: 0;
 	width: 100%;
@@ -371,17 +369,14 @@ footer {
 	color: #fff;
 	padding: 5px 10px;
 }
-
-footer a {
+footer a{
 	color: #fff;
 }
-
-footer a:hover {
+footer a:hover{
 	color: #e5e800;
 	text-decoration: underline;
 }
-
-input, option, select, button, div.search div#abc {
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+input, option, select, button, div.search div#abc{
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 	letter-spacing: 0.01em;
 }
