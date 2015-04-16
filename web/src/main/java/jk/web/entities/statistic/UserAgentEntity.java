@@ -29,8 +29,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import eu.bitwalker.useragentutils.Browser;
-import eu.bitwalker.useragentutils.BrowserType;
-import eu.bitwalker.useragentutils.Manufacturer;
 import eu.bitwalker.useragentutils.OperatingSystem;
 
 /**

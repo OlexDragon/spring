@@ -28,6 +28,7 @@
     <class>jk.web.entities.statistic.VersionEntity</class>
     <class>jk.web.entities.statistic.StatisticRequestUrlEntity</class>
     <class>jk.web.entities.statistic.IpAddressEntity</class>
+    <class>jk.web.entities.BlacklistEntity</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/jk?zeroDateTimeBehavior=convertToNull"/>
       <property name="javax.persistence.jdbc.password" value="potomkina"/>

@@ -134,8 +134,8 @@ div.search div#abc a:hover{
 	cursor: pointer;
 	background-color: #5a6074;
 	padding: 5px 15px;
-    text-shadow: 1px 1px rgba(0, 0, 0, 0.7);
-    text-transform: uppercase; 
+	text-shadow: 1px 1px rgba(0, 0, 0, 0.7);
+	text-transform: uppercase;
 }
 .advance_search_btn:hover{
 	background-color: #494f63;
