@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -11,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import jk.web.entities.BlacklistEntity;
+import jk.web.entities.BlacklistEntity.BlackListType;
 import jk.web.entities.statistic.IpAddressEntity;
 import jk.web.entities.statistic.RequestUrlEntity;
 import jk.web.entities.statistic.StatisticEntity;
@@ -18,6 +21,7 @@ import jk.web.entities.statistic.StatisticRequestUrlEntity;
 import jk.web.entities.statistic.StatisticRequestUrlEntityPK;
 import jk.web.entities.statistic.UserAgentEntity;
 import jk.web.entities.statistic.VersionEntity;
+import jk.web.repositories.statictic.BlacklistRepository;
 import jk.web.repositories.statictic.IpAddressRepository;
 import jk.web.repositories.statictic.RequestUrlRepository;
 import jk.web.repositories.statictic.StatisticRepository;
@@ -53,9 +57,15 @@ public class Statistic extends OncePerRequestFilter {
 	private RequestUrlRepository requestUrlRepository;
 	@Autowired
 	private StatisticRequestUrlsRepository statisticRequestUrlsRepository;
+	@Autowired
+	private BlacklistRepository blacklistRepository;
 
+	private List<BlacklistEntity> blacklistEntities;
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
+		if(blacklistEntities==null)
+			blacklistEntities = blacklistRepository.findByBlacklistType(BlackListType.CONTAINS);
 
 		String ipAddress = request.getHeader("X-FORWARDED-FOR");
 		   if (ipAddress == null)
@@ -66,8 +76,22 @@ public class Statistic extends OncePerRequestFilter {
 		   Version browserVersion = ua.getBrowserVersion();
 		   OperatingSystem operatingSystem = ua.getOperatingSystem();
 
-		   new DoStatistic(getUserId(request), ipAddress, request.getRequestURI(), browser, browserVersion, operatingSystem);
-		   filterChain.doFilter(request, response);
+		   String requestURI = request.getRequestURI();
+		new DoStatistic(getUserId(request), ipAddress, requestURI, browser, browserVersion, operatingSystem);
+		   if(!contains(requestURI, blacklistEntities))
+			   filterChain.doFilter(request, response);
+	}
+
+	private boolean contains(String requestURI, List<BlacklistEntity> blacklistEntities) {
+		boolean result = false;
+
+		for(BlacklistEntity ble:blacklistEntities)
+			if(requestURI.contains(ble.getBlacklistEntityPK().getBlacklistValue())){
+				result = true;
+				break;
+			}
+
+			return result;
 	}
 
 	private Long getUserId(HttpServletRequest request) {
