@@ -68,18 +68,20 @@ public class Statistic extends OncePerRequestFilter {
 			blacklistEntities = blacklistRepository.findByBlacklistType(BlackListType.CONTAINS);
 
 		String ipAddress = request.getHeader("X-FORWARDED-FOR");
-		   if (ipAddress == null)
-			   ipAddress = request.getRemoteAddr();
+		if (ipAddress == null)
+			ipAddress = request.getRemoteAddr();
 
-		   UserAgent ua = UserAgent.parseUserAgentString(request.getHeader("user-agent"));
-		   Browser browser = ua.getBrowser();
-		   Version browserVersion = ua.getBrowserVersion();
-		   OperatingSystem operatingSystem = ua.getOperatingSystem();
+		UserAgent ua = UserAgent.parseUserAgentString(request.getHeader("user-agent"));
+		Browser browser = ua.getBrowser();
+		Version browserVersion = ua.getBrowserVersion();
+		OperatingSystem operatingSystem = ua.getOperatingSystem();
 
-		   String requestURI = request.getRequestURI();
+		String requestURI = request.getRequestURI();
 		new DoStatistic(getUserId(request), ipAddress, requestURI, browser, browserVersion, operatingSystem);
-		   if(!contains(requestURI, blacklistEntities))
-			   filterChain.doFilter(request, response);
+		if(!contains(requestURI, blacklistEntities))
+			filterChain.doFilter(request, response);
+		else
+			logger.info("\n\t{} has been blocked.\n\tIt is tried to access to {}", ipAddress, requestURI);
 	}
 
 	private boolean contains(String requestURI, List<BlacklistEntity> blacklistEntities) {

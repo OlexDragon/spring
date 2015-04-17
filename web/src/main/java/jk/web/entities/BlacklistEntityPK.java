@@ -6,6 +6,7 @@
 package jk.web.entities;
 
 import java.io.Serializable;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -13,6 +14,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
 import jk.web.entities.BlacklistEntity.BlackListType;
 
 /**
@@ -21,12 +23,15 @@ import jk.web.entities.BlacklistEntity.BlackListType;
  */
 @Embeddable
 public class BlacklistEntityPK implements Serializable {
-    @Basic(optional = false)
+	private static final long serialVersionUID = 1L;
+
+	@Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
     @Column(name = "blacklist_value")
     private String blacklistValue;
-    @Basic(optional = false)
+
+	@Basic(optional = false)
     @NotNull
     @Column(name = "blacklist_type")
     @Enumerated(EnumType.ORDINAL)
