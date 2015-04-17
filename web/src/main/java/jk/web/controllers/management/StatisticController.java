@@ -24,14 +24,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @PreAuthorize("hasAuthority('MANAGER')")
 @RequestMapping("/management/statistic")
-public class ManagementStatisticController {
+public class StatisticController {
 
 	private final Logger logger = LogManager.getLogger();
 
 	@Autowired
 	private StatisticRepository statisticRepository;
 
-	private ExecutorService executorService = Executors.newFixedThreadPool(10);
+	private ExecutorService executorService = Executors.newFixedThreadPool(100);
 
 	@ModelAttribute("day")
 	public List<StatisticEntity>  attrDayStatistic(){
@@ -102,7 +102,6 @@ public class ManagementStatisticController {
 			executorService.awaitTermination(1000, TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e) {
 			logger.catching(e);
-			e.printStackTrace();
 		}
 		return "management/statistic";
 	}
