@@ -22,22 +22,21 @@ IE 11
 	<div class="comunication_forms">
 		<h2>Contact Us</h2>
 		<hr/>
-		<form action="">
+		<form action="/signup/forms" method="post" th:object="${contactUsView}">
 			<label >Ad Reference Number:</label>
-			<input type="text"/>
+			<input type="text" required="required" pattern=".{3,}" th:field="*{referenceNumber}"/>
 
 			<label >Your Name:</label>
-			<input type="text"/>
+			<input type="text" required="required" pattern=".{3,}" th:field="*{name}"/>
 
 			<label >Email Address:</label>
-			<input type="text"/>
+			<input type="text" required="required" pattern=".{3,}" th:field="*{email}"/>
 
 			<label >Subject:</label>
-			<input type="text"/>
-
+			<input type="text" required="required" pattern=".{3,}" th:field="*{subject}"/>
 
 			<label>Message:</label>
-			<textarea></textarea>
+			<textarea required="required" th:field="*{message}"></textarea>
 
 			<button class="submit" type="submit">submit</button>
 
@@ -46,7 +45,7 @@ IE 11
 	</div><!--/* end comunication_forms 
 
 
-*/--><div class="comunication_forms"> 
+*/--><div class="comunication_forms" th:with="countries=${T(java.util.Locale).getISOCountries()}"> 
 		<h3>Please complete the form below to add your site.</h3>
 		<hr/>
 		<form class="comunication_forms">
@@ -56,10 +55,11 @@ IE 11
 			
 			<label>Main Country Of Activity</label>
 			<select>
-				<option value="volvo">Volvo</option>
-				<option value="saab">Saab</option>
-				<option value="mercedes">Mercedes</option>
-				<option value="audi">Audi</option>
+				<option>Select</option>
+				<option value="volvo" th:each="c:${countries}" th:value="${c}" th:text="${new java.util.Locale('', c).displayCountry}">Volvo</option>
+				<option value="saab" th:remove="all">Saab</option>
+				<option value="mercedes" th:remove="all">Mercedes</option>
+				<option value="audi" th:remove="all">Audi</option>
 			</select>
 			
 			<div class="clear"></div>
@@ -95,10 +95,11 @@ IE 11
 
 			<label>Country</label>
 			<select>
-				<option value="volvo">Volvo</option>
-				<option value="saab">Saab</option>
-				<option value="mercedes">Mercedes</option>
-				<option value="audi">Audi</option>
+				<option>Select</option>
+				<option value="volvo" th:each="c:${countries}" th:value="${c}" th:text="${new java.util.Locale('', c).displayCountry}">Volvo</option>
+				<option value="saab" th:remove="all">Saab</option>
+				<option value="mercedes" th:remove="all">Mercedes</option>
+				<option value="audi" th:remove="all">Audi</option>
 			</select> 
 
 			<label>VAT Number</label>
