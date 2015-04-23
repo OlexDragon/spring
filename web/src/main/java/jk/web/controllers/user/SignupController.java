@@ -31,6 +31,7 @@ import jk.web.user.Address.AddressType;
 import jk.web.user.Business;
 import jk.web.user.User;
 import jk.web.user.validators.SignUpFormValidator;
+import jk.web.view.components.ContactUsView;
 import jk.web.workers.EMailWorker;
 import jk.web.workers.UserWorker;
 
@@ -311,11 +312,27 @@ public class SignupController {
 	@Autowired
 	private HomeController homeController;
 	@RequestMapping("/signup/forms")
-	public String signUp(Model model){
-		logger.entry();
+	public String signUp(ContactUsView contactUsView, BindingResult bindingResult, Model model){
+		logger.entry(contactUsView);
+
+		contactUs(contactUsView, bindingResult);
+
 		model.addAttribute("forms", true);
 		model.addAttribute("result", true);
 		model.addAttribute("letters", homeController.getAvailableLetters());
 		return "search";
+	}
+
+	private void contactUs(ContactUsView contactUsView, BindingResult bindingResult) {
+		validateField("referenceNumber", contactUsView.getReferenceNumber(), bindingResult);
+		validateField("name",	contactUsView.getName(),	bindingResult);
+		validateField("email",	contactUsView.getEmail(),	bindingResult);
+		validateField("subject", contactUsView.getSubject(), bindingResult);
+		validateField("message", contactUsView.getMessage(), bindingResult);
+	}
+
+	private void validateField(String fieldName, String referenceNumber, BindingResult bindingResult) {
+		// TODO Auto-generated method stub
+		
 	}
 }
