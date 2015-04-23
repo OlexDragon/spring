@@ -13,6 +13,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.PropertyException;
 
+import jk.web.HomeController;
 import jk.web.entities.user.ActivityEntity;
 import jk.web.entities.user.AddressEntity;
 import jk.web.entities.user.BusinessEntity;
@@ -305,5 +306,16 @@ public class SignupController {
 		List<TitleEntity> findAll = titleRepository.findAll(new Sort("id"));
 		logger.trace("\n\t{}", findAll);
 		model.addAttribute("titles", findAll);
+	}
+
+	@Autowired
+	private HomeController homeController;
+	@RequestMapping("/signup/forms")
+	public String signUp(Model model){
+		logger.entry();
+		model.addAttribute("forms", true);
+		model.addAttribute("result", true);
+		model.addAttribute("letters", homeController.getAvailableLetters());
+		return "search";
 	}
 }
