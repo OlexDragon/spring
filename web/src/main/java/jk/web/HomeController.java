@@ -1,6 +1,5 @@
 package jk.web;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -23,16 +22,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @ComponentScan
 public class HomeController {
 
-	private final Logger logger = LogManager.getLogger();
-
-	private static final List<String> CHARACTERS = new ArrayList<String>();
-	static{
-		for(char ch='A'; ch<='Z'; ch++)
-			CHARACTERS.add(Character.toString(ch));
-	}
+	private final static Logger logger = LogManager.getLogger();
 
 	@Autowired
 	private SearchCatgoriesRepository searchCatgoriesRepository;
+
+	private List<String> letters;
 
 	@RequestMapping({ "/", "/home", "/index" })
 	public String home(Model model, @CookieValue(value="location", required=false) String locationCooky, @ModelAttribute("clientIpAddress") String clientIpAddress) {
@@ -41,16 +36,18 @@ public class HomeController {
 		if(locationCooky!=null && !locationCooky.isEmpty())
 			model.addAttribute("location", locationCooky);
 
-		List<String> letters = searchCatgoriesRepository.findAvailableFirstLeters();
-		logger.trace("\n\tLetters: {}", letters);
-		model.addAttribute("letters", letters);
-		model.addAttribute("CHARACTERS", CHARACTERS);
-		model.addAttribute("bgImage", getBgImagePath());
+		model.addAttribute("letters", getAvailableLetters());
 
 		return "search";
 	}
 
-	private String getBgImagePath() {
+	public List<String> getAvailableLetters() {
+		if(letters==null)
+			letters = searchCatgoriesRepository.findAvailableFirstLeters();
+		return letters;
+	}
+
+	public static String getBgImagePath() {
 		Calendar calendar = Calendar.getInstance();
 		String path;
 		int thehour = calendar.get(Calendar.HOUR_OF_DAY);

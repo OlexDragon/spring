@@ -17,6 +17,7 @@
 
     <Loggers>
     <logger name="jk.web.controllers.management.ManagementStatisticController" level="INFO" />
+    <logger name="jk.web.controllers.user.SignupController" level="all" />
         <Root level="INFO">
 			<AppenderRef ref="STDOUT" />
 			<AppenderRef ref="FILE" />

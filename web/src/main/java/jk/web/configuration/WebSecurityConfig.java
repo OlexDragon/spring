@@ -46,7 +46,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers(
 				"/favicon.ico", 
 				"/google3f524851ab0b98a8.html",
-				"/robot.txt",
+				"/robots.txt",
 				"/",
 				"/home",
 				"/login/**",
