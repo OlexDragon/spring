@@ -1,6 +1,6 @@
 package jk.web.view.components;
 
-public class ContactUsView {
+public class ContactUsForm {
 
 	private String referenceNumber;
 	private String name;

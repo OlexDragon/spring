@@ -31,7 +31,8 @@ import jk.web.user.Address.AddressType;
 import jk.web.user.Business;
 import jk.web.user.User;
 import jk.web.user.validators.SignUpFormValidator;
-import jk.web.view.components.ContactUsView;
+import jk.web.view.components.AddSiteForm;
+import jk.web.view.components.ContactUsForm;
 import jk.web.workers.EMailWorker;
 import jk.web.workers.UserWorker;
 
@@ -312,10 +313,10 @@ public class SignupController {
 	@Autowired
 	private HomeController homeController;
 	@RequestMapping("/signup/forms")
-	public String signUp(ContactUsView contactUsView, BindingResult bindingResult, Model model){
-		logger.entry(contactUsView);
+	public String signUp(ContactUsForm contactUsForm, AddSiteForm addSiteForm, BindingResult bindingResult, Model model){
+		logger.entry(contactUsForm);
 
-		contactUs(contactUsView, bindingResult);
+		contactUs(contactUsForm, bindingResult);
 
 		model.addAttribute("forms", true);
 		model.addAttribute("result", true);
@@ -323,7 +324,7 @@ public class SignupController {
 		return "search";
 	}
 
-	private void contactUs(ContactUsView contactUsView, BindingResult bindingResult) {
+	private void contactUs(ContactUsForm contactUsView, BindingResult bindingResult) {
 		validateField("referenceNumber", contactUsView.getReferenceNumber(), bindingResult);
 		validateField("name",	contactUsView.getName(),	bindingResult);
 		validateField("email",	contactUsView.getEmail(),	bindingResult);
