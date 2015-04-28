@@ -35,7 +35,7 @@ public class EMailEntity implements Serializable {
 
 	@Basic(optional = false)
     @NotNull
-    @Column(name = "logins_loginID")
+    @Column(name = "login_id")
     private Long idUsers;
 
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation

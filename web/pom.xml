@@ -14,6 +14,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<start-class>jk.web.HomeController</start-class>
 		<tomcat.version>8.0.21</tomcat.version>
+		<docker.image.prefix>olex</docker.image.prefix>
 	</properties>
 
 	<parent>
@@ -157,17 +158,17 @@
 			<artifactId>CareerjetAPIClient</artifactId>
 			<version>4.4.6</version>
 		</dependency>
-	<!-- https://github.com/HaraldWalker/user-agent-utils -->
-	<dependency>
-		<groupId>eu.bitwalker</groupId>
-		<artifactId>UserAgentUtils</artifactId>
-		<version>1.15</version>
-	</dependency>
-	<dependency>
-		<groupId>xml-resolver</groupId>
-		<artifactId>xml-resolver</artifactId>
-		<version>1.2</version>
-	</dependency>
+		<!-- https://github.com/HaraldWalker/user-agent-utils -->
+		<dependency>
+			<groupId>eu.bitwalker</groupId>
+			<artifactId>UserAgentUtils</artifactId>
+			<version>1.15</version>
+		</dependency>
+		<dependency>
+			<groupId>xml-resolver</groupId>
+			<artifactId>xml-resolver</artifactId>
+			<version>1.2</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -183,6 +184,22 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>0.2.3</version>
+				<configuration>
+					<imageName>${docker.image.prefix}/${project.artifactId}</imageName>
+					<dockerDirectory>src/main/docker</dockerDirectory>
+					<resources>
+						<resource>
+							<targetPath>/</targetPath>
+							<directory>${project.build.directory}</directory>
+							<include>${project.build.finalName}.jar</include>
+						</resource>
+					</resources>
+				</configuration>
 			</plugin>
 		</plugins>
 

@@ -23,22 +23,32 @@ IE 11
 		<h2>Contact Us</h2>
 		<hr/>
 		<form action="/signup/forms" method="post" th:object="${contactUsForm}">
-			<label >Ad Reference Number:</label>
-			<input type="text" required="required" pattern=".{3,}" th:field="*{referenceNumber}"/>
+			<div class="form-group" th:with="err=${#fields.hasErrors('referenceNumber')}" th:classappend="${err ? 'has-error' : null}">
+				<label class="control-label">Ad Reference Number:<span th:if="${err}" th:errors="*{referenceNumber}">ReferenceNumber Error</span></label>
+				<input type="text" class="form-control" required="required" th:field="*{referenceNumber}"/>
+			</div><!--/* max length(45) from database 
 
-			<label >Your Name:</label>
-			<input type="text" required="required" pattern=".{3,}" th:field="*{name}"/>
+		*/--><div class="form-group" th:with="err=${#fields.hasErrors('name')}" th:classappend="${err ? 'has-error' : null}">
+				<label class="control-label">Your Name:<span th:if="${err}" th:errors="*{name}">ReferenceNumber Error</span></label>
+				<input type="text" class="form-control" required="required" th:field="*{name}"/>
+			</div><!--/* max length(245) from database 
 
-			<label >Email Address:</label>
-			<input type="email" required="required" th:field="*{email}"/>
+		*/--><div class="form-group" th:with="err=${#fields.hasErrors('email')}" th:classappend="${err ? 'has-error' : null}">
+				<label class="control-label">Email Address:<span th:if="${err}" th:errors="*{email}">ReferenceNumber Error</span></label>
+				<input type="email" class="form-control" required="required" th:field="*{email}"/>
+			</div><!--/* max length (254) http://en.wikipedia.org/wiki/Email_address
 
-			<label >Subject:</label>
-			<input type="text" required="required" pattern=".{3,}" th:field="*{subject}"/>
+		*/--><div class="form-group" th:with="err=${#fields.hasErrors('subject')}" th:classappend="${err ? 'has-error' : null}">
+				<label class="control-label">Subject:<span th:if="${err}" th:errors="*{subject}">ReferenceNumber Error</span></label>
+				<input type="text" class="form-control" required="required" th:field="*{subject}"/>
+			</div><!--/* max length(145) from database 
 
-			<label>Message:</label>
-			<textarea required="required" th:field="*{message}"></textarea>
+		*/--><div class="form-group" th:with="err=${#fields.hasErrors('message')}" th:classappend="${err ? 'has-error' : null}">
+				<label class="control-label">Message:<span th:if="${err}" th:errors="*{message}">ReferenceNumber Error</span></label>
+				<textarea required="required" class="form-control" th:field="*{message}"></textarea>
+			</div><!--/* max length(1000) from database
 
-			<button class="submit" type="submit">submit</button>
+		*/--><button name="contactUs" class="submit" type="submit">submit</button>
 
 			<div class="clear"></div>
 		</form>

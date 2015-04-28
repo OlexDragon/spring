@@ -24,6 +24,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import jk.web.entities.ContactUsEntity;
 
 /**
  *
@@ -53,6 +54,9 @@ public class IpAddressEntity implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "ipAddress", fetch = FetchType.EAGER)
     private List<StatisticEntity> statisticEntityList;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ipAddressEntity", fetch = FetchType.LAZY)
+    private List<ContactUsEntity> contactUsList;
 
     public IpAddressEntity() {
     }
@@ -90,6 +94,14 @@ public class IpAddressEntity implements Serializable {
         this.statisticEntityList = statisticEntityList;
     }
 
+    public List<ContactUsEntity> getContactUsList() {
+        return contactUsList;
+    }
+
+    public void setContactUsList(List<ContactUsEntity> contactUsList) {
+        this.contactUsList = contactUsList;
+    }
+
     @Override
 	public int hashCode() {
 		return 31 + ((ipAddress == null) ? 0 : ipAddress.hashCode());
@@ -103,6 +115,5 @@ public class IpAddressEntity implements Serializable {
     @Override
     public String toString() {
         return "ipAddressesId=" + ipAddressId;
-    }
-    
+    }    
 }

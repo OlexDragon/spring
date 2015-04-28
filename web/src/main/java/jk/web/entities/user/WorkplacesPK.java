@@ -23,7 +23,7 @@ public class WorkplacesPK implements Serializable {
 
 	@Basic(optional = false)
     @NotNull
-    @Column(name = "logins_loginID")
+    @Column(name = "login_id")
     private Long loginsloginID;
 
 	@Basic(optional = false)

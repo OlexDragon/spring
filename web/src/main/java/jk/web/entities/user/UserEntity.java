@@ -47,7 +47,7 @@ public class UserEntity implements Serializable {
 
     @Id
     @Basic(optional = false)
-    @Column(name = "logins_loginID", nullable = false)
+    @Column(name = "login_id", nullable = false)
     private Long id;
 
     @Column(name = "title_id")
@@ -70,7 +70,7 @@ public class UserEntity implements Serializable {
     private Date birthday;
 
     @OneToMany(fetch=FetchType.EAGER)
-    @JoinColumn(name = "logins_loginID", referencedColumnName = "logins_loginID")
+    @JoinColumn(name = "login_id")
     @NotFound(action=NotFoundAction.IGNORE)
     @Cascade(value=CascadeType.ALL)
     private List<AddressEntity> addressEntities;
@@ -80,23 +80,23 @@ public class UserEntity implements Serializable {
     private Gender gender;
 
     @OneToMany(fetch=FetchType.EAGER)
-    @JoinColumn(name = "logins_loginID", referencedColumnName = "logins_loginID")
+    @JoinColumn(name = "login_id")
     @NotFound(action=NotFoundAction.IGNORE)
     @Cascade(value=CascadeType.ALL)
     private List<ProfessionalSkillEntity> professionalSkills;
 
     @OneToMany(fetch=FetchType.EAGER)
-    @JoinColumn(name = "logins_loginID", referencedColumnName = "logins_loginID")
+    @JoinColumn(name = "login_id")
     @NotFound(action=NotFoundAction.IGNORE)
     @Cascade(value=CascadeType.ALL)
     private List<WorkplaceEntity> workplaces;
 
     @OneToOne(optional = false, fetch = FetchType.EAGER)
-    @JoinColumn(name = "logins_loginID", referencedColumnName = "loginID", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "login_id", nullable = false, insertable = false, updatable = false)
     private LoginEntity loginEntity;
 
     @OneToOne(optional = false, fetch = FetchType.EAGER)
-    @JoinColumn(name = "logins_loginID", nullable = true, insertable = true, updatable = true)
+    @JoinColumn(name = "login_id", nullable = true, insertable = true, updatable = true)
     private BusinessEntity businessEntity;
 
     public UserEntity() {

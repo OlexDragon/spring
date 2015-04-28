@@ -99,7 +99,7 @@ public class LoginEntity implements Serializable{
 	}
 
 	@Id
-	@Column(name="loginID")
+	@Column(name="login_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
@@ -125,7 +125,7 @@ public class LoginEntity implements Serializable{
 	//if the field contains email address consider using this annotation to enforce field validation
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")
     @OneToMany(fetch=FetchType.EAGER)
-    @JoinColumn(name = "logins_loginID", referencedColumnName="loginID")
+    @JoinColumn(name = "login_id")
     @NotFound(action=NotFoundAction.IGNORE)
     @Cascade(value=CascadeType.ALL)
     private List<EMailEntity> emails;

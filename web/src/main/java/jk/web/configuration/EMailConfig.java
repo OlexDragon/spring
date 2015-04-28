@@ -43,7 +43,7 @@ public class EMailConfig {
 		javaMailSender.setJavaMailProperties(javaMailProperties);
 
 		javaMailSender.setHost(host);
-		javaMailSender.setPort(Integer.parseInt(javaMailProperties.getProperty("mail.smtp.port")));
+		javaMailSender.setPort((Integer)javaMailProperties.get("mail.smtp.port"));
 		javaMailSender.setUsername(username);
 		javaMailSender.setPassword(password);
 		javaMailSender.setDefaultEncoding("UTF-8");
