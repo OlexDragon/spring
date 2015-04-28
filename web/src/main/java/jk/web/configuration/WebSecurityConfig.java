@@ -44,11 +44,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http
 			.authorizeRequests()
 			.antMatchers(
-				"/favicon.ico", 
-				"/google3f524851ab0b98a8.html",
-				"/robots.txt",
-				"/",
-				"/home",
+				"/*",
 				"/login/**",
 				"/autocomplete/**",
 				"/connect/**",

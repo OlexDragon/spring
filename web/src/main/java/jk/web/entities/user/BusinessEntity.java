@@ -29,7 +29,7 @@ public class BusinessEntity implements Serializable {
     @Id
     @Basic(optional = false)
     @NotNull
-    @Column(name = "logins_loginID", nullable = false)
+    @Column(name = "login_id", nullable = false)
     private Long userID;
 
     @Basic(optional = false)

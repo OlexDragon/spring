@@ -47,7 +47,7 @@ public class AddressEntity implements Serializable {
     private Long addsressId;
 
     @Basic(optional = false)
-    @Column(name = "logins_loginID")
+    @Column(name = "login_id")
     private Long userId;
 
     @Basic

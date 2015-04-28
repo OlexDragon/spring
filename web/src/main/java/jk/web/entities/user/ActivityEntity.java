@@ -36,7 +36,7 @@ public class ActivityEntity implements Serializable {
 
 	@Basic(optional = false)
     @NotNull
-    @Column(name = "logins_loginID")
+    @Column(name = "login_id")
     private long userid;
 
 	@Basic(optional = false)
@@ -46,7 +46,7 @@ public class ActivityEntity implements Serializable {
     private ActivityType activityType;
 
     @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name = "logins_loginID", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "login_id", nullable = false, insertable = false, updatable = false)
     private UserEntity userEntity;
 
     public ActivityEntity() {

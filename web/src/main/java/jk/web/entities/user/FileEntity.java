@@ -44,7 +44,7 @@ public class FileEntity implements Serializable {
 	private Long fileID;
 
 	@Basic(optional = false)
-	@Column(name = "logins_loginID", nullable = false)
+	@Column(name = "login_id", nullable = false)
 	private Long userID;
 
 	@Size(max = 145)

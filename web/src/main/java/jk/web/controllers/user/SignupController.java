@@ -11,9 +11,18 @@ import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import javax.xml.bind.PropertyException;
 
 import jk.web.HomeController;
+import jk.web.entities.ContactEmailEntity;
+import jk.web.entities.ContactEmailEntity.EmailStatus;
+import jk.web.entities.ContactUsEntity;
+import jk.web.entities.ContactUsEntity.ContactUsStatus;
+import jk.web.entities.ReferenceNumberEntity;
+import jk.web.entities.repositories.ContactEmailRepository;
+import jk.web.entities.repositories.ContactUsRepository;
+import jk.web.entities.repositories.ReferenceNumberRepository;
 import jk.web.entities.user.ActivityEntity;
 import jk.web.entities.user.AddressEntity;
 import jk.web.entities.user.BusinessEntity;
@@ -24,6 +33,8 @@ import jk.web.entities.user.LoginEntity.Permission;
 import jk.web.entities.user.TitleEntity;
 import jk.web.entities.user.UserEntity;
 import jk.web.entities.user.UserEntity.ActivityType;
+import jk.web.filters.Statistic;
+import jk.web.repositories.statictic.IpAddressRepository;
 import jk.web.repositories.user.ActivityRepository;
 import jk.web.repositories.user.TitleRepository;
 import jk.web.user.Address.AddressStatus;
@@ -78,7 +89,6 @@ public class SignupController {
 
 	@Autowired
 	private TitleRepository titleRepository;
-
 
 	@Value("${main.url}")
 	private String mainURL;
@@ -312,28 +322,61 @@ public class SignupController {
 
 	@Autowired
 	private HomeController homeController;
-	@RequestMapping("/signup/forms")
-	public String signUp(ContactUsForm contactUsForm, AddSiteForm addSiteForm, BindingResult bindingResult, Model model){
+	@Autowired
+	private IpAddressRepository ipAddressRepository;
+	@Autowired
+	private ContactEmailRepository contactEmailRepository;
+	@Autowired
+	private ReferenceNumberRepository referenceNumberRepository;
+	@Autowired
+	private ContactUsRepository contactUsRepository;
+	//Values from application.properties file
+	@Value("${email.from}")
+	private String emaleFrom;
+
+	@RequestMapping(value="/signup/forms", params="contactUs")
+	public String contactUs(@Valid ContactUsForm contactUsForm, BindingResult bindingResult, AddSiteForm addSiteForm, Model model, HttpServletRequest request){
 		logger.entry(contactUsForm);
 
-		contactUs(contactUsForm, bindingResult);
+		if (bindingResult.hasErrors())
+			return returnToForms(model);
 
+		ContactEmailEntity emailEntity = contactEmailRepository.findOneByEmail(contactUsForm.getEmail());
+		if(emailEntity==null)
+			emailEntity = contactEmailRepository.save(new ContactEmailEntity(contactUsForm.getEmail(), EmailStatus.TO_CONTACT));
+
+		ReferenceNumberEntity referenceNumberEntity = referenceNumberRepository.findOneByReferenceNumber(contactUsForm.getReferenceNumber());
+		if(referenceNumberEntity==null)
+			referenceNumberEntity = referenceNumberRepository.save(new ReferenceNumberEntity(contactUsForm.getReferenceNumber()));
+
+		contactUsRepository.save(	new ContactUsEntity(
+															contactUsForm.getName(),
+															contactUsForm.getSubject(),
+															contactUsForm.getMessage(),
+															ipAddressRepository.findOneByIpAddress(Statistic.getIpAddress(request)),
+															referenceNumberEntity,
+															emailEntity,
+															ContactUsStatus.TO_CONTACT));
+
+		eMailWorker.sendEMail(emaleFrom, "New ContactUs Message", "http://www.fashionprofinder.com/management/contactUs");
+
+		return returnToForms(model);
+	}
+
+	@RequestMapping("/signup/forms")
+	public String signUp(ContactUsForm contactUsForm, @Valid AddSiteForm addSiteForm, BindingResult bindingResult, Model model){
+		logger.entry(addSiteForm);
+
+		if (bindingResult.hasErrors())
+			return returnToForms(model);
+
+		return returnToForms(model);
+	}
+
+	public String returnToForms( Model model) {
 		model.addAttribute("forms", true);
 		model.addAttribute("result", true);
 		model.addAttribute("letters", homeController.getAvailableLetters());
 		return "search";
-	}
-
-	private void contactUs(ContactUsForm contactUsView, BindingResult bindingResult) {
-		validateField("referenceNumber", contactUsView.getReferenceNumber(), bindingResult);
-		validateField("name",	contactUsView.getName(),	bindingResult);
-		validateField("email",	contactUsView.getEmail(),	bindingResult);
-		validateField("subject", contactUsView.getSubject(), bindingResult);
-		validateField("message", contactUsView.getMessage(), bindingResult);
-	}
-
-	private void validateField(String fieldName, String referenceNumber, BindingResult bindingResult) {
-		// TODO Auto-generated method stub
-		
 	}
 }

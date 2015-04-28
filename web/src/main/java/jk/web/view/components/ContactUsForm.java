@@ -1,11 +1,18 @@
 package jk.web.view.components;
 
+import javax.validation.constraints.Size;
+
 public class ContactUsForm {
 
+	@Size(min=3, max=45)
 	private String referenceNumber;
+	@Size(min=3, max=245)
 	private String name;
+	@Size(min=5, max=254)
 	private String email;
+	@Size(min=3, max=145)
 	private String subject;
+	@Size(min=3, max=1000)
 	private String message;
 
 	public String getReferenceNumber() {
