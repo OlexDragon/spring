@@ -1,0 +1,51 @@
+/*
+Natue Wallpapers
+http://www.daswallpaper.de/nature-wallpaper
+*/
+@font-face {
+	font-family: 'DUBIEL';
+	src: url('/fonts/DUBIEL.eot'); /* IE9 Compat Modes */
+	src: url('/fonts/DUBIEL.eot?#iefix') format('embedded-opentype'),
+		/* IE6-IE8 */
+       url('/fonts/DUBIEL.woff') format('woff'), /* Modern Browsers */
+       url('/fonts/DUBIEL.TTF') format('truetype'),
+		/* Safari, Android, iOS */
+       url('/fonts/DUBIEL.svg#svgFontName') format('svg');
+	/* Legacy iOS */
+}
+body{
+	margin-bottom: 55px;
+}
+.brand{
+	font-family: "DUBIEL", Arial, Helvetica, sans-serif;
+	color: white;
+}
+.brand{
+	color: white;
+}
+.cw{
+	color: white;
+}
+.cw a:not(.empty){
+	color: white;
+}
+a.empty {
+	cursor: default;
+	text-decoration: none;
+}
+.top-buffer{
+	margin-top:5%;
+}
+.bg-abc{
+	background-color: rgba(0, 0, 0, 0.5);
+	padding: 4px;
+}
+.bg-wt{
+	background-color: rgba(255, 255, 255, 0.95);
+}
+.m0{
+	margin: 0;
+}
+.mt8{
+	margin: 8px 0 0 0;
+}

@@ -17,7 +17,7 @@
 
     <Loggers>
     <logger name="jk.web.controllers.management.ManagementStatisticController" level="INFO" />
-    <logger name="jk.web.controllers.user.SignupController" level="all" />
+    <logger name="jk.web.controllers.user.FormsController" level="all" />
     <logger name="jk.web.configuration.EMailConfig" level="all" />
     <logger name="jk.web.workers.EMailWorker" level="all" />
     <logger name="jk.web.entities.ContactUsEntity" level="all" />

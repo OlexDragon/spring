@@ -51,7 +51,7 @@ public class LoginController {
 	@RequestMapping
 	public String login(User user, Model model) {
 		logger.entry(user);
-		SignupController.signupAttributes(model, titleRepository);
+		FormsController.signupAttributes(model, titleRepository);
 		model.addAttribute("message", "home.welcome");
 		return "home";
 	}

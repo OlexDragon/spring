@@ -387,12 +387,6 @@ input, option, select, button, div.search div#abc {
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	letter-spacing: 0.01em;
 }
-nav.navbar-fixed-bottom, .navbar-fixed-bottom #navbar, .navbar-fixed-bottom .navbar, .navbar-fixed-bottom .nav>li>a, .navbar-fixed-bottom .navbar-brand{
-	padding: 0 10px;
-	height: 30px;
-	line-height: 30px;
-	min-height: 30px;
-}
 .navbar-fixed-bottom .dropdown-menu>li>a{
 	color: gray;
 }
