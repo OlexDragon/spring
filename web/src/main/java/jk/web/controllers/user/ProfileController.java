@@ -102,7 +102,7 @@ public class ProfileController {
 
 		model.addAttribute("profileImageLink", fileWorker.getProfileImage(userWorker.getUserEntity()));
 		model.addAttribute("showP", true);
-		SignupController.signupAttributes(model, titleRepository);
+		FormsController.signupAttributes(model, titleRepository);
 		model.addAttribute("edit_profile", true);
 		return "profile";
 	}

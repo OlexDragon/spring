@@ -64,11 +64,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.LocaleResolver;
 import org.thymeleaf.context.Context;
 
 @Controller
-public class SignupController {
+public class FormsController {
 
 	private static final Logger logger = LogManager.getLogger();
 
@@ -320,6 +321,11 @@ public class SignupController {
 		model.addAttribute("titles", findAll);
 	}
 
+	public enum MenuSelection{
+		CONTACT_US,
+		ADD_URL_ADDRESS,
+		MESSAGE
+	}
 	@Autowired
 	private HomeController homeController;
 	@Autowired
@@ -334,13 +340,24 @@ public class SignupController {
 	@Value("${email.from}")
 	private String emaleFrom;
 
-	@RequestMapping(value="/signup/forms", params="contactUs")
-	public String contactUs(@Valid ContactUsForm contactUsForm, BindingResult bindingResult, AddSiteForm addSiteForm, Model model, HttpServletRequest request){
-		logger.entry(contactUsForm);
+	@RequestMapping(value="/contact_us")
+	public String contactUs(@Valid ContactUsForm contactUsForm, BindingResult bindingResult, @RequestParam(required=false) String contactUs, AddSiteForm addSiteForm, Model model, HttpServletRequest request){
+		logger.entry(contactUsForm, contactUs);
 
-		if (bindingResult.hasErrors())
-			return returnToForms(model);
+		if (contactUs!=null && !bindingResult.hasErrors()){
 
+			model.addAttribute("messageTitle", "Confirmation");
+			model.addAttribute("content", new String[]{"Thank You", "All The Best"});
+
+			contactUs(contactUsForm, request);
+
+			return returnToForms("Confirmation", MenuSelection.MESSAGE, model);
+		}
+
+		return returnToForms("Contact Us", MenuSelection.CONTACT_US, model);
+	}
+
+	private void contactUs(ContactUsForm contactUsForm, HttpServletRequest request) {
 		ContactEmailEntity emailEntity = contactEmailRepository.findOneByEmail(contactUsForm.getEmail());
 		if(emailEntity==null)
 			emailEntity = contactEmailRepository.save(new ContactEmailEntity(contactUsForm.getEmail(), EmailStatus.TO_CONTACT));
@@ -359,8 +376,6 @@ public class SignupController {
 															ContactUsStatus.TO_CONTACT));
 
 		eMailWorker.sendEMail(emaleFrom, "New ContactUs Message", "http://www.fashionprofinder.com/management/contactUs");
-
-		return returnToForms(model);
 	}
 
 	@RequestMapping("/signup/forms")
@@ -368,14 +383,19 @@ public class SignupController {
 		logger.entry(addSiteForm);
 
 		if (bindingResult.hasErrors())
-			return returnToForms(model);
+			return returnToForms("Add URL", null, model);
 
-		return returnToForms(model);
+		return returnToForms("Confirmation", MenuSelection.ADD_URL_ADDRESS, model);
 	}
 
-	public String returnToForms( Model model) {
-		model.addAttribute("forms", true);
+	public String returnToForms(String title, MenuSelection formSelection, Model model) {
+		logger.entry(title, formSelection);
+		if(title!=null)
+			model.addAttribute("title", title);
 		model.addAttribute("result", true);
+		model.addAttribute("forms", true);
+		if(formSelection!=null)
+			model.addAttribute("menuSelection", formSelection);
 		model.addAttribute("letters", homeController.getAvailableLetters());
 		return "search";
 	}
