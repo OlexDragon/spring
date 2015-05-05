@@ -49,3 +49,15 @@ a.empty {
 .mt8{
 	margin: 8px 0 0 0;
 }
+ul{
+	list-style-type: none;
+	padding-left: 5px;
+}
+#categoriesList[aria-expanded="false"] ul.c3 {
+	-moz-column-count: 3;
+	-moz-column-gap: 20px;
+	-webkit-column-count: 3;
+	-webkit-column-gap: 20px;
+	column-count: 3;
+	column-gap: 20px;
+}
