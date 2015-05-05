@@ -19,7 +19,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 @RequestMapping("/search")
@@ -52,8 +51,8 @@ public class SearchController {
 		return "message";
 	}
 
-	@RequestMapping(value="categories/{startWith}", method = RequestMethod.POST)
-	public ResponseEntity<List<SearchCatgoryEntity>> search(	@PathVariable String startWith){
+	@RequestMapping(value="categories/{startWith}")
+	public String searchCategories(	@PathVariable String startWith, Model model){
 		logger.entry(startWith);
 
 		List<SearchCatgoryEntity> categories;
@@ -67,22 +66,8 @@ public class SearchController {
 			categories = null;
 		}
 		logger.trace("\n\t{}", categories);
+		model.addAttribute("categories", categories);
 
-//		Locale locale = userWorker.getLocale();
-		HttpStatus status;
-		if(categories==null || categories.size()==0){
-//			categories = new ArrayList<>();
-//			categories.add(new SearchCatgoriesEntity(HTML_P_TAG, applicationContext.getMessage( "SearchController.find.X_result_s", new String[]{"0"}, "Find 0 result" , locale)));
-//			categories.add(new SearchCatgoriesEntity(HTML_H1_TAG, applicationContext.getMessage( "SearchController.find.no_results_for_X", new String[]{startWith}, "Sorry, but we didn't find any results" , locale)));
-//			categories.add(new SearchCatgoriesEntity(HTML_UL_LI_TAG, applicationContext.getMessage( "SearchController.find.make_sure.spelled_correctly", null, "Make sure all words are spelled correctly." , locale)));
-//			categories.add(new SearchCatgoriesEntity(HTML_UL_LI_TAG, applicationContext.getMessage( "SearchController.find.try.keywords.different", null, "Try different keywords." , locale)));
-//			categories.add(new SearchCatgoriesEntity(HTML_UL_LI_TAG, applicationContext.getMessage( "SearchController.find.try.keywords.general", null, "Try more general keywords." , locale)));
-			status = HttpStatus.NOT_FOUND;
-		}else{
-			categories.add(0, new SearchCatgoryEntity(0L, startWith));
-			status = HttpStatus.OK;
-		}
-
-		return logger.exit(new ResponseEntity<>(categories,  status));
+		return "search :: categories";
 	}
 }

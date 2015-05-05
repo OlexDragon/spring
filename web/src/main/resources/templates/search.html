@@ -114,14 +114,27 @@ IE11
 					href="#"
 					th:class="${ #lists.contains(letters, ch ) ? null : 'empty' }"
 					th:text="${ ch }">a</a>
-	</div>
-<div id="categories">
-	<p class="breaker">ALL</p><!--/*
+	</div><!--/*  
+
+	Categories
+
+*/--><div id="categories" class="navbar navbar-default" th:remove="body">
+<th:block th:fragment="categories">
+<div class="navbar-header">
+ <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#categoriesList">
+ 		<span class="sr-only">Toggle categories</span>
+ 		<span class="icon-bar"></span>
+ 		<span class="icon-bar"></span>
+ 		<span class="icon-bar"></span>
+ </button>
+	<h4 th:text="${startWith}">ALL</h4>
+</div><!--/*
 
 				 start Categories
 
-	  					*/--><ul class="c3">
-								<li><a href="#">Acrobats</a></li>
+	  				*/--><div id="categoriesList" class="navbar-collapse collapse" aria-expanded="false">
+	  						<ul class="c3" th:remove="all-but-first">
+								<li th:each="cat:${categories}"><a href="#" th:text="${cat.categoryName}">Acrobats</a></li>
 								<li><a href="#">Actors(stagecombat)</a></li>
 								<li><a href="#">Animation</a></li>
 								<li><a href="#">Artisticgymnasts</a></li>
@@ -152,11 +165,12 @@ IE11
 								<li><a href="#">ResponsibleforStaging</a></li>
 								<li><a href="#">Stuntmen</a></li>
 								<li><a href="#">Waders</a></li>
-							</ul><!--/*
+							</ul>
+						</div><!--/*
 
-							 finish Categories
+	finish Categories
 
-					*/--></div>
+*/--></th:block></div>
 
 						<div id="locations" th:remove="body">
 							<p class="breaker">Locations</p><!--/*
@@ -427,54 +441,19 @@ IE11
 	<script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
 /*[-*/
-
-	//Function to show 'Advance Search Panel'
-
-/*-]*/	$('.advance_search_btn').click(function() {
-			$('.advance_search_panel').toggle("slow");
-		});
-/*[-*/
 		//Function for <div id="abc">...</div>
 
-/*-]*/	var page;
-		var className = 'dozen';
-		$('#abc a').on('click',
+/*-]*/$('#abc a').on('click',
 			function(e) {
-				$('#categories').hide();
 				e.preventDefault();
 				if($(this).attr('class')=='empty')
-					return;
+					return false;
 				$('#abc .active').removeAttr('class');
 				$(this).addClass('active');
-				$('#categories').empty();
-				$.ajax({
-						url : '/search/categories/' + this.text,
-						type : 'POST',
+				$('#categories').empty().load('/search/categories/' + this.text);
+		});/*[-
 
-					success : function(data) {
-						var uList = $('<ul></ul>').addClass('c3');
-						$.each(data, function(index, value) {
-							if (value.categoryId == 0) {
-								$('<p></p>').addClass('breaker').text(value.categoryName).appendTo($('#categories')).after(uList);
-							} else {
-								uList.append(
-										$('<li></li>').append(
-												$('<a></a>').attr('href', '#').text(value.categoryName)
-										)
-								);
-							}
-					});
-					$('#categories').show();
-					$('#categories a').on('click', function(e) {
-								e.preventDefault();
-								$('#keywords').val(this.text);
-								$('#searchForm').submit();
-						});
-				}
-				});
-			});/*[-
-
-				//On Submit
+		//On Submit
 
 -]*/		$('#searchForm').on('submit', function(e){
 				e.preventDefault();
