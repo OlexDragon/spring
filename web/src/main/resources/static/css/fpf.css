@@ -18,9 +18,8 @@ body{
 }
 .brand{
 	font-family: "DUBIEL", Arial, Helvetica, sans-serif;
-	color: white;
 }
-.brand{
+#brand:not(.text-muted){
 	color: white;
 }
 .cw{
