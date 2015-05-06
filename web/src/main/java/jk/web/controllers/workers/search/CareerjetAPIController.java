@@ -13,8 +13,6 @@ import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,12 +33,13 @@ public class CareerjetAPIController {
 	private LocaleResolver localeResolver;
 
 	@RequestMapping
-	public ResponseEntity<JSONObject> search(
-									@RequestParam(value = "keywords") String keywords,
-									@RequestParam(value = "location", required=false) String location,
-									@RequestParam(value = "page", required=false) Integer page,
-									@RequestParam(value = "pagesize", required=false) Integer pagesize,
-									HttpServletResponse response) throws JsonParseException, JsonMappingException, IOException{
+	public String search(	@RequestParam(value = "keywords")					String keywords,
+							@RequestParam(value = "location", required=false)	String location,
+							@RequestParam(value = "page", required=false)		Integer page,
+							@RequestParam(value = "pagesize", required=false)	Integer pagesize,
+							HttpServletResponse response,
+							Model model) throws JsonParseException, JsonMappingException, IOException{
+		logger.entry(keywords, location, page, pagesize);
 
 /*		HashMap<?, ?> readValue = new ObjectMapper().readValue(
 			"{"
@@ -263,9 +262,12 @@ public class CareerjetAPIController {
 */
 
 //		new RestServiceConsumer (new AdsIndeedCom(), keywords, location, page, pagesize);
-		JSONObject results = getSearchResult(keywords, location, page, pagesize, response);
 
-		return logger.exit(new ResponseEntity<>(results,  HttpStatus.OK));
+		model.addAttribute("keywords", keywords);
+		model.addAttribute("page", page!=null ? page : 0);
+		model.addAttribute("results", getSearchResult(keywords, location, page, pagesize, response));
+
+		return "search :: result";
 	}
 
 	@RequestMapping("results")
@@ -301,7 +303,6 @@ public class CareerjetAPIController {
 		if(pagesize!=null && pagesize > 0)
 			args.put("pagesize", pagesize.toString());
 
-		JSONObject results = (JSONObject) c.search(args);
-		return logger.exit(results);
+		return (JSONObject) c.search(args);
 	}
 }
