@@ -99,11 +99,15 @@ IE11
 
 */--><div class="container-fluid" th:classappend="${result==true ? 'result' : null}">
 <div class="row top-buffer">
-<div id="main" class="col-xs-8 col-xs-offset-1">
-	<h1 id="brand" class="brand">FashionProFinder</h1>
-	<form action="#" class="form-inline">
+<div id="main" class="col-sm-8 col-sm-offset-1">
+	<h1 id="brand" class="brand">FashionProFinder</h1><!--/*
+
+
+		Search form
+
+*/--><form id="searchForm" action="#" class="form-inline">
 		<div class="form-group">
-			<label for="keywords" class="sr-only">Keywords</label><input type="text" id="keywords" class="form-control" placeholder="Keywords..." />
+			<label for="keywords" class="sr-only">Keywords</label><input type="text" id="keywords" class="form-control" placeholder="Keywords..." required="required"/>
 			<label for="location" class="sr-only">Location</label><input type="text" id="location" class="form-control" placeholder="Location..." />
 			<button type="submit" class="btn btn-default glyphicon glyphicon-search"></button>
 		</div>
@@ -170,278 +174,162 @@ IE11
 
 	finish Categories
 
-*/--></th:block></div>
 
-						<div id="locations" th:remove="body">
-							<p class="breaker">Locations</p><!--/*
+*/--></th:block></div><!--/*
 
-							 start Keywords
 
-					 */--><ul id="solveLocations" class="c3">
-								<li><a href="#">Montreal, QC</a></li>
-								<li><a href="#">Laval, QC</a></li>
-								<li><a href="#">Toronto, ON</a></li>
-								<li><a href="#">North York, ON</a></li>
-							</ul><!--/*
+	Result
 
-							 finish Keywords
-				*/--></div>
+*/--><div id="result">
+	</div>				
+</div><!--/*
+
+
+		enf of the first column
+
+
+
+ */-->
+<div class="col-sm-3">
 </div>
-<div class="col-xs-3">
 </div>
-</div>
-		<div id="search" class="search">
-
-			<div class="advance_search">
-				<div class="row">
-					<div class="col-md-8">
-
-						
-						<div th:remove="${forms==true ? 'all-but-first' : 'body'}">
-							<th:block th:switch="${menuSelection}">
-								<th:block th:case="${T(jk.web.controllers.user.FormsController.MenuSelection).CONTACT_US}">
-									<div th:replace="fragments/forms :: contact_us"></div>
-								</th:block>
-								<div th:case="${T(jk.web.controllers.user.FormsController.MenuSelection).MESSAGE}">
-									<h3 th:text="${messageTitle}">Message Title</h3>
-									<p th:each="message:${content}" th:utext="${message}">contents</p>
-								</div>
-							</th:block>
-							<p id="count" class="breaker">2 results</p>
-							<ul class="pages list-inline pagination">
-								<li class='prev disabled'><a href="#" aria-label="Previous">
-									<span aria-hidden="true">«</span>
-								</a></li>
-								<li class="dozen1"><a href="#">1</a></li>
-								<li class="dozen1"><a href="#">2</a></li>
-								<li class="dozen1"><a href="#">3</a></li>
-								<li class="active dozen1"><a href="#">4</a></li>
-								<li class="dozen1"><a href="#">5</a></li>
-								<li class="dozen1"><a href="#">6</a></li>
-								<li class="dozen1"><a href="#">7</a></li>
-								<li class="dozen1"><a href="#">8</a></li>
-								<li class="dozen1"><a href="#">9</a></li>
-								<li class="dozen1"><a href="#">10</a></li>
-								<li class='dNone dozen2'><a href="#">221</a></li>
-								<li class='dNone dozen2'><a href="#">222</a></li>
-								<li class='dNone dozen2'><a href="#">223</a></li>
-								<li class='dNone dozen2'><a href="#">224</a></li>
-								<li class='dNone dozen2'><a href="#">225</a></li>
-								<li class='dNone dozen2'><a href="#">226</a></li>
-								<li class='dNone dozen2'><a href="#">227</a></li>
-								<li class='dNone dozen2'><a href="#">228</a></li>
-								<li class='dNone dozen2'><a href="#">229</a></li>
-								<li class='dNone dozen2'><a href="#">230</a></li>
-								<li class='dNone dozen3'><a href="#">555</a></li>
-								<li class='dNone dozen3'><a href="#">777</a></li>
-								<li class='dNone dozen3'><a href="#">999</a></li>
-								<li class='nxt'><a href="#" aria-label="Next">
-									<span aria-hidden="true">»</span>
-								</a></li>
-							</ul>
+</div><!--/*		----	End of the body	----
 
 
 
-							<ul id="jobs">
-								<li><ul>
-									<li>
-										<a href="http://jobviewtrack.com/en-ca/job-131c414c430d020f531d4f0d48000003454715050c00284f544a44100e0207154e0a05001a0e0a4e765b0d534b4554404c10001c25154e0a05001a0e0a4e765b0d534b4554404c100601497514535d55/fff8a461d9c56b4e601b228fda0287a8.html" target="_blank">Apex Media Corp. (a.k.a. Mark Animation)</a>
-									</li>
-									<li><span>Title: </span>3D animator (for kid's TV
-										animation and digital games)</li>
-									<li><span>Locations: </span>North York, ON</li>
-									<li><span>Description: </span>Apex Media Corp. (a.k.a.
-										Mark <b>Animation</b>) Web Site: Job requirements Languages
-										English Education Completion..., etc.) Not applicable .
-										Experience 5 years or more . Area of Design Specialization <b>Animation</b>;
-										Multimedia . Business...</li>
-									<li><span>Site: </span><a href="http://www.jobbank.gc.ca"
-										target="_blank">www.jobbank.gc.ca</a></li>
-								</ul></li>
-								<li><ul>
-									<li>
-										<a href="http://jobviewtrack.com/en-ca/job-1e4e414443000a1d4e134e611c040f040d45061b6b1a4647485e59160e1a480621505b505c/a00e600da57afc3782aa951b6232660c.html">Go to site</a>
-									</li>
-									<li><span>Title: </span>3D animator (for kid's TV
-										animation and digital games)</li>
-									<li><span>Locations: </span>North York, ON</li>
-									<li><span>Description: </span>Apex Media Corp. (a.k.a.
-										Mark <b>Animation</b>) Web Site: Job requirements Languages
-										English Education Completion..., etc.) Not applicable .
-										Experience 5 years or more . Area of Design Specialization <b>Animation</b>;
-										Multimedia . Business...</li>
-									<li><span>Site: </span><a href="http://www.jobbank.gc.ca"
-										target="_blank">www.jobbank.gc.ca</a></li>
-								</ul></li>
-								<li><ul>
-									<li>
-										<a href="http://jobviewtrack.com/en-ca/job-1b12414c430d020f531d4f0d48530a650c4e071c1b06495f525f2f0501074a15540a070f6c5401001506001e4b5f544243655c5d1646/2d38edadc66a4b4020057f53fd42295b.html" target="_blank">LCI Education</a>
-									</li>
-									<li><span>Title: </span>3D animator (for kid's TV
-										animation and digital games)</li>
-									<li><span>Locations: </span>North York, ON</li>
-									<li><span>Description: </span>Apex Media Corp. (a.k.a.
-										Mark <b>Animation</b>) Web Site: Job requirements Languages
-										English Education Completion..., etc.) Not applicable .
-										Experience 5 years or more . Area of Design Specialization <b>Animation</b>;
-										Multimedia . Business...</li>
-									<li><span>Site: </span><a href="http://www.jobbank.gc.ca"
-										target="_blank">www.jobbank.gc.ca</a></li>
-								</ul></li>
-								<li><ul>
-									<li><span>Title: </span>3D animator (for kid's TV
-										animation and digital games)</li>
-									<li><span>Locations: </span>North York, ON</li>
-									<li><span>Description: </span>Apex Media Corp. (a.k.a.
-										Mark <b>Animation</b>) Web Site: Job requirements Languages
-										English Education Completion..., etc.) Not applicable .
-										Experience 5 years or more . Area of Design Specialization <b>Animation</b>;
-										Multimedia . Business...</li>
-									<li><span>Site: </span><a href="http://www.jobbank.gc.ca"
-										target="_blank">www.jobbank.gc.ca</a></li>
-								</ul></li>
-								<li><ul>
-									<li>
-										<a href="http://jobviewtrack.com/en-ca/job-131c414c430d020f531d4f0d48000003454715050c00284f544a44100e0207154e0a05001a0e0a4e765b0d534b4554404c10001c25154e0a05001a0e0a4e765b0d534b4554404c100601497514535d55/fff8a461d9c56b4e601b228fda0287a8.html" target="_blank">Apex Media Corp. (a.k.a. Mark Animation)</a>
-									</li>
-									<li><span>Title: </span>3D animator (for kid's TV
-										animation and digital games)</li>
-									<li><span>Locations: </span>North York, ON</li>
-									<li><span>Description: </span>Apex Media Corp. (a.k.a.
-										Mark <b>Animation</b>) Web Site: Job requirements Languages
-										English Education Completion..., etc.) Not applicable .
-										Experience 5 years or more . Area of Design Specialization <b>Animation</b>;
-										Multimedia . Business...</li>
-									<li><span>Site: </span><a href="http://www.jobbank.gc.ca"
-										target="_blank">www.jobbank.gc.ca</a></li>
-								</ul></li>
-								<li><ul>
-									<li>
-										<a href="http://jobviewtrack.com/en-ca/job-131c414c430d020f531d4f0d48000003454715050c00284f544a44100e0207154e0a05001a0e0a4e765b0d534b4554404c10001c25154e0a05001a0e0a4e765b0d534b4554404c100601497514535d55/fff8a461d9c56b4e601b228fda0287a8.html" target="_blank">Apex Media Corp. (a.k.a. Mark Animation)</a>
-									</li>
-									<li><span>Title: </span>3D animator (for kid's TV
-										animation and digital games)</li>
-									<li><span>Locations: </span>North York, ON</li>
-									<li><span>Description: </span>Apex Media Corp. (a.k.a.
-										Mark <b>Animation</b>) Web Site: Job requirements Languages
-										English Education Completion..., etc.) Not applicable .
-										Experience 5 years or more . Area of Design Specialization <b>Animation</b>;
-										Multimedia . Business...</li>
-									<li><span>Site: </span><a href="http://www.jobbank.gc.ca"
-										target="_blank">www.jobbank.gc.ca</a></li>
-								</ul></li>
-								<li><ul>
-									<li>
-										<a href="http://jobviewtrack.com/en-ca/job-131c414c430d020f531d4f0d48000003454715050c00284f544a44100e0207154e0a05001a0e0a4e765b0d534b4554404c10001c25154e0a05001a0e0a4e765b0d534b4554404c100601497514535d55/fff8a461d9c56b4e601b228fda0287a8.html" target="_blank">Apex Media Corp. (a.k.a. Mark Animation)</a>
-									</li>
-									<li><span>Title: </span>3D animator (for kid's TV
-										animation and digital games)</li>
-									<li><span>Locations: </span>North York, ON</li>
-									<li><span>Description: </span>Apex Media Corp. (a.k.a.
-										Mark <b>Animation</b>) Web Site: Job requirements Languages
-										English Education Completion..., etc.) Not applicable .
-										Experience 5 years or more . Area of Design Specialization <b>Animation</b>;
-										Multimedia . Business...</li>
-									<li><span>Site: </span><a href="http://www.jobbank.gc.ca"
-										target="_blank">www.jobbank.gc.ca</a></li>
-								</ul></li>
-								<li><ul>
-									<li>
-										<a href="http://jobviewtrack.com/en-ca/job-131c414c430d020f531d4f0d48000003454715050c00284f544a44100e0207154e0a05001a0e0a4e765b0d534b4554404c10001c25154e0a05001a0e0a4e765b0d534b4554404c100601497514535d55/fff8a461d9c56b4e601b228fda0287a8.html" target="_blank">Apex Media Corp. (a.k.a. Mark Animation)</a>
-									</li>
-									<li><span>Title: </span>3D animator (for kid's TV
-										animation and digital games)</li>
-									<li><span>Locations: </span>North York, ON</li>
-									<li><span>Description: </span>Apex Media Corp. (a.k.a.
-										Mark <b>Animation</b>) Web Site: Job requirements Languages
-										English Education Completion..., etc.) Not applicable .
-										Experience 5 years or more . Area of Design Specialization <b>Animation</b>;
-										Multimedia . Business...</li>
-									<li><span>Site: </span><a href="http://www.jobbank.gc.ca"
-										target="_blank">www.jobbank.gc.ca</a></li>
-								</ul></li>
-							</ul>
-						</div>
-					</div>
+	----	FRAFMENTS	----
 
-					<div id="ads" name="ads" class="col-md-4 sponsored" th:remove="body">
-						<span>Sponsored Ads</span>
-						<div class="adds">
-							<!-- start sponsored ads -->
-
-							<ul>
-								<li><ul>
-									<li><span>Title: </span>3D animator (for kid's TV
-										animation and digital games)</li>
-									<li><span>Locations: </span>North York, ON</li>
-									<li><span>Description: </span>Apex Media Corp. (a.k.a.
-										Mark <b>Animation</b>) Web Site: Job requirements Languages
-										English Education Completion..., etc.) Not applicable .
-										Experience 5 years or more . Area of Design Specialization <b>Animation</b>;
-										Multimedia . Business...</li>
-									<li><span>Site: </span><a href="http://www.jobbank.gc.ca"
-										target="_blank">www.jobbank.gc.ca</a></li>
-								</ul></li>
-
-								<li><ul>
-									<li><span>Title: </span>3D animator (for kid's TV
-										animation and digital games)</li>
-									<li><span>Locations: </span>North York, ON</li>
-									<li><span>Description: </span>Apex Media Corp. (a.k.a.
-										Mark <b>Animation</b>) Web Site: Job requirements Languages
-										English Education Completion..., etc.) Not applicable .
-										Experience 5 years or more . Area of Design Specialization <b>Animation</b>;
-										Multimedia . Business...</li>
-									<li><span>Site: </span><a href="http://www.jobbank.gc.ca"
-										target="_blank">www.jobbank.gc.ca</a></li>
-								</ul></li>
-								<li><ul>
-									<li><span>Title: </span>3D animator (for kid's TV
-										animation and digital games)</li>
-									<li><span>Locations: </span>North York, ON</li>
-									<li><span>Description: </span>Apex Media Corp. (a.k.a.
-										Mark <b>Animation</b>) Web Site: Job requirements Languages
-										English Education Completion..., etc.) Not applicable .
-										Experience 5 years or more . Area of Design Specialization <b>Animation</b>;
-										Multimedia . Business...</li>
-									<li><span>Site: </span><a href="http://www.jobbank.gc.ca"
-										target="_blank">www.jobbank.gc.ca</a></li>
-								</ul></li>
-
-							</ul>
-							<!-- finish sponsored ads -->
-						</div>
+*/--><th:block th:remove="all">
 
 
-						<div class="banner_300x250 banner1">
-							<img src="../static/images/advertising300x250-1.gif"
-								th:src="@{/images/advertising300x250-1.gif}"
-								width="300"
-								height="250" />
-						</div>
-						<div class="banner_300x250 banner2">
-							<img src="../static/images/advertising300x250-1.gif"
-								th:src="@{/images/advertising300x250-1.gif}"
-								width="300"
-								height="250" />
-						</div>
+<div th:switch="${results.get('type')}" th:fragment="result"><!--/*
 
-					</div>
-				</div>
-			</div>
+
+	JOBS
+
+*/--><div th:case="JOBS" class="panel panel-default" th:with="jobs=${results.get('jobs')}, pages=${results.pages}">
+		<div class="panel-heading">
+    		<h3 class="panel-title" th:inline="text">
+    			<small>Searching for:</small>
+				[[${keywords}]]
+    			<small th:text="${'( '+results.hits+' result'+(results.hits!=1 ? 's' : '')+'; '+
+    								pages+' page'+(pages!=1 ? 's' : '')+' )'}">
+    			</small>
+    		</h3>
 		</div>
+		<div class="panel-body">
+			<nav th:if="${pages!=null and pages>1}" th:fragment="pagination">
+				<ul id="pagination" class="pagination" th:with="activeDozen=${page!=null ? page/10 : 0}">
+					<li th:if="${pages>10}" class="prev" th:classappend="${activeDozen==0 ? 'disabled' : null}">
+						<a href="#" aria-label="Previous">
+							<span aria-hidden="true">&laquo;</span>
+						</a>
+					</li>
+					<li th:each="num:${#numbers.sequence(0,pages-1)}"
+								th:class="${num==page ? 'active' : null}"
+								th:with="dozen=${num/10}"
+								th:classappend="${'dozen'+dozen+(dozen!=activeDozen ? ' dNone' : '')}">
+						<a href="#" th:href="${num}" th:text="${num+1}">1</a>
+					</li>
+					<li th:if="${pages>10}" class="nex">
+						<a href="#" aria-label="Next">
+							<span aria-hidden="true">&raquo;</span>
+						</a>
+					</li>
+				</ul>
+			</nav>
+			<dl th:each="job:${jobs}">
+				<dt><a th:href="job.url" th:text="${job.company!=null ? job.company : 'Go to site'}">Company Name</a></dt>
+				<dt th:if="${job['title']!=null}">Title:</dt>
+				<dd th:if="${job['title']!=null}" th:text="${job.title}"></dd>
 
+				<dt th:if="${job['salary']!=null}">Salary:</dt>
+				<dd th:if="${job['salary']!=null}" th:text="${job.salary}"></dd>
+
+				<dt th:if="${job['salary_currency_code']!=null}">Salary currency code:</dt>
+				<dd th:if="${job['salary_currency_code']!=null}" th:text="${job.salary_currency_code}"></dd>
+
+				<dt th:if="${job['locations']!=null}">Locations:</dt>
+				<dd th:if="${job['locations']!=null}" th:text="${job.locations}"></dd>
+
+				<dt th:if="${job['description']!=null}">Description:</dt>
+				<dd th:if="${job['description']!=null}" th:utext="${job.description}"></dd>
+
+				<dt th:if="${job['site']!=null}">Site:</dt>
+				<dd th:if="${job['site']!=null}"><a th:href="@{${job.site}}" th:text="${job.site}"></a></dd>
+			</dl>
+			<div th:replace=":: pagination"></div>
+		</div>
+	</div><!--/*
+
+
+	LOCATIONS
+
+*/--><div id="locations" th:case="LOCATIONS">
+		<p >Locations</p>
+			<ul id="solveLocations" class="c3">
+				<li><a href="#">Montreal, QC</a></li>
+				<li><a href="#">Laval, QC</a></li>
+				<li><a href="#">Toronto, ON</a></li>
+				<li><a href="#">North York, ON</a></li>
+			</ul><!--/*
+
+	finish Location
+
+*/--></div><!--/*
+
+
+	ERROR
+
+*/--><div th:case="ERROR">
+	</div><!--/*
+
+
+	DEFAULT
+
+*/--><div th:case="*">
 	</div>
-<!--/*
+<script type="text/javascript" th:inline="javascript">/*<![CDATA[*//*[-*/
 
-	End of the body
+							//********     Page Select OnClick funktion       ********
 
-*/-->
+							/*-]*/
+										$('.pages a').on('click', function(e) {
+										e.preventDefault();
+										var attr = $(this).attr('aria-label');
+										if(attr){
+											if(!$(this).parent().hasClass('disabled')){
+												$('.'+className+activeDozen).addClass('dNone');
+												if(attr=='Previous'){
+													activeDozen--;
+												}else{
+													activeDozen++;
+												}
+												$('.'+className+activeDozen).removeClass('dNone');
+												if(activeDozen == 1){
+													$('.prev').addClass('disabled');
+												}else{
+													$('.prev').removeClass('disabled');
+												}
+												if(pages && activeDozen >= Math.ceil(pages/10)){
+													$('.nxt').addClass('dNone');
+												}else{
+													$('.nxt').removeClass('dNone');
+												}
+											}
+										}else{
+											page = this.text;
+											$('#searchForm').submit();
+										}
+									});
+		/*]]>*/
+		</script>
+	</div>
+</th:block>
 </body>
-	<script type="text/javascript" th:inline="javascript">
-	/*<![CDATA[*/
-/*[-*/
-		//Function for <div id="abc">...</div>
+<script type="text/javascript" th:inline="javascript">/*<![CDATA[*//*[-*/
+
+       //Function for <div id="abc">...</div>
 
 /*-]*/$('#abc a').on('click',
 			function(e) {
@@ -449,15 +337,7 @@ IE11
 				if($(this).hasClass('empty')){
 					return false;
 				}
-				if(!$('#main').hasClass("bg-wt")){
-					$('#main').addClass("bg-wt")
-				}
-				if(!$('#categories').hasClass('navbar-default')){
-					$('#categories').addClass('navbar-default')
-				}
-				if(!$('#brand').hasClass('text-muted')){
-					$('#brand').addClass('text-muted');
-				}
+				setBgColor();
 				$('#categories').empty();
 				if($(this).hasClass('active')){
 					$(this).removeAttr('class');
@@ -469,69 +349,26 @@ IE11
 				$('#categories').load('/search/categories/' + this.text);
 		});/*[-
 
-		//On Submit
+		//On Search Submit
 
--]*/		$('#searchForm').on('submit', function(e){
+-]*/$('#searchForm').on('submit',
+		function(e){
 				e.preventDefault();
-				var wel =$('.welcome');
-				if(wel[0]!==undefined){
-					wel.removeClass('welcome').addClass('result');
-				}
-		$('#categories').empty();
-			$('#result').empty();
    				var keywords = trim($('#keywords').val());
-				if(keywords){
-					var data = {};
-					data['keywords'] = keywords;
-
-					var location = trim($('#location').val());
-					if(location){
-						data['location'] = location;
-					}
-
-					if(page){
-						data['page'] = page;
-					}
-
-					var pagesize = $('#pagesize').val();
-					if(pagesize){
-						data['pagesize'] = pagesize
-					}
-					$.ajax({
-						url : '/careerjet',
-						type : 'POST',
-						data : data ,
-
-						success : function(data) {
-								switch(data.type){
-								case "JOBS":
-									jobs(data);
-									break;
-								case "LOCATIONS":
-									locations(data.solveLocations);
-									break;
-								case "ERROR":
-									alert(data);
-									break;
-								default:
-									alert(data);
-								}
-							}
-						});
-					}
+				if(!keywords)
+					return false;
+				setBgColor();
+				$('#categories').empty();
+				$('#result').empty();
+				var data = {};
+				data['keywords'] = keywords;
+				var location = trim($('#location').val());
+				if(location)
+					data['location'] = location;
+				$('#result').empty();
+				$('#result').load('/careerjet', data);
 		});
-			function jobs(data) {
-				jobsCount(data.hits);
-				jobsPages(data.pages);
-				jobsResults(data.jobs);
-			}
-			function jobsCount(hits) {
-				if (hits !== undefined) {
-					$('#result').append(
-							$('<p></p>').addClass('breaker').attr('id', 'count').addClass('breaker').text( hits + " results" )
-					);
-				}
-			}
+
 var activeDozen;
 function jobsPages(pages) {
 
@@ -673,39 +510,7 @@ function jobsPages(pages) {
 						-]*/var pages = $('.pages');
 							if(pages){
 								pages.clone().insertAfter(list);
-							}/*[-*/
-
-							//********     Page Select OnClick funktion       ********
-
-							/*-]*/
-										$('.pages a').on('click', function(e) {
-										e.preventDefault();
-										var attr = $(this).attr('aria-label');
-										if(attr){
-											if(!$(this).parent().hasClass('disabled')){
-												$('.'+className+activeDozen).addClass('dNone');
-												if(attr=='Previous'){
-													activeDozen--;
-												}else{
-													activeDozen++;
-												}
-												$('.'+className+activeDozen).removeClass('dNone');
-												if(activeDozen == 1){
-													$('.prev').addClass('disabled');
-												}else{
-													$('.prev').removeClass('disabled');
-												}
-												if(pages && activeDozen >= Math.ceil(pages/10)){
-													$('.nxt').addClass('dNone');
-												}else{
-													$('.nxt').removeClass('dNone');
-												}
-											}
-										}else{
-											page = this.text;
-											$('#searchForm').submit();
-										}
-									});
+							}
 					}
 				}
 			}/*[-
@@ -749,6 +554,19 @@ function locations(solveLocations) {
 	$('.brand').on('click', function(){
 		location.reload();
 	});
+
+	function setBgColor(){
+		if(!$('#main').hasClass("bg-wt")){
+			$('#main').addClass("bg-wt")
+		}
+		if(!$('#categories').hasClass('navbar-default')){
+			$('#categories').addClass('navbar-default')
+		}
+		if(!$('#brand').hasClass('text-muted')){
+			$('#brand').addClass('text-muted');
+		}
+		
+	}
 	/*]]>*/
 	</script>
 </html>
