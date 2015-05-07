@@ -170,6 +170,22 @@ IE11
 								<li><a href="#">Stuntmen</a></li>
 								<li><a href="#">Waders</a></li>
 							</ul>
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+$(function(){
+	$('#categoriesList a').on('click',
+			function(e){
+				e.preventDefault();
+				$('#keywords').val($(this).text());
+				$('#page').remove();
+				$('#categories').empty();
+				$('#abc a.active').removeClass('active');
+				$('#searchForm').submit();
+				return false;
+	});
+});
+/*]]>*/
+</script>
 						</div><!--/*
 
 	finish Categories
@@ -204,7 +220,7 @@ IE11
 <th:block th:remove="all">
 
 
-<div th:switch="${results.get('type')}" th:with="activeDozen=${page!=null ? page/10 : 0}, pages=${results.pages}" th:fragment="result"><!--/*
+<div th:switch="${results.get('type')}" th:with="activeDozen=${page!=null ? page/10 : 0}, pages=${results['pages']}" th:fragment="result"><!--/*
 
 
 	JOBS
@@ -280,32 +296,6 @@ IE11
 			</dl>
 			<div th:replace=":: pagination"></div>
 		</div>
-	</div><!--/*
-
-
-	LOCATIONS
-
-*/--><div id="locations" th:case="LOCATIONS" th:with="locations=${results.get('solveLocations')}">
-		<p >Locations</p>
-			<ul id="solveLocations" class="c3">
-				<li th:each="location:${locations}"><a href="#" th:text="${location}">Montreal, QC</a></li>
-			</ul><!--/*
-
-	finish Location
-
-*/--></div><!--/*
-
-
-	ERROR
-
-*/--><div th:case="ERROR">
-	</div><!--/*
-
-
-	DEFAULT
-
-*/--><div th:case="*">
-	</div>
 <script type="text/javascript" th:inline="javascript">
 /*<![CDATA[*//*[-
 
@@ -357,7 +347,52 @@ IE11
 	});
 /*]]>*/
 </script>
+	</div><!--/*
+
+
+	LOCATIONS
+
+*/--><div th:case="LOCATIONS" th:with="locations=${results.get('solveLocations')}">
+		<p >Locations</p>
+			<ul id="solveLocations" class="c3">
+				<li th:each="location:${locations}"><a href="#" th:text="${location['name']}">Montreal, QC</a></li>
+			</ul>
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*//*[-
+
+	********     Page Select OnClick funktion       ********
+
+-]*/
+$(function(){
+	$('#solveLocations a').on('click',
+			function(e){
+				e.preventDefault();
+				alert($(this).text());
+				$('#location').val($(this).text());
+				$('#searchForm').submit();
+				return false;
+	});
+});
+/*]]>*/
+</script>
+<!--/*
+
+	finish Location
+
+*/--></div><!--/*
+
+
+	ERROR
+
+*/--><div th:case="ERROR">
+	</div><!--/*
+
+
+	DEFAULT
+
+*/--><div th:case="*">
 	</div>
+</div>
 </th:block>
 <script type="text/javascript" th:inline="javascript">/*<![CDATA[*//*[-*/
 
@@ -425,6 +460,12 @@ IE11
 			$('#brand').addClass('text-muted');
 		}
 		
+	}
+	function trim(text) {
+		if (text) {
+			text = $.trim(text);
+		}
+		return text;
 	}
 	/*]]>*/
 	</script>
