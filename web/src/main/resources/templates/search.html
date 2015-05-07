@@ -193,21 +193,23 @@ IE11
 <div class="col-sm-3">
 </div>
 </div>
-</div><!--/*		----	End of the body	----
+</div>
+<!--/*		----	End of the body	----
 
 
 
 	----	FRAFMENTS	----
 
-*/--><th:block th:remove="all">
+*/-->
+<th:block th:remove="all">
 
 
-<div th:switch="${results.get('type')}" th:fragment="result"><!--/*
+<div th:switch="${results.get('type')}" th:with="activeDozen=${page!=null ? page/10 : 0}, pages=${results.pages}" th:fragment="result"><!--/*
 
 
 	JOBS
 
-*/--><div th:case="JOBS" class="panel panel-default" th:with="jobs=${results.get('jobs')}, pages=${results.pages}">
+*/--><div th:case="JOBS" class="panel panel-default" th:with="jobs=${results.get('jobs')}">
 		<div class="panel-heading">
     		<h3 class="panel-title" th:inline="text">
     			<small>Searching for:</small>
@@ -217,9 +219,12 @@ IE11
     			</small>
     		</h3>
 		</div>
-		<div class="panel-body">
-			<nav th:if="${pages!=null and pages>1}" th:fragment="pagination">
-				<ul id="pagination" class="pagination" th:with="activeDozen=${page!=null ? page/10 : 0}">
+		<div class="panel-body"><!--/*
+
+			Paginatin
+
+	*/--><nav th:if="${pages!=null and pages>1}" th:fragment="pagination">
+				<ul id="pagination" class="pagination">
 					<li th:if="${pages>10}" class="prev" th:classappend="${activeDozen==0 ? 'disabled' : null}">
 						<a href="#" aria-label="Previous">
 							<span aria-hidden="true">&laquo;</span>
@@ -231,32 +236,47 @@ IE11
 								th:classappend="${'dozen'+dozen+(dozen!=activeDozen ? ' dNone' : '')}">
 						<a href="#" th:href="${num}" th:text="${num+1}">1</a>
 					</li>
-					<li th:if="${pages>10}" class="nex">
+					<li th:if="${pages>10}" class="nxt">
 						<a href="#" aria-label="Next">
 							<span aria-hidden="true">&raquo;</span>
 						</a>
 					</li>
 				</ul>
-			</nav>
-			<dl th:each="job:${jobs}">
-				<dt><a th:href="job.url" th:text="${job.company!=null ? job.company : 'Go to site'}">Company Name</a></dt>
-				<dt th:if="${job['title']!=null}">Title:</dt>
-				<dd th:if="${job['title']!=null}" th:text="${job.title}"></dd>
+			</nav><!--/*
 
-				<dt th:if="${job['salary']!=null}">Salary:</dt>
-				<dd th:if="${job['salary']!=null}" th:text="${job.salary}"></dd>
+		Job results
 
-				<dt th:if="${job['salary_currency_code']!=null}">Salary currency code:</dt>
-				<dd th:if="${job['salary_currency_code']!=null}" th:text="${job.salary_currency_code}"></dd>
+	*/--><dl th:each="job:${jobs}">
+				<dt><a th:href="@{${job.url}}" th:text="${#strings.isEmpty(job.company) ? 'Go to site' : job.company}">Company Name</a></dt>
+				<th:block th:if="${!#strings.isEmpty(job['title'])}">
+					<dt>Title:</dt>
+					<dd th:text="${job.title}"></dd>
+				</th:block>
 
-				<dt th:if="${job['locations']!=null}">Locations:</dt>
-				<dd th:if="${job['locations']!=null}" th:text="${job.locations}"></dd>
+				<th:block th:if="${!#strings.isEmpty(job['salary'])}">
+				<dt>Salary:</dt>
+				<dd th:text="${job.salary}"></dd>
+				</th:block>
 
-				<dt th:if="${job['description']!=null}">Description:</dt>
-				<dd th:if="${job['description']!=null}" th:utext="${job.description}"></dd>
+				<th:block th:if="${!#strings.isEmpty(job['salary_currency_code'])}">
+				<dt>Salary currency code:</dt>
+				<dd th:text="${job.salary_currency_code}"></dd>
+				</th:block>
 
-				<dt th:if="${job['site']!=null}">Site:</dt>
-				<dd th:if="${job['site']!=null}"><a th:href="@{${job.site}}" th:text="${job.site}"></a></dd>
+				<th:block th:if="${!#strings.isEmpty(job['locations'])}">
+				<dt>Locations:</dt>
+				<dd th:text="${job.locations}"></dd>
+				</th:block>
+
+				<th:block th:if="${!#strings.isEmpty(job['description'])}">
+				<dt>Description:</dt>
+				<dd th:utext="${job.description}"></dd>
+				</th:block>
+
+				<th:block th:if="${!#strings.isEmpty(job['site'])}">
+				<dt>Site:</dt>
+				<dd><a th:href="@{${job.site}}" th:text="${job.site}"></a></dd>
+				</th:block>
 			</dl>
 			<div th:replace=":: pagination"></div>
 		</div>
@@ -265,13 +285,10 @@ IE11
 
 	LOCATIONS
 
-*/--><div id="locations" th:case="LOCATIONS">
+*/--><div id="locations" th:case="LOCATIONS" th:with="locations=${results.get('solveLocations')}">
 		<p >Locations</p>
 			<ul id="solveLocations" class="c3">
-				<li><a href="#">Montreal, QC</a></li>
-				<li><a href="#">Laval, QC</a></li>
-				<li><a href="#">Toronto, ON</a></li>
-				<li><a href="#">North York, ON</a></li>
+				<li th:each="location:${locations}"><a href="#" th:text="${location}">Montreal, QC</a></li>
 			</ul><!--/*
 
 	finish Location
@@ -289,44 +306,59 @@ IE11
 
 */--><div th:case="*">
 	</div>
-<script type="text/javascript" th:inline="javascript">/*<![CDATA[*//*[-*/
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*//*[-
 
-							//********     Page Select OnClick funktion       ********
+	********     Page Select OnClick funktion       ********
 
-							/*-]*/
-										$('.pages a').on('click', function(e) {
-										e.preventDefault();
-										var attr = $(this).attr('aria-label');
-										if(attr){
-											if(!$(this).parent().hasClass('disabled')){
-												$('.'+className+activeDozen).addClass('dNone');
-												if(attr=='Previous'){
-													activeDozen--;
-												}else{
-													activeDozen++;
-												}
-												$('.'+className+activeDozen).removeClass('dNone');
-												if(activeDozen == 1){
-													$('.prev').addClass('disabled');
-												}else{
-													$('.prev').removeClass('disabled');
-												}
-												if(pages && activeDozen >= Math.ceil(pages/10)){
-													$('.nxt').addClass('dNone');
-												}else{
-													$('.nxt').removeClass('dNone');
-												}
-											}
-										}else{
-											page = this.text;
-											$('#searchForm').submit();
-										}
-									});
-		/*]]>*/
-		</script>
+	-]*/
+	var activeDozen = /*[[${activeDozen}]]*/ 0;
+	var pages = /*[[${pages}]]*/ 0;
+	$(function(){
+		$('.pagination a').on('click', function(e) {
+			e.preventDefault();
+			var parent = $(this).parent();
+			if(parent.hasClass('active') || parent.hasClass('disabled'))
+				return false;
+			var attr = $(this).attr('aria-label');/*[-
+
+			if next or preview button
+
+		-]*/if(attr){
+				$('.dozen'+activeDozen).addClass('dNone');
+					if(attr=='Previous'){
+						activeDozen--;
+					}else{
+						activeDozen++;
+					}
+					$('.dozen'+activeDozen).removeClass('dNone');
+					if(activeDozen == 0){
+						$('.prev').addClass('disabled');
+					}else{
+						$('.prev').removeClass('disabled');
+					}
+					if(pages && activeDozen >= (Math.ceil(pages/10)-1)){
+						$('.nxt').addClass('dNone');
+					}else{
+						$('.nxt').removeClass('dNone');
+					}
+			}else{
+				var pageInput = $('#page');
+				if(!pageInput[0])
+					pageInput =  $("<input></input>")
+	               					.attr("type", "hidden")
+	              					.attr("id", "page")
+	            					.appendTo($('#searchForm'));
+				pageInput.val($(this).attr('href'))
+				$('#searchForm').submit();
+			}
+			return false;
+		});
+	});
+/*]]>*/
+</script>
 	</div>
 </th:block>
-</body>
 <script type="text/javascript" th:inline="javascript">/*<![CDATA[*//*[-*/
 
        //Function for <div id="abc">...</div>
@@ -347,6 +379,7 @@ IE11
 				$('#abc .active').removeAttr('class');
 				$(this).addClass('active');
 				$('#categories').load('/search/categories/' + this.text);
+				return false;
 		});/*[-
 
 		//On Search Submit
@@ -365,196 +398,22 @@ IE11
 				var location = trim($('#location').val());
 				if(location)
 					data['location'] = location;
+				var page = $('#page').val();
+				if(page)
+					data['page'] = page;
 				$('#result').empty();
 				$('#result').load('/careerjet', data);
-		});
-
-var activeDozen;
-function jobsPages(pages) {
-
-	var li;
-	if (pages && pages > 1) {
-		var p = $('<ul></ul>')
-				.insertAfter($('#count'))
-				.addClass('pages list-inline pagination')
-				.append(/*[-
-
-			              Preview button
-
--]*/				$('<li></li>')
-						.addClass('prev')
-						.append(
-								$('<a></a>')
-								.attr('href', '#')
-								.attr('aria-label', 'Previous')
-								.append(
-										$('<span></span>')
-										.attr('aria-hidden', 'true')
-										.text('«')
-								)
-						)
-				);/*[-
-
-	              pages creation
-
--]*/
-		for (var i = 1; i <= pages; i++) {
-			var cn = className + Math.ceil(i/10);
-			li = $('<li></li>')
-			.appendTo(p)
-			.append(
-					$('<a></a>').attr('href', '#').text(i)
-					).addClass(cn+' dNone');/*[-
-
-            set active pages
-
--]*/	if ((page && page == i) || (!page && i == 1)) {
-				li.addClass("active");
-				activeDozen = Math.ceil(i/10);
-			}
-		}/*[-
-					    
-					    Next Button
-					    
--]*/	li = $('<li></li>')
-			.addClass('nxt')
-			.appendTo(p)
-			.append(
-					$('<a></a>')
-					.attr('href', '#')
-					.attr('aria-label', 'Next')
-					.append(
-							$('<span></span>')
-							.attr('aria-hidden', 'true')
-							.text('»')
-					)
-			);/*[-
-
-					Disable next if first dozen
-
--]*/	if(pages && activeDozen == Math.ceil(pages/10)){
-			$('.nxt').addClass('dNone');
-		}/*[-
-
-		              Disable preview if first dozen
-
--]*/	if(activeDozen == 1){
-			$('.prev').addClass('disabled');
-		}/*[-
-
-					Show 10 buttons
-
--]*/	$('.' + className + activeDozen).removeClass('dNone');
-			page = undefined;
-	}
-}
-			function jobsResults(jobs) {
-				if (jobs) {
-					var length = jobs.length;
-					if (length > 0) {
-						var list = $('<ul></ul>').attr('id', 'jobs').appendTo('#result');
-						$.each(	jobs,
-								function(index, value) {
-										var ul = $('<ul></ul>')
-										$('<li></li>')
-											.appendTo(list)
-											.append(ul);
-										$('<li></li>')
-											.appendTo(ul)
-											.append(
-												$('<a></a>')
-													.attr('href', value.url).text(value.company ? value.company : 'Go to site')
-													.attr('target', 'blank')
-											);
-
-										if (value.title) {
-											$('<li></li>')
-												.appendTo(ul)
-												.append('<span>Title: </span>' + value.title);
-										}
-										if (value.salary) {
-											$('<li></li>')
-												.appendTo(ul)
-												.append('<span>Salary: </span>' + value.salary);
-										}
-										if (value.salary_currency_code) {
-											$('<li></li>')
-												.appendTo(ul)
-												.append('<span>Salary currency code: </span>' + value.salary_currency_code);
-										}
-										if (value.locations) {
-											$('<li></li>')
-												.appendTo(ul)
-												.append('<span>Locations: </span>' + value.locations);
-										}
-										if (value.description) {
-											$('<li></li>')
-												.appendTo(ul)
-												.append('<span>Description: </span>' + value.description);
-										}
-										var site = value.site;
-										if (site) {
-											if (site.substr(0, 3) != 'http') {
-												site = 'http://' + site;
-											}
-											$('<li></li>')
-												.appendTo(ul)
-												.append('<span>Site: </span><a href="'+site+'" target="_blank">'
-																	+ value.site
-																	+ '</a>');
-								}
-						});/*[-
-
-						   Clone pages                   
-
-						-]*/var pages = $('.pages');
-							if(pages){
-								pages.clone().insertAfter(list);
-							}
-					}
-				}
-			}/*[-
-
-			   // Location
-
--]*/
-function locations(solveLocations) {
-	if (solveLocations && solveLocations.length > 0) {
-		$('#locations')
-			.append(
-					$('<p></p>').addClass('breaker').text('Select Location')
-			).append(
-					$('<ul></ul>').attr('id','solveLocations').addClass('c3')
-			);
-		$.each(solveLocations, function(index, value) {
-			$('<li></li>').append(
-							'<a href="#">' + value.name + '</a>'
-			).appendTo($('#solveLocations'));
-		});
-		$('#solveLocations a').on('click', function(e) {
+				return false;
+	});
+	$('categoriesList').on('click',
+			function(e){
 			e.preventDefault();
-			$('#location').val(this.text);
-			$('#searchForm').submit();
-		});
-	} else
-		alert('Impossible to find a location');
-	$('#solveLocations a').on('click',
-			function(e) {
-				e.preventDefault();
-				$('#location').val(this.text);
-			$('#searchForm').submit();
-});
-}
-	function trim(text) {
-		if (text) {
-			text = $.trim(text);
-		}
-		return text;
-	}
+	});
 	$('.brand').on('click', function(){
 		location.reload();
+		$('#keywords').val($(this).text());
+		$('#searchForm').submit();
 	});
-
 	function setBgColor(){
 		if(!$('#main').hasClass("bg-wt")){
 			$('#main').addClass("bg-wt")
@@ -569,4 +428,5 @@ function locations(solveLocations) {
 	}
 	/*]]>*/
 	</script>
+</body>
 </html>
