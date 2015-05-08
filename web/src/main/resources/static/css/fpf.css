@@ -15,6 +15,11 @@ http://www.daswallpaper.de/nature-wallpaper
 }
 body{
 	margin-bottom: 55px;
+	background:url('https://scontent-lga.xx.fbcdn.net/hphotos-xpa1/v/t1.0-9/s720x720/18293_514588762015384_7037405496006114391_n.jpg?oh=0f86b62797ab3a957145e6ddcda2f8b3&oe=55A1676C') no-repeat center center fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
 }
 .brand{
 	font-family: "DUBIEL", Arial, Helvetica, sans-serif;
