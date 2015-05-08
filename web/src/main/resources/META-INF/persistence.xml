@@ -32,6 +32,7 @@
     <class>jk.web.entities.ContactUs</class>
     <class>jk.web.entities.ReferenceNumbers</class>
     <class>jk.web.entities.ContactEmails</class>
+    <class>jk.web.entities.BackgroundImgEntity</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/jk?zeroDateTimeBehavior=convertToNull"/>
       <property name="javax.persistence.jdbc.password" value="potomkina"/>
