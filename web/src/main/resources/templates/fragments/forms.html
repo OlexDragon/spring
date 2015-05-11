@@ -19,39 +19,42 @@ IE 11
 -->
 <body>
 <th:block th:fragment="sign_up_forms">
-	<div class="comunication_forms" th:fragment="contact_us">
-		<h2>Contact Us</h2>
-		<hr/>
+	<div class="panel panel-default" th:fragment="contact_us">
+		<div class="panel-heading">
+			<h2 th:text="${contact_us}">Contact Us</h2>
+		</div>
+		<div class="panel-body">
 		<form action="/contact_us" method="post" th:object="${contactUsForm}">
 			<div class="form-group" th:with="err=${#fields.hasErrors('referenceNumber')}" th:classappend="${err ? 'has-error' : null}">
-				<label class="control-label">Ad Reference Number:<span th:if="${err}" th:errors="*{referenceNumber}">ReferenceNumber Error</span></label>
+				<label class="control-label" for="referenceNumber">Ad Reference Number: <span th:if="${err}" th:errors="*{referenceNumber}">ReferenceNumber Error</span></label>
 				<input type="text" class="form-control" required="required" th:field="*{referenceNumber}"/>
 			</div><!--/* max length(45) from database 
 
 		*/--><div class="form-group" th:with="err=${#fields.hasErrors('name')}" th:classappend="${err ? 'has-error' : null}">
-				<label class="control-label">Your Name:<span th:if="${err}" th:errors="*{name}">ReferenceNumber Error</span></label>
+				<label class="control-label" for="name">Your Name: <span th:if="${err}" th:errors="*{name}">Name Error</span></label>
 				<input type="text" class="form-control" required="required" th:field="*{name}"/>
 			</div><!--/* max length(245) from database 
 
 		*/--><div class="form-group" th:with="err=${#fields.hasErrors('email')}" th:classappend="${err ? 'has-error' : null}">
-				<label class="control-label">Email Address:<span th:if="${err}" th:errors="*{email}">ReferenceNumber Error</span></label>
+				<label class="control-label" for="email">Email Address: <span th:if="${err}" th:errors="*{email}">Email Error</span></label>
 				<input type="email" class="form-control" required="required" th:field="*{email}"/>
 			</div><!--/* max length (254) http://en.wikipedia.org/wiki/Email_address
 
 		*/--><div class="form-group" th:with="err=${#fields.hasErrors('subject')}" th:classappend="${err ? 'has-error' : null}">
-				<label class="control-label">Subject:<span th:if="${err}" th:errors="*{subject}">ReferenceNumber Error</span></label>
+				<label class="control-label" for="subject">Subject: <span th:if="${err}" th:errors="*{subject}">Subject Error</span></label>
 				<input type="text" class="form-control" required="required" th:field="*{subject}"/>
 			</div><!--/* max length(145) from database 
 
 		*/--><div class="form-group" th:with="err=${#fields.hasErrors('message')}" th:classappend="${err ? 'has-error' : null}">
-				<label class="control-label">Message:<span th:if="${err}" th:errors="*{message}">ReferenceNumber Error</span></label>
+				<label class="control-label" for="message">Message: <span th:if="${err}" th:errors="*{message}">Message Error</span></label>
 				<textarea required="required" class="form-control" th:field="*{message}"></textarea>
 			</div><!--/* max length(1000) from database
 
-		*/--><button name="contactUs" class="submit" type="submit">submit</button>
+		*/--><button name="contactUs" class="submit form-control" type="submit">submit</button>
 
 			<div class="clear"></div>
 		</form>
+		</div>
 	</div><!--/* end comunication_forms 
 
 */--><div class="comunication_forms" th:with="countries=${T(java.util.Locale).getISOCountries()}"> 

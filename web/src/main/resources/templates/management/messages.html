@@ -7,6 +7,7 @@
 <meta charset="UTF-8"/>
 <title>Users</title>
 <th:block th:replace="search :: headContent">
+	<link rel="shortcut icon" type="image/vnd.microsoft.icon" href="../static/favicon.ico" th:href="@{/favicon.ico}" />
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="../static/css/general_static.css" th:href="@{/css/general.css}" />
 	<link rel="stylesheet" href="../static/css/normalize.css" th:href="@{/css/normalize.css}" />
@@ -14,44 +15,35 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 </th:block>
 </head>
-<body th:with="searchFormPath=${'/management/users'}, managementMenu=${true}, menuSelection=${T(jk.web.controllers.user.FormsController.MenuSelection).USERS}">
+<body th:with="searchFormPath=${'/management/messages'}, managementMenu=${true}, menuSelection=${T(jk.web.controllers.user.FormsController.MenuSelection).CONTACT_US}">
 	<nav th:replace="management/categories :: managementMenu"></nav>
 	<div class="container-fluid">
 		<table class="table table-striped table-hover table-condensed table-responsive">
 			<thead>
 				<tr>
 					<th>ID</th>
-					<th>Username</th>
-					<th>Permissions</th>
-					<th>Created</th>
-					<th>Accessed</th>
+					<th>IP Address</th>
+					<th>Reference Number</th>
+					<th>Name</th>
+					<th>E-Mail</th>
+					<th>Subject</th>
+					<th>Message</th>
+					<th>Status</th>
 				</tr>
 			</thead>
 			<tr th:each="u:${usersView.all}">
-				<td th:text="${u.id}" th:class="${usersView.getPermissions(u.permissions)}">ID</td>
-				<td th:text="${u.username}">Username</td>
-				<td th:text="${u.permissions}">Permissions</td>
-				<td th:text="${#calendars.format(u.createdDate, 'HH:mm dd MMMM yyyy')}">Created</td>
-				<td th:text="${u.lastAccessed!=null ? #calendars.format(u.lastAccessed, 'HH:mm dd MMMM yyyy') : null}">Accessed</td>
+					<td>ID</td>
+					<td>IP Address</td>
+					<td>Reference Number</td>
+					<td>Name</td>
+					<td>E-Mail</td>
+					<td>Subject</td>
+					<td>Message</td>
+					<td>Status</td>
 			</tr>
 		</table>
 		<script type="text/javascript">
 		/*<![CDATA[*/
-		var selection;
-		$('tbody tr').on('click', function(){
-			if(selection)
-				selection.removeClass('success');
-			selection = $(this).addClass('success');
-			var firstTd = selection.find('td').eq(0);
-			var id = firstTd.text();
-			$('#id').val(id);
-			$('#editorLabel').text(selection.find('td').eq(1).text());
-			var chBoxes = $('#editorForm input[type=checkbox]');
-			$.each( chBoxes, function(index){
-			    $(this).prop( "checked", firstTd.hasClass($(this).attr('id')));
-			});
-			$('#editor').modal();
-		});
 		/*]]>*/
 		</script>
 	</div><!--/*

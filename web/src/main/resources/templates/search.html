@@ -5,12 +5,11 @@
 	lang="en">
 <head>
 <meta charset="UTF-8" />
-<title th:text="${title==null ? 'FashionProFinder' : title + ':FashionProFinder'}">FashionProFinder</title>
+<title th:text="${title==null} ? 'FashionProFinder' : #{${title}} + ':FashionProFinder'">FashionProFinder</title>
 <th:block th:fragment="headContent">
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
 <link rel="stylesheet" href="../static/css/fpf.css" th:href="@{/css/fpf.css}" />
-<link rel="stylesheet" href="../static/css/forms.css"  th:href="@{/css/forms.css}" th:if="${forms==true}"/>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 </th:block>
@@ -75,12 +74,25 @@ IE11
  		<ul class="nav navbar-nav navbar-right">
  			<li><a href="#" data-toggle="modal" data-target="#aboutModal">About us</a></li>
  			<li th:classappend="${menuSelection==null ? 'active' : null}"><a href="/">Search</a></li>
- 			<li class="dropup" sec:authorize="hasAuthority('MANAGER')" th:classappend="${managementMenu!=null ? 'active' : null}">
+ 			<li sec:authorize="hasAuthority('MANAGER')" class="dropup" th:classappend="${managementMenu!=null ? 'active' : null}">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Management<span class="caret"></span></a>
-					<ul class="dropdown-menu navbar-inverse" role="menu" aria-labelledby="managementMenu">
-						<li role="presentation" th:classappend="${categoriesMenu!=null ? 'active' : null}"><a role="menuitem" tabindex="-1" href="/management/search/categories">Edit Search Categories</a></li>
-						<li role="presentation" th:classappend="${usersMenu!=null ? 'active' : null}"><a role="menuitem" tabindex="-1" href="/management/users">Users</a></li>
-						<li role="presentation" th:classappend="${statisticMenu!=null ? 'active' : null}"><a role="menuitem" tabindex="-1" href="/management/statistic">Statistic</a></li>
+					<ul class="dropdown-menu" role="menu" aria-labelledby="managementMenu">
+						<li role="presentation"
+								th:classappend="${menuSelection==T(jk.web.controllers.user.FormsController.MenuSelection).EDIT_CATEGORIES ? 'active' : null}">
+							<a role="menuitem" tabindex="-1" href="/management/search/categories">Edit Search Categories</a>
+						</li>
+						<li role="presentation"
+								th:classappend="${menuSelection==T(jk.web.controllers.user.FormsController.MenuSelection).USERS ? 'active' : null}">
+							<a role="menuitem" tabindex="-1" href="/management/users">Users</a>
+						</li>
+						<li role="presentation"
+								th:classappend="${menuSelection==T(jk.web.controllers.user.FormsController.MenuSelection).STATISTIC ? 'active' : null}">
+							<a role="menuitem" tabindex="-1" href="/management/statistic">Statistic</a>
+						</li>
+						<li role="presentation"
+								th:classappend="${menuSelection==T(jk.web.controllers.user.FormsController.MenuSelection).CONTACT_US ? 'active' : null}">
+							<a role="menuitem" tabindex="-1" href="/management/messages">Messages</a>
+						</li>
 					</ul>
 			</li>
 			<li th:class="${menuSelection==T(jk.web.controllers.user.FormsController.MenuSelection).CONTACT_US ? 'active' : null}"><a href="/contact_us">Contact Us</a></li>
@@ -94,8 +106,8 @@ IE11
 
 */--><div class="container-fluid" th:classappend="${result==true ? 'result' : null}">
 <div class="row top-buffer">
-<div id="main" class="col-sm-8 col-sm-offset-1">
-	<h1 id="brand" class="brand">FashionProFinder</h1><!--/*
+<div id="main" class="col-sm-8 col-sm-offset-1" th:classappend="${menuSelection!=null ? 'bg-wt' : null}">
+	<h1 id="brand" class="brand" th:classappend="${result==true ? 'text-muted' : null}">FashionProFinder</h1><!--/*
 
 
 		Search form
@@ -138,32 +150,6 @@ IE11
 								<li><a href="#">Animation</a></li>
 								<li><a href="#">Artisticgymnasts</a></li>
 								<li><a href="#">Choreographers</a></li>
-								<li><a href="#">Clowns</a></li>
-								<li><a href="#">Comedians (Public, Television, Film)</a></li>
-								<li><a href="#">Composers</a></li>
-								<li><a href="#">Contortionists</a></li>
-								<li><a href="#">Dancers</a></li>
-								<li><a href="#">Decorators</a></li>
-								<li><a href="#">Fashion</a></li>
-								<li><a href="#">Figuration(public)</a></li>
-								<li><a href="#">Filmmakers</a></li>
-								<li><a href="#">Fire-eaters</a></li>
-								<li><a href="#">Funambulists</a></li>
-								<li><a href="#">Improvisation</a></li>
-								<li><a href="#">Jugglers</a></li>
-								<li><a href="#">Liner (Light, photo)</a></li>
-								<li><a href="#">Lyricalsinging(opera)</a></li>
-								<li><a href="#">Magicians</a></li>
-								<li><a href="#">Makeup</a></li>
-								<li><a href="#">Mimes</a></li>
-								<li><a href="#">ModelsPhotoMusicians</a></li>
-								<li><a href="#">MotionSensors</a></li>
-								<li><a href="#">MusicalInterpreters</a></li>
-								<li><a href="#">Narrators(voiceover)</a></li>
-								<li><a href="#">Puppeteers</a></li>
-								<li><a href="#">ResponsibleforStaging</a></li>
-								<li><a href="#">Stuntmen</a></li>
-								<li><a href="#">Waders</a></li>
 							</ul>
 <script type="text/javascript" th:inline="javascript">
 /*<![CDATA[*/
@@ -189,9 +175,16 @@ $(function(){
 */--></th:block></div><!--/*
 
 
-	Result
+	Result, Forms or Message
 
-*/--><div id="result">
+*/--><div id="result" th:switch="${menuSelection}">
+		<th:block th:case="${T(jk.web.controllers.user.FormsController.MenuSelection).CONTACT_US}">
+			<div th:replace="fragments/forms :: contact_us"></div>
+		</th:block>
+		<div th:case="${T(jk.web.controllers.user.FormsController.MenuSelection).MESSAGE}">
+			<h3 th:text="#{${messageTitle}}">Message Title</h3>
+			<p th:each="message:${content}" th:utext="#{${message}}">contents</p>
+		</div>
 	</div>				
 </div><!--/*
 
@@ -428,7 +421,7 @@ $(function(){
 				var location = trim($('#location').val());
 				if(location)
 					data['location'] = location;
-				var page = $('#page').val();
+				var page = $('#page').text();
 				if(page)
 					data['page'] = page;
 				$('#result').empty();

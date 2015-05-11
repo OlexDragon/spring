@@ -14,7 +14,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
 		<start-class>jk.web.HomeController</start-class>
-		<tomcat.version>8.0.21</tomcat.version>
+		<tomcat.version>8.0.22</tomcat.version>
 		<docker.image.prefix>olex</docker.image.prefix>
 	</properties>
 
