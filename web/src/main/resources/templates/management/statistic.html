@@ -15,7 +15,7 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 </th:block>
 </head>
-<body th:with="searchFormPath=${'/management/users'}, managementMenu=${true}, statisticMenu=${true}">
+<body th:with="searchFormPath=${'/management/users'}, managementMenu=${true}, menuSelection=${T(jk.web.controllers.user.FormsController.MenuSelection).STATISTIC}">
 	<nav th:replace="management/categories :: managementMenu"></nav>
 	<div class="container-fluid">
 		<div role="tabpanel"><!--/*
