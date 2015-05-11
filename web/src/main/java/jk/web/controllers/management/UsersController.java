@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @PreAuthorize("hasAuthority('MANAGER')")
 @RequestMapping("/management/users")
-public class ManagementUsersController {
+public class UsersController {
 
 	private final Logger logger = LogManager.getLogger();
 

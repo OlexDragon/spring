@@ -324,7 +324,10 @@ public class FormsController {
 	public enum MenuSelection{
 		CONTACT_US,
 		ADD_URL_ADDRESS,
-		MESSAGE
+		MESSAGE,
+		STATISTIC,
+		USERS,
+		EDIT_CATEGORIES
 	}
 	@Autowired
 	private HomeController homeController;
@@ -340,21 +343,21 @@ public class FormsController {
 	@Value("${email.from}")
 	private String emaleFrom;
 
-	@RequestMapping(value="/contact_us")
+	@RequestMapping(value="contact_us")
 	public String contactUs(@Valid ContactUsForm contactUsForm, BindingResult bindingResult, @RequestParam(required=false) String contactUs, AddSiteForm addSiteForm, Model model, HttpServletRequest request){
 		logger.entry(contactUsForm, contactUs);
 
 		if (contactUs!=null && !bindingResult.hasErrors()){
 
-			model.addAttribute("messageTitle", "Confirmation");
-			model.addAttribute("content", new String[]{"Thank You", "All The Best"});
+			model.addAttribute("messageTitle", "contact_us_confirmation");
+			model.addAttribute("content", new String[]{"thank_you", "all_the_best"});
 
 			contactUs(contactUsForm, request);
 
 			return returnToForms("Confirmation", MenuSelection.MESSAGE, model);
 		}
 
-		return returnToForms("Contact Us", MenuSelection.CONTACT_US, model);
+		return returnToForms("contact_us", MenuSelection.CONTACT_US, model);
 	}
 
 	private void contactUs(ContactUsForm contactUsForm, HttpServletRequest request) {
@@ -375,7 +378,7 @@ public class FormsController {
 															emailEntity,
 															ContactUsStatus.TO_CONTACT));
 
-		eMailWorker.sendEMail(emaleFrom, "New ContactUs Message", "http://www.fashionprofinder.com/management/contactUs");
+		eMailWorker.sendEMail(emaleFrom, "New ContactUs Message", "http://www.fashionprofinder.com/management/messages");
 	}
 
 	@RequestMapping("/signup/forms")

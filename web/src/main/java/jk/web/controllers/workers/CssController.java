@@ -50,6 +50,8 @@ public class CssController {
 		setBackgroundPath();
 
 		if(setBackground(zoneId) || fpfCss==null){
+			logger.info("The File 'fpf.css' was read from the disk.");
+
 			InputStream is = CssController.class.getResourceAsStream("/static/css/fpf.css");
 			if(backgroundInUse!=null)
 				is = editFpfCssFile(is);
@@ -102,6 +104,7 @@ public class CssController {
 				if(bi!=backgroundInUse){
 					backgroundInUse = bi;
 					chaged = true;
+					logger.info("background has been changed to {}", backgroundInUse);
 				}
 				index = 0;
 			}else
@@ -111,6 +114,7 @@ public class CssController {
 				if(backgroundImgs.get(index).getStartToShowAt().before(time)){
 					backgroundInUse = backgroundImgs.get(index);
 					chaged = true;
+					logger.info("For loop: background has been changed to {};", backgroundInUse);
 				}else{
 					break;
 				}
