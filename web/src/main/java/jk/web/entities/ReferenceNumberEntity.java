@@ -114,6 +114,6 @@ public class ReferenceNumberEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "jk.web.entities.ReferenceNumbers[ referenceNumberId=" + referenceNumberId + " ]";
+        return referenceNumber;
     }
 }

@@ -134,8 +134,10 @@ public class ContactEmailEntity implements Serializable {
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "jk.web.entities.ContactEmails[ emailId=" + emailId + " ]";
-    }
+	@Override
+	public String toString() {
+		return "ContactEmailEntity [emailId=" + emailId + ", email=" + email
+				+ ", emailCreationDate=" + emailCreationDate + ", emailStatus="
+				+ emailStatus + "]";
+	}
 }
