@@ -17,7 +17,8 @@
 </head>
 <body th:with="searchFormPath=${'/management/messages'}, managementMenu=${true}, menuSelection=${T(jk.web.controllers.user.FormsController.MenuSelection).CONTACT_US}">
 	<nav th:replace="management/categories :: managementMenu"></nav>
-	<div class="container-fluid">
+	<div class="container">
+	<div class="panel panel-default">
 		<table class="table table-striped table-hover table-condensed table-responsive">
 			<thead>
 				<tr>
@@ -31,36 +32,43 @@
 					<th>Status</th>
 				</tr>
 			</thead>
-			<tr th:each="u:${usersView.all}">
-					<td>ID</td>
-					<td>IP Address</td>
-					<td>Reference Number</td>
-					<td>Name</td>
-					<td>E-Mail</td>
-					<td>Subject</td>
-					<td>Message</td>
-					<td>Status</td>
+			<tr th:each="cont:${tocontact}">
+					<td class="id" th:text="${cont.contactUsId}">ID</td>
+					<td class="ipaddress" th:text="${cont.ipAddressEntity}">IP Address</td>
+					<td class="reference" th:text="${cont.referenceNumberEntity}">Reference Number</td>
+					<td class="clname" th:text="${cont.name}">Name</td>
+					<td class="email" th:text="${cont.contactEmailEntity.email}">E-Mail</td>
+					<td class="subject" th:text="${cont.subject}">Subject</td>
+					<td class="message" th:text="${cont.message}">Message</td>
+					<td class="status" th:text="${cont.contactStatus}">Status</td>
 			</tr>
 		</table>
 		<script type="text/javascript">
 		/*<![CDATA[*/
+		$('tbody tr').on('click',
+			function(){
+				$('#messagerLabel').text($(this).children('.email').text());
+				$('#id').val($(this).children('.id').text());
+				$('#messagerModal').modal();
+		});
 		/*]]>*/
 		</script>
+	</div>
 	</div><!--/*
 
 Modal Editor
 
-*/--><div class="modal fade" id="editor" tabindex="-1" role="dialog" aria-labelledby="editorLabel" aria-hidden="true">
+*/--><div class="modal fade" id="messagerModal" tabindex="-1" role="dialog" aria-labelledby="editorLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 id="editorLabel" class="modal-title">Modal title</h4>
+        <h4 id="messagerLabel" class="modal-title">Modal title</h4>
       </div>
       	<div class="modal-body">
       		<form id="editorForm" method="post" action="/management/users/edit">
       			<input id="id" name="id" type="hidden"/>
-      			<label for="categoryINP">Permissions:</label>
+      			<label >Permissions:</label>
       			<div class="container">
       			<div class="checkbox" th:each="p:${T(jk.web.entities.user.LoginEntity.Permission).values()}" th:classappend="${#authorization.expression('hasRole(''ADMIN'')') ? null : 'disabled'}">
 					<input th:id="${p}" th:name="${p}" type="checkbox" th:disabled="${not #authorization.expression('hasRole(''ADMIN'')')}"/>

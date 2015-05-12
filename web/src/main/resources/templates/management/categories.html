@@ -21,7 +21,7 @@
 	});
 	</script>
 </head>
-<body th:with="searchFormPath=${'/management/search/categories'}, managementMenu=${true}, menuSelection${T(jk.web.controllers.user.FormsController.MenuSelection).EDIT_CATEGORIES}"><!--/*
+<body th:with="searchFormPath=${'/management/search/categories'}, managementMenu=${true}, menuSelection=${T(jk.web.controllers.user.FormsController.MenuSelection).EDIT_CATEGORIES}"><!--/*
 
 	Message
 
@@ -42,7 +42,7 @@
 		<div class="container-fluid">
 
 			<div class="navbar-header brand">
-				<a href="/">FashionProFinder</a>
+				<h2><a href="/">FashionProFinder</a></h2>
 			</div>
 			<form th:action="@{${searchFormPath}}" method="post">
 				<div class="navbar-form navbar-right" role="search">
@@ -160,7 +160,7 @@ Modal Editor
       	<div class="modal-body">
       		<form id="editorForm" method="post" action="/management/search/categories/edit" class="form-inline" th:object="${searchCategoryView}">
       			<input type="hidden" th:field="*{id}"/>
-      			<label for="categoryINP">Category:</label>
+      			<label>Category:</label>
       			<div class="input-group">
 					<span class="input-group-addon">
 						<input id="show" type="checkbox" checked="checked" th:field="*{show}"/>
