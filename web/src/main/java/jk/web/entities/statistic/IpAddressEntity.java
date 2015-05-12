@@ -114,6 +114,6 @@ public class IpAddressEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "ipAddressesId=" + ipAddressId;
+        return ipAddress;
     }    
 }
