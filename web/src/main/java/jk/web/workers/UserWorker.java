@@ -431,7 +431,7 @@ public class UserWorker extends LoginWorker{
 						applicationContext.getMessage(	"UserController.email_had_been_changed_message",
 														new String[]{getEMail()},
 														"email had been changed",
-														locale));
+														locale), null);
 				break;
 			case NEW_EMAIL:
 				eMailWorker.sendEMail(	getEMail(),
@@ -442,7 +442,7 @@ public class UserWorker extends LoginWorker{
 						applicationContext.getMessage(	"UserController.email_confirmation_message",
 														new String[]{getEMail()},
 														"email confirmation",
-														locale));
+														locale), null);
 				break;
 			case NEW_USER:
 			}

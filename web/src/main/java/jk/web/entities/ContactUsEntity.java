@@ -22,6 +22,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import jk.web.entities.statistic.IpAddressEntity;
+import jk.web.entities.user.UserEntity;
 
 /**
  *
@@ -73,6 +74,14 @@ public class ContactUsEntity implements Serializable {
     @JoinColumn(name = "reference_number_id")
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private ReferenceNumberEntity referenceNumberEntity;
+
+    @JoinColumn(name = "reference_number_id", referencedColumnName="login_id", insertable=false, updatable=false)
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    private UserEntity userEntity;
+
+    @Basic
+    @Column(name = "answer_date")
+    private Timestamp answerDate;
 
     public enum ContactUsStatus{
     	TO_CONTACT,
@@ -168,8 +177,24 @@ public class ContactUsEntity implements Serializable {
         return contactStatus;
     }
 
-    public void setContactStatus(ContactUsStatus contactStatus) {
-        this.contactStatus = contactStatus;
+    public void setContactStatus(ContactUsStatus contactUsStatus) {
+        contactStatus = contactUsStatus;
+    }
+
+    public UserEntity getUserEntity() {
+        return userEntity;
+    }
+
+    public void setUserEntityEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
+    }
+
+	public Timestamp getAnswerDate() {
+		return answerDate;
+	}
+
+    public void setAnswerDate(Timestamp contactDate) {
+        this.answerDate = contactDate;
     }
 
     @Override
