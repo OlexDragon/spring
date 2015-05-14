@@ -1,4 +1,4 @@
-package jk.web.workers;
+package jk.web.workers.email;
 
 import java.util.Date;
 import java.util.Locale;
@@ -40,11 +40,19 @@ public class EMailWorker {
 
 	public void sendRegistrationMail(User user, String url, Locale locale, Context context){
 		logger.entry(user);
-		new ConfirmationEMail(user, url, locale, context);
+		context.setVariable("firstName", user.getFirstName());
+		context.setVariable("lastName", user.getLastName());
+		context.setVariable("href", url);
+		String subject = applicationContext.getMessage(	"EMailWorker.signup.subject",
+				new String[]{	user.getFirstName().toUpperCase(),
+								user.getLastName().toUpperCase()},
+								"Thank you",
+				locale);
+		new SendEMailTemplet("mails/signup_confirmation", user.getEMail(), subject, context);
 	}
 
-	public void sendEMail(String eMail, String titleCode, String message) {
-		new MailSender( eMail, titleCode, message);
+	public void sendEMail(String eMail, String titleCode, String message, StatusUpdater statusUpdater) {
+		new MailSender( eMail, titleCode, message, statusUpdater);
 	}
 
 	public class MailSender extends Thread {
@@ -52,12 +60,14 @@ public class EMailWorker {
 		private String eMail;
 		private String subject;
 		private String message;
+		private StatusUpdater statusUpdater;
 
-		public MailSender(String eMail, String titleCode, String messageCode) {
+		public MailSender(String eMail, String titleCode, String messageCode, StatusUpdater statusUpdater) {
 			logger.trace("\n\t{}\n\t{}\n\t{}", eMail, titleCode, messageCode);
 			this.eMail = eMail;
 			this.subject = titleCode;
 			this.message = messageCode;
+			this.statusUpdater = statusUpdater;
 
 			int priority = getPriority();
 			if(priority>Thread.MIN_PRIORITY)
@@ -79,6 +89,9 @@ public class EMailWorker {
 
 					mailSender.send(mimeMessage);
 
+					if(statusUpdater!=null)
+						statusUpdater.updateStatus();
+
 				} catch (MessagingException e) {
 					logger.catching(e);
 				}
@@ -89,9 +102,9 @@ public class EMailWorker {
 
 	private class MailThreadWorker extends Thread {
 
-		private ConfirmationEMail mailThread;
+		private SendEMailTemplet mailThread;
 
-		public MailThreadWorker(ConfirmationEMail mailThread) {
+		public MailThreadWorker(SendEMailTemplet mailThread) {
 			this.mailThread = mailThread;
 
 			setPriority(Thread.MIN_PRIORITY);
@@ -112,20 +125,19 @@ public class EMailWorker {
 		}
 	}
 
-	private class ConfirmationEMail extends Thread {
+	private class SendEMailTemplet extends Thread {
 
-		private final User user;
-		private final Locale locale;
 		private final Context context;
+		private final String templetePath;
+		private String email;
+		private String subject;
 
-		public ConfirmationEMail(User signUpForm, String url, Locale locale, Context context) {
+		public SendEMailTemplet(String templetePath, String email, String subject, Context context) {
 
-			this.user = signUpForm;
-			this.locale = locale;
+			this.templetePath = templetePath;
+			this.email = email;
+			this.subject = subject;
 			this.context = context;
-			context.setVariable("firstName", signUpForm.getFirstName());
-			context.setVariable("lastName", signUpForm.getLastName());
-			context.setVariable("href", url);
 
 			setDaemon(true);
 			setPriority(Thread.MIN_PRIORITY);
@@ -135,15 +147,15 @@ public class EMailWorker {
 		@Override
 		public void run() {
 
-			final String htmlContent = templateEngine.process("mails/signup_confirmation", context);
+			final String htmlContent = templateEngine.process(templetePath, context);
 
 			MimeMessage mimeMessage = mailSender.createMimeMessage();
 			final MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
 	        try {
 	        	message.setFrom(mailSender.getUsername());
-				message.setTo(user.getEMail());
+				message.setTo(email);
 				message.setSentDate(new Date());
-				message.setSubject(getSubject(user.getFirstName(), user.getLastName(), locale));
+				message.setSubject(subject);
 				message.setText(htmlContent, true);
 				mailSender.send(mimeMessage);
 			} catch (Exception e) {
@@ -152,14 +164,6 @@ public class EMailWorker {
 			}
 
 	        logger.info("Email Send Successfully");
-		}
-
-		private String getSubject(String firstName, String lastName, Locale locale) {
-			return logger.exit(applicationContext.getMessage(	"EMailWorker.signup.subject",
-																new String[]{	firstName.toUpperCase(),
-																				lastName.toUpperCase()},
-																				"Thank you",
-																locale));
 		}
 	}
 }

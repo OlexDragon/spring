@@ -44,8 +44,8 @@ import jk.web.user.User;
 import jk.web.user.validators.SignUpFormValidator;
 import jk.web.view.components.AddSiteForm;
 import jk.web.view.components.ContactUsForm;
-import jk.web.workers.EMailWorker;
 import jk.web.workers.UserWorker;
+import jk.web.workers.email.EMailWorker;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -378,7 +378,7 @@ public class FormsController {
 															emailEntity,
 															ContactUsStatus.TO_CONTACT));
 
-		eMailWorker.sendEMail(emaleFrom, "New ContactUs Message", "http://www.fashionprofinder.com/management/messages");
+		eMailWorker.sendEMail(emaleFrom, "New ContactUs Message", "http://www.fashionprofinder.com/management/messages", null);
 	}
 
 	@RequestMapping("/signup/forms")

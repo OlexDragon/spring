@@ -9,8 +9,8 @@ import jk.web.repositories.user.LoginRepository;
 import jk.web.repositories.user.TitleRepository;
 import jk.web.user.User;
 import jk.web.user.validators.SignUpFormValidator;
-import jk.web.workers.EMailWorker;
 import jk.web.workers.UserWorker;
+import jk.web.workers.email.EMailWorker;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -84,7 +84,7 @@ public class LoginController {
 																		""+userEntity.getId(),
 																		 userEntity.getLoginEntity().getPassword()
 																},
-																locale));
+																locale), null);
 				model.addAttribute("message", "LoginController.forgot_password_title_message");
 			}else
 				model.addAttribute("errorMessage", "LoginController.email_not_exists");
