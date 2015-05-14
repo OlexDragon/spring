@@ -13,6 +13,7 @@ import jk.web.entities.user.LoginEntity.Permission;
 import jk.web.repositories.user.EMailRepository;
 import jk.web.repositories.user.LoginRepository;
 import jk.web.workers.UserWorker.ConfirmationStaus;
+import jk.web.workers.email.EMailWorker;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -80,7 +81,7 @@ public class LoginWorker {
 				applicationContext.getMessage(	"LoginWorker.Username_had_been_changed_message",
 												new String[]{loginEntity.getUsername()},
 												"Username had been changed",
-												locale));
+												locale), null);
 		return loginEntity;
 	}
 
@@ -95,7 +96,7 @@ public class LoginWorker {
 				applicationContext.getMessage(	"LoginWorker.Password_had_been_changed_message",
 												new String[]{newPassword},
 												"Password had been changed",
-												locale));
+												locale), null);
 		return loginEntity;
 	}
 
@@ -136,7 +137,7 @@ public class LoginWorker {
 						applicationContext.getMessage(	"UserController.email_had_been_changed_message",
 														new String[]{em},
 														"email had been changed",
-														locale));
+														locale), null);
 				break;
 			case NEW_EMAIL:
 				eMailWorker.sendEMail(	em,
@@ -147,7 +148,7 @@ public class LoginWorker {
 						applicationContext.getMessage(	"UserController.email_confirmation_message",
 														new String[]{em},
 														"email confirmation",
-														locale));
+														locale), null);
 				break;
 			case NEW_USER:
 			}

@@ -19,6 +19,7 @@
     <logger name="jk.web.controllers.workers.CssController" level="INFO" />
     <logger name="jk.web.controllers.workers.search.CareerjetAPIController" level="INFO" />
     <logger name="jk.web.controllers.management.ManagementStatisticController" level="INFO" />
+    <logger name="jk.web.controllers.management.MessagesController" level="all" />
     <logger name="jk.web.controllers.user.FormsController" level="INFO" />
     <logger name="jk.web.configuration.EMailConfig" level="INFO" />
     <logger name="jk.web.workers.EMailWorker" level="INFO" />

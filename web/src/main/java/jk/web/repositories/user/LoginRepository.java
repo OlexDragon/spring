@@ -20,4 +20,7 @@ public interface LoginRepository  extends JpaRepository<LoginEntity, Long>  {
 	public LoginEntity findByUsernameOrEMail(@Param("usernameOrEMail") String usernameOrEMail);
 
 	public LoginEntity findById(Long userId);
+
+	@Query(value="SELECT l.id FROM login l WHERE l.username=:username")
+	public Long getIdByUsername(@Param("username") String username);
 }

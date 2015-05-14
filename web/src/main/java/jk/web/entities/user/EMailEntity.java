@@ -36,7 +36,7 @@ public class EMailEntity implements Serializable {
 	@Basic(optional = false)
     @NotNull
     @Column(name = "login_id")
-    private Long idUsers;
+    private Long userId;
 
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
 	@Column(name = "email", nullable = false, length = 145)
@@ -65,12 +65,12 @@ public class EMailEntity implements Serializable {
 		return this;
 	}
 
-    public Long getIdUsers() {
-        return idUsers;
+    public Long getUserId() {
+        return userId;
     }
 
-    public EMailEntity setUserId(Long idUsers) {
-        this.idUsers = idUsers;
+    public EMailEntity setUserId(Long userId) {
+        this.userId = userId;
         return this;
     }
 
@@ -112,6 +112,6 @@ public class EMailEntity implements Serializable {
     }
 	@Override
 	public String toString() {
-		return "EMailEntity [id=" + id + ", idUsers=" + idUsers + ", eMail=" + eMail + ", createDate=" + createDate + ", updateDate=" + updateDate + ", status=" + status + "]";
+		return "EMailEntity [id=" + id + ", userId=" + userId + ", eMail=" + eMail + ", createDate=" + createDate + ", updateDate=" + updateDate + ", status=" + status + "]";
 	}
 }
