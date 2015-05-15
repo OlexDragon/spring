@@ -24,11 +24,11 @@ public class EMailConfig {
 	private TemplateEngine templateEngine;
 
 	//Values from application.properties file
-	@Value("${email.username}")
+	@Value("${jk.email.username}")
 	private String username;
-	@Value("${email.password}")
+	@Value("${jk.email.password}")
 	private String password;
-	@Value("${mail.smtp.host}")
+	@Value("${jk.mail.smtp.host}")
 	private String host;
 
 	@Bean(name="mailSender")

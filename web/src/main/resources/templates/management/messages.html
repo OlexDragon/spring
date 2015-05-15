@@ -15,7 +15,7 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 </th:block>
 </head>
-<body th:with="searchFormPath=${'/management/messages'}, managementMenu=${true}, menuSelection=${T(jk.web.controllers.user.FormsController.MenuSelection).CONTACT_US}">
+<body th:with="searchFormPath=${'/management/messages'}, managementMenu=${true}, menuSelection=${T(jk.web.controllers.user.FormsController.MenuSelection).MANAGEMENT_MESSAGES}">
 	<nav th:replace="management/categories :: managementMenu"></nav>
 	<div class="container">
 	<div th:if="${error}" class="alert alert-danger" role="alert">

@@ -37,10 +37,6 @@ public class MessagesController {
 	private StringBuilder stringBuilder = new StringBuilder();
 	private String lineSeparator = System.getProperty("line.separator");
 
-	public MessagesController(){
-		
-	}
-
 	@ModelAttribute("tocontact")
 	public List<ContactUsEntity>  attrUsersView(){
 		return contactUsRepository.findByContactStatus(ContactUsStatus.TO_ANSWER);
