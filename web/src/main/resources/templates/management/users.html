@@ -16,7 +16,7 @@
 </head>
 <body th:with="searchFormPath=${'/management/users'}, managementMenu=${true}, menuSelection=${T(jk.web.controllers.user.FormsController.MenuSelection).USERS}">
 	<nav th:replace="management/categories :: managementMenu"></nav>
-	<div class="container-fluid">
+	<div class="panel panel-default container">
 		<table class="table table-striped table-hover table-condensed table-responsive">
 			<thead>
 				<tr>

@@ -11,19 +11,28 @@ public class ContactUsStatusUpdater implements StatusUpdater {
 
 	private ContactUsRepository contactUsRepository;
 	private ContactUsEntity contactUsEntity;
-	private ContactUsStatus contactUsStatus;
+	private ContactUsStatus statusBefor;
+	private ContactUsStatus statusAfter;
 
-	public ContactUsStatusUpdater(ContactUsRepository contactUsRepository, ContactUsEntity contactUsEntity, ContactUsStatus contactUsStatus){
+	public ContactUsStatusUpdater(ContactUsRepository contactUsRepository, ContactUsEntity contactUsEntity, ContactUsStatus statusBefor, ContactUsStatus statusAfter){
 		this.contactUsRepository = contactUsRepository;
 		this.contactUsEntity = contactUsEntity;
-		this.contactUsStatus = contactUsStatus;
+		this.statusBefor = statusBefor;
+		this.statusAfter = statusAfter;
+	}
+
+
+	@Override
+	public void preUpdateStatus() {
+		contactUsEntity.setContactStatus(statusBefor);
+		contactUsEntity.setAnswerDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
+		contactUsRepository.saveAndFlush(contactUsEntity);
 	}
 
 	@Override
-	public void updateStatus() {
-		Calendar calendar = Calendar.getInstance();
-		contactUsEntity.setContactStatus(contactUsStatus);
-		contactUsEntity.setAnswerDate(new Timestamp(calendar.getTime().getTime()));
+	public void postUpdateStatus() {
+		contactUsEntity.setContactStatus(statusAfter);
+		contactUsEntity.setAnswerDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
 		contactUsRepository.saveAndFlush(contactUsEntity);
 	}
 }

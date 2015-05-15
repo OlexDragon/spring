@@ -84,8 +84,9 @@ public class ContactUsEntity implements Serializable {
     private Timestamp answerDate;
 
     public enum ContactUsStatus{
-    	TO_CONTACT,
-    	CONTACTED
+    	TO_ANSWER,
+    	IN_PROCESS,
+    	ANSWERED
     }
     @Column(name = "contact_status")
     @Enumerated(EnumType.ORDINAL)
