@@ -13,16 +13,21 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 @Service
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class NewMessageInformer {
 
 	private final Logger logger = LogManager.getLogger();
 
 	//Values from application.properties file
-	@Value("${email.from}")
+	@Value("${jk.email.from}")
 	private String emaleFrom;
+	@Value("${jk.messages.period}")
+	private String period;
 
 	@Autowired
 	public ContactUsRepository contactUsRepository;
@@ -32,12 +37,12 @@ public class NewMessageInformer {
 	@PostConstruct
 	public void start() {
 		logger.entry();
-		Thread t = new Thread(target);
-		int priority = t.getPriority();
+		Thread thread = new Thread(target);
+		int priority = thread.getPriority();
 		if(priority>Thread.MIN_PRIORITY)
-			t.setPriority(priority-1);
-		t.setDaemon(true);
-		t.start();
+			thread.setPriority(priority-1);
+		thread.setDaemon(true);
+		thread.start();
 	}
 
 	private Runnable target = new Runnable() {
@@ -45,15 +50,20 @@ public class NewMessageInformer {
 		@Override
 		public void run() {
 			logger.entry();
+
+			int p = Integer.parseInt(period);
+
 			while(true){
-				List<ContactUsEntity> findByContactStatus = contactUsRepository.findByContactStatus(ContactUsStatus.TO_ANSWER);
-				if(findByContactStatus!=null && findByContactStatus.size()>0){
-					eMailWorker.sendEMail(emaleFrom, "new_messages", "We have new messagies to answer(http://www.fashionprofinder.com/management/messages)", null);
-				}
 				try {
-					Thread.sleep(24*60*60*1000);
+					Thread.sleep(p);
 				} catch (InterruptedException e) {
 					logger.catching(e);
+				}
+				List<ContactUsEntity> findByContactStatus = contactUsRepository.findByContactStatus(ContactUsStatus.TO_ANSWER);
+				logger.trace("\n\t{}", findByContactStatus);
+
+				if(findByContactStatus!=null && findByContactStatus.size()>0){
+					eMailWorker.sendEMail(emaleFrom, "new_messages", "We have new messagies to answer(http://www.fashionprofinder.com/management/messages)", null);
 				}
 			}
 		}
