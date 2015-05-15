@@ -31,6 +31,7 @@ public class NewMessageInformer {
 
 	@PostConstruct
 	public void start() {
+		logger.entry();
 		Thread t = new Thread(target);
 		int priority = t.getPriority();
 		if(priority>Thread.MIN_PRIORITY)
@@ -43,8 +44,9 @@ public class NewMessageInformer {
 		
 		@Override
 		public void run() {
+			logger.entry();
 			while(true){
-				List<ContactUsEntity> findByContactStatus = contactUsRepository.findByContactStatus(ContactUsStatus.TO_CONTACT);
+				List<ContactUsEntity> findByContactStatus = contactUsRepository.findByContactStatus(ContactUsStatus.TO_ANSWER);
 				if(findByContactStatus!=null && findByContactStatus.size()>0){
 					eMailWorker.sendEMail(emaleFrom, "new_messages", "We have new messagies to answer(http://www.fashionprofinder.com/management/messages)", null);
 				}

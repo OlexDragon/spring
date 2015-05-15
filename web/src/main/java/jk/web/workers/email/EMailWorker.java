@@ -77,6 +77,10 @@ public class EMailWorker {
 
 		@Override
 		public void run() {
+
+			if(statusUpdater!=null)
+				statusUpdater.preUpdateStatus();
+
 			if(eMail!=null){
 				MimeMessage mimeMessage = mailSender.createMimeMessage();
 				MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
@@ -90,7 +94,7 @@ public class EMailWorker {
 					mailSender.send(mimeMessage);
 
 					if(statusUpdater!=null)
-						statusUpdater.updateStatus();
+						statusUpdater.postUpdateStatus();
 
 				} catch (MessagingException e) {
 					logger.catching(e);

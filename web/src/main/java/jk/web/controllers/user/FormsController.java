@@ -15,6 +15,7 @@ import javax.validation.Valid;
 import javax.xml.bind.PropertyException;
 
 import jk.web.HomeController;
+import jk.web.controllers.management.NewMessageInformer;
 import jk.web.entities.ContactEmailEntity;
 import jk.web.entities.ContactEmailEntity.EmailStatus;
 import jk.web.entities.ContactUsEntity;
@@ -339,6 +340,8 @@ public class FormsController {
 	private ReferenceNumberRepository referenceNumberRepository;
 	@Autowired
 	private ContactUsRepository contactUsRepository;
+	@Autowired
+	private NewMessageInformer newMessageInformer;
 	//Values from application.properties file
 	@Value("${email.from}")
 	private String emaleFrom;
@@ -376,9 +379,10 @@ public class FormsController {
 															ipAddressRepository.findOneByIpAddress(Statistic.getIpAddress(request)),
 															referenceNumberEntity,
 															emailEntity,
-															ContactUsStatus.TO_CONTACT));
+															ContactUsStatus.TO_ANSWER));
 
-		eMailWorker.sendEMail(emaleFrom, "New ContactUs Message", "http://www.fashionprofinder.com/management/messages", null);
+		newMessageInformer.notify();
+//		eMailWorker.sendEMail(emaleFrom, "New ContactUs Message", "http://www.fashionprofinder.com/management/messages", null);
 	}
 
 	@RequestMapping("/signup/forms")

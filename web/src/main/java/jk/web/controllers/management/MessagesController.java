@@ -5,8 +5,10 @@ import java.util.List;
 
 import jk.web.entities.ContactUsEntity;
 import jk.web.entities.ContactUsEntity.ContactUsStatus;
+import jk.web.entities.repositories.ContactUsRepository;
 import jk.web.repositories.user.LoginRepository;
 import jk.web.workers.email.ContactUsStatusUpdater;
+import jk.web.workers.email.EMailWorker;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,7 +29,10 @@ public class MessagesController {
 
 	@Autowired
 	private LoginRepository loginRepository;
-	private NewMessageInformer data = new NewMessageInformer();
+	@Autowired
+	private ContactUsRepository contactUsRepository;
+	@Autowired
+	private EMailWorker eMailWorker;
 
 	private StringBuilder stringBuilder = new StringBuilder();
 	private String lineSeparator = System.getProperty("line.separator");
@@ -37,8 +42,8 @@ public class MessagesController {
 	}
 
 	@ModelAttribute("tocontact")
-	public List<ContactUsEntity>  attrUsersView(Model model){
-		return data.contactUsRepository.findByContactStatus(ContactUsStatus.TO_CONTACT);
+	public List<ContactUsEntity>  attrUsersView(){
+		return contactUsRepository.findByContactStatus(ContactUsStatus.TO_ANSWER);
 	}
 
 	@RequestMapping
@@ -55,7 +60,7 @@ public class MessagesController {
 		if(loginId==null){
 			model.addAttribute("error", "Can not find the login information for username: "+username);
 		}else{
-			ContactUsEntity contactUsEntity = data.contactUsRepository.findOne(id);
+			ContactUsEntity contactUsEntity = contactUsRepository.findOne(id);
 
 			synchronized (stringBuilder) {
 				
@@ -70,11 +75,11 @@ public class MessagesController {
 				stringBuilder.append(lineSeparator);
 				stringBuilder.append(contactUsEntity.getMessage());
 
-				data.eMailWorker.sendEMail(
+				eMailWorker.sendEMail(
 						contactUsEntity.getContactEmailEntity().getEmail(),
 						contactUsEntity.getSubject(),
 						stringBuilder.toString(),
-						new ContactUsStatusUpdater(data.contactUsRepository, contactUsEntity, ContactUsStatus.CONTACTED));
+						new ContactUsStatusUpdater(contactUsRepository, contactUsEntity, ContactUsStatus.IN_PROCESS, ContactUsStatus.ANSWERED));
 			}
 		}
 
