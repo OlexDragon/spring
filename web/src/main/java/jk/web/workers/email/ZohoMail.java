@@ -6,7 +6,7 @@ public class ZohoMail {
 
 	public  final static Properties props = new Properties();
 	static{
-		props.put("mail.smtp.host", "smtp.zoho.com");
+		props.put("jk.mail.smtp.host", "smtp.zoho.com");
 		props.put("mail.smtp.auth", "true");
 		props.put("mail.smtp.port", 465);
 		props.put("mail.smtp.startssl.enable", "true");

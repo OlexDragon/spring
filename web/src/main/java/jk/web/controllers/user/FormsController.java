@@ -323,12 +323,13 @@ public class FormsController {
 	}
 
 	public enum MenuSelection{
-		CONTACT_US,
-		ADD_URL_ADDRESS,
-		MESSAGE,
-		STATISTIC,
-		USERS,
-		EDIT_CATEGORIES
+		CONTACT_US,			//contact us page
+		ADD_URL_ADDRESS,	
+		CONFIRM_MESSAGE,	//confirmation message
+		MANAGEMENT_STATISTIC,
+		MANAGEMENT_USERS,
+		MANAGEMENT_EDIT_CATEGORIES,
+		MANAGEMENT_MESSAGES
 	}
 	@Autowired
 	private HomeController homeController;
@@ -343,7 +344,7 @@ public class FormsController {
 	@Autowired
 	private NewMessageInformer newMessageInformer;
 	//Values from application.properties file
-	@Value("${email.from}")
+	@Value("${jk.email.from}")
 	private String emaleFrom;
 
 	@RequestMapping(value="contact_us")
@@ -357,7 +358,7 @@ public class FormsController {
 
 			contactUs(contactUsForm, request);
 
-			return returnToForms("Confirmation", MenuSelection.MESSAGE, model);
+			return returnToForms("Confirmation", MenuSelection.CONFIRM_MESSAGE, model);
 		}
 
 		return returnToForms("contact_us", MenuSelection.CONTACT_US, model);
@@ -381,7 +382,7 @@ public class FormsController {
 															emailEntity,
 															ContactUsStatus.TO_ANSWER));
 
-		newMessageInformer.notify();
+		newMessageInformer.notifyAll();
 //		eMailWorker.sendEMail(emaleFrom, "New ContactUs Message", "http://www.fashionprofinder.com/management/messages", null);
 	}
 

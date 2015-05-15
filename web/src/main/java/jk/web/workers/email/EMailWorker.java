@@ -35,7 +35,7 @@ public class EMailWorker {
 	private TemplateEngine templateEngine;
 
 	//Values from application.properties file
-	@Value("${email.from}")
+	@Value("${jk.email.from}")
 	private String emaleFrom;
 
 	public void sendRegistrationMail(User user, String url, Locale locale, Context context){
