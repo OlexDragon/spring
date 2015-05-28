@@ -1,7 +1,6 @@
 package jk.web.workers;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -13,8 +12,6 @@ import jk.web.html.select.HTMLOptionElement;
 import jk.web.repositories.user.AddressRepository;
 import jk.web.repositories.user.CountryRepository;
 import jk.web.repositories.user.RegionRepository;
-import jk.web.user.Address.AddressStatus;
-import jk.web.user.Address.AddressType;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -90,21 +87,21 @@ public class AddressWorker {
 
 	public AddressEntity save(AddressEntity addressEntity) {
 		logger.entry(addressEntity);
-		List<AddressEntity> addresses = addressRepository.findByUserIdAndType(addressEntity.getUserId(), addressEntity.getType());
-		AddressEntity savedEntity = null;
-		if(addresses!=null){
-			savedEntity = getFrom(addresses, addressEntity);
-			logger.trace("\n\t{}", savedEntity);
-			if(savedEntity==null){
-				for(AddressEntity ae:addresses)
-					if(ae.getStatus()==AddressStatus.ACTIVE)
-						addressRepository.save(ae.setStatus(AddressStatus.OLD).setStatusUpdateDate(new Date()));
-				savedEntity = addressRepository.save(addressEntity);
-			}
-		}else
-			savedEntity = addressRepository.save(addressEntity);
+//		List<AddressEntity> addresses = addressRepository.findByUserIdAndType(addressEntity.getUserId(), addressEntity.getType());
+//		AddressEntity savedEntity = null;
+//		if(addresses!=null){
+//			savedEntity = getFrom(addresses, addressEntity);
+//			logger.trace("\n\t{}", savedEntity);
+//			if(savedEntity==null){
+//				for(AddressEntity ae:addresses)
+//					if(ae.getStatus()==AddressStatus.ACTIVE)
+//						addressRepository.save(ae.setStatus(AddressStatus.OLD).setStatusUpdateDate(new Date()));
+//				savedEntity = addressRepository.save(addressEntity);
+//			}
+//		}else
+//			savedEntity = addressRepository.save(addressEntity);
 
-		return savedEntity;
+		return null;//savedEntity;
 	}
 
 	public String getRegionName(String countryCode) {
@@ -156,8 +153,8 @@ public class AddressWorker {
 		return containsAE;
 		
 	}
-
-	public List<AddressEntity> getAddressEntities(Long userId, AddressType addressType) {
-		return addressRepository.findByUserIdAndType(userId, addressType);
-	}
+//
+//	public List<AddressEntity> getAddressEntities(Long userId, AddressType addressType) {
+//		return addressRepository.findByUserIdAndType(userId, addressType);
+//	}
 }

@@ -382,7 +382,6 @@ public class ProfileController {
 			model.addAttribute("addressWorker", addressWorker);
 		else{
 			if(userWorker.saveAddress(new AddressEntity()
-												.setType(address.getAddressType())
 												.setAddress(address.getAddress())
 												.setCity(address.getCity())
 												.setCountryCode(address.getCountryCode())

@@ -1,6 +1,6 @@
-package jk.web.repositories.user;
+package jk.web.entities.repositories;
 
-import jk.web.entities.user.BusinessEntity;
+import jk.web.entities.BusinessEntity;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

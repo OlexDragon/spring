@@ -35,6 +35,8 @@
     <class>jk.web.entities.BackgroundImgEntity</class>
     <class>jk.web.entities.ZoneIdEntity</class>
     <class>jk.web.entities.Answer</class>
+    <class>jk.web.entities.TelephonEntity</class>
+    <class>jk.web.database.UrlEntity</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/jk?zeroDateTimeBehavior=convertToNull"/>
       <property name="javax.persistence.jdbc.password" value="potomkina"/>

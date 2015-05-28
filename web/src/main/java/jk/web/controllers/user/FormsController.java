@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
@@ -16,6 +17,7 @@ import javax.xml.bind.PropertyException;
 
 import jk.web.HomeController;
 import jk.web.controllers.management.NewMessageInformer;
+import jk.web.entities.BusinessEntity;
 import jk.web.entities.ContactEmailEntity;
 import jk.web.entities.ContactEmailEntity.EmailStatus;
 import jk.web.entities.ContactUsEntity;
@@ -26,7 +28,6 @@ import jk.web.entities.repositories.ContactUsRepository;
 import jk.web.entities.repositories.ReferenceNumberRepository;
 import jk.web.entities.user.ActivityEntity;
 import jk.web.entities.user.AddressEntity;
-import jk.web.entities.user.BusinessEntity;
 import jk.web.entities.user.EMailEntity;
 import jk.web.entities.user.EMailEntity.EMailStatus;
 import jk.web.entities.user.LoginEntity;
@@ -39,7 +40,6 @@ import jk.web.repositories.statictic.IpAddressRepository;
 import jk.web.repositories.user.ActivityRepository;
 import jk.web.repositories.user.TitleRepository;
 import jk.web.user.Address.AddressStatus;
-import jk.web.user.Address.AddressType;
 import jk.web.user.Business;
 import jk.web.user.User;
 import jk.web.user.validators.SignUpFormValidator;
@@ -177,9 +177,7 @@ public class FormsController {
 			//Create Business Entity
 			BusinessEntity be = new BusinessEntity();
 			be.setCompanyName(business.getCompany());
-			be.setCondition(business.getCondition());
-			be.setCountryOfActivity(business.getCountryOfActivity());
-			be.setSiteAddress(business.getSite());
+//			be.setCondition(business.getCondition());
 			be.setVATnumber(business.getVatNumber());
 			try {
 				userWorker.saveBusinessEntity(be);
@@ -189,7 +187,6 @@ public class FormsController {
 
 			//create Address Entity
 			AddressEntity ae = new AddressEntity();
-			ae.setUserId(le.getId());
 			String a = business.getAddress1();
 			if(business.getAddress2()!=null)
 				a += "\n"+business.getAddress2();
@@ -197,7 +194,6 @@ public class FormsController {
 			ae.setCity(business.getCity());
 			ae.setCountryCode(business.getCountry());
 			ae.setPostalCode(business.getPostalcode());
-			ae.setType(AddressType.WORK);
 			ae.setStatus(AddressStatus.ACTIVE);
 			userWorker.saveAddress(ae);
 
@@ -324,7 +320,7 @@ public class FormsController {
 
 	public enum MenuSelection{
 		CONTACT_US,			//contact us page
-		ADD_URL_ADDRESS,	
+		ADD_SITE_URL,	
 		CONFIRM_MESSAGE,	//confirmation message
 		MANAGEMENT_STATISTIC,
 		MANAGEMENT_USERS,
@@ -386,14 +382,23 @@ public class FormsController {
 //		eMailWorker.sendEMail(emaleFrom, "New ContactUs Message", "http://www.fashionprofinder.com/management/messages", null);
 	}
 
-	@RequestMapping("/signup/forms")
-	public String signUp(ContactUsForm contactUsForm, @Valid AddSiteForm addSiteForm, BindingResult bindingResult, Model model){
+	@RequestMapping("add-site")
+	public String signUp(@Valid AddSiteForm addSiteForm, BindingResult bindingResult, Locale local, Model model){
 		logger.entry(addSiteForm);
 
-		if (bindingResult.hasErrors())
-			return returnToForms("Add URL", null, model);
+		if(addSiteForm.getMainCountry()==null)
+			addSiteForm.setMainCountry(Locale.getDefault().getCountry());
 
-		return returnToForms("Confirmation", MenuSelection.ADD_URL_ADDRESS, model);
+		if(addSiteForm.getCountry()==null)
+			addSiteForm.setCountry(Locale.getDefault().getCountry());
+
+		if (bindingResult.hasErrors() || addSiteForm.getSiteAddress()==null)
+			return returnToForms("Add URL", MenuSelection.ADD_SITE_URL, model);
+
+		model.addAttribute("messageTitle", "add_site_url_confirmation");
+		model.addAttribute("content", new String[]{"thank_you", "all_the_best"});
+
+		return returnToForms("Confirmation", MenuSelection.CONFIRM_MESSAGE, model);
 	}
 
 	public String returnToForms(String title, MenuSelection formSelection, Model model) {

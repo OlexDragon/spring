@@ -12,8 +12,9 @@ import java.util.Locale;
 
 import javax.xml.bind.PropertyException;
 
+import jk.web.entities.BusinessEntity;
+import jk.web.entities.repositories.BusinessRepository;
 import jk.web.entities.user.AddressEntity;
-import jk.web.entities.user.BusinessEntity;
 import jk.web.entities.user.CountryEntity;
 import jk.web.entities.user.EMailEntity;
 import jk.web.entities.user.EMailEntity.EMailStatus;
@@ -25,11 +26,9 @@ import jk.web.entities.user.TitleEntity;
 import jk.web.entities.user.UserEntity;
 import jk.web.entities.user.WorkplaceEntity;
 import jk.web.entities.user.social.SocialEntity;
-import jk.web.repositories.user.BusinessRepository;
 import jk.web.repositories.user.TitleRepository;
 import jk.web.repositories.user.UserRepository;
 import jk.web.user.Address;
-import jk.web.user.Address.AddressStatus;
 import jk.web.user.Address.AddressType;
 import jk.web.user.User;
 import jk.web.user.User.Gender;
@@ -474,14 +473,14 @@ public class UserWorker extends LoginWorker{
 	public AddressEntity getAddressEntity(AddressType addressType) {
 		AddressEntity addressEntity = null;
 		if(userEntity!=null) {
-			List<AddressEntity> aes = addressWorker.getAddressEntities(userEntity.getId(), addressType);
-			if(aes!=null)
-				for(AddressEntity a:aes){
-					if(a.getStatus()==AddressStatus.ACTIVE){
-						addressEntity = a;
-						break;
-					}
-				}
+//			List<AddressEntity> aes = addressWorker.getAddressEntities(userEntity.getId(), addressType);
+//			if(aes!=null)
+//				for(AddressEntity a:aes){
+//					if(a.getStatus()==AddressStatus.ACTIVE){
+//						addressEntity = a;
+//						break;
+//					}
+//				}
 		}
 		return addressEntity;
 	}
@@ -492,7 +491,7 @@ public class UserWorker extends LoginWorker{
 
 		boolean saved = false;
 		if(isValid() && addressEntity!=null && existsAE==null){
-			addressEntity.setUserId(userEntity.getId());
+//			addressEntity.setUserId(userEntity.getId());
 			addressWorker.save(addressEntity);
 			saved = true;
 
@@ -531,7 +530,7 @@ public class UserWorker extends LoginWorker{
 		if(userEntity!=null && businessEntity!=null){
 			BusinessEntity be = userEntity.getBusinessEntity();
 			if(be==null)
-				userEntity.setBusinessEntity(bisinessRepository.save(businessEntity.setUserID(userEntity.getId())));
+				;//userEntity.setBusinessEntity(bisinessRepository.save(businessEntity.setUserID(userEntity.getId())));
 			else
 				throw new PropertyException("businessEntity for this user olready exist");
 		}else

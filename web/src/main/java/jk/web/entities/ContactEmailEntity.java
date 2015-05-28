@@ -20,6 +20,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -61,6 +62,9 @@ public class ContactEmailEntity implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "contactEmailEntity", fetch = FetchType.EAGER)
     private List<ContactUsEntity> contactUsList;
+
+    @ManyToMany(mappedBy = "contactEmailEntityList")
+    private List<BusinessEntity> businessEntityList;
 
     public ContactEmailEntity() {
     }
