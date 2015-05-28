@@ -37,6 +37,7 @@ IE11
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+		<span class="sr-only">Fashion Pro Finder</span>
         <h4 class="modal-title">About Us</h4>
       </div>
       <div class="modal-body">
@@ -97,6 +98,14 @@ IE11
 						</li>
 					</ul>
 			</li>
+			<li class="dropup" th:classappend="${userMenu!=null ? 'active' : null}">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">User<span class="caret"></span></a>
+				<ul class="dropdown-menu" role="menu" aria-labelledby="userMenu">
+					<li th:class="${menuSelection==T(jk.web.controllers.user.FormsController.MenuSelection).ADD_SITE_URL ? 'active' : null}">
+						<a role="menuitem" tabindex="-1" href="/add-site">Add Site</a>
+					</li>
+				</ul>
+			</li>
 			<li th:class="${menuSelection==T(jk.web.controllers.user.FormsController.MenuSelection).CONTACT_US ? 'active' : null}"><a href="/contact_us">Contact Us</a></li>
 		</ul>
 	</div>
@@ -108,7 +117,7 @@ IE11
 
 */--><div class="container-fluid" th:classappend="${result==true ? 'result' : null}">
 <div class="row top-buffer">
-<div id="main" class="col-sm-8 col-sm-offset-1" th:classappend="${menuSelection!=null ? 'bg-wt' : null}">
+<div id="main" class="col-md-8 col-sm-offset-1" th:classappend="${menuSelection!=null ? 'bg-wt' : null}">
 	<h1 id="brand" class="brand" th:classappend="${result==true ? 'text-muted' : null}">FashionProFinder</h1><!--/*
 
 
@@ -183,6 +192,9 @@ $(function(){
 		<th:block th:case="${T(jk.web.controllers.user.FormsController.MenuSelection).CONTACT_US}">
 			<div th:replace="fragments/forms :: contact_us"></div>
 		</th:block>
+		<th:block th:case="${T(jk.web.controllers.user.FormsController.MenuSelection).ADD_SITE_URL}">
+			<div th:replace="fragments/forms :: add-site"></div>
+		</th:block>
 		<div th:case="${T(jk.web.controllers.user.FormsController.MenuSelection).CONFIRM_MESSAGE}">
 			<h3 th:text="#{${messageTitle}}">Message Title</h3>
 			<p th:each="message:${content}" th:utext="#{${message}}">contents</p>
@@ -196,7 +208,7 @@ $(function(){
 
 
  */-->
-<div class="col-sm-3">
+<div class="col-md-3">
 <script async="async" src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <ins class="adsbygoogle" style="display:inline-block;width:250px;height:250px" data-ad-client="ca-pub-1240215757349321"  data-ad-slot="7690894295"></ins>
 <ins class="adsbygoogle" style="display:inline-block;width:250px;height:250px" data-ad-client="ca-pub-1240215757349321" data-ad-slot="3260694695"></ins>

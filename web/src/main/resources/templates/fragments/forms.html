@@ -18,14 +18,21 @@ comments:
 IE 11
 -->
 <body>
-<th:block th:fragment="sign_up_forms">
+<th:block th:fragment="sign_up_forms"><!-- 
+
+	CONTACT US
+
+ -->
 	<div class="panel panel-default" th:fragment="contact_us">
 		<div class="panel-heading">
 			<h2 th:text="${contact_us}">Contact Us</h2>
 		</div>
 		<div class="panel-body">
-		<form action="/contact_us" method="post" th:object="${contactUsForm}">
-			<div class="form-group" th:with="err=${#fields.hasErrors('referenceNumber')}" th:classappend="${err ? 'has-error' : null}">
+		<form action="/contact_us" method="post" th:object="${contactUsForm}"><!--/*
+
+		reference number
+
+		*/--><div class="form-group" th:with="err=${#fields.hasErrors('referenceNumber')}" th:classappend="${err ? 'has-error' : null}">
 				<label class="control-label" for="referenceNumber">Ad Reference Number: <span th:if="${err}" th:errors="*{referenceNumber}">ReferenceNumber Error</span></label>
 				<input type="text" class="form-control" required="required" th:field="*{referenceNumber}"/>
 			</div><!--/* max length(45) from database 
@@ -50,80 +57,92 @@ IE 11
 				<textarea required="required" class="form-control" th:field="*{message}"></textarea>
 			</div><!--/* max length(1000) from database
 
-		*/--><button name="contactUs" class="submit form-control" type="submit">submit</button>
-
-			<div class="clear"></div>
+		*/--><button name="contactUs" class="submit form-control btn btn-info" type="submit">Send</button>
 		</form>
 		</div>
-	</div><!--/* end comunication_forms 
+	</div><!--/* end contact us 
 
-*/--><div class="comunication_forms" th:with="countries=${T(java.util.Locale).getISOCountries()}"> 
-		<h3>Please complete the form below to add your site.</h3>
-		<hr/>
-		<form action="/signup/forms" method="post" class="comunication_forms" th:object="${addSiteForm}">
-			
-			<label>Site Address</label>
-			<input type="url" required="required" th:field="*{siteAddress}"/>
-			
-			<label>Main Country Of Activity</label>
-			<select th:field="*{mainCountry}" required="required">
-				<option value="">Select</option>
-				<option value="volvo" th:each="c:${countries}" th:value="${c}" th:text="${new java.util.Locale('', c).displayCountry}">Volvo</option>
-				<option value="saab" th:remove="all">Saab</option>
-				<option value="mercedes" th:remove="all">Mercedes</option>
-				<option value="audi" th:remove="all">Audi</option>
-			</select>
-			
-			<div class="clear"></div>
-			<h3>Personal Data</h3>
-			<label>First Name</label>
-			<input type="text" required="required" th:field="*{firstName}"/>
 
-			<label>Last Name</label>
-			<input type="text" required="required" th:field="*{lastName}"/>
+	ADD SITE	
 
-			<label>Post</label>
-			<input type="text" required="required" th:field="*{post}"/>
+*/--><div class="panel panel-default" th:fragment="add-site" th:with="countries=${T(java.util.Locale).getISOCountries()}">
+		<div class="panel-heading">
+			<h4>Please complete the form below to add your site.</h4>
+		</div>
+		<div class="panel-body">
+		<form action="/add-site" method="post" th:object="${addSiteForm}"><!--/*
 
-			<label for="">Email</label>
-			<input type="email" required="required" th:field="*{email}"/>
-			
-			<div class="clear"></div>
+	Site address
+
+		*/--><div class="form-group" th:with="err=${#fields.hasErrors('siteAddress')}" th:classappend="${err ? 'has-error' : null}">
+				<label>Site Address: <span th:if="${err}" th:errors="*{siteAddress}">siteAddress Error</span></label>
+				<input type="url" class="form-control" required="required" th:field="*{siteAddress}"/>
+			</div><!--/*
+
+	Main Country Of Activity
+
+		*/--><div class="form-group" th:with="err=${#fields.hasErrors('mainCountry')}" th:classappend="${err ? 'has-error' : null}">
+			<label for="mainCountry">Main Country Of Activity: <span th:if="${err}" th:errors="*{mainCountry}">mainCountry Error</span></label>
+				<select class="form-control" th:field="*{mainCountry}" required="required"><option th:each="c:${countries}" th:value="${c}" th:text="${new java.util.Locale('', c).displayCountry}">Country</option></select>
+			</div>
+			<h3>Personal Data</h3><!--/*
+
+	Personal Data
+
+		*/--><div class="form-group" th:with="err=${#fields.hasErrors('firstName')}" th:classappend="${err ? 'has-error' : null}">
+				<label for="firstName">First Name: <span th:if="${err}" th:errors="*{firstName}">mainCountry Error</span></label>
+				<input type="text" class="form-control" required="required" th:field="*{firstName}"/>
+			</div>
+			<div class="form-group" th:with="err=${#fields.hasErrors('lastName')}" th:classappend="${err ? 'has-error' : null}">
+				<label for="lastName">Last Name: <span th:if="${err}" th:errors="*{lastName}">mainCountry Error</span></label>
+				<input type="text" class="form-control" required="required" th:field="*{lastName}"/>
+			</div>
+			<div class="form-group" th:with="err=${#fields.hasErrors('post')}" th:classappend="${err ? 'has-error' : null}">
+				<label for="post">Post: <span th:if="${err}" th:errors="*{post}">mainCountry Error</span></label>
+				<input type="text" class="form-control" required="required" th:field="*{post}"/>
+			</div>
+			<div class="form-group" th:with="err=${#fields.hasErrors('email')}" th:classappend="${err ? 'has-error' : null}">
+				<label for="email">Email</label>
+				<input type="email" class="form-control" required="required" th:field="*{email}"/>
+			</div>
 			<h3>Your Business</h3>
-			<label>Company Name</label>
-			<input type="text" required="required" th:field="*{companyName}"/>
- 
-			<label for="">Address</label>
-			<input type="text" th:field="*{address}"/>
+			<div class="form-group" th:with="err=${#fields.hasErrors('companyName')}" th:classappend="${err ? 'has-error' : null}">
+				<label for="companyName">Company Name:</label>
+				<input type="text" class="form-control" required="required" th:field="*{companyName}"/>
+			</div>
+			<div class="form-group" th:with="err=${#fields.hasErrors('address')}" th:classappend="${err ? 'has-error' : null}">
+				<label for="address">Address</label>
+				<input type="text" class="form-control" required="required" th:field="*{address}"/>
+			</div>
+			<div class="form-group" th:with="err=${#fields.hasErrors('city')}" th:classappend="${err ? 'has-error' : null}">
+				<label for="city">City</label>
+				<input type="text" class="form-control" required="required" th:field="*{city}"/>
+			</div>
+			<div class="form-group" th:with="err=${#fields.hasErrors('postalCode')}" th:classappend="${err ? 'has-error' : null}">
+				<label for="postalCode">Postal Code</label>
+				<input type="text" class="form-control" required="required" th:field="*{postalCode}"/>
+			</div>
+			<div class="form-group" th:with="err=${#fields.hasErrors('provinceState')}" th:classappend="${err ? 'has-error' : null}">
+				<label for="provinceState">Province/State</label>
+				<input type="text" class="form-control" required="required" th:field="*{provinceState}"/>
+			</div>
+			<div class="form-group" th:with="err=${#fields.hasErrors('country')}" th:classappend="${err ? 'has-error' : null}">
+				<label for="country">Country</label>
+				<select class="form-control" required="required" th:field="*{country}"><option th:each="c:${countries}" th:value="${c}" th:text="${new java.util.Locale('', c).displayCountry}">Countries</option></select> 
+			</div>
+			<div class="form-group" th:with="err=${#fields.hasErrors('vatNumber')}" th:classappend="${err ? 'has-error' : null}">
+				<label for="vatNumber">VAT Number</label>
+				<input type="text" class="form-control" required="required" th:field="*{vatNumber}"/>
+			</div>
+			<div class="form-group" th:with="err=${#fields.hasErrors('phone')}" th:classappend="${err ? 'has-error' : null}">
+				<label for="phone">Phone</label>
+				<input type="text" class="form-control" required="required" th:field="*{phone}"/>
+			</div>
 
-			<label for="">City</label>
-			<input type="text" required="required" th:field="*{city}"/>
-
-			<label>Postal Code</label>
-			<input type="text" required="required" th:field="*{postalCode}"/>
-
-			<label>Province/State</label>
-			<input type="text" required="required" th:field="*{provinceState}"/>
-
-			<label>Country</label>
-			<select required="required" th:field="*{country}">
-				<option value="">Select</option>
-				<option value="volvo" th:each="c:${countries}" th:value="${c}" th:text="${new java.util.Locale('', c).displayCountry}">Volvo</option>
-				<option value="saab" th:remove="all">Saab</option>
-				<option value="mercedes" th:remove="all">Mercedes</option>
-				<option value="audi" th:remove="all">Audi</option>
-			</select> 
-
-			<label>VAT Number</label>
-			<input type="text" required="required" th:field="*{vatNumber}"/>
-
-			<label>Phone</label>
-			<input type="text" required="required" th:field="*{phone}"/>
-
-			<button class="submit" type="submit">submit</button>
-			<div class="clear"></div>
+			<button type="submit" name="addSite" class="submit form-control btn btn-info">submit</button>
 		</form>
-	</div><!--/* end comunication_forms */-->
+		</div>
+	</div><!--/* end add site forms */-->
 </th:block>
 </body>
 </html>

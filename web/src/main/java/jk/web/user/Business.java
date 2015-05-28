@@ -21,7 +21,7 @@ public class Business extends User {
 	private String country;
 	private String postalcode;
 	private String confirmEmail;
-	private Long vatNumber;
+	private String vatNumber;
 	private String company;
 	private String phone;
 
@@ -79,10 +79,10 @@ public class Business extends User {
 	public void setCountry(String country) {
 		this.country = country;
 	}
-	public Long getVatNumber() {
+	public String getVatNumber() {
 		return vatNumber;
 	}
-	public void setVatNumber(Long vatNumber) {
+	public void setVatNumber(String vatNumber) {
 		this.vatNumber = vatNumber;
 	}
 	public String getPhone() {
