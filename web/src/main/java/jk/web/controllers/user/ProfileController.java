@@ -7,7 +7,7 @@ import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
-import jk.web.entities.user.AddressEntity;
+import jk.web.entities.AddressEntity;
 import jk.web.entities.user.CountryEntity;
 import jk.web.entities.user.FileEntity;
 import jk.web.repositories.user.FileRepositiry;

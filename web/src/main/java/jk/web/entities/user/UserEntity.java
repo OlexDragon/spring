@@ -22,6 +22,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
+import jk.web.entities.AddressEntity;
 import jk.web.entities.BusinessEntity;
 import jk.web.user.User.Gender;
 

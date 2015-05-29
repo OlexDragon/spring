@@ -1,8 +1,8 @@
-package jk.web.repositories.user;
+package jk.web.entities.repositories;
 
 import java.util.List;
 
-import jk.web.entities.user.RegionEntity;
+import jk.web.entities.RegionEntity;
 import jk.web.entities.user.RegionEntityPK;
 
 import org.springframework.data.jpa.repository.JpaRepository;

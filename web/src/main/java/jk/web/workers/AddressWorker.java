@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import jk.web.entities.user.AddressEntity;
+import jk.web.entities.AddressEntity;
+import jk.web.entities.RegionEntity;
+import jk.web.entities.repositories.AddressRepository;
+import jk.web.entities.repositories.RegionRepository;
 import jk.web.entities.user.CountryEntity;
-import jk.web.entities.user.RegionEntity;
 import jk.web.entities.user.RegionEntityPK;
 import jk.web.html.select.HTMLOptionElement;
-import jk.web.repositories.user.AddressRepository;
 import jk.web.repositories.user.CountryRepository;
-import jk.web.repositories.user.RegionRepository;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,18 +28,19 @@ public class AddressWorker {
 	private RegionRepository regionRepository;
 	@Autowired
 	private CountryRepository countryRepository;
+	private List<CountryEntity> allCountries;
 
 	private static List<HTMLOptionElement> htmlOptionElements;
 
 	public AddressWorker(CountryRepository countryRepository, Set<String> countries) {
 
-		Iterable<CountryEntity> findAll = countryRepository.findAll(new Sort("countryName"));
-		if(findAll!=null){
+		allCountries = countryRepository.findAll(new Sort("countryName"));
+		if(allCountries!=null){
 			List<HTMLOptionElement> first = new ArrayList<>();
 			List<HTMLOptionElement> rest = new ArrayList<>();
 			int legnth = 0;
 
-			for(CountryEntity ce:findAll) {
+			for(CountryEntity ce:allCountries) {
 				String countryName = ce.getCountryName();
 				if(legnth<countryName.length())
 					legnth = countryName.length();
@@ -157,4 +158,8 @@ public class AddressWorker {
 //	public List<AddressEntity> getAddressEntities(Long userId, AddressType addressType) {
 //		return addressRepository.findByUserIdAndType(userId, addressType);
 //	}
+
+	public List<CountryEntity> getAllCountries() {
+		return allCountries;
+	}
 }
