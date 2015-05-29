@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package jk.web.entities.user;
+package jk.web.entities;
 
 import java.io.Serializable;
 import java.util.List;
@@ -22,6 +22,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+
+import jk.web.entities.user.CountryEntity;
+import jk.web.entities.user.RegionEntityPK;
 
 /**
  * @author Oleksandr Potomkin
@@ -118,8 +121,9 @@ public class RegionEntity implements Serializable {
     }
 
     @Override
-    public String toString() {
-        return "jk.web.user.entities.RegionEntity[ regionEntityPK=" + regionEntityPK + " ]";
-    }
+	public String toString() {
+		return "\n\tRegionEntity [regionEntityPK=" + regionEntityPK
+				+ ", regionName=" + regionName + "]";
+	}
 
 }

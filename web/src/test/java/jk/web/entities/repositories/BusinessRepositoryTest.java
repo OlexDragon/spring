@@ -8,8 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jk.web.TestHomeController;
+import jk.web.entities.AddressEntity;
 import jk.web.entities.BusinessEntity;
-import jk.web.entities.user.AddressEntity;
+import jk.web.entities.ContactEmailEntity;
+import jk.web.entities.TelephonEntity;
+import jk.web.entities.UrlEntity;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,54 +33,69 @@ public class BusinessRepositoryTest {
 
 	@Test
 	public void test() {
-		BusinessEntity businessEntity = new BusinessEntity();
-		businessEntity.setCompanyName("Test Company Name 1");
-		businessEntity.setVATnumber("VAT Number 1");
+
+		BusinessEntity be = new BusinessEntity();
+		be.setCompanyName("Test Company Name 1");
+		be.setVATnumber("VAT Number 1");
+
+		List<ContactEmailEntity> contactEmailEntities = new ArrayList<>();
+		contactEmailEntities.add(ContactEmailRepositoryTest.contactEmailEntity);
+		be.setContactEmailEntityList(contactEmailEntities);
+
+		List<UrlEntity> urlEntities = new ArrayList<>();
+		urlEntities.add(UrlRepositoryTest.urlEntity);
+		be.setUrlEntityList(urlEntities);
+
+		List<TelephonEntity> telephonEntityList = new ArrayList<>();
+		telephonEntityList.add(TelephonRepositoryTest.telephonEntity);
+		be.setTelephonEntityList(telephonEntityList);
+
 		List<AddressEntity> addressEntityList = new ArrayList<AddressEntity>();
-		AddressEntity address = new AddressEntity();
-		address.setAddress("Address Test");
-		address.setCity("City Test");
-		addressEntityList.add(address);
-		businessEntity.setAddressEntityList(addressEntityList);
-		BusinessEntity save = businessRepository.save(businessEntity);
-		assertNotNull(save);
-		long businessId = save.getBusinessId().longValue();
-		assertNotNull(businessId);
-		assertEquals(save.getCompanyName(), "Test Company Name 1");
-		assertEquals(save.getVATnumber(), "VAT Number 1");
-		addressEntityList = save.getAddressEntityList();
+		addressEntityList.add(AddressRepositoryTest.addressEntity);
+		be.setAddressEntityList(addressEntityList);
+
+		be = businessRepository.save(be);
+		logger.trace("\n\tbusinessEntity:{}", be);
+
+		//RESUNT
+		be = businessRepository.findOne(be.getBusinessId());
+		assertNotNull(be);
+
+		//Address
+		addressEntityList = be.getAddressEntityList();
+		logger.trace("\n\taddressEntityList:{}", addressEntityList);
 		assertNotNull(addressEntityList);
 		assertTrue(addressEntityList.size()>0);
 		AddressEntity addressEntity = addressEntityList.get(0);
-//		assertNotNull(addressEntity.getAddsressId());
-		assertEquals("Address Test", addressEntity.getAddress());
-		logger.trace(save);
-
-		businessEntity = new BusinessEntity();
-		businessEntity.setCompanyName("Test Company Name 2");
-		businessEntity.setVATnumber("VAT Number 2");
-		save = businessRepository.save(businessEntity);
-		assertNotNull(save);
-		assertNotNull(save.getBusinessId());
-		assertEquals(save.getCompanyName(), "Test Company Name 2");
-		assertEquals(save.getVATnumber(), "VAT Number 2");
-		logger.trace(save);
-
-		businessRepository.flush();
-
-		List<BusinessEntity> findAll = businessRepository.findAll();
-		assertEquals(2, findAll.size());
-		logger.trace("{}", findAll);
-
-		logger.trace("businessId:\t{}", businessId);
-		businessEntity = businessRepository.findOne(businessId);
-		addressEntityList = businessEntity.getAddressEntityList();
-		assertNotNull(addressEntityList);
-		assertTrue(addressEntityList.size()>0);
-		addressEntity = addressEntityList.get(0);
 		assertNotNull(addressEntity.getAddsressId());
-		assertEquals("Address Test", addressEntity.getAddress());
-		logger.trace(businessEntity);
+		assertEquals(AddressRepositoryTest.ADDRESS, addressEntity.getAddress());
+
+		//Telephon
+		telephonEntityList = be.getTelephonEntityList();
+		logger.trace("\n\ttelephonEntityList:{}", telephonEntityList);
+		assertNotNull(telephonEntityList);
+		assertTrue(telephonEntityList.size()>0);
+		TelephonEntity telephonEntity = telephonEntityList.get(0);
+		assertNotNull(telephonEntity.getTelephonId());
+		assertEquals(TelephonRepositoryTest.TELEPHON, telephonEntity.getTelephon());
+
+		//URL
+		urlEntities = be.getUrlEntityList();
+		logger.trace("\n\turlEntities:{}", urlEntities);
+		assertNotNull(urlEntities);
+		assertTrue(urlEntities.size()>0);
+		UrlEntity urlEntity = urlEntities.get(0);
+		assertNotNull(urlEntity.getUrlId());
+		assertEquals(UrlRepositoryTest.URL, urlEntity.getUrl());
+
+		//ContactEmail
+		contactEmailEntities = be.getContactEmailEntityList();
+		logger.trace("\n\tcontactEmailEntities:{}", contactEmailEntities);
+		assertNotNull(contactEmailEntities);
+		assertTrue(contactEmailEntities.size()>0);
+		ContactEmailEntity emailEntity = contactEmailEntities.get(0);
+		assertNotNull(emailEntity.getEmailId());
+		assertEquals(ContactEmailRepositoryTest.EMAIL, emailEntity.getEmail());
 	}
 
 }

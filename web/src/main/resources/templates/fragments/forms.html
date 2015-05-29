@@ -65,7 +65,7 @@ IE 11
 
 	ADD SITE	
 
-*/--><div class="panel panel-default" th:fragment="add-site" th:with="countries=${T(java.util.Locale).getISOCountries()}">
+*/--><div class="panel panel-default" th:fragment="add-site">
 		<div class="panel-heading">
 			<h4>Please complete the form below to add your site.</h4>
 		</div>
@@ -83,22 +83,22 @@ IE 11
 
 		*/--><div class="form-group" th:with="err=${#fields.hasErrors('mainCountry')}" th:classappend="${err ? 'has-error' : null}">
 			<label for="mainCountry">Main Country Of Activity: <span th:if="${err}" th:errors="*{mainCountry}">mainCountry Error</span></label>
-				<select class="form-control" th:field="*{mainCountry}" required="required"><option th:each="c:${countries}" th:value="${c}" th:text="${new java.util.Locale('', c).displayCountry}">Country</option></select>
+				<select class="form-control" th:field="*{mainCountry}" required="required"><option th:each="c:${all_countries}" th:value="${c.countryCode}" th:text="${new java.util.Locale('', c.countryCode).displayCountry}" th:fragment="countries">Country</option></select>
 			</div>
 			<h3>Personal Data</h3><!--/*
 
 	Personal Data
 
 		*/--><div class="form-group" th:with="err=${#fields.hasErrors('firstName')}" th:classappend="${err ? 'has-error' : null}">
-				<label for="firstName">First Name: <span th:if="${err}" th:errors="*{firstName}">mainCountry Error</span></label>
+				<label for="firstName">First Name: <span th:if="${err}" th:errors="*{firstName}">firstName Error</span></label>
 				<input type="text" class="form-control" required="required" th:field="*{firstName}"/>
 			</div>
 			<div class="form-group" th:with="err=${#fields.hasErrors('lastName')}" th:classappend="${err ? 'has-error' : null}">
-				<label for="lastName">Last Name: <span th:if="${err}" th:errors="*{lastName}">mainCountry Error</span></label>
+				<label for="lastName">Last Name: <span th:if="${err}" th:errors="*{lastName}">lastName Error</span></label>
 				<input type="text" class="form-control" required="required" th:field="*{lastName}"/>
 			</div>
 			<div class="form-group" th:with="err=${#fields.hasErrors('post')}" th:classappend="${err ? 'has-error' : null}">
-				<label for="post">Post: <span th:if="${err}" th:errors="*{post}">mainCountry Error</span></label>
+				<label for="post">Post: <span th:if="${err}" th:errors="*{post}">post Error</span></label>
 				<input type="text" class="form-control" required="required" th:field="*{post}"/>
 			</div>
 			<div class="form-group" th:with="err=${#fields.hasErrors('email')}" th:classappend="${err ? 'has-error' : null}">
@@ -128,7 +128,6 @@ IE 11
 			</div>
 			<div class="form-group" th:with="err=${#fields.hasErrors('country')}" th:classappend="${err ? 'has-error' : null}">
 				<label for="country">Country</label>
-				<select class="form-control" required="required" th:field="*{country}"><option th:each="c:${countries}" th:value="${c}" th:text="${new java.util.Locale('', c).displayCountry}">Countries</option></select> 
 			</div>
 			<div class="form-group" th:with="err=${#fields.hasErrors('vatNumber')}" th:classappend="${err ? 'has-error' : null}">
 				<label for="vatNumber">VAT Number</label>

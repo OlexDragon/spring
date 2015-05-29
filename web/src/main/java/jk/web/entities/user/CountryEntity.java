@@ -20,6 +20,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import jk.web.entities.AddressEntity;
+import jk.web.entities.RegionEntity;
+
 /**
  * @author Oleksandr Potomkin
  */
@@ -27,25 +30,30 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "countries", catalog = "jk", schema = "")
 @XmlRootElement
 public class CountryEntity implements Serializable {
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "countryCode")
-    private List<AddressEntity> addressEntityList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "countryEntity")
-    private List<RegionEntity> regionEntityList;
     private static final long serialVersionUID = 1L;
+
     @Id
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 3)
     @Column(name = "country_code")
     private String countryCode;
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 52)
     @Column(name = "country_name")
     private String countryName;
+
     @Size(max = 145)
     @Column(name = "region_name")
     private String regionName;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "countryCode")
+    private List<AddressEntity> addressEntityList;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "countryEntity")
+    private List<RegionEntity> regionEntityList;
 
     public CountryEntity() {
     }
@@ -93,11 +101,6 @@ public class CountryEntity implements Serializable {
         return obj!=null ? obj.hashCode()==hashCode() : false;
     }
 
-	@Override
-	public String toString() {
-		return "CountryEntity [countryCode=" + countryCode + ", countryName=" + countryName + ", regionName=" + regionName + "]";
-	}
-
     public List<AddressEntity> getAddressEntityList() {
         return addressEntityList;
     }
@@ -114,4 +117,8 @@ public class CountryEntity implements Serializable {
         this.regionEntityList = regionEntityList;
     }
 
+	@Override
+	public String toString() {
+		return "\n\tCountryEntity [countryCode=" + countryCode + ", countryName=" + countryName + ", regionName=" + regionName + "]";
+	}
 }

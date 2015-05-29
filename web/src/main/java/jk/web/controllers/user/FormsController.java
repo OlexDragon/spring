@@ -17,6 +17,7 @@ import javax.xml.bind.PropertyException;
 
 import jk.web.HomeController;
 import jk.web.controllers.management.NewMessageInformer;
+import jk.web.entities.AddressEntity;
 import jk.web.entities.BusinessEntity;
 import jk.web.entities.ContactEmailEntity;
 import jk.web.entities.ContactEmailEntity.EmailStatus;
@@ -27,7 +28,6 @@ import jk.web.entities.repositories.ContactEmailRepository;
 import jk.web.entities.repositories.ContactUsRepository;
 import jk.web.entities.repositories.ReferenceNumberRepository;
 import jk.web.entities.user.ActivityEntity;
-import jk.web.entities.user.AddressEntity;
 import jk.web.entities.user.EMailEntity;
 import jk.web.entities.user.EMailEntity.EMailStatus;
 import jk.web.entities.user.LoginEntity;
@@ -45,6 +45,7 @@ import jk.web.user.User;
 import jk.web.user.validators.SignUpFormValidator;
 import jk.web.view.components.AddSiteForm;
 import jk.web.view.components.ContactUsForm;
+import jk.web.workers.AddressWorker;
 import jk.web.workers.UserWorker;
 import jk.web.workers.email.EMailWorker;
 
@@ -382,6 +383,9 @@ public class FormsController {
 //		eMailWorker.sendEMail(emaleFrom, "New ContactUs Message", "http://www.fashionprofinder.com/management/messages", null);
 	}
 
+	@Autowired
+	private AddressWorker addressWorker;
+
 	@RequestMapping("add-site")
 	public String signUp(@Valid AddSiteForm addSiteForm, BindingResult bindingResult, Locale local, Model model){
 		logger.entry(addSiteForm);
@@ -397,6 +401,7 @@ public class FormsController {
 
 		model.addAttribute("messageTitle", "add_site_url_confirmation");
 		model.addAttribute("content", new String[]{"thank_you", "all_the_best"});
+		model.addAttribute("all_countries", addressWorker.getAllCountries());
 
 		return returnToForms("Confirmation", MenuSelection.CONFIRM_MESSAGE, model);
 	}

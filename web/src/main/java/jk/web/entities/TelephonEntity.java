@@ -11,6 +11,8 @@ import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -44,15 +46,27 @@ public class TelephonEntity implements Serializable {
     @Column(name = "telephon")
     private String telephon;
 
+    enum TelephonType{
+    	UNKNOWN,
+    	HOME,
+    	WORK,
+    	CELL
+    }
     @Basic(optional = false)
     @NotNull
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "telephon_type")
-    private int telephonType;
+    private TelephonType telephonType = TelephonType.UNKNOWN;
 
+    enum TelephonStatus{
+    	INACTIVE,
+    	ACTIVE
+    }
     @Basic(optional = false)
     @NotNull
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "telephon_status")
-    private int telephonStatus;
+    private TelephonStatus telephonStatus = TelephonStatus.ACTIVE;
 
     @ManyToMany(mappedBy = "telephonEntityList")
     private List<BusinessEntity> businessEntityList;
@@ -64,7 +78,7 @@ public class TelephonEntity implements Serializable {
         this.telephonId = telephonId;
     }
 
-    public TelephonEntity(Integer telephonId, String telephon, int telephonType, int telephonStatus) {
+    public TelephonEntity(Integer telephonId, String telephon, TelephonType telephonType, TelephonStatus telephonStatus) {
         this.telephonId = telephonId;
         this.telephon = telephon;
         this.telephonType = telephonType;
@@ -87,19 +101,19 @@ public class TelephonEntity implements Serializable {
         this.telephon = telephon;
     }
 
-    public int getTelephonType() {
+    public TelephonType getTelephonType() {
         return telephonType;
     }
 
-    public void setTelephonType(int telephonType) {
+    public void setTelephonType(TelephonType telephonType) {
         this.telephonType = telephonType;
     }
 
-    public int getTelephonStatus() {
+    public TelephonStatus getTelephonStatus() {
         return telephonStatus;
     }
 
-    public void setTelephonStatus(int telephonStatus) {
+    public void setTelephonStatus(TelephonStatus telephonStatus) {
         this.telephonStatus = telephonStatus;
     }
 
@@ -132,8 +146,10 @@ public class TelephonEntity implements Serializable {
     }
 
     @Override
-    public String toString() {
-        return "jk.web.entities.TelephonEntity[ telephonId=" + telephonId + " ]";
-    }
+	public String toString() {
+		return "TelephonEntity [telephonId=" + telephonId + ", telephon="
+				+ telephon + ", telephonType=" + telephonType
+				+ ", telephonStatus=" + telephonStatus + "]";
+	}
     
 }

@@ -57,8 +57,9 @@ public class ContactEmailEntity implements Serializable {
     	CONFIRMED
     }
     @Column(name = "email_status")
+    @NotNull
     @Enumerated(EnumType.ORDINAL)
-    private EmailStatus emailStatus;
+    private EmailStatus emailStatus = EmailStatus.TO_CONFIRM;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "contactEmailEntity", fetch = FetchType.EAGER)
     private List<ContactUsEntity> contactUsList;

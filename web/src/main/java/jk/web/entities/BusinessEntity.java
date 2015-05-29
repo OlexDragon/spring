@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -23,9 +24,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import jk.web.database.UrlEntity;
-import jk.web.entities.user.AddressEntity;
 
 /**
  * @author Oleksandr Potomkin
@@ -57,22 +55,29 @@ public class BusinessEntity implements Serializable {
     @JoinTable(name = "business_has_telephons", joinColumns = {
         @JoinColumn(name = "business_id", referencedColumnName = "business_id")}, inverseJoinColumns = {
         @JoinColumn(name = "telephon_id", referencedColumnName = "telephon_id")})
-    @ManyToMany
+    @ManyToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
     private List<TelephonEntity> telephonEntityList;
 
-    @ManyToMany(mappedBy = "businessEntityList", fetch=FetchType.EAGER)
+    @JoinTable(name = "business_has_addresses",
+    		joinColumns = { @JoinColumn(
+    				name = "business_business_id",
+    				referencedColumnName = "business_id")},
+    		inverseJoinColumns = {@JoinColumn(
+    				name = "addresses_addsress_id",
+    				referencedColumnName = "addsress_id")})
+    @ManyToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
     private List<AddressEntity> addressEntityList;
 
     @JoinTable(name = "business_has_contact_emails", joinColumns = {
             @JoinColumn(name = "business_business_id", referencedColumnName = "business_id")}, inverseJoinColumns = {
             @JoinColumn(name = "contact_emails_email_id", referencedColumnName = "email_id")})
-    @ManyToMany
+    @ManyToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
     private List<ContactEmailEntity> contactEmailEntityList;
 
     @JoinTable(name = "business_has_urls", joinColumns = {
     		@JoinColumn(name = "business_id", referencedColumnName = "business_id")}, inverseJoinColumns = {
             @JoinColumn(name = "url_id", referencedColumnName = "url_id")})
-    @ManyToMany
+    @ManyToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
     private List<UrlEntity> urlEntityList;
 
     public BusinessEntity() {
@@ -159,7 +164,12 @@ public class BusinessEntity implements Serializable {
     }
 
     @Override
-    public String toString() {
-        return "jk.web.entities.user.BusinessEntity[ businessId=" + businessId + " ]";
-    }
+	public String toString() {
+		return "\n\tBusinessEntity [businessId=" + businessId + ", companyName="
+				+ companyName + ", vATnumber=" + vATnumber
+				+ ", telephonEntityList=" + telephonEntityList
+				+ ", addressEntityList=" + addressEntityList
+				+ ", contactEmailEntityList=" + contactEmailEntityList
+				+ ", urlEntityList=" + urlEntityList + "]";
+	}
 }
