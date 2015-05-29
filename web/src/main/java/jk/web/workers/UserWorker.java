@@ -12,15 +12,15 @@ import java.util.Locale;
 
 import javax.xml.bind.PropertyException;
 
+import jk.web.entities.AddressEntity;
 import jk.web.entities.BusinessEntity;
+import jk.web.entities.RegionEntity;
 import jk.web.entities.repositories.BusinessRepository;
-import jk.web.entities.user.AddressEntity;
 import jk.web.entities.user.CountryEntity;
 import jk.web.entities.user.EMailEntity;
 import jk.web.entities.user.EMailEntity.EMailStatus;
 import jk.web.entities.user.LoginEntity;
 import jk.web.entities.user.ProfessionalSkillEntity;
-import jk.web.entities.user.RegionEntity;
 import jk.web.entities.user.RegionEntityPK;
 import jk.web.entities.user.TitleEntity;
 import jk.web.entities.user.UserEntity;

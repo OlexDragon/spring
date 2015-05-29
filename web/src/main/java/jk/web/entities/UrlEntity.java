@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package jk.web.database;
+package jk.web.entities;
 
 import java.io.Serializable;
 import java.util.List;
@@ -11,6 +11,8 @@ import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,8 +22,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import jk.web.entities.BusinessEntity;
 
 /**
  *
@@ -38,7 +38,7 @@ public class UrlEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "url_id")
-    private Integer urlId;
+    private Long urlId;
 
     @Basic(optional = false)
     @NotNull
@@ -46,10 +46,15 @@ public class UrlEntity implements Serializable {
     @Column(name = "url")
     private String url;
 
+    enum UrlStatus{
+    	UNKNOWN,
+    	ACTIVE,
+    	INACTIVE
+    }
     @Basic(optional = false)
     @NotNull
-    @Column(name = "url_status")
-    private int urlStatus;
+    @Enumerated(EnumType.ORDINAL)
+    private UrlStatus urlStatus = UrlStatus.UNKNOWN;
 
     @ManyToMany(mappedBy = "urlEntityList")
     private List<BusinessEntity> businessEntityList;
@@ -57,21 +62,21 @@ public class UrlEntity implements Serializable {
     public UrlEntity() {
     }
 
-    public UrlEntity(Integer urlId) {
+    public UrlEntity(Long urlId) {
         this.urlId = urlId;
     }
 
-    public UrlEntity(Integer urlId, String url, int urlStatus) {
+    public UrlEntity(Long urlId, String url, UrlStatus urlStatus) {
         this.urlId = urlId;
         this.url = url;
         this.urlStatus = urlStatus;
     }
 
-    public Integer getUrlId() {
+    public Long getUrlId() {
         return urlId;
     }
 
-    public void setUrlId(Integer urlId) {
+    public void setUrlId(Long urlId) {
         this.urlId = urlId;
     }
 
@@ -83,11 +88,11 @@ public class UrlEntity implements Serializable {
         this.url = url;
     }
 
-    public int getUrlStatus() {
+    public UrlStatus getUrlStatus() {
         return urlStatus;
     }
 
-    public void setUrlStatus(int urlStatus) {
+    public void setUrlStatus(UrlStatus urlStatus) {
         this.urlStatus = urlStatus;
     }
 
@@ -120,8 +125,9 @@ public class UrlEntity implements Serializable {
     }
 
     @Override
-    public String toString() {
-        return "jk.web.database.UrlEntity[ urlId=" + urlId + " ]";
-    }
+	public String toString() {
+		return "UrlEntity [urlId=" + urlId + ", url=" + url + ", urlStatus="
+				+ urlStatus + "]";
+	}
     
 }

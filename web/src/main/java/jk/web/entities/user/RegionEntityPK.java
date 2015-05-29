@@ -82,7 +82,7 @@ public class RegionEntityPK implements Serializable {
 
     @Override
     public String toString() {
-        return "jk.web.user.entities.RegionEntityPK[ regionCode=" + regionCode + ", countryCode=" + countryCode + " ]";
+        return "RegionEntityPK[ regionCode=" + regionCode + ", countryCode=" + countryCode + " ]";
     }
 
 }

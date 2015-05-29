@@ -4,9 +4,10 @@
  * and open the template in the editor.
  */
 
-package jk.web.entities.user;
+package jk.web.entities;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -21,16 +22,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import jk.web.entities.BusinessEntity;
+import jk.web.entities.user.CountryEntity;
 import jk.web.user.Address.AddressStatus;
 
 /**
@@ -65,14 +63,14 @@ public class AddressEntity implements Serializable {
     @Column(name = "postal_code")
     private String postalCode;
 
-    @Basic
+    @Basic(optional=true)
     @Column(name = "regions_code")
     private String regionsCode;
 
     @JoinColumns({
         @JoinColumn(name = "regions_code", referencedColumnName = "region_code", insertable=false, updatable=false),
         @JoinColumn(name = "country_code", referencedColumnName = "country_code", insertable=false, updatable=false)})
-    @ManyToOne(fetch=FetchType.EAGER)
+    @ManyToOne(fetch=FetchType.EAGER, optional=true)
     private RegionEntity regionEntity;
 
     @Basic
@@ -80,27 +78,18 @@ public class AddressEntity implements Serializable {
     private String countryCode;
 
     @JoinColumn(name = "country_code", referencedColumnName = "country_code", insertable=false, updatable=false)
-    @ManyToOne(fetch=FetchType.EAGER)
+    @ManyToOne(fetch=FetchType.EAGER, optional=true)
     private CountryEntity countryEntity;
 
-    @JoinTable(name = "business_has_addresses",
-    		joinColumns = {@JoinColumn(
-    				name = "addresses_addsress_id",
-    				referencedColumnName = "addsress_id")},
-    		inverseJoinColumns = { @JoinColumn(
-    				name = "business_business_id",
-    				referencedColumnName = "business_id")})
-    @ManyToMany
+    @ManyToMany(mappedBy = "addressEntityList")
     private List<BusinessEntity> businessEntityList;
 
     @Column(name = "address_status")
     @Enumerated(EnumType.ORDINAL)
     private AddressStatus status = AddressStatus.ACTIVE;
 
-    @Basic
-    @Column(name = "create_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createDate;
+   @Column(name = "create_date", insertable=false, updatable=false)
+    private Timestamp createDate;
 
     public AddressEntity() {
     }
@@ -109,7 +98,7 @@ public class AddressEntity implements Serializable {
         this.addsressId = addsressId;
     }
 
-    public AddressEntity(Long addsressId, String addsress, String city, String postalCode, Date createDate) {
+    public AddressEntity(Long addsressId, String addsress, String city, String postalCode, Timestamp createDate) {
         this.addsressId = addsressId;
         this.address = addsress;
         this.city = city;
@@ -156,7 +145,7 @@ public class AddressEntity implements Serializable {
         return createDate;
     }
 
-    public void setCreateDate(Date createDate) {
+    public void setCreateDate(Timestamp createDate) {
         this.createDate = createDate;
     }
 
