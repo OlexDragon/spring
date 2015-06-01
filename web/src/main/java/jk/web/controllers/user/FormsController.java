@@ -396,12 +396,16 @@ public class FormsController {
 		if(addSiteForm.getCountry()==null)
 			addSiteForm.setCountry(Locale.getDefault().getCountry());
 
-		if (bindingResult.hasErrors() || addSiteForm.getSiteAddress()==null)
+		if (bindingResult.hasErrors() || addSiteForm.getSiteAddress()==null){
+
+			model.addAttribute("all_countries", addressWorker.getAllCountries());
+			logger.error("\n\t{}", addressWorker.getAllCountries());
+
 			return returnToForms("Add URL", MenuSelection.ADD_SITE_URL, model);
+		}
 
 		model.addAttribute("messageTitle", "add_site_url_confirmation");
 		model.addAttribute("content", new String[]{"thank_you", "all_the_best"});
-		model.addAttribute("all_countries", addressWorker.getAllCountries());
 
 		return returnToForms("Confirmation", MenuSelection.CONFIRM_MESSAGE, model);
 	}
