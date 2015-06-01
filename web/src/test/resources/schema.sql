@@ -66,7 +66,7 @@ CREATE TABLE jk.business_has_urls ( business_id integer NOT NULL, url_id integer
 CREATE INDEX fk_business_has_urls_urls1_idx ON jk.business_has_urls (url_id ASC)
 CREATE INDEX fk_business_has_urls_business1_idx ON jk.business_has_urls (business_id ASC)
 START TRANSACTION
-INSERT INTO jk.logins (login_id, username, password, permissions, created_date, last_accessed) VALUES (1, 'AlexDragon', '$2a$10$Ngs18wBAxxMoBgHW2dikouwCgRExj6ENjOiVk0CjWODYMzJZoriq6', 256, DEFAULT, NULL)
+INSERT INTO jk.logins (login_id, username, password, permissions, created_date, last_accessed) VALUES (1, 'AlexDragon', '$2a$10$Ngs18wBAxxMoBgHW2dikouwCgRExj6ENjOiVk0CjWODYMzJZoriq6', 256, '2015-03-27 17:39:35', NULL)
 INSERT INTO jk.logins (login_id, username, password, permissions, created_date, last_accessed) VALUES (2, 'jenia', '$2a$10$xD11pl01P72T8JXMwKd.YeC4W6t3gzdfF5FhWsNI8DMHC1BkxZxX6', 256, '2015-03-27 17:39:35', NULL)
 COMMIT
 START TRANSACTION
@@ -389,7 +389,7 @@ INSERT INTO jk.search_categories (category_id, category_name, category_status) V
 INSERT INTO jk.search_categories (category_id, category_name, category_status) VALUES (4, '\"Film maker\"', 1)
 INSERT INTO jk.search_categories (category_id, category_name, category_status) VALUES (5, '\"Fire-eater\"', 1)
 INSERT INTO jk.search_categories (category_id, category_name, category_status) VALUES (6, '\"Models Photo\"', 1)
-INSERT INTO jk.search_categories (category_id, category_name, category_status) VALUES (7, '\"Motion Sensor\"/  \"motion tracking\"', 1)
+INSERT INTO jk.search_categories (category_id, category_name, category_status) VALUES (7, '\"Motion Sensor\"/ \"motion tracking\"', 1)
 INSERT INTO jk.search_categories (category_id, category_name, category_status) VALUES (8, '\"Musical Interpreter\"', 1)
 INSERT INTO jk.search_categories (category_id, category_name, category_status) VALUES (9, '\"Opera singer\"', 1)
 INSERT INTO jk.search_categories (category_id, category_name, category_status) VALUES (10, '\"Photo Producer\"', 1)
@@ -437,7 +437,6 @@ COMMIT
 START TRANSACTION
 INSERT INTO jk.blacklist (blacklist_value, blacklist_type) VALUES ('php', 0)
 INSERT INTO jk.blacklist (blacklist_value, blacklist_type) VALUES ('rom-0', 0)
-INSERT INTO jk.blacklist (blacklist_value, blacklist_type) VALUES ('html', 0)
 COMMIT
 START TRANSACTION
 INSERT INTO jk.background_imgs (background_img_id, path, start_to_show_at, status) VALUES (1, 'https://scontent-lga.xx.fbcdn.net/hphotos-xpa1/v/t1.0-9/s720x720/18293_514588762015384_7037405496006114391_n.jpg?oh=0f86b62797ab3a957145e6ddcda2f8b3&oe=55A1676C', '18:00:00', 1)
@@ -445,4 +444,3 @@ INSERT INTO jk.background_imgs (background_img_id, path, start_to_show_at, statu
 INSERT INTO jk.background_imgs (background_img_id, path, start_to_show_at, status) VALUES (3, 'https://fbcdn-sphotos-f-a.akamaihd.net/hphotos-ak-xfp1/v/t1.0-9/q81/s720x720/10422257_514588908682036_3567941355937352193_n.jpg?oh=33a9fb8a97f8d95cb36bd91661605f9d&oe=55982745&__gda__=1436590828_08d611061239a3d8bc75fa347dbd9092', '12:00:00', 1)
 INSERT INTO jk.background_imgs (background_img_id, path, start_to_show_at, status) VALUES (4, 'https://fbcdn-sphotos-c-a.akamaihd.net/hphotos-ak-xtp1/v/t1.0-9/s720x720/11110884_514588745348719_1960553605335542264_n.jpg?oh=f7a406a436b1fdcf015adf091d966c48&oe=55E33AF9&__gda__=1437460846_4efa191621d921e751a46f47f9f537be', '07:00:00', 1)
 COMMIT
-
