@@ -117,4 +117,9 @@ public class ResourceController {
 
 		return new ResponseEntity<String>(Boolean.toString(true),  HttpStatus.CREATED);
 	}
+
+	@RequestMapping("file/{filename}")
+	public ResponseEntity<byte[]> getFile(@PathVariable String filename){
+		return null;	
+	}
 }
