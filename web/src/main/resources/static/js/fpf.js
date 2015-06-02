@@ -1,5 +1,5 @@
 var ipinfo;
-$.get("http://ipinfo.io", function(data) {
+$.get('//freegeoip.net/json/', function(data) {
 	ipinfo = data
 });
 $(function() {
@@ -14,13 +14,22 @@ $(function() {
 		$.each(sortedCountries,
 				function(index, value) {
 					var v = $(value);
-					$('<option></option>').val(v.find('countryCode').text())
-							.text(v.find('countryName').text()).attr(
-									'geonameId', v.find('geonameId').text())
-							.appendTo($('select.countries'));
+					$('<option></option>').val(v.find('countryCode').text()).text(v.find('countryName').text()).attr('geonameId', v.find('geonameId').text()).appendTo($('select.countries'));
 				});
 		if(ipinfo){
-			
+			$('select.countries').val(ipinfo.country_code);
+			setRegions($('select.countries').find('option:selected').attr('geonameId'));
 		}
 	});
+	$('select.countries').on('change', function(){
+		var selectRegion = $('select.region');
+		if(selectRegion){
+			setRegions($(this).find('option:selected').attr('geonameId'));
+		}
+	});
+	function setRegions(geonameId){
+		$.get('http://api.geonames.org/childrenJSON?geonameId=' + geonameId + '&username=olexdragon', function(data){
+			var regions = $(data);
+		});		
+	}
 });
