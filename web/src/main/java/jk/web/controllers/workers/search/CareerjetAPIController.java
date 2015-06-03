@@ -264,8 +264,8 @@ public class CareerjetAPIController {
 //		new RestServiceConsumer (new AdsIndeedCom(), keywords, location, page, pagesize);
 
 		model.addAttribute("keywords", keywords);
-		model.addAttribute("page", page!=null ? page : 0);
 		model.addAttribute("results", getSearchResult(keywords, location, page, pagesize, response));
+		model.addAttribute("page", page!=null ? --page : 0);
 
 		return "search :: result";
 	}

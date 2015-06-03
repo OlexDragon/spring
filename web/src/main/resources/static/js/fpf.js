@@ -29,7 +29,18 @@ $(function() {
 	});
 	function setRegions(geonameId){
 		$.get('http://api.geonames.org/childrenJSON?geonameId=' + geonameId + '&username=olexdragon', function(data){
-			var regions = $(data);
-		});		
+			var regions = data.geonames;
+			if(regions[0]){
+				var input = $('div.regions input');
+				if(input[0]){
+					input.replaceWith(input = $('<select></select>').addClass('form-control').attr('name', 'provinceState').prop('required',true));
+				}else{
+					input = $('div.regions select');
+				}
+				$.each(regions, function(index, data){
+					$('<option></option>').val(data.adminName1).text(data.adminName1).appendTo(input);
+				});
+			}
+		});
 	}
 });
