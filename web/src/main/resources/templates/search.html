@@ -226,7 +226,7 @@ $(function(){
 <th:block th:remove="all">
 
 
-<div th:switch="${results.get('type')}" th:with="activeDozen=${page/10}, pages=${results['pages']}" th:fragment="result"><!--/*
+<div th:switch="${results.get('type')}" th:with="pages=${results['pages']}, activeDozen=${pages!=null and pages &lt; page ? page/10 : page = 0}" th:fragment="result"><!--/*
 
 
 	JOBS
@@ -253,12 +253,12 @@ $(function(){
 						</a>
 					</li>
 					<li th:each="num:${#numbers.sequence(0,pages-1)}"
-								th:class="${num==page ? 'active' : null}"
 								th:with="dozen=${num/10}"
-								th:classappend="${'dozen'+dozen+(dozen!=activeDozen ? ' dNone' : '')}">
+								th:class="${'dozen'+dozen+(num==page ? ' active' : '')}"
+								th:classappend="${dozen!=activeDozen} ? ' dNone'">
 						<a href="#" th:href="${num}" th:text="${num+1}">1</a>
 					</li>
-					<li th:if="${pages>10}" class="nxt">
+					<li th:if="${pages>10}" class="nxt" th:classappend="${activeDozen>=pages/10-1} ? 'dNone'">
 						<a href="#" aria-label="Next">
 							<span aria-hidden="true">&raquo;</span>
 						</a>
