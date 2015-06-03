@@ -8,11 +8,10 @@
 <title th:text="${title==null} ? 'FashionProFinder' : #{${title}} + ':FashionProFinder'">FashionProFinder</title>
 <th:block th:fragment="headContent">
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
 <link rel="stylesheet" href="../static/css/fpf.css" th:href="@{/css/fpf.css}" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-<script src="../static/js/fpf.js"  th:src="@{/js/fpf.js}"></script>
 </th:block>
 <th:block th:fragment="googleapis">
 <script>
@@ -227,7 +226,7 @@ $(function(){
 <th:block th:remove="all">
 
 
-<div th:switch="${results.get('type')}" th:with="activeDozen=${page!=null ? page/10 : 0}, pages=${results['pages']}" th:fragment="result"><!--/*
+<div th:switch="${results.get('type')}" th:with="activeDozen=${page/10}, pages=${results['pages']}" th:fragment="result"><!--/*
 
 
 	JOBS
@@ -247,7 +246,7 @@ $(function(){
 			Paginatin
 
 	*/--><nav th:if="${pages!=null and pages>1}" th:fragment="pagination">
-				<ul id="pagination" class="pagination">
+				<ul class="pagination">
 					<li th:if="${pages>10}" class="prev" th:classappend="${activeDozen==0 ? 'disabled' : null}">
 						<a href="#" aria-label="Previous">
 							<span aria-hidden="true">&laquo;</span>
@@ -345,8 +344,8 @@ $(function(){
 					pageInput =  $("<input></input>")
 	               					.attr("type", "hidden")
 	              					.attr("id", "page")
-	            					.appendTo($('#searchForm'));
-				pageInput.val($(this).attr('href'))
+	            					.appendTo($('body'));
+				pageInput.val($(this).text())
 				$('#searchForm').submit();
 			}
 			return false;
@@ -374,7 +373,6 @@ $(function(){
 	$('#solveLocations a').on('click',
 			function(e){
 				e.preventDefault();
-				alert($(this).text());
 				$('#location').val($(this).text());
 				$('#searchForm').submit();
 				return false;
@@ -440,7 +438,7 @@ $(function(){
 				var location = trim($('#location').val());
 				if(location)
 					data['location'] = location;
-				var page = $('#page').text();
+				var page = $('#page').val();
 				if(page)
 					data['page'] = page;
 				$('#result').empty();
