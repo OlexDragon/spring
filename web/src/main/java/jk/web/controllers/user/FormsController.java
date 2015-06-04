@@ -6,7 +6,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
@@ -24,6 +23,9 @@ import jk.web.entities.ContactEmailEntity.EmailStatus;
 import jk.web.entities.ContactUsEntity;
 import jk.web.entities.ContactUsEntity.ContactUsStatus;
 import jk.web.entities.ReferenceNumberEntity;
+import jk.web.entities.TelephonEntity;
+import jk.web.entities.UrlEntity;
+import jk.web.entities.repositories.BusinessRepository;
 import jk.web.entities.repositories.ContactEmailRepository;
 import jk.web.entities.repositories.ContactUsRepository;
 import jk.web.entities.repositories.ReferenceNumberRepository;
@@ -179,7 +181,7 @@ public class FormsController {
 			BusinessEntity be = new BusinessEntity();
 			be.setCompanyName(business.getCompany());
 //			be.setCondition(business.getCondition());
-			be.setVATnumber(business.getVatNumber());
+			be.setVatNumber(business.getVatNumber());
 			try {
 				userWorker.saveBusinessEntity(be);
 			} catch (PropertyException e) {
@@ -387,22 +389,140 @@ public class FormsController {
 	private AddressWorker addressWorker;
 
 	@RequestMapping("add-site")
-	public String signUp(@Valid AddSiteForm addSiteForm, BindingResult bindingResult, Locale local, Model model){
+	public String signUp(@Valid AddSiteForm addSiteForm, BindingResult bindingResult, Model model){
 		logger.entry(addSiteForm);
 
-		if(addSiteForm.getMainCountry()==null)
-			addSiteForm.setMainCountry(Locale.getDefault().getCountry());
-
-		if(addSiteForm.getCountry()==null)
-			addSiteForm.setCountry(Locale.getDefault().getCountry());
-
-		if (bindingResult.hasErrors() || addSiteForm.getSiteAddress()==null)
+		if (bindingResult.hasErrors() || addSiteForm.getSiteAddress()==null || !addSite(addSiteForm, model))
 			return returnToForms("Add URL", MenuSelection.ADD_SITE_URL, model);
 
 		model.addAttribute("messageTitle", "add_site_url_confirmation");
 		model.addAttribute("content", new String[]{"thank_you", "all_the_best"});
 
 		return returnToForms("Confirmation", MenuSelection.CONFIRM_MESSAGE, model);
+	}
+
+	@Autowired
+	private BusinessRepository businessRepository;
+
+	private boolean addSite(AddSiteForm addSiteForm, Model model) {
+		boolean hasAdded = false;
+
+		BusinessEntity be = getBusinessEntity(addSiteForm);
+
+		addAdderssEntity	(addSiteForm, be);
+		addEmailEntity		(addSiteForm, be);
+		addTelephonEntity	(addSiteForm, be);
+		addUrlEntity		(addSiteForm, be);
+
+		businessRepository.save(be);
+
+		return hasAdded;
+	}
+
+	private boolean addUrlEntity(AddSiteForm addSiteForm, BusinessEntity be) {
+		List<UrlEntity> uel = be.getUrlEntityList();
+
+		if(uel==null)
+			be.setUrlEntityList(uel = new ArrayList<>());
+
+		String url = addSiteForm.getSiteAddress();
+
+		boolean createNew = true;
+		for(UrlEntity cee:uel){
+			if(cee.getUrl().equalsIgnoreCase(url)){
+				createNew = false;
+				break;
+			}
+		}
+
+		if(createNew)
+			uel.add(new UrlEntity(url));
+
+		return createNew;
+	}
+
+	private boolean addTelephonEntity(AddSiteForm addSiteForm, BusinessEntity be) {
+		List<TelephonEntity> tel = be.getTelephonEntityList();
+
+		if(tel==null)
+			be.setTelephonEntityList(tel = new ArrayList<>());
+
+		String phon = addSiteForm.getPhone().replaceAll("\\D", "");
+
+		boolean createNew = true;
+		for(TelephonEntity te:tel){
+			if(te.getTelephon().equalsIgnoreCase(phon)){
+				createNew = false;
+				break;
+			}
+		}
+
+		if(createNew)
+			tel.add(new TelephonEntity(phon));
+
+		return createNew;
+	}
+
+	private boolean addEmailEntity(AddSiteForm addSiteForm, BusinessEntity be) {
+		List<ContactEmailEntity> ceel = be.getContactEmailEntityList();
+
+		if(ceel==null)
+			be.setContactEmailEntityList(ceel = new ArrayList<>());
+
+		String email = addSiteForm.getEmail();
+
+		boolean createNew = true;
+		for(ContactEmailEntity cee:ceel){
+			if(cee.getEmail().equalsIgnoreCase(email)){
+				createNew = false;
+				break;
+			}
+		}
+
+		if(createNew)
+			ceel.add(new ContactEmailEntity(email));
+
+		return createNew;
+	}
+
+	private boolean addAdderssEntity(AddSiteForm addSiteForm, BusinessEntity be) {
+		List<AddressEntity> ael = be.getAddressEntityList();
+
+		if(ael==null)
+			be.setAddressEntityList(ael = new ArrayList<>());
+
+		String address = addSiteForm.getAddress();
+		String city = addSiteForm.getCity();
+		String regionsCode = addSiteForm.getProvinceState();
+		String countryCode = addSiteForm.getCountry();
+		String postalCode = addSiteForm.getPostalCode();
+
+		boolean createNew = true;
+		for(AddressEntity ae:ael){
+			if(ae.getAddress().equalsIgnoreCase(address) &&
+					ae.getCity().equalsIgnoreCase(city) &&
+					ae.getCountryCode().equalsIgnoreCase(countryCode) &&
+					ae.getPostalCode().equalsIgnoreCase(postalCode) &&
+					ae.getRegionsCode().equalsIgnoreCase(regionsCode)){
+				createNew = false;
+				break;
+			}			
+		}
+
+		if(createNew)
+			ael.add(new AddressEntity(address, city, regionsCode, countryCode, postalCode));
+
+		return createNew;
+	}
+
+	private BusinessEntity getBusinessEntity(AddSiteForm addSiteForm) {
+		BusinessEntity be = businessRepository.findByVatNumberAndCompanyName(addSiteForm.getVatNumber(), addSiteForm.getCompanyName());
+		if(be==null){
+			be = new BusinessEntity();
+			be.setCompanyName(addSiteForm.getCompanyName());
+			be.setVatNumber(addSiteForm.getVatNumber());
+		}
+		return be;
 	}
 
 	public String returnToForms(String title, MenuSelection formSelection, Model model) {

@@ -36,7 +36,7 @@ public class BusinessRepositoryTest {
 
 		BusinessEntity be = new BusinessEntity();
 		be.setCompanyName("Test Company Name 1");
-		be.setVATnumber("VAT Number 1");
+		be.setVatNumber("VAT Number 1");
 
 		List<ContactEmailEntity> contactEmailEntities = new ArrayList<>();
 		contactEmailEntities.add(ContactEmailRepositoryTest.contactEmailEntity);
