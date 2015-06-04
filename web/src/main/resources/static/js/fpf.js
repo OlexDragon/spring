@@ -40,6 +40,8 @@ $(function() {
 				$.each(regions, function(index, data){
 					$('<option></option>').val(data.adminName1).text(data.adminName1).appendTo(input);
 				});
+				input.val(ipinfo.region_name);
+				$('#city').val(ipinfo.city);
 			}
 		});
 	}
