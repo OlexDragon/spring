@@ -98,12 +98,12 @@ public class AddressEntity implements Serializable {
         this.addsressId = addsressId;
     }
 
-    public AddressEntity(Long addsressId, String addsress, String city, String postalCode, Timestamp createDate) {
-        this.addsressId = addsressId;
-        this.address = addsress;
+    public AddressEntity(String address, String city, String regionsCode, String countryCode, String postalCode) {
+        this.address = address;
         this.city = city;
+        this.regionsCode = regionsCode;
+        this.countryCode = countryCode;
         this.postalCode = postalCode;
-        this.createDate = createDate;
     }
 
     public Long getAddsressId() {
@@ -203,14 +203,11 @@ public class AddressEntity implements Serializable {
 
 	@Override
     public int hashCode() {
-        int hash = 0;
-        hash += (addsressId != null ? addsressId.hashCode() : 0);
-        return hash;
+        return addsressId != null ? addsressId.hashCode() : 0;
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof AddressEntity)) {
             return false;
         }

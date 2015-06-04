@@ -66,10 +66,8 @@ public class UrlEntity implements Serializable {
         this.urlId = urlId;
     }
 
-    public UrlEntity(Long urlId, String url, UrlStatus urlStatus) {
-        this.urlId = urlId;
+    public UrlEntity(String url) {
         this.url = url;
-        this.urlStatus = urlStatus;
     }
 
     public Long getUrlId() {
