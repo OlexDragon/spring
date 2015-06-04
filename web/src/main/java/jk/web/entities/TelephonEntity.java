@@ -78,11 +78,8 @@ public class TelephonEntity implements Serializable {
         this.telephonId = telephonId;
     }
 
-    public TelephonEntity(Integer telephonId, String telephon, TelephonType telephonType, TelephonStatus telephonStatus) {
-        this.telephonId = telephonId;
+    public TelephonEntity(String telephon) {
         this.telephon = telephon;
-        this.telephonType = telephonType;
-        this.telephonStatus = telephonStatus;
     }
 
     public Integer getTelephonId() {

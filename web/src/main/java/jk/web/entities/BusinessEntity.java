@@ -50,7 +50,7 @@ public class BusinessEntity implements Serializable {
     @NotNull
     @Size(min = 1, max = 21)
     @Column(name = "VAT_number")
-    private String vATnumber;
+    private String vatNumber;
 
     @JoinTable(name = "business_has_telephons", joinColumns = {
         @JoinColumn(name = "business_id", referencedColumnName = "business_id")}, inverseJoinColumns = {
@@ -103,12 +103,12 @@ public class BusinessEntity implements Serializable {
         this.businessId = businessId;
     }
 
-    public String getVATnumber() {
-        return vATnumber;
+    public String getVatNumber() {
+        return vatNumber;
     }
 
-    public void setVATnumber(String vATnumber) {
-        this.vATnumber = vATnumber;
+    public void setVatNumber(String vATnumber) {
+        this.vatNumber = vATnumber;
     }
 
     public List<TelephonEntity> getTelephonEntityList() {
@@ -166,7 +166,7 @@ public class BusinessEntity implements Serializable {
     @Override
 	public String toString() {
 		return "\n\tBusinessEntity [businessId=" + businessId + ", companyName="
-				+ companyName + ", vATnumber=" + vATnumber
+				+ companyName + ", vATnumber=" + vatNumber
 				+ ", telephonEntityList=" + telephonEntityList
 				+ ", addressEntityList=" + addressEntityList
 				+ ", contactEmailEntityList=" + contactEmailEntityList

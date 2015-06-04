@@ -74,6 +74,10 @@ public class ContactEmailEntity implements Serializable {
         this.emailId = emailId;
     }
 
+    public ContactEmailEntity(String email) {
+        this.email = email;
+    }
+
     public ContactEmailEntity(String email, EmailStatus emailStatus) {
         this.email = email;
         this.emailStatus = emailStatus;
