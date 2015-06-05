@@ -14,14 +14,12 @@ import javax.xml.bind.PropertyException;
 
 import jk.web.entities.AddressEntity;
 import jk.web.entities.BusinessEntity;
-import jk.web.entities.RegionEntity;
 import jk.web.entities.repositories.BusinessRepository;
 import jk.web.entities.user.CountryEntity;
 import jk.web.entities.user.EMailEntity;
 import jk.web.entities.user.EMailEntity.EMailStatus;
 import jk.web.entities.user.LoginEntity;
 import jk.web.entities.user.ProfessionalSkillEntity;
-import jk.web.entities.user.RegionEntityPK;
 import jk.web.entities.user.TitleEntity;
 import jk.web.entities.user.UserEntity;
 import jk.web.entities.user.WorkplaceEntity;
@@ -320,12 +318,9 @@ public class UserWorker extends LoginWorker{
 			address.setCity(addressEntity.getCity());
 			address.setPostalCode(addressEntity.getPostalCode());
 
-			RegionEntity regionEntity = addressEntity.getRegionEntity();
-			if(regionEntity!=null) {
-				RegionEntityPK regionEntityPK = regionEntity.getRegionEntityPK();
-				if(regionEntityPK!=null){
-					address.setRegionCode(regionEntityPK.getRegionCode());
-				}
+			String region = addressEntity.getRegion();
+			if(region!=null) {
+					address.setRegion(region);
 			} 
 		}
 		address.setMapPath(fileWorker.getMapFileUrl(address.getAddressType(), userEntity.getId()));

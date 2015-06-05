@@ -351,15 +351,15 @@ public class ProfileController {
 					model.addAttribute("regions", addressWorker.getRegionEntities(addressStr));
 
 					//Region
-					aeStr = addressEntity!=null ? addressEntity.getRegionsCode() : null;
-					addressStr = address.getRegionCode();
+					aeStr = addressEntity!=null ? addressEntity.getRegion() : null;
+					addressStr = address.getRegion();
 					isError = checkAdress(aeStr, addressStr);
 					if(isError!=null){
 						modelAddress.setEditAddress(true);
 						if(isError)
 							modelAddress.setRegionCodeError("address.select_"+regionName);
 						else if(addressStr==null){
-							address.setRegionCode(aeStr);
+							address.setRegion(aeStr);
 						}
 					}
 				}
@@ -372,7 +372,7 @@ public class ProfileController {
 						fileWorker.getMapFile(userID, addressType),
 						address.getAddress(),
 						address.getCity(),
-						address.getRegionCode(),
+						address.getRegion(),
 						countryEntity!=null ? countryEntity.getCountryName() : null,
 						modelAddress.getPostalCode()
 		);
@@ -386,7 +386,7 @@ public class ProfileController {
 												.setCity(address.getCity())
 												.setCountryCode(address.getCountryCode())
 												.setPostalCode(address.getPostalCode())
-												.setRegionsCode(address.getRegionCode()))){
+												.setRegionsCode(address.getRegion()))){
 
 			}
 			address.setRegionName(modelAddress.getRegionName());

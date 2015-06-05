@@ -24,7 +24,7 @@ public class Address {
 	private String cityError;
 
 	private String regionName;
-	private String regionCode;
+	private String region;
 
 	private String countryCode;
 	private String countryCodeError;
@@ -102,12 +102,12 @@ public class Address {
 		this.regionName = regionName;
 	}
 
-	public String getRegionCode() {
-		return regionCode;
+	public String getRegion() {
+		return region;
 	}
 
-	public void setRegionCode(String regionCode) {
-		this.regionCode = regionCode;
+	public void setRegion(String regionCode) {
+		this.region = regionCode;
 	}
 
 	public String getRegionCodeError() {
@@ -161,7 +161,7 @@ public class Address {
 	@Override
 	public String toString() {
 		return "Address [addressType=" + addressType + ", address=" + address + ", addressError=" + addressError + ", city=" + city + ", cityError=" + cityError + ", regionName="
-				+ regionName + ", regionCode=" + regionCode + ", countryCode=" + countryCode + ", countryCodeError=" + countryCodeError + ", postalCode=" + postalCode
+				+ regionName + ", regionCode=" + region + ", countryCode=" + countryCode + ", countryCodeError=" + countryCodeError + ", postalCode=" + postalCode
 				+ ", postalCodeError=" + postalCodeError + ", mapPath=" + mapPath + ", regionCodeError=" + regionCodeError + ", showAddress="
 				+ showAddress + ", editAddress=" + editAddress + "]";
 	}

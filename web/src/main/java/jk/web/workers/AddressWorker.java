@@ -143,11 +143,11 @@ public class AddressWorker {
 					continue;//if not equal check next entity
 
 				//Region
-				String regionsCode = ae.getRegionsCode();
+/*				String regionsCode = ae.getRegionsCode();
 				String newRegionsCode = addressEntity.getRegionsCode();
 				if(regionsCode!=null ? regionsCode.equals(newRegionsCode) : newRegionsCode!=null)
 					continue;//if not equal check next entity
-
+*/
 				containsAE = ae;
 				break;
 			}
