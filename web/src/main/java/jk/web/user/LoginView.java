@@ -7,16 +7,16 @@ public class LoginView {
 
 	@NotNull
 	@Size(max = 64)
-	private String login;
+	private String username;
 	@NotNull
 	@Size(max = 64)
 	private String password;
 	private boolean rememberMe;
-	public String getLogin() {
-		return login;
+	public String getUsername() {
+		return username;
 	}
-	public void setLogin(String login) {
-		this.login = login;
+	public void setUsername(String login) {
+		this.username = login;
 	}
 	public String getPassword() {
 		return password;

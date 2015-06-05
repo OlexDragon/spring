@@ -29,7 +29,7 @@
 						<h4 class="modal-title" id="logInModalLabel" th:text="${msgEror==null ? 'Log In' : msgEror}">Log In</h4>
 					</div>
 					<div class="modal-body">
-						<form action="login" method="post" th:object="${login}">
+						<form action="login" method="post" th:object="${loginView}">
 							<input name="requestURI" type="hidden" th:value="${#httpServletRequest.requestURI}" />
 							<div class="form-group">
 								<label for="username" class="control-label">Username</label>
@@ -125,17 +125,21 @@
 
 				*/--><li th:switch="${#authentication==null or #authentication.name=='anonymousUser'}">
 						<th:block th:case="${true}">
-							<a id="login" href="#" data-toggle="modal" data-target="#logInModal">Log In</a>
+							<a id="loginLink" href="#" data-toggle="modal" data-target="#logInModal">Log In</a>
 							<script type="text/javascript" th:inline="javascript">
 							/*<![CDATA[*/
 								$(function() {
-									$('#login').on('click', function(){
-										if ( $('#myfav').children().length == 0 ) {
+									$('#loginLink').on('click', function(){
+										fillLogInModal();
+									});
+									if([[${(#authentication==null or #authentication.name=='anonymousUser')and(login!=null or login_error!=null)}]]){
+										fillLogInModal();
+										$('#logInModal').modal('show');
+									}
+									function fillLogInModal(){
+										if ($('#myfav').children().length == 0 ) {
 											$('#logInModal').load('/login/inputs');
 										}
-									});
-									if([[${#authentication==null or #authentication.name=='anonymousUser'}]]){
-										$('#logInModal').modal('show');
 									}
 								});
 							/*]]>*/
