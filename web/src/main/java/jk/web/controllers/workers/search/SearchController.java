@@ -6,7 +6,6 @@ import jk.web.entities.workers.search.SearchCatgoryEntity;
 import jk.web.entities.workers.search.SearchCatgoryEntity.CategoryStatus;
 import jk.web.html.select.ContentDiv;
 import jk.web.repositories.workers.search.SearchCatgoriesRepository;
-import jk.web.user.LoginView;
 import jk.web.workers.SearchClass;
 import jk.web.workers.SearchClass.SearchDetails;
 
@@ -16,10 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("search")

@@ -21,7 +21,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -64,14 +63,8 @@ public class AddressEntity implements Serializable {
     private String postalCode;
 
     @Basic(optional=true)
-    @Column(name = "regions_code")
-    private String regionsCode;
-
-    @JoinColumns({
-        @JoinColumn(name = "regions_code", referencedColumnName = "region_code", insertable=false, updatable=false),
-        @JoinColumn(name = "country_code", referencedColumnName = "country_code", insertable=false, updatable=false)})
-    @ManyToOne(fetch=FetchType.EAGER, optional=true)
-    private RegionEntity regionEntity;
+    @Column(name = "region")
+    private String region;
 
     @Basic
     @Column(name = "country_code")
@@ -98,10 +91,10 @@ public class AddressEntity implements Serializable {
         this.addsressId = addsressId;
     }
 
-    public AddressEntity(String address, String city, String regionsCode, String countryCode, String postalCode) {
+    public AddressEntity(String address, String city, String region, String countryCode, String postalCode) {
         this.address = address;
         this.city = city;
-        this.regionsCode = regionsCode;
+        this.region = region;
         this.countryCode = countryCode;
         this.postalCode = postalCode;
     }
@@ -149,15 +142,6 @@ public class AddressEntity implements Serializable {
         this.createDate = createDate;
     }
 
-    public RegionEntity getRegionEntity() {
-        return regionEntity;
-    }
-
-    public AddressEntity setRegionEntity(RegionEntity regionEntity) {
-        this.regionEntity = regionEntity;
-        return this;
-    }
-
     public CountryEntity getCountryEntity() {
         return countryEntity;
     }
@@ -167,12 +151,12 @@ public class AddressEntity implements Serializable {
         return this;
     }
 
-    public String getRegionsCode() {
-		return regionsCode;
+    public String getRegion() {
+		return region;
 	}
 
-	public AddressEntity setRegionsCode(String regionsCode) {
-		this.regionsCode = regionsCode;
+	public AddressEntity setRegionsCode(String region) {
+		this.region = region;
 		return this;
 	}
 
@@ -221,6 +205,6 @@ public class AddressEntity implements Serializable {
 	@Override
 	public String toString() {
 		return "AddressEntity [addsressId=" + addsressId + ", address=" + address + ", city=" + city + ", postalCode=" + postalCode + ", status=" + status
-				+ ", createDate=" + createDate + ", regionEntity=" + regionEntity + ", countryEntity=" + countryEntity + "]";
+				+ ", createDate=" + createDate + ", countryEntity=" + countryEntity + "]";
 	}
 }

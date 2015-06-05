@@ -493,7 +493,7 @@ public class FormsController {
 
 		String address = addSiteForm.getAddress();
 		String city = addSiteForm.getCity();
-		String regionsCode = addSiteForm.getProvinceState();
+		String region = addSiteForm.getProvinceState();
 		String countryCode = addSiteForm.getCountry();
 		String postalCode = addSiteForm.getPostalCode();
 
@@ -503,14 +503,14 @@ public class FormsController {
 					ae.getCity().equalsIgnoreCase(city) &&
 					ae.getCountryCode().equalsIgnoreCase(countryCode) &&
 					ae.getPostalCode().equalsIgnoreCase(postalCode) &&
-					ae.getRegionsCode().equalsIgnoreCase(regionsCode)){
+					ae.getRegion().equalsIgnoreCase(region)){
 				createNew = false;
 				break;
 			}			
 		}
 
 		if(createNew)
-			ael.add(new AddressEntity(address, city, regionsCode, countryCode, postalCode));
+			ael.add(new AddressEntity(address, city, region, countryCode, postalCode));
 
 		return createNew;
 	}
