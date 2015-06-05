@@ -184,7 +184,8 @@ public class LoginController {
 	}
 
 	@RequestMapping("inputs")
-	public String getLogInInputs(LoginView loginView){
+	public String getLogInInputs(Model model){
+		model.addAttribute("loginView", new LoginView());
 		return "search :: logInInputs";
 	}
 }

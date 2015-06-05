@@ -3,10 +3,8 @@ $.get('//freegeoip.net/json/', function(data) {
 	ipinfo = data
 });
 $(function() {
-	$.get('http://api.geonames.org/countryInfo?username=olexdragon', function(
-			data) {
-		var sortedCountries = $(data).find('geonames').find('country').get()
-				.sort(function(a, b) {
+	$.get('http://api.geonames.org/countryInfo?username=olexdragon', function(data) {
+		var sortedCountries = $(data).find('geonames').find('country').get().sort(function(a, b) {
 					var valA = $(a).find('countryName').text();
 					var valB = $(b).find('countryName').text();
 					return valA < valB ? -1 : valA == valB ? 0 : 1;
