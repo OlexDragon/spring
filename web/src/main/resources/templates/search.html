@@ -13,26 +13,42 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 </th:block>
-<th:block th:fragment="googleapis">
-<script>
-/*<![CDATA[*/
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-  ga('create', 'UA-60869220-1', 'auto');
-  ga('send', 'pageview');
-  /*]]>*/
-</script>
-</th:block>
+<th:block th:fragment="googleapis"><script>/*<![CDATA[*/(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create', 'UA-60869220-1', 'auto');ga('send', 'pageview');/*]]>*/</script></th:block>
 </head>
-<!--
-comments: 
-IE11
--->
+<!--comments:IE11-->
 <body>
-<th:block th:fragment="footer">
-<div id="aboutModal" class="modal fade" th:fragment="about">
+<th:block th:fragment="footer"><!--/*
+
+	Modal Log In
+
+ 	*/--><div class="modal fade" id="logInModal" tabindex="-1" role="dialog" aria-labelledby="logInModalLabel" aria-hidden="true" th:remove="body">
+			<div class="modal-dialog modal-sm" th:fragment="logInInputs">
+				<div class="modal-content">
+					<div class="modal-header" th:classappend="${loginEror!=null ? 'alert alert-danger' : null}" th:attr="role=${loginEror!=null ? 'alert' : null}">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title" id="logInModalLabel" th:text="${msgEror==null ? 'Log In' : msgEror}">Log In</h4>
+					</div>
+					<div class="modal-body">
+						<form action="login" method="post" th:object="${login}">
+							<input name="requestURI" type="hidden" th:value="${#httpServletRequest.requestURI}" />
+							<div class="form-group">
+								<label for="username" class="control-label">Username</label>
+								<input type="text" required="required" th:field="*{username}"/>
+							</div>
+							<div class="form-group">
+								<label for="password" class="control-label">Password</label>
+								<input type="password" name="password" required="required" th:field="*{password}"/>
+							</div>
+							<button type="submit" class="btn btn-primary">Log In</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div><!--/*
+
+	Modal About
+
+*/--><div id="aboutModal" class="modal fade" th:fragment="about">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -103,6 +119,29 @@ IE11
 				<ul class="dropdown-menu" role="menu" aria-labelledby="userMenu">
 					<li th:class="${menuSelection==T(jk.web.controllers.user.FormsController.MenuSelection).ADD_SITE_URL ? 'active' : null}">
 						<a role="menuitem" tabindex="-1" href="/add-site">Add Site</a>
+					</li><!--/*
+
+	Log In Menu
+
+				*/--><li th:switch="${#authentication==null or #authentication.name=='anonymousUser'}">
+						<th:block th:case="${true}">
+							<a id="login" href="#" data-toggle="modal" data-target="#logInModal">Log In</a>
+							<script type="text/javascript" th:inline="javascript">
+							/*<![CDATA[*/
+								$(function() {
+									$('#login').on('click', function(){
+										if ( $('#myfav').children().length == 0 ) {
+											$('#logInModal').load('/login/inputs');
+										}
+									});
+									if([[${#authentication==null or #authentication.name=='anonymousUser'}]]){
+										$('#logInModal').modal('show');
+									}
+								});
+							/*]]>*/
+							</script>
+						</th:block>
+						<a th:case="${false}" href="/logout">Log Out</a>
 					</li>
 				</ul>
 			</li>
@@ -130,13 +169,20 @@ IE11
 			<button type="submit" class="btn btn-default glyphicon glyphicon-search"></button>
 		</div>
 	</form>
-	<div id="abc" class="bg-abc mt8 cw">
+	<div id="abc" class="bg-abc mt8 cw" th:remove="body" >
+		<th:block th:fragment="available-letters">
 				<span>Search by alphabet: </span><a href="#">ALL</a>
 				<a th:each="ch : ${#strings.arraySplit('A B C D E F G H I J K L M N O P Q R S T U V W X Y Z',' ')}"
 					href="#"
-					th:class="${ #lists.contains(letters, ch ) ? null : 'empty' }"
-					th:text="${ ch }">a</a>
-	</div><!--/*  
+					th:class="${ #lists.contains(availableLetters, ch ) ? null : 'empty' }"
+					th:text="${ch}">a</a>
+		</th:block>
+	</div>
+		<script type="text/javascript">
+		$(function(){
+			$('#abc').load('/search/available-letters');
+		});
+		</script><!--/*  
 
 	Categories
 

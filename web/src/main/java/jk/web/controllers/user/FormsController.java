@@ -533,7 +533,6 @@ public class FormsController {
 		model.addAttribute("forms", true);
 		if(formSelection!=null)
 			model.addAttribute("menuSelection", formSelection);
-		model.addAttribute("letters", homeController.getAvailableLetters());
 		return "search";
 	}
 }
