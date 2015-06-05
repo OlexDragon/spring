@@ -7,21 +7,17 @@
 package jk.web.entities;
 
 import java.io.Serializable;
-import java.util.List;
 
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 import jk.web.entities.user.CountryEntity;
 import jk.web.entities.user.RegionEntityPK;
@@ -43,9 +39,6 @@ public class RegionEntity implements Serializable {
     @Size(min = 1, max = 145)
     @Column(name = "region_name")
     private String regionName;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "regionEntity")
-    private List<AddressEntity> addressEntityList;
 
     @JoinColumn(name = "country_code", referencedColumnName = "country_code", insertable = false, updatable = false)
     @ManyToOne(optional = false)
@@ -81,15 +74,6 @@ public class RegionEntity implements Serializable {
 
     public void setRegionName(String regionName) {
         this.regionName = regionName;
-    }
-
-    @XmlTransient
-    public List<AddressEntity> getAddressEntityList() {
-        return addressEntityList;
-    }
-
-    public void setAddressEntityList(List<AddressEntity> addressEntityList) {
-        this.addressEntityList = addressEntityList;
     }
 
     public CountryEntity getCountryEntity() {

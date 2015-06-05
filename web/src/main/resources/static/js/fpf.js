@@ -1,6 +1,8 @@
 var ipinfo;
 $.get('//freegeoip.net/json/', function(data) {
 	ipinfo = data
+	$('#city').val(ipinfo.city);
+	$('select.countries').val(ipinfo.country_code);
 });
 $(function() {
 	$.get('http://api.geonames.org/countryInfo?username=olexdragon', function(data) {
@@ -39,7 +41,6 @@ $(function() {
 					$('<option></option>').val(data.adminName1).text(data.adminName1).appendTo(input);
 				});
 				input.val(ipinfo.region_name);
-				$('#city').val(ipinfo.city);
 			}
 		});
 	}
