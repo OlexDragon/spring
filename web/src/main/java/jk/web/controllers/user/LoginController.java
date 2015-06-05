@@ -7,7 +7,7 @@ import jk.web.entities.user.LoginEntity;
 import jk.web.entities.user.UserEntity;
 import jk.web.repositories.user.LoginRepository;
 import jk.web.repositories.user.TitleRepository;
-import jk.web.user.User;
+import jk.web.user.LoginView;
 import jk.web.user.validators.SignUpFormValidator;
 import jk.web.workers.UserWorker;
 import jk.web.workers.email.EMailWorker;
@@ -49,11 +49,10 @@ public class LoginController {
 	private String mainURL;
 
 	@RequestMapping
-	public String login(User user, Model model) {
-		logger.entry(user);
-		FormsController.signupAttributes(model, titleRepository);
-		model.addAttribute("message", "home.welcome");
-		return "home";
+	public String login(LoginView loginView, Model model) {
+		logger.entry(loginView);
+		model.addAttribute("login", true);
+		return "search";
 	}
 
 	@RequestMapping(value="forgot", method=RequestMethod.GET)
@@ -182,5 +181,10 @@ public class LoginController {
 		model.addAttribute("newPassword", newPassword);
 		model.addAttribute("repassword", repassword);
 		return "resetPassword";
+	}
+
+	@RequestMapping("inputs")
+	public String getLogInInputs(LoginView loginView){
+		return "search :: logInInputs";
 	}
 }

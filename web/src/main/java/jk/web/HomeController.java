@@ -1,7 +1,5 @@
 package jk.web;
 
-import java.util.List;
-
 import jk.web.repositories.workers.search.SearchCatgoriesRepository;
 
 import org.apache.logging.log4j.LogManager;
@@ -24,8 +22,6 @@ public class HomeController {
 	@Autowired
 	private SearchCatgoriesRepository searchCatgoriesRepository;
 
-	private List<String> letters;
-
 	@RequestMapping({ "/", "/home", "/index" })
 	public String home(Model model, @CookieValue(value="location", required=false) String locationCooky, @ModelAttribute("clientIpAddress") String clientIpAddress) {
 		logger.entry( locationCooky, clientIpAddress);
@@ -33,15 +29,7 @@ public class HomeController {
 		if(locationCooky!=null && !locationCooky.isEmpty())
 			model.addAttribute("location", locationCooky);
 
-		model.addAttribute("letters", getAvailableLetters());
-
 		return "search";
-	}
-
-	public List<String> getAvailableLetters() {
-		if(letters==null)
-			letters = searchCatgoriesRepository.findAvailableFirstLeters();
-		return letters;
 	}
 
 	public static void main(String[] args) throws Exception {
