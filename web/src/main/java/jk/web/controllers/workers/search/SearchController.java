@@ -6,6 +6,7 @@ import jk.web.entities.workers.search.SearchCatgoryEntity;
 import jk.web.entities.workers.search.SearchCatgoryEntity.CategoryStatus;
 import jk.web.html.select.ContentDiv;
 import jk.web.repositories.workers.search.SearchCatgoriesRepository;
+import jk.web.user.LoginView;
 import jk.web.workers.SearchClass;
 import jk.web.workers.SearchClass.SearchDetails;
 
@@ -15,11 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("/search")
+@RequestMapping("search")
 public class SearchController {
 
 //	private static final long HTML_UL_LI_TAG = -100L;
@@ -34,6 +37,8 @@ public class SearchController {
 //	protected ApplicationContext applicationContext;
 	@Autowired
 	private SearchCatgoriesRepository searchCatgoriesRepository;
+
+	private List<String> letters;
 
 	@RequestMapping
 	public String serch(@Param(value = "searchFor") String searchFor, @Param(value="searchDetails") SearchDetails searchDetails, Model model){
@@ -52,6 +57,7 @@ public class SearchController {
 	@RequestMapping(value="categories/{startWith}")
 	public String searchCategories(	@PathVariable String startWith, Model model){
 		logger.entry(startWith);
+		logger.error(logger.getName());
 
 		List<SearchCatgoryEntity> categories;
 		try{
@@ -67,5 +73,21 @@ public class SearchController {
 		model.addAttribute("categories", categories);
 
 		return "search :: categories";
+	}
+
+	@RequestMapping("available-letters")
+	public String getAvailableLetters(Model model) {
+		logger.entry();
+
+		model.addAttribute("availableLetters", getAvailableLetters());
+
+		return "search :: available-letters";
+	}
+
+	public List<String> getAvailableLetters() {
+		if(letters==null)
+			letters = searchCatgoriesRepository.findAvailableFirstLeters();
+
+		return letters;
 	}
 }
