@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RegionTitlesRepository  extends JpaRepository<RegionTitleEntity, Long>{
 
+	RegionTitleEntity findOneByRegionTitle(RegionTitleEntity regionTitleEntity);
+
 }

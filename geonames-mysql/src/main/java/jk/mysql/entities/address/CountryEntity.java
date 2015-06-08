@@ -19,7 +19,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -74,12 +73,12 @@ public class CountryEntity implements Serializable {
     private String postalCodeFormat;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "countryEntity", fetch=FetchType.EAGER)
-    @OrderColumn(name="region_order")
+//    @OrderColumn(name="region_order")
     private List<RegionEntity> regionEntityList;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "countryEntity", fetch=FetchType.EAGER)
-    @OrderColumn(name="region_title_order")
-    private List<RegionTitleEntity> regionTitleEntityList;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "countryEntity", fetch=FetchType.EAGER)
+//    @OrderColumn(name="region_title_order")
+//    private List<RegionTitleEntity> regionTitleEntityList;
 
     @JoinColumn(name = "continent_id", referencedColumnName = "continent_id")
     @ManyToOne(optional = false)
@@ -158,14 +157,14 @@ public class CountryEntity implements Serializable {
         this.regionEntityList = regionEntityList;
     }
 
-    @XmlTransient
-    public List<RegionTitleEntity> getRegionTitleEntityList() {
-        return regionTitleEntityList;
-    }
-
-    public void setRegionTitleEntityList(List<RegionTitleEntity> regionTitleEntityList) {
-        this.regionTitleEntityList = regionTitleEntityList;
-    }
+//    @XmlTransient
+//    public List<RegionTitleEntity> getRegionTitleEntityList() {
+//        return regionTitleEntityList;
+//    }
+//
+//    public void setRegionTitleEntityList(List<RegionTitleEntity> regionTitleEntityList) {
+//        this.regionTitleEntityList = regionTitleEntityList;
+//    }
 
     public ContinentEntity getContinentEntity() {
         return continentEntity;
@@ -198,7 +197,7 @@ public class CountryEntity implements Serializable {
     @Override
 	public String toString() {
 		return "CountryEntity [geonamesId=" + geonamesId + ", countryCode=" + countryCode + ", countryName=" + countryName + ", isoAlfa3=" + isoAlfa3 + ", capital=" + capital
-				+ ", postalCodeFormat=" + postalCodeFormat + ", regionTitleEntityList=" + regionTitleEntityList + "]";
+				+ ", postalCodeFormat=" + postalCodeFormat + "]";
 	}
     
 }
