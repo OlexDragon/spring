@@ -48,7 +48,7 @@ public class ContinentsRepositoryTest {
 
 		List<RegionTitleEntity> regionTitleEntityList = new ArrayList<>();
 		regionTitleEntityList.add(regionTitleEntity);
-		countryEntity.setRegionTitleEntityList(regionTitleEntityList);
+//		countryEntity.setRegionTitleEntityList(regionTitleEntityList);
 		regionTitleEntity.setCountryEntity(countryEntity);
 
 		ContinentEntity continentEntity = continentsRepository.save(ContinentsRepositoryTest.continentEntity);
@@ -70,7 +70,7 @@ public class ContinentsRepositoryTest {
 		assertTrue(regionEntitiesList.size()>0);
 		assertEquals(ContinentsRepositoryTest.regionEntity.getRegionName(), regionEntitiesList.get(0).getRegionName());
 
-		regionTitleEntityList = countryEntity.getRegionTitleEntityList();
+//		regionTitleEntityList = countryEntity.getRegionTitleEntityList();
 		assertTrue(regionTitleEntityList.size()>0);
 		assertEquals(regionTitleEntity.getRegionTitle(), regionTitleEntityList.get(0).getRegionTitle());
 	}
