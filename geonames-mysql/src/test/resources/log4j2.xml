@@ -8,6 +8,7 @@
 
     <Loggers>
     	<logger name="jk.geonames.mysql.entities.address.repositopies.ContinentsRepositoryTest" level="all" />
+    	<logger name="jk.geonames.objects.CountryChildrenTest" level="all" />
         <Root level="error">
 			<AppenderRef ref="STDOUT" />
          </Root>
