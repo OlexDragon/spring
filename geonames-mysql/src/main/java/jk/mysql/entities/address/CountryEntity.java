@@ -15,6 +15,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -76,9 +78,12 @@ public class CountryEntity implements Serializable {
 //    @OrderColumn(name="region_order")
     private List<RegionEntity> regionEntityList;
 
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "countryEntity", fetch=FetchType.EAGER)
-//    @OrderColumn(name="region_title_order")
-//    private List<RegionTitleEntity> regionTitleEntityList;
+    @JoinTable(name = "region_titles_has_countries", joinColumns = {
+    		@JoinColumn(name = "countries_geonames_id", referencedColumnName = "geonames_id")},
+    	inverseJoinColumns = {
+            @JoinColumn(name = "region_titles_region_title_id", referencedColumnName = "region_title_id")})
+    @ManyToMany
+    private List<RegionTitleEntity> regionTitleEntityLisr;
 
     @JoinColumn(name = "continent_id", referencedColumnName = "continent_id")
     @ManyToOne(optional = false)
@@ -157,14 +162,14 @@ public class CountryEntity implements Serializable {
         this.regionEntityList = regionEntityList;
     }
 
-//    @XmlTransient
-//    public List<RegionTitleEntity> getRegionTitleEntityList() {
-//        return regionTitleEntityList;
-//    }
-//
-//    public void setRegionTitleEntityList(List<RegionTitleEntity> regionTitleEntityList) {
-//        this.regionTitleEntityList = regionTitleEntityList;
-//    }
+    @XmlTransient
+    public List<RegionTitleEntity> getRegionTitleEntityCollection() {
+        return regionTitleEntityLisr;
+    }
+
+    public void setRegionTitleEntityCollection(List<RegionTitleEntity> regionTitleEntityList) {
+        this.regionTitleEntityLisr = regionTitleEntityList;
+    }
 
     public ContinentEntity getContinentEntity() {
         return continentEntity;
@@ -198,6 +203,5 @@ public class CountryEntity implements Serializable {
 	public String toString() {
 		return "CountryEntity [geonamesId=" + geonamesId + ", countryCode=" + countryCode + ", countryName=" + countryName + ", isoAlfa3=" + isoAlfa3 + ", capital=" + capital
 				+ ", postalCodeFormat=" + postalCodeFormat + "]";
-	}
-    
+	}    
 }
