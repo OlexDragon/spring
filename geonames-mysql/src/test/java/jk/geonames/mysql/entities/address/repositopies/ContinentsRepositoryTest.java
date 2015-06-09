@@ -11,6 +11,7 @@ import jk.mysql.entities.address.CountryEntity;
 import jk.mysql.entities.address.RegionEntity;
 import jk.mysql.entities.address.RegionTitleEntity;
 import jk.mysql.entities.address.repositopies.ContinentsRepository;
+import jk.mysql.entities.address.repositopies.RegionTitlesRepository;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,24 +34,15 @@ public class ContinentsRepositoryTest {
 
 	@Autowired
 	ContinentsRepository continentsRepository;
+	@Autowired
+	RegionTitlesRepository regionTitlesRepository;
 
 	@Test
 	public void test() {
-		
-		List<CountryEntity> countryEntityList = new ArrayList<>();
-		countryEntityList.add(countryEntity);
-		continentEntity.setCountryEntityList(countryEntityList);
-		countryEntity.setContinentEntity(continentEntity);
+		List<CountryEntity> countryEntityList = addCountries();
+		addRegions();
 
-		List<RegionEntity> regionEntitiesList = new ArrayList<>();
-		regionEntitiesList.add(regionEntity);
-		countryEntity.setRegionEntityList(regionEntitiesList);
-		regionEntity.setCountryEntity(countryEntity);
-
-		List<RegionTitleEntity> regionTitleEntityList = new ArrayList<>();
-		regionTitleEntityList.add(regionTitleEntity);
-//		countryEntity.setRegionTitleEntityList(regionTitleEntityList);
-		regionTitleEntity.setCountryEntityList(countryEntityList);
+		addRegionTitles(continentEntity.getCountryEntityList());
 
 		ContinentEntity continentEntity = continentsRepository.save(ContinentsRepositoryTest.continentEntity);
 		logger.trace(continentEntity);
@@ -67,13 +59,44 @@ public class ContinentsRepositoryTest {
 		CountryEntity countryEntity = countryEntityList.get(0);
 		assertEquals(ContinentsRepositoryTest.countryEntity.getCountryName(), countryEntity.getCountryName());
 
-		regionEntitiesList = countryEntity.getRegionEntityList();
+		List<RegionEntity> regionEntitiesList = countryEntity.getRegionEntityList();
+		logger.trace("\n\t{}", regionEntitiesList);
 		assertTrue(regionEntitiesList.size()>0);
 		assertEquals(ContinentsRepositoryTest.regionEntity.getRegionName(), regionEntitiesList.get(0).getRegionName());
 
-//		regionTitleEntityList = countryEntity.getRegionTitleEntityList();
+		List<RegionTitleEntity> regionTitleEntityList = countryEntity.getRegionTitleEntityList();
 		assertTrue(regionTitleEntityList.size()>0);
 		assertEquals(regionTitleEntity.getRegionTitle(), regionTitleEntityList.get(0).getRegionTitle());
+	}
+
+	private void addRegionTitles(List<CountryEntity> countryEntityList) {
+		RegionTitleEntity regionTitleEntity = regionTitlesRepository.save(ContinentsRepositoryTest.regionTitleEntity);
+
+		List<RegionTitleEntity> regionTitleEntityList = new ArrayList<>();
+		regionTitleEntityList.add(regionTitleEntity);
+		regionTitleEntity.setCountryEntityList(countryEntityList);
+
+		for(CountryEntity ce:countryEntityList){
+			ce.setRegionTitleEntityList(regionTitleEntityList);
+		}
+	}
+
+	private void addRegions() {
+		List<RegionEntity> regionEntitiesList = new ArrayList<>();
+		regionEntitiesList.add(regionEntity);
+		countryEntity.setRegionEntityList(regionEntitiesList);
+		regionEntity.setCountryEntity(countryEntity);
+	}
+
+	private List<CountryEntity> addCountries() {
+
+		countryEntity.setContinentEntity(continentEntity);
+
+		List<CountryEntity> countryEntityList = new ArrayList<>();
+		countryEntityList.add(countryEntity);
+		continentEntity.setCountryEntityList(countryEntityList);
+
+		return countryEntityList;
 	}
 
 }

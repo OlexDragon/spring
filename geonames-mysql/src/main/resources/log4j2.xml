@@ -7,7 +7,7 @@
     </Appenders>
 
     <Loggers>
-    	<logger name="jk.service.GeonamesToMySQLService" level="all" />
+    	<logger name="jk.controllers.ConverterController" level="all" />
         <Root level="error">
 			<AppenderRef ref="STDOUT" />
          </Root>

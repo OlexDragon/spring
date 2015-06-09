@@ -47,7 +47,7 @@ public class RegionTitleEntity implements Serializable {
     @Column(name = "region_title")
     private String regionTitle;
 
-    @ManyToMany(mappedBy = "regionTitleEntityList")
+    @ManyToMany(mappedBy = "regionTitleEntityLisr")
     private List<CountryEntity> countryEntityList;
 
     public RegionTitleEntity() {
@@ -77,31 +77,6 @@ public class RegionTitleEntity implements Serializable {
         this.regionTitle = regionTitle;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (regionTitleId != null ? regionTitleId.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof RegionTitleEntity)) {
-            return false;
-        }
-        RegionTitleEntity other = (RegionTitleEntity) object;
-        if ((this.regionTitleId == null && other.regionTitleId != null) || (this.regionTitleId != null && !this.regionTitleId.equals(other.regionTitleId))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-	public String toString() {
-		return "\n\tRegionTitleEntity [regionTitleId=" + regionTitleId + ", regionTitle=" + regionTitle + "]";
-	}
-
     @XmlTransient
     public List<CountryEntity> getCountryEntityList() {
         return countryEntityList;
@@ -110,5 +85,19 @@ public class RegionTitleEntity implements Serializable {
     public void setCountryEntityList(List<CountryEntity> countryEntityList) {
         this.countryEntityList = countryEntityList;
     }
-    
+
+    @Override
+    public int hashCode() {
+        return regionTitleId != null ? regionTitleId.hashCode() : 0;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        return object instanceof RegionTitleEntity ? object.hashCode() == hashCode() : false;
+    }
+
+    @Override
+	public String toString() {
+		return "\n\tRegionTitleEntity [regionTitleId=" + regionTitleId + ", regionTitle=" + regionTitle + "]";
+	}    
 }
