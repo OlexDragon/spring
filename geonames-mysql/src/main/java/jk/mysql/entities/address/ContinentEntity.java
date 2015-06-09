@@ -37,8 +37,8 @@ public class ContinentEntity implements Serializable {
     @Id
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 2)
-    @Column(name = "continent_id")
+    @Size(min = 2, max = 2)
+    @Column(name = "continent_code")
     private String continentCode;
 
     @Basic(optional = false)

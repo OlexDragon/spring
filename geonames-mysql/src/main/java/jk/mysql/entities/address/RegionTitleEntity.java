@@ -6,6 +6,7 @@
 package jk.mysql.entities.address;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -13,14 +14,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -33,6 +34,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "RegionTitleEntity.findAll", query = "SELECT r FROM RegionTitleEntity r")})
 public class RegionTitleEntity implements Serializable {
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -45,9 +47,8 @@ public class RegionTitleEntity implements Serializable {
     @Column(name = "region_title")
     private String regionTitle;
 
-    @JoinColumn(name = "country_code", referencedColumnName = "country_code", updatable=false)
-    @ManyToOne(optional = false)
-    private CountryEntity countryEntity;
+    @ManyToMany(mappedBy = "regionTitleEntityList")
+    private List<CountryEntity> countryEntityList;
 
     public RegionTitleEntity() {
     }
@@ -76,14 +77,6 @@ public class RegionTitleEntity implements Serializable {
         this.regionTitle = regionTitle;
     }
 
-    public CountryEntity getCountryEntity() {
-        return countryEntity;
-    }
-
-    public void setCountryEntity(CountryEntity countryEntity) {
-        this.countryEntity = countryEntity;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -108,5 +101,14 @@ public class RegionTitleEntity implements Serializable {
 	public String toString() {
 		return "\n\tRegionTitleEntity [regionTitleId=" + regionTitleId + ", regionTitle=" + regionTitle + "]";
 	}
+
+    @XmlTransient
+    public List<CountryEntity> getCountryEntityList() {
+        return countryEntityList;
+    }
+
+    public void setCountryEntityList(List<CountryEntity> countryEntityList) {
+        this.countryEntityList = countryEntityList;
+    }
     
 }
