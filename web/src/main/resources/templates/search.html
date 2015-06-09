@@ -269,14 +269,16 @@ $(function(){
 /*<![CDATA[*/
 setTimeout(function(){
 	$('<script/>').attr('async', 'async').attr('src', '//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js').appendTo($('#advertisement'));
-	$('<ins>').addClass('adsbygoogle').attr('style', 'display:inline-block;width:250px;height:250px').attr('data-ad-client', 'ca-pub-1240215757349321').attr('data-ad-slot', '7690894295').appendTo($('#advertisement'));
-	$('<script/>').append('(adsbygoogle = window.adsbygoogle || []).push({})').appendTo($('#advertisement'));
 	setTimeout(function(){
-		$('<ins>').addClass('adsbygoogle').attr('style', 'display:inline-block;width:250px;height:250px').attr('data-ad-client', 'ca-pub-1240215757349321').attr('data-ad-slot', '3260694695').appendTo($('#advertisement'));
+		$('<ins>').addClass('adsbygoogle').attr('style', 'display:inline-block;width:250px;height:250px').attr('data-ad-client', 'ca-pub-1240215757349321').attr('data-ad-slot', '7690894295').appendTo($('#advertisement'));
 		$('<script/>').append('(adsbygoogle = window.adsbygoogle || []).push({})').appendTo($('#advertisement'));
 		setTimeout(function(){
-			$('<ins>').addClass('adsbygoogle').attr('style', 'display:inline-block;width:250px;height:250px').attr('data-ad-client', 'ca-pub-1240215757349321').attr('data-ad-slot', '9307228294').appendTo($('#advertisement'));
+			$('<ins>').addClass('adsbygoogle').attr('style', 'display:inline-block;width:250px;height:250px').attr('data-ad-client', 'ca-pub-1240215757349321').attr('data-ad-slot', '3260694695').appendTo($('#advertisement'));
 			$('<script/>').append('(adsbygoogle = window.adsbygoogle || []).push({})').appendTo($('#advertisement'));
+			setTimeout(function(){
+				$('<ins>').addClass('adsbygoogle').attr('style', 'display:inline-block;width:250px;height:250px').attr('data-ad-client', 'ca-pub-1240215757349321').attr('data-ad-slot', '9307228294').appendTo($('#advertisement'));
+				$('<script/>').append('(adsbygoogle = window.adsbygoogle || []).push({})').appendTo($('#advertisement'));
+			}, 5000);
 		}, 5000);
 	}, 5000);
 }, 5000);
