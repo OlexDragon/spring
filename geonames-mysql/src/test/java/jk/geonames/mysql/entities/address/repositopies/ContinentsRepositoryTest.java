@@ -36,6 +36,7 @@ public class ContinentsRepositoryTest {
 
 	@Test
 	public void test() {
+		
 		List<CountryEntity> countryEntityList = new ArrayList<>();
 		countryEntityList.add(countryEntity);
 		continentEntity.setCountryEntityList(countryEntityList);
@@ -49,7 +50,7 @@ public class ContinentsRepositoryTest {
 		List<RegionTitleEntity> regionTitleEntityList = new ArrayList<>();
 		regionTitleEntityList.add(regionTitleEntity);
 //		countryEntity.setRegionTitleEntityList(regionTitleEntityList);
-		regionTitleEntity.setCountryEntity(countryEntity);
+		regionTitleEntity.setCountryEntityList(countryEntityList);
 
 		ContinentEntity continentEntity = continentsRepository.save(ContinentsRepositoryTest.continentEntity);
 		logger.trace(continentEntity);
