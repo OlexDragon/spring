@@ -38,9 +38,8 @@ public class RegionEntity implements Serializable {
     @Column(name = "geonames_id")
     private Long geonamesId;
  
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 2, max = 2)
+    @Basic(optional = true)
+    @Size(max = 5)
     @Column(name = "region_code")
     private String regionCode;
 
@@ -101,22 +100,12 @@ public class RegionEntity implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (geonamesId != null ? geonamesId.hashCode() : 0);
-        return hash;
+        return geonamesId != null ? geonamesId.hashCode() : 0;
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof RegionEntity)) {
-            return false;
-        }
-        RegionEntity other = (RegionEntity) object;
-        if ((this.geonamesId == null && other.geonamesId != null) || (this.geonamesId != null && !this.geonamesId.equals(other.geonamesId))) {
-            return false;
-        }
-        return true;
+        return object instanceof RegionEntity ? object.hashCode() == hashCode() : false;
     }
 
     @Override
