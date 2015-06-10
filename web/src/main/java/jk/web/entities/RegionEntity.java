@@ -3,36 +3,44 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package jk.web.entities;
 
 import java.io.Serializable;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import jk.web.entities.user.CountryEntity;
-import jk.web.entities.user.RegionEntityPK;
-
 /**
- * @author Oleksandr Potomkin
+ *
+ * @author Alex
  */
-@Entity(name="region")
-@Table(name = "regions", catalog = "jk", schema = "")
+@Entity
+@Table(name = "regions")
 @XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = "RegionEntity.findAll", query = "SELECT r FROM RegionEntity r")})
 public class RegionEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @EmbeddedId
-    protected RegionEntityPK regionEntityPK;
+    @Id
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "geonames_id")
+    private Long geonamesId;
+
+    @Size(max = 5)
+    @Column(name = "region_code")
+    private String regionCode;
 
     @Basic(optional = false)
     @NotNull
@@ -40,32 +48,39 @@ public class RegionEntity implements Serializable {
     @Column(name = "region_name")
     private String regionName;
 
-    @JoinColumn(name = "country_code", referencedColumnName = "country_code", insertable = false, updatable = false)
+    @Column(name = "order_column")
+    private Integer orderColumn;
+
+    @JoinColumn(name = "country_code", referencedColumnName = "country_code")
     @ManyToOne(optional = false)
     private CountryEntity countryEntity;
 
     public RegionEntity() {
     }
 
-    public RegionEntity(RegionEntityPK regionEntityPK) {
-        this.regionEntityPK = regionEntityPK;
+    public RegionEntity(Long geonamesId) {
+        this.geonamesId = geonamesId;
     }
 
-    public RegionEntity(RegionEntityPK regionEntityPK, String regionName) {
-        this.regionEntityPK = regionEntityPK;
+    public RegionEntity(Long geonamesId, String regionName) {
+        this.geonamesId = geonamesId;
         this.regionName = regionName;
     }
 
-    public RegionEntity(String regionCode, String countryCode) {
-        this.regionEntityPK = new RegionEntityPK(regionCode, countryCode);
+    public Long getGeonamesId() {
+        return geonamesId;
     }
 
-    public RegionEntityPK getRegionEntityPK() {
-        return regionEntityPK;
+    public void setGeonamesId(Long geonamesId) {
+        this.geonamesId = geonamesId;
     }
 
-    public void setRegionEntityPK(RegionEntityPK regionEntityPK) {
-        this.regionEntityPK = regionEntityPK;
+    public String getRegionCode() {
+        return regionCode;
+    }
+
+    public void setRegionCode(String regionCode) {
+        this.regionCode = regionCode;
     }
 
     public String getRegionName() {
@@ -74,6 +89,14 @@ public class RegionEntity implements Serializable {
 
     public void setRegionName(String regionName) {
         this.regionName = regionName;
+    }
+
+    public Integer getOrderColumn() {
+        return orderColumn;
+    }
+
+    public void setOrderColumn(Integer orderColumn) {
+        this.orderColumn = orderColumn;
     }
 
     public CountryEntity getCountryEntity() {
@@ -87,7 +110,7 @@ public class RegionEntity implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (regionEntityPK != null ? regionEntityPK.hashCode() : 0);
+        hash += (geonamesId != null ? geonamesId.hashCode() : 0);
         return hash;
     }
 
@@ -98,16 +121,15 @@ public class RegionEntity implements Serializable {
             return false;
         }
         RegionEntity other = (RegionEntity) object;
-        if ((this.regionEntityPK == null && other.regionEntityPK != null) || (this.regionEntityPK != null && !this.regionEntityPK.equals(other.regionEntityPK))) {
+        if ((this.geonamesId == null && other.geonamesId != null) || (this.geonamesId != null && !this.geonamesId.equals(other.geonamesId))) {
             return false;
         }
         return true;
     }
 
     @Override
-	public String toString() {
-		return "\n\tRegionEntity [regionEntityPK=" + regionEntityPK
-				+ ", regionName=" + regionName + "]";
-	}
-
+    public String toString() {
+        return "jk.web.entities.RegionEntity[ geonamesId=" + geonamesId + " ]";
+    }
+    
 }

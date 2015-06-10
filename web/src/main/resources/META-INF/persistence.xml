@@ -39,6 +39,9 @@
     <class>jk.web.database.UrlEntity</class>
     <class>jk.web.entities.CountryEntity</class>
     <class>jk.web.entities.Continents</class>
+    <class>jk.web.entities.RegionEntity</class>
+    <class>jk.web.entities.ContinentEntity</class>
+    <class>jk.web.entities.RegionTitles</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/jk?zeroDateTimeBehavior=convertToNull"/>
       <property name="javax.persistence.jdbc.password" value="potomkina"/>

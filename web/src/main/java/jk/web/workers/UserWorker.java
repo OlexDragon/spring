@@ -14,8 +14,8 @@ import javax.xml.bind.PropertyException;
 
 import jk.web.entities.AddressEntity;
 import jk.web.entities.BusinessEntity;
+import jk.web.entities.CountryEntity;
 import jk.web.entities.repositories.BusinessRepository;
-import jk.web.entities.user.CountryEntity;
 import jk.web.entities.user.EMailEntity;
 import jk.web.entities.user.EMailEntity.EMailStatus;
 import jk.web.entities.user.LoginEntity;
@@ -312,7 +312,7 @@ public class UserWorker extends LoginWorker{
 
 			if(countryEntity!=null){
 				address.setCountryCode(countryEntity.getCountryCode());
-				address.setRegionName(countryEntity.getRegionName());
+//				address.setRegionName(countryEntity.getRegionName());
 			}
 			address.setAddress(addressEntity.getAddress());
 			address.setCity(addressEntity.getCity());

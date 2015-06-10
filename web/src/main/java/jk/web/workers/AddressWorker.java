@@ -5,11 +5,10 @@ import java.util.List;
 import java.util.Set;
 
 import jk.web.entities.AddressEntity;
+import jk.web.entities.CountryEntity;
 import jk.web.entities.RegionEntity;
 import jk.web.entities.repositories.AddressRepository;
 import jk.web.entities.repositories.RegionRepository;
-import jk.web.entities.user.CountryEntity;
-import jk.web.entities.user.RegionEntityPK;
 import jk.web.html.select.HTMLOptionElement;
 import jk.web.repositories.user.CountryRepository;
 
@@ -64,7 +63,7 @@ public class AddressWorker {
 	}
 
 	public CountryEntity getCountryEntity(String countryCode) {
-		return countryCode!=null ? countryRepository.findOne(countryCode) : null;
+		return null;//countryCode!=null ? countryRepository.findOne(countryCode) : null;
 	}
 
 	public List<RegionEntity> getRegionEntities(String countryCode){
@@ -80,8 +79,8 @@ public class AddressWorker {
 		logger.entry(regionCode);
 		RegionEntity regionEntity = null;
 
-		if(regionCode!=null && countryCode!=null)
-			regionEntity = regionRepository.findOne(new RegionEntityPK(regionCode, countryCode));
+//		if(regionCode!=null && countryCode!=null)
+//			regionEntity = regionRepository.findOne(new RegionEntityPK(regionCode, countryCode));
 
 		return regionEntity;
 	}
@@ -108,7 +107,7 @@ public class AddressWorker {
 	public String getRegionName(String countryCode) {
 		CountryEntity countryEntity = getCountryEntity(countryCode);
 		logger.trace("\n\t{}", countryEntity);
-		return countryEntity!=null ? countryEntity.getRegionName() : null;
+		return null;//countryEntity!=null ? countryEntity.getRegionName() : null;
 	}
 
 	public static AddressEntity getFrom(List<AddressEntity> addressEntities, AddressEntity addressEntity) {
