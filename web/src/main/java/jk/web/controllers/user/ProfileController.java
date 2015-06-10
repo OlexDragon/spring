@@ -8,7 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 import jk.web.entities.AddressEntity;
-import jk.web.entities.user.CountryEntity;
+import jk.web.entities.CountryEntity;
 import jk.web.entities.user.FileEntity;
 import jk.web.repositories.user.FileRepositiry;
 import jk.web.repositories.user.TitleRepository;
@@ -343,27 +343,27 @@ public class ProfileController {
 		}
 		CountryEntity countryEntity = null;
 		if(addressStr!=null && !addressStr.isEmpty()){
-			countryEntity = addressWorker.getCountryEntity(addressStr);
-			if(countryEntity!=null){
-				String regionName = countryEntity.getRegionName();
-				modelAddress.setRegionName(regionName);
-				if(regionName!=null){
-					model.addAttribute("regions", addressWorker.getRegionEntities(addressStr));
-
-					//Region
-					aeStr = addressEntity!=null ? addressEntity.getRegion() : null;
-					addressStr = address.getRegion();
-					isError = checkAdress(aeStr, addressStr);
-					if(isError!=null){
-						modelAddress.setEditAddress(true);
-						if(isError)
-							modelAddress.setRegionCodeError("address.select_"+regionName);
-						else if(addressStr==null){
-							address.setRegion(aeStr);
-						}
-					}
-				}
-			}
+//			countryEntity = addressWorker.getCountryEntity(addressStr);
+//			if(countryEntity!=null){
+//				String regionName = countryEntity.getRegionName();
+//				modelAddress.setRegionName(regionName);
+//				if(regionName!=null){
+//					model.addAttribute("regions", addressWorker.getRegionEntities(addressStr));
+//
+//					//Region
+//					aeStr = addressEntity!=null ? addressEntity.getRegion() : null;
+//					addressStr = address.getRegion();
+//					isError = checkAdress(aeStr, addressStr);
+//					if(isError!=null){
+//						modelAddress.setEditAddress(true);
+//						if(isError)
+//							modelAddress.setRegionCodeError("address.select_"+regionName);
+//						else if(addressStr==null){
+//							address.setRegion(aeStr);
+//						}
+//					}
+//				}
+//			}
 		}
 
 		Long userID = userWorker.getUserEntity().getId();

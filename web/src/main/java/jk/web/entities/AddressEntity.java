@@ -27,7 +27,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import jk.web.entities.user.CountryEntity;
 import jk.web.user.Address.AddressStatus;
 
 /**
