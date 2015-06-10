@@ -6,19 +6,25 @@
 package jk.web.entities;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -35,7 +41,12 @@ public class CountryEntity implements Serializable {
     @Id
     @Basic(optional = false)
     @NotNull
-    @Size(min = 2, max = 2)
+    @Column(name = "geonames_id")
+    private Long geonamesId;
+
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 2)
     @Column(name = "country_code")
     private String countryCode;
 
@@ -47,45 +58,51 @@ public class CountryEntity implements Serializable {
 
     @Basic(optional = false)
     @NotNull
-    @Size(min = 3, max = 3)
+    @Size(min = 1, max = 3)
     @Column(name = "iso_alfa_3")
     private String isoAlfa3;
 
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 145)
+    @Size(max = 145)
     @Column(name = "capital")
     private String capital;
 
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "geoname_id")
-    private Long geonameId;
-
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
+    @Size(max = 145)
     @Column(name = "postal_code_format")
     private String postalCodeFormat;
 
-    @JoinColumn(name = "continent_id", referencedColumnName = "continent_id")
+    @JoinTable(name = "region_titles_has_countries", joinColumns = {
+        @JoinColumn(name = "countries_geonames_id", referencedColumnName = "geonames_id")}, inverseJoinColumns = {
+        @JoinColumn(name = "region_titles_region_title_id", referencedColumnName = "region_title_id")})
+    @ManyToMany
+    private List<RegionTitles> regionTitlesList;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "countryCode")
+    private List<RegionEntity> regionEntityList;
+
+    @JoinColumn(name = "continent_code", referencedColumnName = "continent_code")
     @ManyToOne(optional = false)
-    private ContinentEntity continents;
+    private ContinentEntity continentEntity;
 
     public CountryEntity() {
     }
 
-    public CountryEntity(String countryCode) {
-        this.countryCode = countryCode;
+    public CountryEntity(Long geonamesId) {
+        this.geonamesId = geonamesId;
     }
 
-    public CountryEntity(String countryCode, String countryName, String isoAlfa3, String capital, Long geonameId, String postalCodeFormat) {
+    public CountryEntity(Long geonamesId, String countryCode, String countryName, String isoAlfa3) {
+        this.geonamesId = geonamesId;
         this.countryCode = countryCode;
         this.countryName = countryName;
         this.isoAlfa3 = isoAlfa3;
-        this.capital = capital;
-        this.geonameId = geonameId;
-        this.postalCodeFormat = postalCodeFormat;
+    }
+
+    public Long getGeonamesId() {
+        return geonamesId;
+    }
+
+    public void setGeonamesId(Long geonamesId) {
+        this.geonamesId = geonamesId;
     }
 
     public String getCountryCode() {
@@ -120,14 +137,6 @@ public class CountryEntity implements Serializable {
         this.capital = capital;
     }
 
-    public Long getGeonameId() {
-        return geonameId;
-    }
-
-    public void setGeonameId(Long geonameId) {
-        this.geonameId = geonameId;
-    }
-
     public String getPostalCodeFormat() {
         return postalCodeFormat;
     }
@@ -136,37 +145,45 @@ public class CountryEntity implements Serializable {
         this.postalCodeFormat = postalCodeFormat;
     }
 
-    public ContinentEntity getContinents() {
-        return continents;
+    @XmlTransient
+    public List<RegionTitles> getRegionTitlesList() {
+        return regionTitlesList;
     }
 
-    public void setContinents(ContinentEntity continents) {
-        this.continents = continents;
+    public void setRegionTitlesList(List<RegionTitles> regionTitlesList) {
+        this.regionTitlesList = regionTitlesList;
+    }
+
+    @XmlTransient
+    public List<RegionEntity> getRegionEntityList() {
+        return regionEntityList;
+    }
+
+    public void setRegionEntityList(List<RegionEntity> regionEntityList) {
+        this.regionEntityList = regionEntityList;
+    }
+
+    public ContinentEntity getContinentEntity() {
+        return continentEntity;
+    }
+
+    public void setContinentEntity(ContinentEntity continentEntity) {
+        this.continentEntity = continentEntity;
     }
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (countryCode != null ? countryCode.hashCode() : 0);
-        return hash;
+        return geonamesId != null ? geonamesId.hashCode() : 0;
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof CountryEntity)) {
-            return false;
-        }
-        CountryEntity other = (CountryEntity) object;
-        if ((this.countryCode == null && other.countryCode != null) || (this.countryCode != null && !this.countryCode.equals(other.countryCode))) {
-            return false;
-        }
-        return true;
+        return object instanceof CountryEntity ? object.hashCode() == hashCode() : false;
     }
 
     @Override
     public String toString() {
-        return "jk.web.entities.CountryEntity[ countryCode=" + countryCode + " ]";
+        return "jk.web.entities.CountryEntity[ geonamesId=" + geonamesId + " ]";
     }
     
 }

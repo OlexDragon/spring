@@ -7,12 +7,13 @@ package jk.web.entities;
 
 import java.io.Serializable;
 import java.util.List;
-
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -27,6 +28,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "continents")
 @XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = "ContinentEntity.findAll", query = "SELECT c FROM ContinentEntity c")})
 public class ContinentEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -34,8 +37,8 @@ public class ContinentEntity implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 2, max = 2)
-    @Column(name = "continent_id")
-    private String continentId;
+    @Column(name = "continent_code")
+    private String continentCode;
 
     @Basic(optional = false)
     @NotNull
@@ -43,27 +46,27 @@ public class ContinentEntity implements Serializable {
     @Column(name = "continent_name")
     private String continentName;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ContinentEvtities")
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "continentCode")
     private List<CountryEntity> countryEntityList;
 
     public ContinentEntity() {
     }
 
-    public ContinentEntity(String continentId) {
-        this.continentId = continentId;
+    public ContinentEntity(String continentCode) {
+        this.continentCode = continentCode;
     }
 
-    public ContinentEntity(String continentId, String continentName) {
-        this.continentId = continentId;
+    public ContinentEntity(String continentCode, String continentName) {
+        this.continentCode = continentCode;
         this.continentName = continentName;
     }
 
-    public String getContinentId() {
-        return continentId;
+    public String getContinentCode() {
+        return continentCode;
     }
 
-    public void setContinentId(String continentId) {
-        this.continentId = continentId;
+    public void setContinentCode(String continentCode) {
+        this.continentCode = continentCode;
     }
 
     public String getContinentName() {
@@ -85,27 +88,17 @@ public class ContinentEntity implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (continentId != null ? continentId.hashCode() : 0);
-        return hash;
+        return continentCode != null ? continentCode.hashCode() : 0;
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ContinentEntity)) {
-            return false;
-        }
-        ContinentEntity other = (ContinentEntity) object;
-        if ((this.continentId == null && other.continentId != null) || (this.continentId != null && !this.continentId.equals(other.continentId))) {
-            return false;
-        }
-        return true;
+        return object instanceof ContinentEntity ? object.hashCode() == hashCode() : false;
     }
 
     @Override
     public String toString() {
-        return "jk.web.entities.Continents[ continentId=" + continentId + " ]";
+        return "jk.web.entities.ContinentEntity[ continentCode=" + continentCode + " ]";
     }
     
 }

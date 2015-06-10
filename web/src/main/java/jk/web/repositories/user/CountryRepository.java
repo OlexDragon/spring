@@ -1,10 +1,8 @@
 package jk.web.repositories.user;
 
-import jk.web.entities.user.CountryEntity;
+import jk.web.entities.CountryEntity;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CountryRepository extends JpaRepository<CountryEntity, String> {
-
-	CountryEntity findByCountryName(String country);
+public interface CountryRepository extends JpaRepository<CountryEntity, Long> {
 }
