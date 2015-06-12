@@ -7,7 +7,6 @@ package jk.web.entities;
 
 import java.io.Serializable;
 import java.util.List;
-
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -31,15 +30,15 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "region_titles")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "RegionTitles.findAll", query = "SELECT r FROM RegionTitles r")})
-public class RegionTitles implements Serializable {
+    @NamedQuery(name = "RegionTitleEntity.findAll", query = "SELECT r FROM RegionTitleEntity r")})
+public class RegionTitleEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "region_title_id")
-    private Long regionTitleId;
+    private Integer regionTitleId;
 
     @Basic(optional = false)
     @NotNull
@@ -47,26 +46,26 @@ public class RegionTitles implements Serializable {
     @Column(name = "region_title")
     private String regionTitle;
 
-    @ManyToMany(mappedBy = "regionTitlesList")
+    @ManyToMany(mappedBy = "regionTitleEntityList")
     private List<CountryEntity> countryEntityList;
 
-    public RegionTitles() {
+    public RegionTitleEntity() {
     }
 
-    public RegionTitles(Long regionTitleId) {
+    public RegionTitleEntity(Integer regionTitleId) {
         this.regionTitleId = regionTitleId;
     }
 
-    public RegionTitles(Long regionTitleId, String regionTitle) {
+    public RegionTitleEntity(Integer regionTitleId, String regionTitle) {
         this.regionTitleId = regionTitleId;
         this.regionTitle = regionTitle;
     }
 
-    public Long getRegionTitleId() {
+    public Integer getRegionTitleId() {
         return regionTitleId;
     }
 
-    public void setRegionTitleId(Long regionTitleId) {
+    public void setRegionTitleId(Integer regionTitleId) {
         this.regionTitleId = regionTitleId;
     }
 
@@ -97,10 +96,10 @@ public class RegionTitles implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof RegionTitles)) {
+        if (!(object instanceof RegionTitleEntity)) {
             return false;
         }
-        RegionTitles other = (RegionTitles) object;
+        RegionTitleEntity other = (RegionTitleEntity) object;
         if ((this.regionTitleId == null && other.regionTitleId != null) || (this.regionTitleId != null && !this.regionTitleId.equals(other.regionTitleId))) {
             return false;
         }
@@ -109,7 +108,7 @@ public class RegionTitles implements Serializable {
 
     @Override
     public String toString() {
-        return "jk.web.entities.RegionTitles[ regionTitleId=" + regionTitleId + " ]";
+        return "jk.web.entities.RegionTitleEntity[ regionTitleId=" + regionTitleId + " ]";
     }
     
 }

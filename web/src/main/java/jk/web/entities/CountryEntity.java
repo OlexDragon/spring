@@ -12,6 +12,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -42,7 +43,7 @@ public class CountryEntity implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "geonames_id")
-    private Long geonamesId;
+    private Integer geonamesId;
 
     @Basic(optional = false)
     @NotNull
@@ -73,35 +74,35 @@ public class CountryEntity implements Serializable {
     @JoinTable(name = "region_titles_has_countries", joinColumns = {
         @JoinColumn(name = "countries_geonames_id", referencedColumnName = "geonames_id")}, inverseJoinColumns = {
         @JoinColumn(name = "region_titles_region_title_id", referencedColumnName = "region_title_id")})
-    @ManyToMany
-    private List<RegionTitles> regionTitlesList;
+    @ManyToMany(fetch=FetchType.EAGER)
+    private List<RegionTitleEntity> regionTitleEntityList;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "countryCode")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "countryEntity", fetch=FetchType.LAZY)
     private List<RegionEntity> regionEntityList;
 
     @JoinColumn(name = "continent_code", referencedColumnName = "continent_code")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch=FetchType.LAZY)
     private ContinentEntity continentEntity;
 
     public CountryEntity() {
     }
 
-    public CountryEntity(Long geonamesId) {
+    public CountryEntity(Integer geonamesId) {
         this.geonamesId = geonamesId;
     }
 
-    public CountryEntity(Long geonamesId, String countryCode, String countryName, String isoAlfa3) {
+    public CountryEntity(Integer geonamesId, String countryCode, String countryName, String isoAlfa3) {
         this.geonamesId = geonamesId;
         this.countryCode = countryCode;
         this.countryName = countryName;
         this.isoAlfa3 = isoAlfa3;
     }
 
-    public Long getGeonamesId() {
+    public Integer getGeonamesId() {
         return geonamesId;
     }
 
-    public void setGeonamesId(Long geonamesId) {
+    public void setGeonamesId(Integer geonamesId) {
         this.geonamesId = geonamesId;
     }
 
@@ -146,12 +147,12 @@ public class CountryEntity implements Serializable {
     }
 
     @XmlTransient
-    public List<RegionTitles> getRegionTitlesList() {
-        return regionTitlesList;
+    public List<RegionTitleEntity> getRegionTitleEntityList() {
+        return regionTitleEntityList;
     }
 
-    public void setRegionTitlesList(List<RegionTitles> regionTitlesList) {
-        this.regionTitlesList = regionTitlesList;
+    public void setRegionTitleEntityList(List<RegionTitleEntity> regionTitleEntityList) {
+        this.regionTitleEntityList = regionTitleEntityList;
     }
 
     @XmlTransient
@@ -167,18 +168,28 @@ public class CountryEntity implements Serializable {
         return continentEntity;
     }
 
-    public void setContinentEntity(ContinentEntity continentEntity) {
+    public void setContinentEntitye(ContinentEntity continentEntity) {
         this.continentEntity = continentEntity;
     }
 
     @Override
     public int hashCode() {
-        return geonamesId != null ? geonamesId.hashCode() : 0;
+        int hash = 0;
+        hash += (geonamesId != null ? geonamesId.hashCode() : 0);
+        return hash;
     }
 
     @Override
     public boolean equals(Object object) {
-        return object instanceof CountryEntity ? object.hashCode() == hashCode() : false;
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof CountryEntity)) {
+            return false;
+        }
+        CountryEntity other = (CountryEntity) object;
+        if ((this.geonamesId == null && other.geonamesId != null) || (this.geonamesId != null && !this.geonamesId.equals(other.geonamesId))) {
+            return false;
+        }
+        return true;
     }
 
     @Override
