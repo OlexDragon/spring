@@ -67,9 +67,9 @@ public class AddressWorker {
 	}
 
 	public List<RegionEntity> getRegionEntities(String countryCode){
-		List<RegionEntity> regions;
+		List<RegionEntity> regions = null;
 		if(countryCode!=null){
-			regions = regionRepository.findByCountryCode(countryCode);
+//			regions = regionRepository.findByCountryCode(countryCode);
 		}else
 			regions = null;
 		return regions;

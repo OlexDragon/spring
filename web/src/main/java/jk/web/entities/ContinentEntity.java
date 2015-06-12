@@ -46,7 +46,7 @@ public class ContinentEntity implements Serializable {
     @Column(name = "continent_name")
     private String continentName;
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "continentCode")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "continentEntity")
     private List<CountryEntity> countryEntityList;
 
     public ContinentEntity() {
@@ -88,12 +88,22 @@ public class ContinentEntity implements Serializable {
 
     @Override
     public int hashCode() {
-        return continentCode != null ? continentCode.hashCode() : 0;
+        int hash = 0;
+        hash += (continentCode != null ? continentCode.hashCode() : 0);
+        return hash;
     }
 
     @Override
     public boolean equals(Object object) {
-        return object instanceof ContinentEntity ? object.hashCode() == hashCode() : false;
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof ContinentEntity)) {
+            return false;
+        }
+        ContinentEntity other = (ContinentEntity) object;
+        if ((this.continentCode == null && other.continentCode != null) || (this.continentCode != null && !this.continentCode.equals(other.continentCode))) {
+            return false;
+        }
+        return true;
     }
 
     @Override
