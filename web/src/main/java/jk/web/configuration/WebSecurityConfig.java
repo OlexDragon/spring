@@ -56,6 +56,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/fonts/**",
 				"/js/**",
 				"/images/**",
+				"/rest/**",
 				FileWorker.RESOURCE_HANDLER + FileWorker.PROFILE_URL + "**")
 			.permitAll()
 			.anyRequest()

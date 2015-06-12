@@ -20,6 +20,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  *
  * @author Alex
@@ -36,7 +38,7 @@ public class RegionEntity implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "geonames_id")
-    private Long geonamesId;
+    private Integer geonamesId;
 
     @Size(max = 5)
     @Column(name = "region_code")
@@ -48,6 +50,7 @@ public class RegionEntity implements Serializable {
     @Column(name = "region_name")
     private String regionName;
 
+    @JsonIgnore
     @Column(name = "order_column")
     private Integer orderColumn;
 
@@ -58,20 +61,20 @@ public class RegionEntity implements Serializable {
     public RegionEntity() {
     }
 
-    public RegionEntity(Long geonamesId) {
+    public RegionEntity(Integer geonamesId) {
         this.geonamesId = geonamesId;
     }
 
-    public RegionEntity(Long geonamesId, String regionName) {
+    public RegionEntity(Integer geonamesId, String regionName) {
         this.geonamesId = geonamesId;
         this.regionName = regionName;
     }
 
-    public Long getGeonamesId() {
+    public Integer getGeonamesId() {
         return geonamesId;
     }
 
-    public void setGeonamesId(Long geonamesId) {
+    public void setGeonamesId(Integer geonamesId) {
         this.geonamesId = geonamesId;
     }
 
@@ -99,11 +102,11 @@ public class RegionEntity implements Serializable {
         this.orderColumn = orderColumn;
     }
 
-    public CountryEntity getCountryEntity() {
+    public CountryEntity getCountryCode() {
         return countryEntity;
     }
 
-    public void setCountryEntity(CountryEntity countryEntity) {
+    public void setCountryCode(CountryEntity countryEntity) {
         this.countryEntity = countryEntity;
     }
 
