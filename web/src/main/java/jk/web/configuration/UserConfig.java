@@ -7,7 +7,7 @@ import java.util.Map;
 
 import javax.servlet.MultipartConfigElement;
 
-import jk.web.repositories.user.CountryRepository;
+import jk.web.entities.repositories.CountryRepository;
 import jk.web.user.validators.SignUpFormValidator;
 import jk.web.workers.AddressWorker;
 import jk.web.workers.UserWorker;
