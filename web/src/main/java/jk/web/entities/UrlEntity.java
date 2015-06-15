@@ -16,7 +16,9 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -58,6 +60,10 @@ public class UrlEntity implements Serializable {
 
     @ManyToMany(mappedBy = "urlEntityList")
     private List<BusinessEntity> businessEntityList;
+
+    @JoinColumn(name = "url_country_of_activity", referencedColumnName = "geonames_id", nullable = false, insertable=false, updatable=false)
+    @ManyToOne(optional = false)
+    private CountryEntity urlCountryOfActivity;
 
     public UrlEntity() {
     }
@@ -104,22 +110,12 @@ public class UrlEntity implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (urlId != null ? urlId.hashCode() : 0);
-        return hash;
+        return urlId != null ? urlId.hashCode() : 0;
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof UrlEntity)) {
-            return false;
-        }
-        UrlEntity other = (UrlEntity) object;
-        if ((this.urlId == null && other.urlId != null) || (this.urlId != null && !this.urlId.equals(other.urlId))) {
-            return false;
-        }
-        return true;
+        return object instanceof UrlEntity ? object.hashCode()==hashCode() : false;
     }
 
     @Override
@@ -127,5 +123,12 @@ public class UrlEntity implements Serializable {
 		return "UrlEntity [urlId=" + urlId + ", url=" + url + ", urlStatus="
 				+ urlStatus + "]";
 	}
-    
+
+    public CountryEntity getUrlCountryOfActivity() {
+        return urlCountryOfActivity;
+    }
+
+    public void setUrlCountryOfActivity(CountryEntity urlCountryOfActivity) {
+        this.urlCountryOfActivity = urlCountryOfActivity;
+    }
 }
