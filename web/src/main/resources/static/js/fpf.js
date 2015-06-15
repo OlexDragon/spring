@@ -1,47 +1,58 @@
 var ipinfo;
-$.get('//freegeoip.net/json/', function(data) {
-	ipinfo = data
-	$('#city').val(ipinfo.city);
-	$('select.countries').val(ipinfo.country_code);
-});
 $(function() {
-	$.get('http://api.geonames.org/countryInfo?username=olexdragon', function(data) {
-		var sortedCountries = $(data).find('geonames').find('country').get().sort(function(a, b) {
-					var valA = $(a).find('countryName').text();
-					var valB = $(b).find('countryName').text();
-					return valA < valB ? -1 : valA == valB ? 0 : 1;
-				});
-		$.each(sortedCountries,
-				function(index, value) {
-					var v = $(value);
-					$('<option></option>').val(v.find('countryCode').text()).text(v.find('countryName').text()).attr('geonameId', v.find('geonameId').text()).appendTo($('select.countries'));
-				});
-		if(ipinfo){
-			$('select.countries').val(ipinfo.country_code);
-			setRegions($('select.countries').find('option:selected').attr('geonameId'));
-		}
+	$.get('//freegeoip.net/json/', function(data) {
+		ipinfo = data
+		$('#city').val(ipinfo.city);
+
+		$.get('/rest/countries', function(data) {
+			$.each(data,
+					function(index, value) {
+						$('<option></option>').val(value.countryCode).text(value.countryName).attr('geonameId', value.geonamesId).appendTo($('select.countries'));
+					});
+			if(ipinfo){
+				$('select.countries').val(ipinfo.country_code);
+				var geonameId = $('select#country').find('option:selected').attr('geonameId');
+				setRegions(geonameId);
+				setPostalCodeFormat(geonameId);
+			}
+		});
 	});
 	$('select.countries').on('change', function(){
 		var selectRegion = $('select.region');
+		var geonameId = $(this).find('option:selected').attr('geonameId');
 		if(selectRegion){
-			setRegions($(this).find('option:selected').attr('geonameId'));
+			setRegions(geonameId);
+		}
+		if($(this).attr('id')=='country'){
+			setPostalCodeFormat(geonameId);
 		}
 	});
 	function setRegions(geonameId){
-		$.get('http://api.geonames.org/childrenJSON?geonameId=' + geonameId + '&username=olexdragon', function(data){
-			var regions = data.geonames;
-			if(regions[0]){
-				var input = $('div.regions input');
-				if(input[0]){
-					input.replaceWith(input = $('<select></select>').addClass('form-control').attr('name', 'provinceState').prop('required',true));
-				}else{
-					input = $('div.regions select');
-				}
-				$.each(regions, function(index, data){
-					$('<option></option>').val(data.adminName1).text(data.adminName1).appendTo(input);
-				});
-				input.val(ipinfo.region_name);
-			}
+		$.get('/rest/regions?geonamesId=' + geonameId,
+				function(data){
+					if(data){
+						var input = $('div.regions input');
+						if(input[0]){
+							input.replaceWith(input = $('<select></select>').addClass('form-control').attr('name', 'provinceState').prop('required',true));
+						}else{
+							input = $('div.regions select');
+						}
+						input.empty();
+						$.each(data, function(index, data){
+							$('<option></option>').val(data.regionCode).text(data.regionName).attr('geonameId', data.geonameId).appendTo(input);
+						});
+						input.val(ipinfo.region_code);
+					}else{
+						var input = $('div.regions select');
+						if(input[0]){
+							input.replaceWith(input = $('<input></input>').addClass('form-control').attr('type', 'text').attr('id', 'postalCode').attr('name', 'postalCode').prop('required',true));
+						}
+					}
+		});
+	}
+	function setPostalCodeFormat(geonameId){
+		$.get('/rest/country?geonamesId='+geonameId, function(country){
+			$('input#postalCode').attr('postalCodeFormat', country.postalCodeFormat);
 		});
 	}
 });
