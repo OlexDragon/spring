@@ -1,4 +1,4 @@
-package jk.web.repositories.user;
+package jk.web.entities.repositories;
 
 import jk.web.entities.CountryEntity;
 

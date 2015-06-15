@@ -1,12 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package jk.web.entities;
 
 import java.io.Serializable;
 import java.util.List;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,12 +18,14 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  *
  * @author Alex
  */
 @Entity
-@Table(name = "region_titles")
+@Table(name = "region_titles", catalog = "", schema = "jk")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "RegionTitleEntity.findAll", query = "SELECT r FROM RegionTitleEntity r")})
@@ -38,7 +36,7 @@ public class RegionTitleEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "region_title_id")
-    private Integer regionTitleId;
+    private Long regionTitleId;
 
     @Basic(optional = false)
     @NotNull
@@ -46,26 +44,26 @@ public class RegionTitleEntity implements Serializable {
     @Column(name = "region_title")
     private String regionTitle;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "regionTitleEntityList")
     private List<CountryEntity> countryEntityList;
 
     public RegionTitleEntity() {
     }
 
-    public RegionTitleEntity(Integer regionTitleId) {
+    public RegionTitleEntity(Long regionTitleId) {
         this.regionTitleId = regionTitleId;
     }
 
-    public RegionTitleEntity(Integer regionTitleId, String regionTitle) {
-        this.regionTitleId = regionTitleId;
+    public RegionTitleEntity(String regionTitle) {
         this.regionTitle = regionTitle;
     }
 
-    public Integer getRegionTitleId() {
+    public Long getRegionTitleId() {
         return regionTitleId;
     }
 
-    public void setRegionTitleId(Integer regionTitleId) {
+    public void setRegionTitleId(Long regionTitleId) {
         this.regionTitleId = regionTitleId;
     }
 
@@ -88,27 +86,16 @@ public class RegionTitleEntity implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (regionTitleId != null ? regionTitleId.hashCode() : 0);
-        return hash;
+        return regionTitleId != null ? regionTitleId.hashCode() : 0;
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof RegionTitleEntity)) {
-            return false;
-        }
-        RegionTitleEntity other = (RegionTitleEntity) object;
-        if ((this.regionTitleId == null && other.regionTitleId != null) || (this.regionTitleId != null && !this.regionTitleId.equals(other.regionTitleId))) {
-            return false;
-        }
-        return true;
+        return object instanceof RegionTitleEntity ? object.hashCode() == hashCode() : false;
     }
 
     @Override
-    public String toString() {
-        return "jk.web.entities.RegionTitleEntity[ regionTitleId=" + regionTitleId + " ]";
-    }
-    
+	public String toString() {
+		return "\n\tRegionTitleEntity [regionTitleId=" + regionTitleId + ", regionTitle=" + regionTitle + "]";
+	}    
 }
