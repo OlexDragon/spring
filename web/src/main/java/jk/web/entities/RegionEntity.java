@@ -20,14 +20,12 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 /**
  *
  * @author Alex
  */
 @Entity
-@Table(name = "regions")
+@Table(name = "regions", catalog = "", schema = "jk")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "RegionEntity.findAll", query = "SELECT r FROM RegionEntity r")})
@@ -38,8 +36,9 @@ public class RegionEntity implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "geonames_id")
-    private Integer geonamesId;
-
+    private Long geonamesId;
+ 
+    @Basic(optional = true)
     @Size(max = 5)
     @Column(name = "region_code")
     private String regionCode;
@@ -50,31 +49,28 @@ public class RegionEntity implements Serializable {
     @Column(name = "region_name")
     private String regionName;
 
-    @JsonIgnore
-    @Column(name = "order_column")
-    private Integer orderColumn;
-
-    @JoinColumn(name = "country_code", referencedColumnName = "country_code")
+    @JoinColumn(name = "country_code", referencedColumnName = "country_code", updatable=false)
     @ManyToOne(optional = false)
     private CountryEntity countryEntity;
 
     public RegionEntity() {
     }
 
-    public RegionEntity(Integer geonamesId) {
+    public RegionEntity(Long geonamesId) {
         this.geonamesId = geonamesId;
     }
 
-    public RegionEntity(Integer geonamesId, String regionName) {
+    public RegionEntity(Long geonamesId, String regionCode, String regionName) {
         this.geonamesId = geonamesId;
+        this.regionCode = regionCode;
         this.regionName = regionName;
     }
 
-    public Integer getGeonamesId() {
+    public Long getGeonamesId() {
         return geonamesId;
     }
 
-    public void setGeonamesId(Integer geonamesId) {
+    public void setGeonamesId(Long geonamesId) {
         this.geonamesId = geonamesId;
     }
 
@@ -94,45 +90,27 @@ public class RegionEntity implements Serializable {
         this.regionName = regionName;
     }
 
-    public Integer getOrderColumn() {
-        return orderColumn;
-    }
-
-    public void setOrderColumn(Integer orderColumn) {
-        this.orderColumn = orderColumn;
-    }
-
-    public CountryEntity getCountryCode() {
+    public CountryEntity getCountryEntity() {
         return countryEntity;
     }
 
-    public void setCountryCode(CountryEntity countryEntity) {
+    public void setCountryEntity(CountryEntity countryEntity) {
         this.countryEntity = countryEntity;
     }
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (geonamesId != null ? geonamesId.hashCode() : 0);
-        return hash;
+        return geonamesId != null ? geonamesId.hashCode() : 0;
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof RegionEntity)) {
-            return false;
-        }
-        RegionEntity other = (RegionEntity) object;
-        if ((this.geonamesId == null && other.geonamesId != null) || (this.geonamesId != null && !this.geonamesId.equals(other.geonamesId))) {
-            return false;
-        }
-        return true;
+        return object instanceof RegionEntity ? object.hashCode() == hashCode() : false;
     }
 
     @Override
-    public String toString() {
-        return "jk.web.entities.RegionEntity[ geonamesId=" + geonamesId + " ]";
-    }
+	public String toString() {
+		return "\n\tRegionEntity [geonamesId=" + geonamesId + ", regionCode=" + regionCode + ", regionName=" + regionName + "]";
+	}
     
 }

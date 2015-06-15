@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package jk.web.entities;
 
 import java.io.Serializable;
@@ -33,7 +27,7 @@ import jk.web.user.Address.AddressStatus;
  * @author Oleksandr Potomkin
  */
 @Entity
-@Table(name = "addresses", catalog = "jk", schema = "")
+@Table(name = "addresses", catalog = "", schema = "jk")
 public class AddressEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 

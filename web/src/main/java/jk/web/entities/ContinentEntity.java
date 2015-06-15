@@ -1,16 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package jk.web.entities;
 
 import java.io.Serializable;
 import java.util.List;
+
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -26,7 +23,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Alex
  */
 @Entity
-@Table(name = "continents")
+@Table(name = "continents", catalog = "", schema = "jk")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "ContinentEntity.findAll", query = "SELECT c FROM ContinentEntity c")})
@@ -46,7 +43,7 @@ public class ContinentEntity implements Serializable {
     @Column(name = "continent_name")
     private String continentName;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "continentEntity")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "continentEntity", fetch=FetchType.LAZY)
     private List<CountryEntity> countryEntityList;
 
     public ContinentEntity() {
@@ -107,8 +104,8 @@ public class ContinentEntity implements Serializable {
     }
 
     @Override
-    public String toString() {
-        return "jk.web.entities.ContinentEntity[ continentCode=" + continentCode + " ]";
-    }
+	public String toString() {
+		return "\n\tContinentEntity [continentCode=" + continentCode + ", continentName=" + continentName + ", countryEntityList=" + countryEntityList + "]";
+	}
     
 }
