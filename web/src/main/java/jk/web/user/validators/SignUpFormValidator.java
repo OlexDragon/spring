@@ -6,8 +6,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import jk.web.entities.user.EMailEntity;
-import jk.web.entities.user.EMailEntity.EMailStatus;
 import jk.web.user.Business;
 import jk.web.user.User;
 import jk.web.workers.UserWorker;
@@ -101,9 +99,9 @@ public class SignUpFormValidator implements Validator {
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, fieldName, "SignUpFormValidator.please_write_a_valid_X", new String[]{"e-mail"});
 		if(errors.getFieldError(fieldName)==null){
 			if(emailPattern.matcher(eMail).matches()){
-				EMailEntity eMailEntity = userWorker.getEMail(eMail);
-				if(eMailEntity!=null && (eMailEntity.getStatus()==EMailStatus.ACTIVE || eMailEntity.getStatus()==EMailStatus.TO_CONFIRM))
-					errors.rejectValue(fieldName, "SignUpFormValidator.this_email_already_exists", "Exists");
+//				EMailEntity eMailEntity = userWorker.getEMail(eMail);
+//				if(eMailEntity!=null && (eMailEntity.getStatus()==EMailStatus.ACTIVE || eMailEntity.getStatus()==EMailStatus.TO_CONFIRM))
+//					errors.rejectValue(fieldName, "SignUpFormValidator.this_email_already_exists", "Exists");
 			}else{
 				logger.trace("\n\t email '{}' does not mach the patern:\n\t{}", eMail, emailPattern);
 				errors.rejectValue(fieldName, "SignUpFormValidator.please_write_a_valid_X", new String[]{"e-mail"}, "Not valid");

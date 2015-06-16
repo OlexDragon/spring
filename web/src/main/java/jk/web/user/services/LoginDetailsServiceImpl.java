@@ -27,7 +27,7 @@ public class LoginDetailsServiceImpl implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String usernameOrEMail) throws UsernameNotFoundException {
 		logger.entry(usernameOrEMail);
-		LoginEntity loginEntity = repository.findByUsernameOrEMail(usernameOrEMail);
+		LoginEntity loginEntity = repository.findByUsernameOrEmailsEmail(usernameOrEMail);
 		logger.trace("\n\t{}", loginEntity);
 		if(loginEntity==null)
 			throw new UsernameNotFoundException("No user found with username: " + usernameOrEMail);
