@@ -7,7 +7,6 @@ package jk.web.entities;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Basic;
@@ -109,7 +108,7 @@ public class ContactEmailEntity implements Serializable {
         this.email = email;
     }
 
-    public Date getEmailCreationDate() {
+    public Timestamp getEmailCreationDate() {
         return emailCreationDate;
     }
 

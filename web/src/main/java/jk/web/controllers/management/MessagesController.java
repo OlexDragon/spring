@@ -6,7 +6,8 @@ import java.util.List;
 import jk.web.entities.ContactUsEntity;
 import jk.web.entities.ContactUsEntity.ContactUsStatus;
 import jk.web.entities.repositories.ContactUsRepository;
-import jk.web.repositories.user.LoginRepository;
+import jk.web.entities.user.LoginEntity;
+import jk.web.entities.user.repositories.LoginRepository;
 import jk.web.workers.email.ContactUsStatusUpdater;
 import jk.web.workers.email.EMailWorker;
 
@@ -52,7 +53,7 @@ public class MessagesController {
 	public String saveMessages(Principal principal, @RequestParam Long id, @RequestParam String message, Model model){
 		logger.entry(id, message);
 		String username = principal.getName();
-		Long loginId = loginRepository.getIdByUsername(username);
+		LoginEntity loginId = loginRepository.findOneByUsername(username);
 		if(loginId==null){
 			model.addAttribute("error", "Can not find the login information for username: "+username);
 		}else{
