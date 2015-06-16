@@ -6,7 +6,7 @@ import java.security.Principal;
 import java.util.Arrays;
 
 import jk.web.entities.user.LoginEntity;
-import jk.web.repositories.user.LoginRepository;
+import jk.web.entities.user.repositories.LoginRepository;
 import jk.web.workers.FileWorker;
 
 import org.apache.logging.log4j.LogManager;
@@ -43,7 +43,7 @@ public class ResourceController {
 		logger.entry( imageSize, imageID, userID);
 
 		String username = principal.getName();
-		LoginEntity loginEntity = loginRepository.findByUsername(username);
+		LoginEntity loginEntity = loginRepository.findOneByUsername(username);
 
 		ResponseEntity<byte[]> responseEntity = null;
 
@@ -64,7 +64,7 @@ public class ResourceController {
 		Boolean deleted;
 
 		String username = principal.getName();
-		LoginEntity loginEntity = loginRepository.findByUsername(username);
+		LoginEntity loginEntity = loginRepository.findOneByUsername(username);
 		if(loginEntity!=null && loginEntity.getId()==userID)
 			deleted =fileWorker.delete( imageID, userID);
 		else
@@ -87,7 +87,7 @@ public class ResourceController {
 
 		boolean set = false;
 		if(username!=null){
-			LoginEntity loginEntity = loginRepository.findByUsername(username);
+			LoginEntity loginEntity = loginRepository.findOneByUsername(username);
 			if(loginEntity!=null && loginEntity.getId()==userID)
 				try {
 					if(isAll)
@@ -110,7 +110,7 @@ public class ResourceController {
 		String username = principal.getName();
 		
 		if(username!=null){
-			LoginEntity loginEntity = loginRepository.findByUsername(username);
+			LoginEntity loginEntity = loginRepository.findOneByUsername(username);
 			if(loginEntity!=null && loginEntity.getId()==userID)
 				fileWorker.setShowToAll(userID, imageID, show);
 		}

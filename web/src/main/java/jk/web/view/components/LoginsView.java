@@ -5,7 +5,7 @@ import java.util.Set;
 
 import jk.web.entities.user.LoginEntity;
 import jk.web.entities.user.LoginEntity.Permission;
-import jk.web.repositories.user.LoginRepository;
+import jk.web.entities.user.repositories.LoginRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;

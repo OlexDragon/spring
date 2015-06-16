@@ -2,7 +2,7 @@ package jk.web.configuration;
 
 import javax.sql.DataSource;
 
-import jk.web.repositories.user.LoginRepository;
+import jk.web.entities.user.repositories.LoginRepository;
 import jk.web.user.listeners.LoginListener;
 import jk.web.user.services.LoginDetailsServiceImpl;
 import jk.web.workers.FileWorker;

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.security.Principal;
 
 import jk.web.entities.user.LoginEntity;
-import jk.web.repositories.user.LoginRepository;
+import jk.web.entities.user.repositories.LoginRepository;
 import jk.web.workers.FileWorker;
 
 import org.apache.logging.log4j.LogManager;
@@ -40,7 +40,7 @@ public class FileUploadControler {
 				String username = principal.getName();
 
 				if(username!=null){
-					LoginEntity loginEntity = loginRepository.findByUsername(username);
+					LoginEntity loginEntity = loginRepository.findOneByUsername(username);
 					for(int i =0 ;i< files.length; i++)
 						fileWorker.saveFile(loginEntity.getId(), files[i]);
 				}

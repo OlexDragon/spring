@@ -25,10 +25,10 @@ import jk.web.entities.repositories.ContactUsRepository;
 import jk.web.entities.repositories.ReferenceNumberRepository;
 import jk.web.entities.user.LoginEntity;
 import jk.web.entities.user.TitleEntity;
+import jk.web.entities.user.repositories.LoginRepository;
 import jk.web.filters.Statistic;
 import jk.web.repositories.statictic.IpAddressRepository;
 import jk.web.repositories.user.ActivityRepository;
-import jk.web.repositories.user.LoginRepository;
 import jk.web.repositories.user.TitleRepository;
 import jk.web.user.Business;
 import jk.web.user.User;
@@ -342,17 +342,40 @@ public class FormsController {
 		return returnToForms("Confirmation", MenuSelection.CONFIRM_MESSAGE, model);
 	}
 
+	@Value("${user.username.range.min}")
+	private String usernameMinRange;
+	@Value("${user.password.range.min}")
+	private String passwordMinRange;
 	@Autowired
 	private LoginRepository loginRepository;
 	private boolean signUp(SignUpView signUpView, BindingResult bindingResult) {
-		LoginEntity loginEntity = loginRepository.findByUsername(signUpView.getUsername());
-		if(loginEntity==null){
-			loginEntity = loginRepository.findByEmailsEmail(signUpView.getEmail());
-			if(loginEntity==null)
-				return true;
-//TODO			else
-		}
+
+		String username = signUpView.getUsername();
+		if(!bindingResult.hasErrors())
+
+			if(username!=null && username.length()>=Integer.parseInt(usernameMinRange)){
+				LoginEntity loginEntity = loginRepository.findOneByUsername(username);
+
+				if(loginEntity==null){
+					String email = signUpView.getEmail();
+					if(email!=null){
+						loginEntity = loginRepository.findOneByEmailsEmail(email);
+						if(loginEntity==null && signUpView.getP){
+							signUp(signUpView);
+							return true;
+						}else
+							bindingResult.rejectValue("email", "SignUpFormValidator.this_email_already_exists", "Exists");
+					}
+				}else
+					bindingResult.rejectValue("username", "SignUpFormValidator.user_name_already_exists", new String[]{username}, "This username already exists.");
+			}else
+				bindingResult.rejectValue("username", "SignUpFormValidator.between_min_and_max_characters", new String[]{usernameMinRange, "64"}, "Between {0} and {1} characters.");
+
 		return false;
+	}
+
+	private void signUp(SignUpView signUpView) {
+		new LoginEntity(username, password)
 	}
 
 	@RequestMapping(value="contact_us")

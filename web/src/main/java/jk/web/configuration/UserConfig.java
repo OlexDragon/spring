@@ -31,10 +31,10 @@ public class UserConfig {
 	@Value("${country.list}")
 	private String countriesCSV;
 
-	@Value("${user.username.range}")
+	@Value("${user.username.range.min}")
 	private String usernameRange;
 
-	@Value("${user.password.range}")
+	@Value("${user.password.range.min}")
 	private String passwordRange;
 
 	@Value("${jk.file.size.maximum}")
