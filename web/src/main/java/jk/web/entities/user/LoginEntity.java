@@ -8,21 +8,17 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
+import jk.web.entities.ContactEmailEntity;
+
 import org.springframework.security.core.GrantedAuthority;
 
 @Entity(name="login")
@@ -122,13 +118,9 @@ public class LoginEntity implements Serializable{
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastAccessed;
 
-	//if the field contains email address consider using this annotation to enforce field validation
-    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")
-    @OneToMany(fetch=FetchType.EAGER)
-    @JoinColumn(name = "login_id")
-    @NotFound(action=NotFoundAction.IGNORE)
-    @Cascade(value=CascadeType.ALL)
-    private List<EMailEntity> emails;
+
+    @ManyToMany(mappedBy = "loginEntityList")
+    private List<ContactEmailEntity> emails;
 
     public LoginEntity() {
 	}
@@ -190,17 +182,20 @@ public class LoginEntity implements Serializable{
         this.lastAccessed = lastAccessed;
     }
 
-	public List<EMailEntity> getEmails() {
+	public List<ContactEmailEntity> getEmails() {
 		return emails;
 	}
 
-	public void setEmails(List<EMailEntity> emails) {
-		this.emails = emails;
+	public void setEmails(List<ContactEmailEntity> contactEmailEntityList) {
+		this.emails = contactEmailEntityList;
 	}
 
 	@Override
 	public String toString() {
-		return "LoginEntity [id=" + id + ", username=" + username + ", password=" + password + ", permissions=" + permissions + ", createdDate=" + createdDate + ", lastAccessed="
-				+ lastAccessed + ", emails=" + emails + "]";
+		return "\n\tLoginEntity [id=" + id + ", username=" + username
+				+ ", password=" + password + ", permissions=" + permissions
+				+ ", createdDate=" + createdDate + ", lastAccessed="
+				+ lastAccessed + ", contactEmailEntityList="
+				+ emails + "]";
 	}
 }

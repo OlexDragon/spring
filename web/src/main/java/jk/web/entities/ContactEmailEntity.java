@@ -20,11 +20,15 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import jk.web.entities.user.LoginEntity;
 
 /**
  *
@@ -66,6 +70,12 @@ public class ContactEmailEntity implements Serializable {
 
     @ManyToMany(mappedBy = "contactEmailEntityList")
     private List<BusinessEntity> businessEntityList;
+
+    @JoinTable(name = "logins_has_contact_emails", joinColumns = {
+    		@JoinColumn(name = "contact_emails_email_id", referencedColumnName = "email_id", nullable = false)}, inverseJoinColumns = {
+            @JoinColumn(name = "logins_login_id", referencedColumnName = "login_id", nullable = false)})
+    @ManyToMany
+    private List<LoginEntity> loginEntityList;
 
     public ContactEmailEntity() {
     }
@@ -123,29 +133,35 @@ public class ContactEmailEntity implements Serializable {
         this.contactUsList = contactUsList;
     }
 
+	public List<BusinessEntity> getBusinessEntityList() {
+		return businessEntityList;
+	}
+
+	public void setBusinessEntityList(List<BusinessEntity> businessEntityList) {
+		this.businessEntityList = businessEntityList;
+	}
+
+	public List<LoginEntity> getLoginEntityList() {
+		return loginEntityList;
+	}
+
+	public void setLoginEntityList(List<LoginEntity> loginEntityList) {
+		this.loginEntityList = loginEntityList;
+	}
+
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (emailId != null ? emailId.hashCode() : 0);
-        return hash;
+        return emailId != null ? emailId.hashCode() : 0;
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ContactEmailEntity)) {
-            return false;
-        }
-        ContactEmailEntity other = (ContactEmailEntity) object;
-        if ((this.emailId == null && other.emailId != null) || (this.emailId != null && !this.emailId.equals(other.emailId))) {
-            return false;
-        }
-        return true;
+        return object instanceof ContactEmailEntity ? object.hashCode()==hashCode() : false;
     }
 
 	@Override
 	public String toString() {
-		return "ContactEmailEntity [emailId=" + emailId + ", email=" + email
+		return "/n\tContactEmailEntity [emailId=" + emailId + ", email=" + email
 				+ ", emailCreationDate=" + emailCreationDate + ", emailStatus="
 				+ emailStatus + "]";
 	}

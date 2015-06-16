@@ -15,14 +15,51 @@ comments:
 IE 11
 -->
 <body>
-<th:block th:fragment="sign_up_forms"><!-- 
+<th:block th:fragment="forms"><!-- 
+
+	SIGN UP
+
+ -->
+	<div class="panel panel-default" th:fragment="sign_up">
+		<div class="panel-heading">
+			<h2>Sing Up</h2>
+		</div>
+		<div class="panel-body">
+		<form action="/sign-up" method="post" th:object="${signUpView}"><!--/*
+
+		reference number
+
+		*/--><div class="form-group" th:with="err=${#fields.hasErrors('username')}" th:classappend="${err ? 'has-error' : null}">
+				<label class="control-label" for="username">username: <span th:if="${err}" th:errors="*{username}">Username Error</span></label>
+				<input type="text" class="form-control" required="required" th:field="*{username}"/>
+			</div><!--/*
+
+		*/--><div class="form-group" th:with="err=${#fields.hasErrors('password')}" th:classappend="${err ? 'has-error' : null}">
+				<label class="control-label" for="password">Password: <span th:if="${err}" th:errors="*{password}">password Error</span></label>
+				<input type="password" class="form-control" required="required" th:field="*{password}"/>
+			</div><!--/* 
+
+		*/--><div class="form-group" th:with="err=${#fields.hasErrors('confirmPassword')}" th:classappend="${err ? 'has-error' : null}">
+				<label class="control-label" for="confirmPassword">Confirm: <span th:if="${err}" th:errors="*{email}">confirm Error</span></label>
+				<input type="password" class="form-control" required="required" th:field="*{confirmPassword}"/>
+			</div><!--/*
+
+		*/--><div class="form-group" th:with="err=${#fields.hasErrors('email')}" th:classappend="${err ? 'has-error' : null}">
+				<label class="control-label" for="email">Email: <span th:if="${err}" th:errors="*{email}">Subject Error</span></label>
+				<input type="email" class="form-control" required="required" th:field="*{email}"/>
+			</div><!--/*
+
+		*/--><button name="sbmtSignUp" class="submit form-control btn btn-info" type="submit">Sign Up</button>
+		</form>
+		</div>
+	</div><!-- 
 
 	CONTACT US
 
  -->
 	<div class="panel panel-default" th:fragment="contact_us">
 		<div class="panel-heading">
-			<h2 th:text="${contact_us}">Contact Us</h2>
+			<h2>Contact Us</h2>
 		</div>
 		<div class="panel-body">
 		<form action="/contact_us" method="post" th:object="${contactUsForm}"><!--/*
@@ -32,12 +69,12 @@ IE 11
 		*/--><div class="form-group" th:with="err=${#fields.hasErrors('referenceNumber')}" th:classappend="${err ? 'has-error' : null}">
 				<label class="control-label" for="referenceNumber">Ad Reference Number: <span th:if="${err}" th:errors="*{referenceNumber}">ReferenceNumber Error</span></label>
 				<input type="text" class="form-control" required="required" th:field="*{referenceNumber}"/>
-			</div><!--/* max length(45) from database 
+			</div><!--/* max length(45) limited by database 
 
 		*/--><div class="form-group" th:with="err=${#fields.hasErrors('name')}" th:classappend="${err ? 'has-error' : null}">
 				<label class="control-label" for="name">Your Name: <span th:if="${err}" th:errors="*{name}">Name Error</span></label>
 				<input type="text" class="form-control" required="required" th:field="*{name}"/>
-			</div><!--/* max length(245) from database 
+			</div><!--/* max length(245) limited by database 
 
 		*/--><div class="form-group" th:with="err=${#fields.hasErrors('email')}" th:classappend="${err ? 'has-error' : null}">
 				<label class="control-label" for="email">Email Address: <span th:if="${err}" th:errors="*{email}">Email Error</span></label>
@@ -47,12 +84,12 @@ IE 11
 		*/--><div class="form-group" th:with="err=${#fields.hasErrors('subject')}" th:classappend="${err ? 'has-error' : null}">
 				<label class="control-label" for="subject">Subject: <span th:if="${err}" th:errors="*{subject}">Subject Error</span></label>
 				<input type="text" class="form-control" required="required" th:field="*{subject}"/>
-			</div><!--/* max length(145) from database 
+			</div><!--/* max length(145) limited by database 
 
 		*/--><div class="form-group" th:with="err=${#fields.hasErrors('message')}" th:classappend="${err ? 'has-error' : null}">
 				<label class="control-label" for="message">Message: <span th:if="${err}" th:errors="*{message}">Message Error</span></label>
 				<textarea required="required" class="form-control" th:field="*{message}"></textarea>
-			</div><!--/* max length(1000) from database
+			</div><!--/* max length(1000) limited by database
 
 		*/--><button name="contactUs" class="submit form-control btn btn-info" type="submit">Send</button>
 		</form>
@@ -63,7 +100,6 @@ IE 11
 	ADD SITE
 
 */--><div class="panel panel-default" th:fragment="add-site">
-<script src="../static/js/fpf.js"  th:src="@{/js/fpf.js}"></script>
 		<div class="panel-heading">
 			<h4>Please complete the form below to add your site.</h4>
 		</div>
