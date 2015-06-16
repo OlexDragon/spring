@@ -4,7 +4,7 @@ import java.util.Locale;
 
 import jk.web.entities.user.LoginEntity;
 import jk.web.entities.user.LoginEntity.Permission;
-import jk.web.repositories.user.LoginRepository;
+import jk.web.entities.user.repositories.LoginRepository;
 import jk.web.workers.UserWorker.ConfirmationStaus;
 import jk.web.workers.email.EMailWorker;
 
@@ -41,20 +41,20 @@ public class LoginWorker {
 	}
 
 	public LoginEntity getLoginEntity(String username) {
-		return loginRepository.findByUsername(username);
+		return loginRepository.findOneByUsername(username);
 	}
 
-	public LoginEntity getLoginEntity(Long userId) {
-		return loginRepository.findById(userId);
-	}
+//	public LoginEntity getLoginEntity(Long userId) {
+//		return loginRepository.findById(userId);
+//	}
 
 	public LoginEntity save(LoginEntity loginEntity) {
 		return loginRepository.save(loginEntity);
 	}
 
-	public boolean existsUserName(String username) {
-		return loginRepository.exists(username);
-	}
+//	public boolean existsUserName(String username) {
+//		return loginRepository.exists(username);
+//	}
 
 	public Locale getLocale() {
 		return locale;

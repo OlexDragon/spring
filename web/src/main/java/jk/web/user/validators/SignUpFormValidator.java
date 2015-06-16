@@ -48,7 +48,7 @@ public class SignUpFormValidator implements Validator {
 		logger.entry(target);
 		User user = (User) target;
 
-		usernameValidation(errors, user);
+//		usernameValidation(errors, user);
 		fieldValidation("firstName", user.getFirstName(), errors);
 		fieldValidation("lastName", user.getLastName(), errors);
 		passwordValidation(errors, user);
@@ -139,24 +139,24 @@ public class SignUpFormValidator implements Validator {
 		return logger.exit(errors.getFieldError(fieldName)==null);// no error
 	}
 
-	public void usernameValidation(Errors errors, User user) {
-
-		Integer min = usernameRange.get("min");
-		Integer max = usernameRange.get("max");
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "username", "SignUpFormValidator.between_min_and_max_characters", new Integer[]{min, max});
-
-		if(errors.getFieldError("username")==null){
-			String username = user.getUsername();
-			logger.entry(username);
-			if(username.length()<min)
-				errors.rejectValue("username", "SignUpFormValidator.username_min", new Integer[]{min}, "The Username you provided must have at least {0} characters.");
-			else if(username.length()>max || !Pattern.matches(USERNAME_PATTERN, username))
-				errors.rejectValue("username", "SignUpFormValidator.between_min_and_max_characters", new Integer[]{min, max}, "Between {0} and {1} characters.");
-			else if(userWorker.existsUserName(username))
-				errors.rejectValue("username", "SignUpFormValidator.user_name_already_exists", new String[]{username}, "This username already exists.");
-		}
-		
-	}
+//	public void usernameValidation(Errors errors, User user) {
+//
+//		Integer min = usernameRange.get("min");
+//		Integer max = usernameRange.get("max");
+//		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "username", "SignUpFormValidator.between_min_and_max_characters", new Integer[]{min, max});
+//
+//		if(errors.getFieldError("username")==null){
+//			String username = user.getUsername();
+//			logger.entry(username);
+//			if(username.length()<min)
+//				errors.rejectValue("username", "SignUpFormValidator.username_min", new Integer[]{min}, "The Username you provided must have at least {0} characters.");
+//			else if(username.length()>max || !Pattern.matches(USERNAME_PATTERN, username))
+//				errors.rejectValue("username", "SignUpFormValidator.between_min_and_max_characters", new Integer[]{min, max}, "Between {0} and {1} characters.");
+//			else if(userWorker.existsUserName(username))
+//				errors.rejectValue("username", "SignUpFormValidator.user_name_already_exists", new String[]{username}, "This username already exists.");
+//		}
+//		
+//	}
 
 	public boolean passwordValidation(Errors errors, User user) {
 

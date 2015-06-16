@@ -1,7 +1,7 @@
 package jk.web.user.services;
 
 import jk.web.entities.user.LoginEntity;
-import jk.web.repositories.user.LoginRepository;
+import jk.web.entities.user.repositories.LoginRepository;
 import jk.web.user.LoginDetails;
 
 import org.apache.logging.log4j.LogManager;
@@ -27,7 +27,7 @@ public class LoginDetailsServiceImpl implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String usernameOrEMail) throws UsernameNotFoundException {
 		logger.entry(usernameOrEMail);
-		LoginEntity loginEntity = repository.findByUsernameOrEmailsEmail(usernameOrEMail);
+		LoginEntity loginEntity = repository.findOneByUsernameOrEmailsEmail(usernameOrEMail, usernameOrEMail);
 		logger.trace("\n\t{}", loginEntity);
 		if(loginEntity==null)
 			throw new UsernameNotFoundException("No user found with username: " + usernameOrEMail);
