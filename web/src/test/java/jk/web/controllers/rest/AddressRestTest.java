@@ -91,6 +91,10 @@ public class AddressRestTest {
 		List<RegionEntity> entities = regionRepository.findByCountryEntityGeonamesIdOrderByRegionNameAsc(GEONAME_ID);
 		logger.trace(entities);
 
+		mockMvc.perform(get("/rest/regions?geonamesId="+countryEntity.getGeonamesId()))
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("$", hasSize(entities.size())));
+		
 		mockMvc.perform(get("/rest/regions?countryCode="+countryEntity.getCountryCode()))
 		.andExpect(status().isOk())
 		.andExpect(jsonPath("$", hasSize(entities.size())));

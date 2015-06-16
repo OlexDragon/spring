@@ -159,7 +159,7 @@ public class LoginController {
 								new Integer[]{ min, max },
 								locale));
 			else if(newPassword.equals(repassword)){
-				userWorker.saveNewPassword(newPassword);
+//				userWorker.saveNewPassword(newPassword);
 				return "login";
 			}else{
 				model.addAttribute(

@@ -147,6 +147,7 @@
 						</th:block>
 						<a th:case="${false}" href="/logout">Log Out</a>
 					</li>
+					<li th:class="${menuSelection==T(jk.web.controllers.user.FormsController.MenuSelection).SIGN_UP ? 'active' : null}"><a href="/sign-up">Sign Up</a></li>
 				</ul>
 			</li>
 			<li th:class="${menuSelection==T(jk.web.controllers.user.FormsController.MenuSelection).CONTACT_US ? 'active' : null}"><a href="/contact_us">Contact Us</a></li>
@@ -241,6 +242,9 @@ $(function(){
 */--><div id="result" th:switch="${menuSelection}">
 		<th:block th:case="${T(jk.web.controllers.user.FormsController.MenuSelection).CONTACT_US}">
 			<div th:replace="fragments/forms :: contact_us"></div>
+		</th:block>
+		<th:block th:case="${T(jk.web.controllers.user.FormsController.MenuSelection).SIGN_UP}">
+			<div th:replace="fragments/forms :: sign_up"></div>
 		</th:block>
 		<th:block th:case="${T(jk.web.controllers.user.FormsController.MenuSelection).ADD_SITE_URL}">
 			<div th:replace="fragments/forms :: add-site"></div>
