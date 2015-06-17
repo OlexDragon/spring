@@ -73,7 +73,7 @@ public class ContactEmailEntity implements Serializable {
     @JoinTable(name = "logins_has_contact_emails", joinColumns = {
     		@JoinColumn(name = "contact_emails_email_id", referencedColumnName = "email_id", nullable = false)}, inverseJoinColumns = {
             @JoinColumn(name = "logins_login_id", referencedColumnName = "login_id", nullable = false)})
-    @ManyToMany
+    @ManyToMany(fetch=FetchType.LAZY)
     private List<LoginEntity> loginEntityList;
 
     public ContactEmailEntity() {
