@@ -54,7 +54,6 @@ public class SearchController {
 	@RequestMapping(value="categories/{startWith}")
 	public String searchCategories(	@PathVariable String startWith, Model model){
 		logger.entry(startWith);
-		logger.error(logger.getName());
 
 		List<SearchCatgoryEntity> categories;
 		try{

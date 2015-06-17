@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -119,7 +120,7 @@ public class LoginEntity implements Serializable{
     private Date lastAccessed;
 
 
-    @ManyToMany(mappedBy = "loginEntityList")
+    @ManyToMany(mappedBy = "loginEntityList", cascade=CascadeType.ALL)
     private List<ContactEmailEntity> emails;
 
     public LoginEntity() {

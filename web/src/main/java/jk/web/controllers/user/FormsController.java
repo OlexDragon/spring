@@ -46,9 +46,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ValidationUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -329,7 +331,14 @@ public class FormsController {
 	@Value("${jk.email.from}")
 	private String emaleFrom;
 
-	@RequestMapping("sign-up")
+
+	@RequestMapping(value="sign-up", method=RequestMethod.GET)
+	public String signUp(SignUpView signUpView, Model model){
+		model.addAttribute("userMenu", true);
+		return returnToForms("sign_up", MenuSelection.SIGN_UP, model);
+	}
+
+	@RequestMapping(value="sign-up", method=RequestMethod.POST)
 	public String signUp(SignUpView signUpView, BindingResult bindingResult, Model model){
 		if (bindingResult.hasErrors() || !signUp(signUpView, bindingResult)){
 			model.addAttribute("userMenu", true);
@@ -346,36 +355,73 @@ public class FormsController {
 	private String usernameMinRange;
 	@Value("${user.password.range.min}")
 	private String passwordMinRange;
+	@Value("${user.username.range.max}")
+	private String usernameMaxRange;
+	@Value("${user.password.range.max}")
+	private String passwordMaxRange;
 	@Autowired
 	private LoginRepository loginRepository;
 	private boolean signUp(SignUpView signUpView, BindingResult bindingResult) {
 
 		String username = signUpView.getUsername();
+		ValidationUtils.rejectIfEmptyOrWhitespace(bindingResult, "username", "SignUpFormValidator.this_field_must_be_filled");
+
+		String email = signUpView.getEmail();
+		ValidationUtils.rejectIfEmptyOrWhitespace(bindingResult, "email", "SignUpFormValidator.this_field_must_be_filled");
+
+		String password = signUpView.getPassword();
+		ValidationUtils.rejectIfEmptyOrWhitespace(bindingResult, "password", "SignUpFormValidator.this_field_must_be_filled");
+
 		if(!bindingResult.hasErrors())
 
-			if(username!=null && username.length()>=Integer.parseInt(usernameMinRange)){
+			if(username.length()>=Integer.parseInt(usernameMinRange) && username.length()<=Integer.parseInt(usernameMaxRange)){
 				LoginEntity loginEntity = loginRepository.findOneByUsername(username);
 
 				if(loginEntity==null){
-					String email = signUpView.getEmail();
-					if(email!=null){
-						loginEntity = loginRepository.findOneByEmailsEmail(email);
-						if(loginEntity==null && signUpView.getP){
-							signUp(signUpView);
-							return true;
+
+					loginEntity = loginRepository.findOneByEmailsEmail(email);
+
+					if(loginEntity==null) {
+
+						if(password.length()>=Integer.parseInt(passwordMinRange) && password.length()<=Integer.parseInt(passwordMaxRange)){
+
+							if(password.equals(signUpView.getConfirmPassword())){
+								signUp(signUpView);
+								return true;
+							}else
+								bindingResult.rejectValue("confirmPassword", "SignUpFormValidator.Not match", "Not Match");
+
 						}else
-							bindingResult.rejectValue("email", "SignUpFormValidator.this_email_already_exists", "Exists");
-					}
+							bindingResult.rejectValue("password", "SignUpFormValidator.between_min_and_max_characters", new String[]{passwordMinRange, passwordMaxRange}, "Between {0} and {1} characters.");
+					}else
+						bindingResult.rejectValue("email", "SignUpFormValidator.this_email_already_exists", "Exists");
 				}else
 					bindingResult.rejectValue("username", "SignUpFormValidator.user_name_already_exists", new String[]{username}, "This username already exists.");
 			}else
-				bindingResult.rejectValue("username", "SignUpFormValidator.between_min_and_max_characters", new String[]{usernameMinRange, "64"}, "Between {0} and {1} characters.");
+				bindingResult.rejectValue("username", "SignUpFormValidator.between_min_and_max_characters", new String[]{usernameMinRange, usernameMaxRange}, "Between {0} and {1} characters.");
 
 		return false;
 	}
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	private void signUp(SignUpView signUpView) {
-		new LoginEntity(username, password)
+
+		LoginEntity loginEntity = new LoginEntity(signUpView.getUsername(), passwordEncoder.encode(signUpView.getPassword()));
+		List<ContactEmailEntity> emailEntities = new ArrayList<>();
+
+		String email = signUpView.getEmail();
+		ContactEmailEntity emailEntity = contactEmailRepository.findOneByEmail(email);
+		if(emailEntity==null)
+			emailEntity = new ContactEmailEntity(email);
+		emailEntities.add(emailEntity);
+
+		loginEntity.setEmails(emailEntities);
+		List<LoginEntity> loginEntityList = new ArrayList<>();
+		loginEntityList.add(loginEntity);
+		emailEntity.setLoginEntityList(loginEntityList);
+
+		loginRepository.save(loginEntity);
 	}
 
 	@RequestMapping(value="contact_us")
