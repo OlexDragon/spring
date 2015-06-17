@@ -181,6 +181,29 @@
 					href="#"
 					th:class="${ #lists.contains(availableLetters, ch ) ? null : 'empty' }"
 					th:text="${ch}">a</a>
+				<script type="text/javascript">/*[-
+
+			       Function for <div id="abc">...</div>
+
+			-]*/$('#abc a').on('click',
+						function(e) {
+							e.preventDefault();
+							if($(this).hasClass('empty')){
+								return false;
+							}
+							setBgColor();
+							$('#categories').empty();
+							if($(this).hasClass('active')){
+								$(this).removeAttr('class');
+								$('#categories').removeClass('navbar-default')
+								return false;
+							}
+							$('#abc .active').removeAttr('class');
+							$(this).addClass('active');
+							$('#categories').load('/search/categories/' + this.text);
+							return false;
+					});
+				</script>
 		</th:block>
 	</div>
 		<script type="text/javascript">
@@ -474,27 +497,6 @@ $(function(){
 </div>
 </th:block>
 <script type="text/javascript" th:inline="javascript">/*<![CDATA[*//*[-
-
-       Function for <div id="abc">...</div>
-
--]*/$('#abc a').on('click',
-			function(e) {
-				e.preventDefault();
-				if($(this).hasClass('empty')){
-					return false;
-				}
-				setBgColor();
-				$('#categories').empty();
-				if($(this).hasClass('active')){
-					$(this).removeAttr('class');
-					$('#categories').removeClass('navbar-default')
-					return false;
-				}
-				$('#abc .active').removeAttr('class');
-				$(this).addClass('active');
-				$('#categories').load('/search/categories/' + this.text);
-				return false;
-		});/*[-
 
 		//On Search Submit
 
