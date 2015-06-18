@@ -1,4 +1,4 @@
-package jk.web.repositories.user;
+package jk.web.entities.user.repositories;
 
 import jk.web.entities.user.UserEntity;
 
@@ -11,8 +11,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 	@Query("SELECT count(l.id)>0 FROM login l WHERE l.username = :username")
 	public boolean exists(@Param("username") String username);
 
-	@Query("SELECT u FROM user u JOIN u.loginEntity l LEFT JOIN l.emails e WHERE l.username = :username")
-	public UserEntity findByUsername(@Param("username") String username);
+	public UserEntity findOneByLoginEntityUsername(String username);
 
 	@Query("SELECT u FROM user u JOIN u.loginEntity l LEFT JOIN l.emails e WITH e.email = :eMail")
 	public UserEntity findByEMail(@Param("eMail") String eMail);

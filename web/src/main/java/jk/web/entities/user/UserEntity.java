@@ -44,6 +44,7 @@ public class UserEntity implements Serializable {
     public enum ActivityType{
     	NEW_USER
     }
+
     @Transient
     private final Logger logger = LogManager.getLogger();
 
