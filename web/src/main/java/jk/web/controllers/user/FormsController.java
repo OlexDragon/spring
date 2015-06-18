@@ -11,7 +11,6 @@ import jk.web.HomeController;
 import jk.web.beans.view.SignUpView;
 import jk.web.controllers.management.NewMessageInformer;
 import jk.web.entities.AddressEntity;
-import jk.web.entities.BusinessEntity;
 import jk.web.entities.ContactEmailEntity;
 import jk.web.entities.ContactEmailEntity.EmailStatus;
 import jk.web.entities.ContactUsEntity;
@@ -19,12 +18,16 @@ import jk.web.entities.ContactUsEntity.ContactUsStatus;
 import jk.web.entities.ReferenceNumberEntity;
 import jk.web.entities.TelephonEntity;
 import jk.web.entities.UrlEntity;
+import jk.web.entities.business.BusinessEntity;
+import jk.web.entities.business.BusinessTelephonEntity;
+import jk.web.entities.business.BusinessUrlEntity;
 import jk.web.entities.repositories.BusinessRepository;
-import jk.web.entities.repositories.ContactEmailRepository;
 import jk.web.entities.repositories.ContactUsRepository;
 import jk.web.entities.repositories.ReferenceNumberRepository;
+import jk.web.entities.repositories.UserContactEmailRepository;
 import jk.web.entities.user.LoginEntity;
 import jk.web.entities.user.TitleEntity;
+import jk.web.entities.user.UserContactEmailEntity;
 import jk.web.entities.user.repositories.LoginRepository;
 import jk.web.filters.Statistic;
 import jk.web.repositories.statictic.IpAddressRepository;
@@ -320,7 +323,7 @@ public class FormsController {
 	@Autowired
 	private IpAddressRepository ipAddressRepository;
 	@Autowired
-	private ContactEmailRepository contactEmailRepository;
+	private UserContactEmailRepository userContactEmailRepository;
 	@Autowired
 	private ReferenceNumberRepository referenceNumberRepository;
 	@Autowired
@@ -408,12 +411,12 @@ public class FormsController {
 	private void signUp(SignUpView signUpView) {
 
 		LoginEntity loginEntity = new LoginEntity(signUpView.getUsername(), passwordEncoder.encode(signUpView.getPassword()));
-		List<ContactEmailEntity> emailEntities = new ArrayList<>();
+		List<UserContactEmailEntity> emailEntities = new ArrayList<>();
 
 		String email = signUpView.getEmail();
-		ContactEmailEntity emailEntity = contactEmailRepository.findOneByEmail(email);
+		UserContactEmailEntity emailEntity = userContactEmailRepository.findOneByEmail(email);
 		if(emailEntity==null)
-			emailEntity = new ContactEmailEntity(email);
+			emailEntity = new UserContactEmailEntity(email);
 		emailEntities.add(emailEntity);
 
 		loginEntity.setEmails(emailEntities);
@@ -442,9 +445,9 @@ public class FormsController {
 	}
 
 	private void contactUs(ContactUsForm contactUsForm, HttpServletRequest request) {
-		ContactEmailEntity emailEntity = contactEmailRepository.findOneByEmail(contactUsForm.getEmail());
+		ContactEmailEntity emailEntity = userContactEmailRepository.findOneByEmail(contactUsForm.getEmail());
 		if(emailEntity==null)
-			emailEntity = contactEmailRepository.save(new ContactEmailEntity(contactUsForm.getEmail(), EmailStatus.TO_CONTACT));
+			emailEntity = userContactEmailRepository.save(new UserContactEmailEntity(contactUsForm.getEmail(), EmailStatus.TO_CONTACT));
 
 		ReferenceNumberEntity referenceNumberEntity = referenceNumberRepository.findOneByReferenceNumber(contactUsForm.getReferenceNumber());
 		if(referenceNumberEntity==null)
@@ -501,7 +504,7 @@ public class FormsController {
 	}
 
 	private boolean addUrlEntity(AddSiteForm addSiteForm, BusinessEntity be) {
-		List<UrlEntity> uel = be.getUrlEntityList();
+		List<BusinessUrlEntity> uel = be.getUrlEntityList();
 
 		if(uel==null)
 			be.setUrlEntityList(uel = new ArrayList<>());
@@ -517,13 +520,13 @@ public class FormsController {
 		}
 
 		if(createNew)
-			uel.add(new UrlEntity(url));
+			uel.add(new BusinessUrlEntity(url));
 
 		return createNew;
 	}
 
 	private boolean addTelephonEntity(AddSiteForm addSiteForm, BusinessEntity be) {
-		List<TelephonEntity> tel = be.getTelephonEntityList();
+		List<BusinessTelephonEntity> tel = be.getTelephonEntityList();
 
 		if(tel==null)
 			be.setTelephonEntityList(tel = new ArrayList<>());
@@ -539,7 +542,7 @@ public class FormsController {
 		}
 
 		if(createNew)
-			tel.add(new TelephonEntity(phon));
+			tel.add(new BusinessTelephonEntity(phon));
 
 		return createNew;
 	}

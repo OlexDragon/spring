@@ -6,7 +6,6 @@
 package jk.web.entities;
 
 import java.io.Serializable;
-import java.util.List;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -16,7 +15,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -68,9 +66,6 @@ public class TelephonEntity implements Serializable {
     @Column(name = "telephon_status")
     private TelephonStatus telephonStatus = TelephonStatus.ACTIVE;
 
-    @ManyToMany(mappedBy = "telephonEntityList")
-    private List<BusinessEntity> businessEntityList;
-
     public TelephonEntity() {
     }
 
@@ -114,14 +109,6 @@ public class TelephonEntity implements Serializable {
         this.telephonStatus = telephonStatus;
     }
 
-    public List<BusinessEntity> getBusinessEntityList() {
-        return businessEntityList;
-    }
-
-    public void setBusinessEntityList(List<BusinessEntity> businessEntityList) {
-        this.businessEntityList = businessEntityList;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -148,5 +135,4 @@ public class TelephonEntity implements Serializable {
 				+ telephon + ", telephonType=" + telephonType
 				+ ", telephonStatus=" + telephonStatus + "]";
 	}
-    
 }

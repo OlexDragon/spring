@@ -25,6 +25,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import jk.web.entities.business.BusinessEntity;
+
 /**
  *
  * @author Oleksandr
@@ -34,9 +36,9 @@ import javax.validation.constraints.Size;
 @NamedQueries({
     @NamedQuery(name = "UrlEntity.findAll", query = "SELECT u FROM UrlEntity u")})
 public class UrlEntity implements Serializable {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -6239926424978624933L;
 
-    @Id
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "url_id")
@@ -108,6 +110,14 @@ public class UrlEntity implements Serializable {
         this.businessEntityList = businessEntityList;
     }
 
+    public CountryEntity getUrlCountryOfActivity() {
+        return urlCountryOfActivity;
+    }
+
+    public void setUrlCountryOfActivity(CountryEntity urlCountryOfActivity) {
+        this.urlCountryOfActivity = urlCountryOfActivity;
+    }
+
     @Override
     public int hashCode() {
         return urlId != null ? urlId.hashCode() : 0;
@@ -123,12 +133,4 @@ public class UrlEntity implements Serializable {
 		return "UrlEntity [urlId=" + urlId + ", url=" + url + ", urlStatus="
 				+ urlStatus + "]";
 	}
-
-    public CountryEntity getUrlCountryOfActivity() {
-        return urlCountryOfActivity;
-    }
-
-    public void setUrlCountryOfActivity(CountryEntity urlCountryOfActivity) {
-        this.urlCountryOfActivity = urlCountryOfActivity;
-    }
 }

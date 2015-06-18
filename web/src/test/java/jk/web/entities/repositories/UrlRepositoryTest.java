@@ -1,8 +1,10 @@
 package jk.web.entities.repositories;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import jk.web.TestHomeController;
 import jk.web.entities.UrlEntity;
+import jk.web.entities.business.BusinessUrlEntity;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,9 +22,9 @@ public class UrlRepositoryTest {
 
 	private final static Logger logger = LogManager.getLogger();
 
-	public static final UrlEntity urlEntity;
+	public static final BusinessUrlEntity urlEntity;
 	static{
-		urlEntity = new UrlEntity();
+		urlEntity = new BusinessUrlEntity();
 		urlEntity.setUrl(URL);
 	}
 
