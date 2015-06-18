@@ -17,9 +17,9 @@ import jk.web.entities.user.LoginEntity;
 import jk.web.entities.user.TitleEntity;
 import jk.web.entities.user.UserEntity;
 import jk.web.entities.user.WorkplaceEntity;
+import jk.web.entities.user.repositories.UserRepository;
 import jk.web.entities.user.social.SocialEntity;
 import jk.web.repositories.user.TitleRepository;
-import jk.web.repositories.user.UserRepository;
 import jk.web.user.Address;
 import jk.web.user.Address.AddressType;
 import jk.web.user.User.Gender;
@@ -59,7 +59,7 @@ public class UserWorker extends LoginWorker{
 	public UserEntity getUserEntity(String username){
 		logger.entry(username);
 		if(userEntity==null || !userEntity.getLoginEntity().getUsername().equals(username)){
-			userEntity = userRepository.findByUsername(username);
+			userEntity = userRepository.findOneByLoginEntityUsername(username);
 			if(userEntity==null){
 				LoginEntity loginEntity = getLoginEntity(username);
 				if(loginEntity!=null){
@@ -207,7 +207,7 @@ public class UserWorker extends LoginWorker{
 		logger.trace("\n\t{}\n\t{}", username, userEntity);
 
 		if(userEntity==null || userEntity.getLoginEntity()==null || userEntity.getLoginEntity().getUsername()==null || !userEntity.getLoginEntity().getUsername().equals(username)){
-			setUserEntity(userRepository.findByUsername(username));
+			setUserEntity(userRepository.findOneByLoginEntityUsername(username));
 			logger.trace("\n\tuserEntity has been set from repository. userEntity={}", userEntity);
 		}
 

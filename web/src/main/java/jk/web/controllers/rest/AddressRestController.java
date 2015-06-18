@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/rest")
-public class AddressRest {
+public class AddressRestController {
 
 	private final Logger logger = LogManager.getLogger();
 

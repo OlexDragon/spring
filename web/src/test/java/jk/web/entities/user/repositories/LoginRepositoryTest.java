@@ -1,6 +1,6 @@
 package jk.web.entities.user.repositories;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 import jk.web.TestHomeController;
 import jk.web.entities.user.LoginEntity;
 
