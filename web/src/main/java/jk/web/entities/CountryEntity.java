@@ -40,9 +40,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @NamedQueries({
     @NamedQuery(name = "CountryEntity.findAll", query = "SELECT c FROM CountryEntity c")})
 public class CountryEntity implements Serializable {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 5828805439162856773L;
 
-    @Id
+	@Id
     @Basic(optional = false)
     @NotNull
     @Column(name = "geonames_id")

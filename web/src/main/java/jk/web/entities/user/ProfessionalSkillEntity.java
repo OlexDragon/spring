@@ -7,12 +7,15 @@
 package jk.web.entities.user;
 
 import java.io.Serializable;
+
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author Oleksandr Potomkin
@@ -28,6 +31,7 @@ public class ProfessionalSkillEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @EmbeddedId
+    @JsonProperty("keys")
     protected ProfessionalSkillsPK professionalSkillsPK;
 
     public ProfessionalSkillEntity() {

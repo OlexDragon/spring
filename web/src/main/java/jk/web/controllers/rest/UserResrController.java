@@ -8,6 +8,7 @@ import jk.web.entities.user.LoginEntity;
 import jk.web.entities.user.UserEntity;
 import jk.web.entities.user.repositories.LoginRepository;
 import jk.web.entities.user.repositories.UserRepository;
+import jk.web.user.User.Gender;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,7 +28,7 @@ public class UserResrController {
 	private LoginRepository loginRepository;
 
 	@RequestMapping(produces="application/json;charset=UTF-8")
-	private UserEntity gerUserEntity(Principal principal){
+	public UserEntity gerUserEntity(Principal principal){
 		logger.entry(principal);
 
 		UserEntity userEntity;
@@ -48,5 +49,15 @@ public class UserResrController {
 		}
 		logger.trace("\n\tuserEntity: ", userEntity);
 		return userEntity;
+	}
+
+	@RequestMapping(value="genders", produces="application/json;charset=UTF-8")
+	public Gender[] getGenders(){
+		return Gender.values();
+	}
+
+	@RequestMapping(value="prof-skills", produces="application/json;charset=UTF-8")
+	public Gender[] getProfessionalSkillEntity(){
+		return Gender.values();
 	}
 }

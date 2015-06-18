@@ -3,7 +3,6 @@ package jk.web.entities;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -15,7 +14,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -66,9 +64,6 @@ public class AddressEntity implements Serializable {
     @JoinColumn(name = "country_code", referencedColumnName = "country_code", insertable=false, updatable=false)
     @ManyToOne(fetch=FetchType.EAGER, optional=true)
     private CountryEntity countryEntity;
-
-    @ManyToMany(mappedBy = "addressEntityList")
-    private List<BusinessEntity> businessEntityList;
 
     @Column(name = "address_status")
     @Enumerated(EnumType.ORDINAL)
@@ -168,14 +163,6 @@ public class AddressEntity implements Serializable {
 
     public void setStatus(AddressStatus status) {
         this.status = status;
-    }
-
-    public List<BusinessEntity> getBusinessEntityList() {
-        return businessEntityList;
-    }
-
-    public void setBusinessEntityList(List<BusinessEntity> businessEntityList) {
-        this.businessEntityList = businessEntityList;
     }
 
 	@Override

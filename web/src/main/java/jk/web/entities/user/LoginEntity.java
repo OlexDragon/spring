@@ -9,16 +9,18 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
-
-import jk.web.entities.ContactEmailEntity;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.springframework.security.core.GrantedAuthority;
 
@@ -121,7 +123,13 @@ public class LoginEntity implements Serializable{
 
 
     @ManyToMany(mappedBy = "loginEntityList", cascade=CascadeType.ALL)
-    private List<ContactEmailEntity> emails;
+    private List<UserContactEmailEntity> emails;
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "loginEntity", fetch = FetchType.LAZY)
+    private UserEntity userEntity;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "loginEntity", fetch = FetchType.LAZY)
+    private List<UserHasContactEmails> userHasContactEmailsCollection;
 
     public LoginEntity() {
 	}
@@ -183,11 +191,11 @@ public class LoginEntity implements Serializable{
         this.lastAccessed = lastAccessed;
     }
 
-	public List<ContactEmailEntity> getEmails() {
+	public List<UserContactEmailEntity> getEmails() {
 		return emails;
 	}
 
-	public void setEmails(List<ContactEmailEntity> contactEmailEntityList) {
+	public void setEmails(List<UserContactEmailEntity> contactEmailEntityList) {
 		this.emails = contactEmailEntityList;
 	}
 
@@ -199,4 +207,21 @@ public class LoginEntity implements Serializable{
 				+ lastAccessed + ", contactEmailEntityList="
 				+ emails + "]";
 	}
+
+    public UserEntity getUserEntity() {
+        return userEntity;
+    }
+
+    public void setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
+    }
+
+    @XmlTransient
+    public List<UserHasContactEmails> getUserHasContactEmailsCollection() {
+        return userHasContactEmailsCollection;
+    }
+
+    public void setUserHasContactEmailsCollection(List<UserHasContactEmails> userHasContactEmailsCollection) {
+        this.userHasContactEmailsCollection = userHasContactEmailsCollection;
+    }
 }

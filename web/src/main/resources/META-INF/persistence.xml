@@ -46,6 +46,15 @@
     <class>jk.web.entities.TitleEntity</class>
     <class>jk.web.entities.LoginEntity</class>
     <class>jk.web.entities.UserEntity</class>
+    <class>jk.web.entities.UsersHasBusinessEntity</class>
+    <class>jk.web.entities.business.BusinessHasUrls</class>
+    <class>jk.web.entities.business.BusinessHasAddresses</class>
+    <class>jk.web.entities.business.BusinessHasTelephons</class>
+    <class>jk.web.entities.business.BusinessHasContactEmails</class>
+    <class>jk.web.entities.user.UsersHasUrls</class>
+    <class>jk.web.entities.user.UsersHasAddresses</class>
+    <class>jk.web.entities.user.UserHasContactEmails</class>
+    <class>jk.web.entities.user.UsersHasTelephons</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/jk?zeroDateTimeBehavior=convertToNull"/>
       <property name="javax.persistence.jdbc.password" value="potomkina"/>

@@ -9,10 +9,12 @@ import java.util.List;
 
 import jk.web.TestHomeController;
 import jk.web.entities.AddressEntity;
-import jk.web.entities.BusinessEntity;
 import jk.web.entities.ContactEmailEntity;
 import jk.web.entities.TelephonEntity;
 import jk.web.entities.UrlEntity;
+import jk.web.entities.business.BusinessEntity;
+import jk.web.entities.business.BusinessTelephonEntity;
+import jk.web.entities.business.BusinessUrlEntity;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,11 +44,11 @@ public class BusinessRepositoryTest {
 		contactEmailEntities.add(ContactEmailRepositoryTest.contactEmailEntity);
 		be.setContactEmailEntityList(contactEmailEntities);
 
-		List<UrlEntity> urlEntities = new ArrayList<>();
+		List<BusinessUrlEntity> urlEntities = new ArrayList<>();
 		urlEntities.add(UrlRepositoryTest.urlEntity);
 		be.setUrlEntityList(urlEntities);
 
-		List<TelephonEntity> telephonEntityList = new ArrayList<>();
+		List<BusinessTelephonEntity> telephonEntityList = new ArrayList<>();
 		telephonEntityList.add(TelephonRepositoryTest.telephonEntity);
 		be.setTelephonEntityList(telephonEntityList);
 

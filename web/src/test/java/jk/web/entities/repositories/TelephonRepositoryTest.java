@@ -1,8 +1,10 @@
 package jk.web.entities.repositories;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import jk.web.TestHomeController;
 import jk.web.entities.TelephonEntity;
+import jk.web.entities.business.BusinessTelephonEntity;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,13 +22,13 @@ public class TelephonRepositoryTest {
 
 	private final static Logger logger = LogManager.getLogger();
 
-	public static final TelephonEntity telephonEntity = new TelephonEntity();
+	public static final BusinessTelephonEntity telephonEntity = new BusinessTelephonEntity();
 	static{
 		telephonEntity.setTelephon(TELEPHON);
 	}
 
 	@Autowired
-	TelephonRepository telephonRepository;
+	BusinessTelephonRepository telephonRepository;
 
 	@Test
 	public void test() {
