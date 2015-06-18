@@ -7,10 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import javax.xml.bind.PropertyException;
-
 import jk.web.entities.AddressEntity;
-import jk.web.entities.BusinessEntity;
 import jk.web.entities.CountryEntity;
 import jk.web.entities.repositories.BusinessRepository;
 import jk.web.entities.user.LoginEntity;
@@ -361,7 +358,6 @@ public class UserWorker extends LoginWorker{
 //
 	public void setTitle(TitleEntity titleEntity) {
 		userEntity.setTitleEntity(titleEntity);
-		userEntity.setTitleID(titleEntity!=null ? titleEntity.getId() : null);
 	}
 
 	public String getPassword(String username) {
@@ -512,15 +508,15 @@ public class UserWorker extends LoginWorker{
 		return addressEntity!=null ? addressEntity.getCountryCode() : null;
 	}
 
-	public void saveBusinessEntity(BusinessEntity businessEntity) throws PropertyException {
-		logger.entry(businessEntity);
-		if(userEntity!=null && businessEntity!=null){
-			BusinessEntity be = userEntity.getBusinessEntity();
-			if(be==null)
-				;//userEntity.setBusinessEntity(bisinessRepository.save(businessEntity.setUserID(userEntity.getId())));
-			else
-				throw new PropertyException("businessEntity for this user olready exist");
-		}else
-			throw new NullPointerException("'userEntity' or 'businessEntity' equals null");
-	}
+//	public void saveBusinessEntity(BusinessEntity businessEntity) throws PropertyException {
+//		logger.entry(businessEntity);
+//		if(userEntity!=null && businessEntity!=null){
+//			BusinessEntity be = userEntity.getBusinessEntity();
+//			if(be==null)
+//				;//userEntity.setBusinessEntity(bisinessRepository.save(businessEntity.setUserID(userEntity.getId())));
+//			else
+//				throw new PropertyException("businessEntity for this user olready exist");
+//		}else
+//			throw new NullPointerException("'userEntity' or 'businessEntity' equals null");
+//	}
 }

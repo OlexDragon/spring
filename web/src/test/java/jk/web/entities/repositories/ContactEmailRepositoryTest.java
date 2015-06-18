@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import jk.web.TestHomeController;
 import jk.web.entities.ContactEmailEntity;
+import jk.web.entities.user.UserContactEmailEntity;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,16 +20,16 @@ public class ContactEmailRepositoryTest {
 
 	public static final String EMAIL = "email";
 
-	public static final ContactEmailEntity contactEmailEntity;
+	public static final UserContactEmailEntity contactEmailEntity;
 	static{
-		contactEmailEntity = new ContactEmailEntity();
+		contactEmailEntity = new UserContactEmailEntity();
 		contactEmailEntity.setEmail(EMAIL);
 		
 	}
 	private final static Logger logger = LogManager.getLogger();
 
 	@Autowired
-	ContactEmailRepository contactEmailRepository;
+	UserContactEmailRepository contactEmailRepository;
 
 	@Test
 	public void test() {
