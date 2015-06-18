@@ -1,6 +1,7 @@
 package jk.web.entities.repositories;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import jk.web.TestHomeController;
 import jk.web.entities.ContactEmailEntity;
 
