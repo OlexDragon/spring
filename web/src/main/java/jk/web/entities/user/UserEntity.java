@@ -61,12 +61,12 @@ public class UserEntity implements Serializable {
 
     @Size(min = 1, max = 164)
     @Column(name = "first_name", length = 164)
-    @JsonProperty("first-name")
+    @JsonProperty("first_name")
     private String firstName;
 
     @Size(min = 1, max = 164)
     @Column(name = "last_name", length = 164)
-    @JsonProperty("last-name")
+    @JsonProperty("last_name")
     private String lastName;
 
     @Column(name = "birthday")
@@ -77,7 +77,7 @@ public class UserEntity implements Serializable {
     @JoinColumn(name = "login_id")
     @NotFound(action=NotFoundAction.IGNORE)
     @Cascade(value=CascadeType.ALL)
-    @JsonProperty("professional-skills")
+    @JsonProperty("professional_skills")
     private List<ProfessionalSkillEntity> professionalSkills;
 
     @OneToMany(fetch=FetchType.EAGER)

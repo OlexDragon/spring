@@ -70,7 +70,7 @@ public class WorkplacesPK implements Serializable {
 
     @Override
     public String toString() {
-        return "jk.web.user.entities.WorkplacesPK[ loginsloginID=" + loginID + ", workplace=" + workplace + " ]";
+        return "jk.web.user.entities.WorkplacesPK[ loginID=" + loginID + ", workplace=" + workplace + " ]";
     }
 
 }

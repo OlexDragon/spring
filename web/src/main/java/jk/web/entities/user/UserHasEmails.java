@@ -8,6 +8,7 @@ package jk.web.entities.user;
 import java.io.Serializable;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -16,14 +17,12 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import jk.web.entities.ContactEmailEntity;
-import jk.web.entities.ContactEmailEntity.EmailStatus;
+import jk.web.entities.EmailEntity;
+import jk.web.entities.EmailEntity.EmailStatus;
 
 /**
  *
@@ -32,16 +31,11 @@ import jk.web.entities.ContactEmailEntity.EmailStatus;
 @Entity
 @Table(name = "user_has_contact_emails", catalog = "jk", schema = "")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "UserHasContactEmails.findAll", query = "SELECT u FROM UserHasContactEmails u"),
-    @NamedQuery(name = "UserHasContactEmails.findByLoginId", query = "SELECT u FROM UserHasContactEmails u WHERE u.userHasContactEmailsPK.loginId = :loginId"),
-    @NamedQuery(name = "UserHasContactEmails.findByEmailId", query = "SELECT u FROM UserHasContactEmails u WHERE u.userHasContactEmailsPK.emailId = :emailId"),
-    @NamedQuery(name = "UserHasContactEmails.findByEmailStatus", query = "SELECT u FROM UserHasContactEmails u WHERE u.emailStatus = :emailStatus")})
-public class UserHasContactEmails implements Serializable {
+public class UserHasEmails implements Serializable {
 	private static final long serialVersionUID = -5638482750718458640L;
 
 	@EmbeddedId
-    protected UserHasContactEmailsPK userHasContactEmailsPK;
+    protected UserHasEmailsPK userHasContactEmailsPK;
 
 	@Basic(optional = false)
     @NotNull
@@ -50,34 +44,34 @@ public class UserHasContactEmails implements Serializable {
     private EmailStatus emailStatus = EmailStatus.TO_CONFIRM;
 
 	@JoinColumn(name = "login_id", referencedColumnName = "login_id", nullable = false, insertable = false, updatable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     private LoginEntity loginEntity;
 
 	@JoinColumn(name = "email_id", referencedColumnName = "email_id", nullable = false, insertable = false, updatable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private ContactEmailEntity contactEmailEntity;
+    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+    private UserEmailEntity emailEntity;
 
-    public UserHasContactEmails() {
+    public UserHasEmails() {
     }
 
-    public UserHasContactEmails(UserHasContactEmailsPK userHasContactEmailsPK) {
+    public UserHasEmails(UserHasEmailsPK userHasContactEmailsPK) {
         this.userHasContactEmailsPK = userHasContactEmailsPK;
     }
 
-    public UserHasContactEmails(UserHasContactEmailsPK userHasContactEmailsPK, EmailStatus emailStatus) {
+    public UserHasEmails(UserHasEmailsPK userHasContactEmailsPK, EmailStatus emailStatus) {
         this.userHasContactEmailsPK = userHasContactEmailsPK;
         this.emailStatus = emailStatus;
     }
 
-    public UserHasContactEmails(int loginId, int emailId) {
-        this.userHasContactEmailsPK = new UserHasContactEmailsPK(loginId, emailId);
+    public UserHasEmails(Long loginId, Long emailId) {
+        this.userHasContactEmailsPK = new UserHasEmailsPK(loginId, emailId);
     }
 
-    public UserHasContactEmailsPK getUserHasContactEmailsPK() {
+    public UserHasEmailsPK getUserHasContactEmailsPK() {
         return userHasContactEmailsPK;
     }
 
-    public void setUserHasContactEmailsPK(UserHasContactEmailsPK userHasContactEmailsPK) {
+    public void setUserHasContactEmailsPK(UserHasEmailsPK userHasContactEmailsPK) {
         this.userHasContactEmailsPK = userHasContactEmailsPK;
     }
 
@@ -97,12 +91,12 @@ public class UserHasContactEmails implements Serializable {
         this.loginEntity = loginEntity;
     }
 
-    public ContactEmailEntity getContactEmailEntity() {
-        return contactEmailEntity;
+    public EmailEntity getEmailEntity() {
+        return emailEntity;
     }
 
-    public void setContactEmailEntity(ContactEmailEntity contactEmailEntity) {
-        this.contactEmailEntity = contactEmailEntity;
+    public void setEmailEntity(UserEmailEntity userEmailEntity) {
+        this.emailEntity = userEmailEntity;
     }
 
     @Override
@@ -115,10 +109,10 @@ public class UserHasContactEmails implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof UserHasContactEmails)) {
+        if (!(object instanceof UserHasEmails)) {
             return false;
         }
-        UserHasContactEmails other = (UserHasContactEmails) object;
+        UserHasEmails other = (UserHasEmails) object;
         if ((this.userHasContactEmailsPK == null && other.userHasContactEmailsPK != null) || (this.userHasContactEmailsPK != null && !this.userHasContactEmailsPK.equals(other.userHasContactEmailsPK))) {
             return false;
         }

@@ -18,13 +18,9 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import jk.web.entities.statistic.IpAddressEntity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import jk.web.entities.statistic.IpAddressEntity;
-import jk.web.entities.user.UserEntity;
 
 /**
  *
@@ -34,8 +30,6 @@ import jk.web.entities.user.UserEntity;
 @Table(name = "contact_us", catalog = "jk", schema = "")
 public class ContactUsEntity implements Serializable {
     private static final long serialVersionUID = 1L;
-
-	private static final Logger logger = LogManager.getLogger();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,14 +55,16 @@ public class ContactUsEntity implements Serializable {
     @Column(name = "message")
     private String message;
 
-    @Basic
     @Column(name = "contact_date", insertable=false, updatable=false)
     private Timestamp contactDate;
+
+    @Column(name = "answer_date", insertable=false)
+    private Timestamp answerDate;
 
     @JoinColumn(name = "email_id")
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JsonManagedReference
-    private ContactUsEmailEntity contactEmailEntity;
+    private ContactUsEmailEntity contactUsEmailEntity;
 
     @JoinColumn(name = "ip_address_id")
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
@@ -78,22 +74,14 @@ public class ContactUsEntity implements Serializable {
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private ReferenceNumberEntity referenceNumberEntity;
 
-    @JoinColumn(name = "reference_number_id", referencedColumnName="login_id", insertable=false, updatable=false)
-    @ManyToOne(optional = true, fetch = FetchType.LAZY)
-    private UserEntity userEntity;
-
-    @Basic
-    @Column(name = "answer_date")
-    private Timestamp answerDate;
-
     public enum ContactUsStatus{
     	TO_ANSWER,
     	IN_PROCESS,
     	ANSWERED
     }
-    @Column(name = "contact_status")
+    @Column(name = "contact_status")//
     @Enumerated(EnumType.ORDINAL)
-    private ContactUsStatus contactStatus;
+    private ContactUsStatus contactUsStatus;
 
     public ContactUsEntity() {
     }
@@ -102,14 +90,13 @@ public class ContactUsEntity implements Serializable {
         this.contactUsId = contactUsId;
     }
 
-    public ContactUsEntity(String name, String subject, String message, IpAddressEntity ipAddressEntity, ReferenceNumberEntity referenceNumberEntity, ContactUsEmailEntity contactEmailEntity, ContactUsStatus contactStatus) {
-    	logger.entry(name, subject, message, ipAddressEntity, referenceNumberEntity, contactEmailEntity, contactStatus);
+    public ContactUsEntity(String name, String subject, String message, IpAddressEntity ipAddressEntity, ReferenceNumberEntity referenceNumberEntity, ContactUsEmailEntity contactUsEmailEntity, ContactUsStatus contactStatus) {
         this.name = name;
         this.subject = subject;
         this.message = message;
-        this.contactStatus = contactStatus;
+        this.contactUsStatus = contactStatus;
         this.referenceNumberEntity = referenceNumberEntity;
-        this.contactEmailEntity = contactEmailEntity;
+        this.contactUsEmailEntity = contactUsEmailEntity;
         this.ipAddressEntity = ipAddressEntity;
     }
 
@@ -153,12 +140,12 @@ public class ContactUsEntity implements Serializable {
         this.contactDate = contactDate;
     }
 
-    public ContactUsEmailEntity getContactEmailEntity() {
-        return contactEmailEntity;
+    public ContactUsEmailEntity getContactUsEmailEntity() {
+        return contactUsEmailEntity;
     }
 
-    public void setContactEmailEntity(ContactUsEmailEntity contactEmailEntity) {
-        this.contactEmailEntity = contactEmailEntity;
+    public void setContactUsEmailEntity(ContactUsEmailEntity contactUsEmailEntity) {
+        this.contactUsEmailEntity = contactUsEmailEntity;
     }
 
     public IpAddressEntity getIpAddressEntity() {
@@ -177,20 +164,12 @@ public class ContactUsEntity implements Serializable {
         this.referenceNumberEntity = referenceNumberEntity;
     }
 
-    public ContactUsStatus getContactStatus() {
-        return contactStatus;
+    public ContactUsStatus getContactUsStatus() {
+        return contactUsStatus;
     }
 
-    public void setContactStatus(ContactUsStatus contactUsStatus) {
-        contactStatus = contactUsStatus;
-    }
-
-    public UserEntity getUserEntity() {
-        return userEntity;
-    }
-
-    public void setUserEntityEntity(UserEntity userEntity) {
-        this.userEntity = userEntity;
+    public void setContactUsStatus(ContactUsStatus contactUsStatus) {
+        this.contactUsStatus = contactUsStatus;
     }
 
 	public Timestamp getAnswerDate() {
@@ -203,22 +182,12 @@ public class ContactUsEntity implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (contactUsId != null ? contactUsId.hashCode() : 0);
-        return hash;
+        return contactUsId != null ? contactUsId.hashCode() : 0;
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ContactUsEntity)) {
-            return false;
-        }
-        ContactUsEntity other = (ContactUsEntity) object;
-        if ((this.contactUsId == null && other.contactUsId != null) || (this.contactUsId != null && !this.contactUsId.equals(other.contactUsId))) {
-            return false;
-        }
-        return true;
+        return object instanceof ContactUsEntity ? object.hashCode()==hashCode() : false;
     }
 
     @Override
@@ -229,9 +198,9 @@ public class ContactUsEntity implements Serializable {
 								+ "subject=" + subject + ",\n\t\t"
 										+ "message=" + message + ",\n\t\t"
 												+ "contactDate=" + contactDate + ",\n\t\t"
-														+ "contactEmailEntity=" + contactEmailEntity + ",\n\t\t"
+														+ "contactEmailEntity=" + contactUsEmailEntity + ",\n\t\t"
 																+ "ipAddressEntity=" + ipAddressEntity + ",\n\t\t"
 																		+ "referenceNumberEntity=" + referenceNumberEntity + ",\n\t\t"
-																				+ "contactStatus=" + contactStatus + "]";
+																				+ "contactStatus=" + contactUsStatus + "]";
 	}
 }

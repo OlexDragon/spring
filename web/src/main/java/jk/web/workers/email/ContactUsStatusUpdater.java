@@ -24,14 +24,14 @@ public class ContactUsStatusUpdater implements StatusUpdater {
 
 	@Override
 	public void preUpdateStatus() {
-		contactUsEntity.setContactStatus(statusBefor);
+		contactUsEntity.setContactUsStatus(statusBefor);
 		contactUsEntity.setAnswerDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
 		contactUsRepository.saveAndFlush(contactUsEntity);
 	}
 
 	@Override
 	public void postUpdateStatus() {
-		contactUsEntity.setContactStatus(statusAfter);
+		contactUsEntity.setContactUsStatus(statusAfter);
 		contactUsEntity.setAnswerDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
 		contactUsRepository.saveAndFlush(contactUsEntity);
 	}

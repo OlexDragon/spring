@@ -11,11 +11,8 @@ import jk.web.HomeController;
 import jk.web.beans.view.SignUpView;
 import jk.web.controllers.management.NewMessageInformer;
 import jk.web.entities.AddressEntity;
-import jk.web.entities.ContactEmailEntity;
-import jk.web.entities.ContactEmailEntity.EmailStatus;
-import jk.web.entities.ContactUsEmailEntity;
-import jk.web.entities.ContactUsEntity;
 import jk.web.entities.ContactUsEntity.ContactUsStatus;
+import jk.web.entities.EmailEntity;
 import jk.web.entities.ReferenceNumberEntity;
 import jk.web.entities.TelephonEntity;
 import jk.web.entities.UrlEntity;
@@ -28,8 +25,13 @@ import jk.web.entities.repositories.ReferenceNumberRepository;
 import jk.web.entities.repositories.UserContactEmailRepository;
 import jk.web.entities.user.LoginEntity;
 import jk.web.entities.user.TitleEntity;
-import jk.web.entities.user.UserContactEmailEntity;
+import jk.web.entities.user.UserContactUsEntity;
+import jk.web.entities.user.UserEmailEntity;
+import jk.web.entities.user.UserHasEmails;
+import jk.web.entities.user.UserHasEmailsPK;
 import jk.web.entities.user.repositories.LoginRepository;
+import jk.web.entities.user.repositories.UserEmailEntityRepository;
+import jk.web.entities.user.repositories.UserHasEmailsRepository;
 import jk.web.filters.Statistic;
 import jk.web.repositories.statictic.IpAddressRepository;
 import jk.web.repositories.user.ActivityRepository;
@@ -383,7 +385,7 @@ public class FormsController {
 
 				if(loginEntity==null){
 
-					loginEntity = loginRepository.findOneByEmailsEmail(email);
+					loginEntity = loginRepository.findOneByHasEmailsEmailEntityEmail(email);
 
 					if(loginEntity==null) {
 
@@ -408,24 +410,33 @@ public class FormsController {
 	}
 
 	@Autowired
+	private UserHasEmailsRepository userHasEmailsRepository;
+	@Autowired
+	private UserEmailEntityRepository userEmailEntityRepository;
+	@Autowired
 	private PasswordEncoder passwordEncoder;
 	private void signUp(SignUpView signUpView) {
 
-		LoginEntity loginEntity = new LoginEntity(signUpView.getUsername(), passwordEncoder.encode(signUpView.getPassword()));
-		List<UserContactEmailEntity> emailEntities = new ArrayList<>();
-
+		//Email
 		String email = signUpView.getEmail();
-		UserContactEmailEntity emailEntity = userContactEmailRepository.findOneByEmail(email);
-		if(emailEntity==null)
-			emailEntity = new UserContactEmailEntity(email);
-		emailEntities.add(emailEntity);
+		UserEmailEntity useEmailEntity = userEmailEntityRepository.findOneByEmail(email);
+		if(useEmailEntity==null)
+			useEmailEntity = userEmailEntityRepository.save(new UserEmailEntity(email));
+		List<UserEmailEntity> emailEntities = new ArrayList<>();
+		emailEntities.add(useEmailEntity);
 
-		loginEntity.setEmails(emailEntities);
+		//Login
+		LoginEntity loginEntity = loginRepository.save(new LoginEntity(signUpView.getUsername(), passwordEncoder.encode(signUpView.getPassword())));
 		List<LoginEntity> loginEntityList = new ArrayList<>();
 		loginEntityList.add(loginEntity);
-		emailEntity.setLoginEntityList(loginEntityList);
 
-		loginRepository.save(loginEntity);
+		//Login and Email
+		UserHasEmails hasEmails = new UserHasEmails(new UserHasEmailsPK(loginEntity.getId(), useEmailEntity.getEmailId()));
+
+		List<UserHasEmails> userHasEmails = new ArrayList<>();
+		userHasEmails.add(hasEmails);
+
+		userHasEmailsRepository.save(hasEmails);
 	}
 
 	@RequestMapping(value="contact_us")
@@ -446,23 +457,22 @@ public class FormsController {
 	}
 
 	private void contactUs(ContactUsForm contactUsForm, HttpServletRequest request) {
-
-		ContactUsEmailEntity emailEntity = userContactEmailRepository.findOneByEmail(contactUsForm.getEmail());
+		UserEmailEntity emailEntity = userContactEmailRepository.findOneByEmail(contactUsForm.getEmail());
 		if(emailEntity==null)
-			emailEntity = new ContactUsEmailEntity(contactUsForm.getEmail());
+			emailEntity = userContactEmailRepository.save(new UserEmailEntity(contactUsForm.getEmail()));
 
 		ReferenceNumberEntity referenceNumberEntity = referenceNumberRepository.findOneByReferenceNumber(contactUsForm.getReferenceNumber());
 		if(referenceNumberEntity==null)
-			referenceNumberEntity = new ReferenceNumberEntity(contactUsForm.getReferenceNumber());
+			referenceNumberEntity = referenceNumberRepository.save(new ReferenceNumberEntity(contactUsForm.getReferenceNumber()));
 
-		ContactUsEntity entity = new ContactUsEntity(		contactUsForm.getName(),
+		contactUsRepository.save(	new UserContactUsEntity(
+															contactUsForm.getName(),
 															contactUsForm.getSubject(),
 															contactUsForm.getMessage(),
 															ipAddressRepository.findOneByIpAddress(Statistic.getIpAddress(request)),
 															referenceNumberEntity,
 															emailEntity,
-															ContactUsStatus.TO_ANSWER);
-		contactUsRepository.save(entity);
+															ContactUsStatus.TO_ANSWER));
 
 		newMessageInformer.notifyAll();
 //		eMailWorker.sendEMail(emaleFrom, "New ContactUs Message", "http://www.fashionprofinder.com/management/messages", null);
@@ -550,7 +560,7 @@ public class FormsController {
 	}
 
 	private boolean addEmailEntity(AddSiteForm addSiteForm, BusinessEntity be) {
-		List<ContactEmailEntity> ceel = be.getContactEmailEntityList();
+		List<EmailEntity> ceel = be.getContactEmailEntityList();
 
 		if(ceel==null)
 			be.setContactEmailEntityList(ceel = new ArrayList<>());
@@ -558,7 +568,7 @@ public class FormsController {
 		String email = addSiteForm.getEmail();
 
 		boolean createNew = true;
-		for(ContactEmailEntity cee:ceel){
+		for(EmailEntity cee:ceel){
 			if(cee.getEmail().equalsIgnoreCase(email)){
 				createNew = false;
 				break;
@@ -566,7 +576,7 @@ public class FormsController {
 		}
 
 		if(createNew)
-			ceel.add(new ContactEmailEntity(email));
+			ceel.add(new EmailEntity(email));
 
 		return createNew;
 	}

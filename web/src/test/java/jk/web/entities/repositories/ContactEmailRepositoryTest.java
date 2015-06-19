@@ -3,8 +3,8 @@ package jk.web.entities.repositories;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import jk.web.TestHomeController;
-import jk.web.entities.ContactEmailEntity;
-import jk.web.entities.user.UserContactEmailEntity;
+import jk.web.entities.EmailEntity;
+import jk.web.entities.user.UserEmailEntity;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,9 +20,9 @@ public class ContactEmailRepositoryTest {
 
 	public static final String EMAIL = "email";
 
-	public static final UserContactEmailEntity contactEmailEntity;
+	public static final UserEmailEntity contactEmailEntity;
 	static{
-		contactEmailEntity = new UserContactEmailEntity();
+		contactEmailEntity = new UserEmailEntity();
 		contactEmailEntity.setEmail(EMAIL);
 		
 	}
@@ -33,7 +33,7 @@ public class ContactEmailRepositoryTest {
 
 	@Test
 	public void test() {
-		ContactEmailEntity cee = contactEmailRepository.save(contactEmailEntity);
+		EmailEntity cee = contactEmailRepository.save(contactEmailEntity);
 		logger.trace(cee);
 		assertNotNull(cee);
 

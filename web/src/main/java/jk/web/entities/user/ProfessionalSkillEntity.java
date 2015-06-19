@@ -35,8 +35,8 @@ public class ProfessionalSkillEntity implements Serializable {
         this.professionalSkillsPK = professionalSkillsPK;
     }
 
-    public ProfessionalSkillEntity(Long loginsloginID, String professionalSkillscol) {
-        this.professionalSkillsPK = new ProfessionalSkillsPK(loginsloginID, professionalSkillscol);
+    public ProfessionalSkillEntity(Long loginID, String professionalSkillscol) {
+        this.professionalSkillsPK = new ProfessionalSkillsPK(loginID, professionalSkillscol);
     }
 
     public ProfessionalSkillsPK getProfessionalSkillsPK() {

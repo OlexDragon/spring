@@ -3,24 +3,28 @@ package jk.web.entities;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-public class ContactUsEmailEntity extends ContactEmailEntity{
+@Entity
+@Table(name = "contact_emails", catalog = "jk", schema = "")
+public class ContactUsEmailEntity extends EmailEntity{
 	private static final long serialVersionUID = -8327593949637569580L;
 
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "contactEmailEntity", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "contactUsEmailEntity", fetch = FetchType.EAGER)
     @JsonBackReference
-    private List<ContactUsEntity> contactUsList;
+    private List<ContactUsEntity> contactUsEntityList;
 
-    public List<ContactUsEntity> getContactUsList() {
-        return contactUsList;
+    public List<ContactUsEntity> getContactUsEntityList() {
+        return contactUsEntityList;
     }
 
-    public void setContactUsList(List<ContactUsEntity> contactUsList) {
-        this.contactUsList = contactUsList;
+    public void setContactUsEntityList(List<ContactUsEntity> contactUsList) {
+        this.contactUsEntityList = contactUsList;
     }
 }

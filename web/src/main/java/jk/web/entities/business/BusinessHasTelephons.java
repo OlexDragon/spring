@@ -14,8 +14,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -27,11 +25,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "business_has_telephons", catalog = "jk", schema = "")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "BusinessHasTelephons.findAll", query = "SELECT b FROM BusinessHasTelephons b"),
-    @NamedQuery(name = "BusinessHasTelephons.findByBusinessId", query = "SELECT b FROM BusinessHasTelephons b WHERE b.businessHasTelephonsPK.businessId = :businessId"),
-    @NamedQuery(name = "BusinessHasTelephons.findByTelephonId", query = "SELECT b FROM BusinessHasTelephons b WHERE b.businessHasTelephonsPK.telephonId = :telephonId"),
-    @NamedQuery(name = "BusinessHasTelephons.findByTelephonStatus", query = "SELECT b FROM BusinessHasTelephons b WHERE b.telephonStatus = :telephonStatus")})
 public class BusinessHasTelephons implements Serializable {
 	private static final long serialVersionUID = 7083916420442772568L;
 

@@ -32,10 +32,6 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "request_urls")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "RequestUrlEntity.findAll", query = "SELECT r FROM RequestUrlEntity r"),
-    @NamedQuery(name = "RequestUrlEntity.findByRequestUrlId", query = "SELECT r FROM RequestUrlEntity r WHERE r.requestUrlId = :requestUrlId"),
-    @NamedQuery(name = "RequestUrlEntity.findByRequestUrl", query = "SELECT r FROM RequestUrlEntity r WHERE r.requestUrl = :requestUrl")})
 public class RequestUrlEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 

@@ -22,11 +22,18 @@ public class LoginRepositoryTest {
 	LoginRepository loginRepository;
 
 	@Test
-	public void test() {
+	public void findById() {
 		LoginEntity loginEntity = loginRepository.findOne(1l);
 		logger.trace(loginEntity);
 
 		assertNotNull(loginEntity);
 	}
 
+	@Test
+	public void findByUserName() {
+		LoginEntity loginEntity = loginRepository.findOneByUsername("AlexDragon");
+		logger.trace(loginEntity);
+
+		assertNotNull(loginEntity);
+	}
 }

@@ -9,5 +9,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ContactUsRepository extends JpaRepository<ContactUsEntity, Long> {
 
-	public List<ContactUsEntity> findByContactStatus(ContactUsStatus toContact);
+	public List<ContactUsEntity> findByContactUsStatus(ContactUsStatus contactUsStatus);
 }

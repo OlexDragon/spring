@@ -22,8 +22,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import jk.web.entities.ContactEmailEntity;
-import jk.web.entities.ContactEmailEntity.EmailStatus;
+import jk.web.entities.EmailEntity;
+import jk.web.entities.EmailEntity.EmailStatus;
 
 /**
  *
@@ -42,6 +42,7 @@ public class BusinessHasContactEmails implements Serializable {
 
     @EmbeddedId
     protected BusinessHasContactEmailsPK businessHasContactEmailsPK;
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "email_status", nullable = false)
@@ -50,7 +51,7 @@ public class BusinessHasContactEmails implements Serializable {
 
     @JoinColumn(name = "contact_emails_email_id", referencedColumnName = "email_id", nullable = false, insertable = false, updatable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private ContactEmailEntity contactEmailEntity;
+    private EmailEntity contactEmailEntity;
 
     @JoinColumn(name = "business_business_id", referencedColumnName = "business_id", nullable = false, insertable = false, updatable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
@@ -88,11 +89,11 @@ public class BusinessHasContactEmails implements Serializable {
         this.emailStatus = emailStatus;
     }
 
-    public ContactEmailEntity getContactEmailEntity() {
+    public EmailEntity getContactEmailEntity() {
         return contactEmailEntity;
     }
 
-    public void setContactEmailEntity(ContactEmailEntity contactEmailEntity) {
+    public void setContactEmailEntity(EmailEntity contactEmailEntity) {
         this.contactEmailEntity = contactEmailEntity;
     }
 

@@ -9,7 +9,7 @@ import java.util.List;
 
 import jk.web.TestHomeController;
 import jk.web.entities.AddressEntity;
-import jk.web.entities.ContactEmailEntity;
+import jk.web.entities.EmailEntity;
 import jk.web.entities.TelephonEntity;
 import jk.web.entities.UrlEntity;
 import jk.web.entities.business.BusinessEntity;
@@ -40,7 +40,7 @@ public class BusinessRepositoryTest {
 		be.setCompanyName("Test Company Name 1");
 		be.setVatNumber("VAT Number 1");
 
-		List<ContactEmailEntity> contactEmailEntities = new ArrayList<>();
+		List<EmailEntity> contactEmailEntities = new ArrayList<>();
 		contactEmailEntities.add(ContactEmailRepositoryTest.contactEmailEntity);
 		be.setContactEmailEntityList(contactEmailEntities);
 
@@ -95,7 +95,7 @@ public class BusinessRepositoryTest {
 		logger.trace("\n\tcontactEmailEntities:{}", contactEmailEntities);
 		assertNotNull(contactEmailEntities);
 		assertTrue(contactEmailEntities.size()>0);
-		ContactEmailEntity emailEntity = contactEmailEntities.get(0);
+		EmailEntity emailEntity = contactEmailEntities.get(0);
 		assertNotNull(emailEntity.getEmailId());
 		assertEquals(ContactEmailRepositoryTest.EMAIL, emailEntity.getEmail());
 	}
