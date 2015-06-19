@@ -6,10 +6,13 @@
 package jk.web.entities.business;
 
 import java.io.Serializable;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -18,7 +21,9 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
+
 import jk.web.entities.ContactEmailEntity;
+import jk.web.entities.ContactEmailEntity.EmailStatus;
 
 /**
  *
@@ -34,15 +39,19 @@ import jk.web.entities.ContactEmailEntity;
     @NamedQuery(name = "BusinessHasContactEmails.findByEmailStatus", query = "SELECT b FROM BusinessHasContactEmails b WHERE b.emailStatus = :emailStatus")})
 public class BusinessHasContactEmails implements Serializable {
     private static final long serialVersionUID = 1L;
+
     @EmbeddedId
     protected BusinessHasContactEmailsPK businessHasContactEmailsPK;
     @Basic(optional = false)
     @NotNull
     @Column(name = "email_status", nullable = false)
-    private int emailStatus;
+    @Enumerated(EnumType.ORDINAL)
+    private EmailStatus emailStatus = EmailStatus.TO_CONFIRM;
+
     @JoinColumn(name = "contact_emails_email_id", referencedColumnName = "email_id", nullable = false, insertable = false, updatable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private ContactEmailEntity contactEmailEntity;
+
     @JoinColumn(name = "business_business_id", referencedColumnName = "business_id", nullable = false, insertable = false, updatable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private BusinessEntity businessEntity;
@@ -54,7 +63,7 @@ public class BusinessHasContactEmails implements Serializable {
         this.businessHasContactEmailsPK = businessHasContactEmailsPK;
     }
 
-    public BusinessHasContactEmails(BusinessHasContactEmailsPK businessHasContactEmailsPK, int emailStatus) {
+    public BusinessHasContactEmails(BusinessHasContactEmailsPK businessHasContactEmailsPK, EmailStatus emailStatus) {
         this.businessHasContactEmailsPK = businessHasContactEmailsPK;
         this.emailStatus = emailStatus;
     }
@@ -71,11 +80,11 @@ public class BusinessHasContactEmails implements Serializable {
         this.businessHasContactEmailsPK = businessHasContactEmailsPK;
     }
 
-    public int getEmailStatus() {
+    public EmailStatus getEmailStatus() {
         return emailStatus;
     }
 
-    public void setEmailStatus(int emailStatus) {
+    public void setEmailStatus(EmailStatus emailStatus) {
         this.emailStatus = emailStatus;
     }
 

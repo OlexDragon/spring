@@ -10,8 +10,6 @@ import java.io.Serializable;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -23,10 +21,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Entity
 @Table(name = "professional_skills")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "ProfessionalSkillEntity.findAll", query = "SELECT p FROM ProfessionalSkillEntity p"),
-    @NamedQuery(name = "ProfessionalSkillEntity.findByLoginsloginID", query = "SELECT p FROM ProfessionalSkillEntity p WHERE p.professionalSkillsPK.loginsloginID = :loginsloginID"),
-    @NamedQuery(name = "ProfessionalSkillEntity.findByProfessionalSkill", query = "SELECT p FROM ProfessionalSkillEntity p WHERE p.professionalSkillsPK.professionalSkill = :professionalSkill")})
 public class ProfessionalSkillEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 

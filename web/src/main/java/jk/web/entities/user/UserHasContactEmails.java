@@ -6,10 +6,13 @@
 package jk.web.entities.user;
 
 import java.io.Serializable;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -18,7 +21,9 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
+
 import jk.web.entities.ContactEmailEntity;
+import jk.web.entities.ContactEmailEntity.EmailStatus;
 
 /**
  *
@@ -33,17 +38,22 @@ import jk.web.entities.ContactEmailEntity;
     @NamedQuery(name = "UserHasContactEmails.findByEmailId", query = "SELECT u FROM UserHasContactEmails u WHERE u.userHasContactEmailsPK.emailId = :emailId"),
     @NamedQuery(name = "UserHasContactEmails.findByEmailStatus", query = "SELECT u FROM UserHasContactEmails u WHERE u.emailStatus = :emailStatus")})
 public class UserHasContactEmails implements Serializable {
-    private static final long serialVersionUID = 1L;
-    @EmbeddedId
+	private static final long serialVersionUID = -5638482750718458640L;
+
+	@EmbeddedId
     protected UserHasContactEmailsPK userHasContactEmailsPK;
-    @Basic(optional = false)
+
+	@Basic(optional = false)
     @NotNull
     @Column(name = "email_status", nullable = false)
-    private int emailStatus;
-    @JoinColumn(name = "login_id", referencedColumnName = "login_id", nullable = false, insertable = false, updatable = false)
+    @Enumerated(EnumType.ORDINAL)
+    private EmailStatus emailStatus = EmailStatus.TO_CONFIRM;
+
+	@JoinColumn(name = "login_id", referencedColumnName = "login_id", nullable = false, insertable = false, updatable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private LoginEntity loginEntity;
-    @JoinColumn(name = "email_id", referencedColumnName = "email_id", nullable = false, insertable = false, updatable = false)
+
+	@JoinColumn(name = "email_id", referencedColumnName = "email_id", nullable = false, insertable = false, updatable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private ContactEmailEntity contactEmailEntity;
 
@@ -54,7 +64,7 @@ public class UserHasContactEmails implements Serializable {
         this.userHasContactEmailsPK = userHasContactEmailsPK;
     }
 
-    public UserHasContactEmails(UserHasContactEmailsPK userHasContactEmailsPK, int emailStatus) {
+    public UserHasContactEmails(UserHasContactEmailsPK userHasContactEmailsPK, EmailStatus emailStatus) {
         this.userHasContactEmailsPK = userHasContactEmailsPK;
         this.emailStatus = emailStatus;
     }
@@ -71,11 +81,11 @@ public class UserHasContactEmails implements Serializable {
         this.userHasContactEmailsPK = userHasContactEmailsPK;
     }
 
-    public int getEmailStatus() {
+    public EmailStatus getEmailStatus() {
         return emailStatus;
     }
 
-    public void setEmailStatus(int emailStatus) {
+    public void setEmailStatus(EmailStatus emailStatus) {
         this.emailStatus = emailStatus;
     }
 

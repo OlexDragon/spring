@@ -17,6 +17,8 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 /**
  * @author Oleksandr Potomkin
  */
@@ -44,6 +46,7 @@ public class TitleEntity implements Serializable {
     private String name;
 
     @OneToMany(mappedBy = "titleEntity", fetch = FetchType.LAZY)
+    @JsonBackReference
     private List<UserEntity> userEntityList;
 
     public TitleEntity() {

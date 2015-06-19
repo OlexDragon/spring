@@ -21,6 +21,8 @@ import javax.validation.constraints.Size;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jk.web.entities.statistic.IpAddressEntity;
 import jk.web.entities.user.UserEntity;
 
@@ -65,7 +67,8 @@ public class ContactUsEntity implements Serializable {
 
     @JoinColumn(name = "email_id")
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    private ContactEmailEntity contactEmailEntity;
+    @JsonManagedReference
+    private ContactUsEmailEntity contactEmailEntity;
 
     @JoinColumn(name = "ip_address_id")
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
@@ -99,7 +102,7 @@ public class ContactUsEntity implements Serializable {
         this.contactUsId = contactUsId;
     }
 
-    public ContactUsEntity(String name, String subject, String message, IpAddressEntity ipAddressEntity, ReferenceNumberEntity referenceNumberEntity, ContactEmailEntity contactEmailEntity, ContactUsStatus contactStatus) {
+    public ContactUsEntity(String name, String subject, String message, IpAddressEntity ipAddressEntity, ReferenceNumberEntity referenceNumberEntity, ContactUsEmailEntity contactEmailEntity, ContactUsStatus contactStatus) {
     	logger.entry(name, subject, message, ipAddressEntity, referenceNumberEntity, contactEmailEntity, contactStatus);
         this.name = name;
         this.subject = subject;
@@ -150,11 +153,11 @@ public class ContactUsEntity implements Serializable {
         this.contactDate = contactDate;
     }
 
-    public ContactEmailEntity getContactEmailEntity() {
+    public ContactUsEmailEntity getContactEmailEntity() {
         return contactEmailEntity;
     }
 
-    public void setContactEmailEntity(ContactEmailEntity contactEmailEntity) {
+    public void setContactEmailEntity(ContactUsEmailEntity contactEmailEntity) {
         this.contactEmailEntity = contactEmailEntity;
     }
 

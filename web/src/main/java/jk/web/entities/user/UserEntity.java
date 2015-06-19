@@ -30,6 +30,7 @@ import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -55,14 +56,17 @@ public class UserEntity implements Serializable {
     @ManyToOne(fetch=FetchType.EAGER, optional=true)
     @JoinColumn(name="title_id", updatable=false, insertable=false, nullable=true)
     @JsonProperty("title")
+    @JsonManagedReference
     private TitleEntity titleEntity;
 
     @Size(min = 1, max = 164)
     @Column(name = "first_name", length = 164)
+    @JsonProperty("first-name")
     private String firstName;
 
     @Size(min = 1, max = 164)
     @Column(name = "last_name", length = 164)
+    @JsonProperty("last-name")
     private String lastName;
 
     @Column(name = "birthday")
@@ -73,6 +77,7 @@ public class UserEntity implements Serializable {
     @JoinColumn(name = "login_id")
     @NotFound(action=NotFoundAction.IGNORE)
     @Cascade(value=CascadeType.ALL)
+    @JsonProperty("professional-skills")
     private List<ProfessionalSkillEntity> professionalSkills;
 
     @OneToMany(fetch=FetchType.EAGER)
@@ -84,21 +89,30 @@ public class UserEntity implements Serializable {
     @OneToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "login_id", nullable = false, insertable = false, updatable = false)
     @JsonProperty("login")
+    @JsonManagedReference
     private LoginEntity loginEntity;
 
     @OneToMany(cascade = javax.persistence.CascadeType.ALL, mappedBy = "userEntity")
+    @JsonProperty("businesses")
+    @JsonManagedReference
     private List<UsersHasBusinessEntity> usersHasBusinessEntityList;
 
     @Column(name = "gender")
     private Gender gender;
 
     @OneToMany(cascade = javax.persistence.CascadeType.ALL, mappedBy = "userEntity", fetch = FetchType.LAZY)
+    @JsonProperty("addresses")
+    @JsonManagedReference
     private List<UserHasAddresses> usersHasAddressesList;
 
     @OneToMany(cascade = javax.persistence.CascadeType.ALL, mappedBy = "userEntity", fetch = FetchType.LAZY)
+    @JsonProperty("telephons")
+    @JsonManagedReference
     private List<UsersHasTelephons> usersHasTelephonsList;
 
     @OneToMany(cascade = javax.persistence.CascadeType.ALL, mappedBy = "userEntity", fetch = FetchType.LAZY)
+    @JsonProperty("urls")
+    @JsonManagedReference
     private List<UserHasUrls> usersHasUrlsList;
 
     public UserEntity() {

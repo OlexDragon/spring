@@ -18,6 +18,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 /**
  *
  * @author Oleksandr
@@ -42,6 +44,7 @@ public class UserHasUrls implements Serializable {
 
     @JoinColumn(name = "urls_url_id", referencedColumnName = "url_id", nullable = false, insertable = false, updatable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JsonBackReference
     private UserfUrlEntity urlEntity;
 
     public UserHasUrls() {
