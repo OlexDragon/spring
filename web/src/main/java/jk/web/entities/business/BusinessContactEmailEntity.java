@@ -17,6 +17,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlTransient;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jk.web.entities.ContactEmailEntity;
 import jk.web.entities.user.LoginEntity;
 import jk.web.entities.user.UserHasContactEmails;
@@ -36,9 +38,6 @@ public class BusinessContactEmailEntity extends ContactEmailEntity{
     @ManyToMany(fetch=FetchType.LAZY)
     private List<LoginEntity> loginEntityList;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "contactEmailEntity", fetch = FetchType.LAZY)
-    private List<UserHasContactEmails> userHasContactEmailsCollection;
-
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "contactEmailEntity", fetch = FetchType.LAZY)
     private List<BusinessHasContactEmails> businessHasContactEmailsList;
 
@@ -49,15 +48,6 @@ public class BusinessContactEmailEntity extends ContactEmailEntity{
 
     public void setBusinessHasContactEmailsList(List<BusinessHasContactEmails> businessHasContactEmailsList) {
         this.businessHasContactEmailsList = businessHasContactEmailsList;
-    }
-
-    @XmlTransient
-    public List<UserHasContactEmails> getUserHasContactEmailsCollection() {
-        return userHasContactEmailsCollection;
-    }
-
-    public void setUserHasContactEmailsCollection(List<UserHasContactEmails> userHasContactEmailsCollection) {
-        this.userHasContactEmailsCollection = userHasContactEmailsCollection;
     }
 
     @XmlTransient

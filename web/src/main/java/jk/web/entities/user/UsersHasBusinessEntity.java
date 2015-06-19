@@ -19,6 +19,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jk.web.entities.business.BusinessEntity;
 
 /**
@@ -49,6 +51,7 @@ public class UsersHasBusinessEntity implements Serializable {
 
     @JoinColumn(name = "login_id", referencedColumnName = "login_id", nullable = false, insertable = false, updatable = false)
     @ManyToOne(optional = false)
+    @JsonBackReference
     private UserEntity userEntity;
 
     @JoinColumn(name = "business_id", referencedColumnName = "business_id", nullable = false, insertable = false, updatable = false)

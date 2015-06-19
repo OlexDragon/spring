@@ -20,6 +20,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 /**
  *
  * @author Oleksandr
@@ -34,15 +36,20 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "UsersHasTelephons.findByTelephonStatus", query = "SELECT u FROM UsersHasTelephons u WHERE u.telephonStatus = :telephonStatus")})
 public class UsersHasTelephons implements Serializable {
     private static final long serialVersionUID = 1L;
+
     @EmbeddedId
     protected UsersHasTelephonsPK usersHasTelephonsPK;
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "telephon_status", nullable = false)
     private int telephonStatus;
+
     @JoinColumn(name = "users_login_id", referencedColumnName = "login_id", nullable = false, insertable = false, updatable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JsonBackReference
     private UserEntity userEntity;
+
     @JoinColumn(name = "telephons_telephon_id", referencedColumnName = "telephon_id", nullable = false, insertable = false, updatable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private UserTelephonEntity telephonEntity;

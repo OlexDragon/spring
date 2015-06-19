@@ -18,6 +18,9 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jk.web.entities.AddressEntity;
 
 /**
@@ -40,10 +43,12 @@ public class UserHasAddresses implements Serializable {
 
     @JoinColumn(name = "users_login_id", referencedColumnName = "login_id", nullable = false, insertable = false, updatable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JsonBackReference
     private UserEntity userEntity;
 
     @JoinColumn(name = "addresses_addsress_id", referencedColumnName = "addsress_id", nullable = false, insertable = false, updatable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private UserAddressEntity addressEntity;
 
     public UserHasAddresses() {
