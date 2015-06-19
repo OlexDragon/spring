@@ -60,11 +60,6 @@ public class TelephonEntity implements Serializable {
     	INACTIVE,
     	ACTIVE
     }
-    @Basic(optional = false)
-    @NotNull
-    @Enumerated(EnumType.ORDINAL)
-    @Column(name = "telephon_status")
-    private TelephonStatus telephonStatus = TelephonStatus.ACTIVE;
 
     public TelephonEntity() {
     }
@@ -101,14 +96,6 @@ public class TelephonEntity implements Serializable {
         this.telephonType = telephonType;
     }
 
-    public TelephonStatus getTelephonStatus() {
-        return telephonStatus;
-    }
-
-    public void setTelephonStatus(TelephonStatus telephonStatus) {
-        this.telephonStatus = telephonStatus;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -133,6 +120,6 @@ public class TelephonEntity implements Serializable {
 	public String toString() {
 		return "TelephonEntity [telephonId=" + telephonId + ", telephon="
 				+ telephon + ", telephonType=" + telephonType
-				+ ", telephonStatus=" + telephonStatus + "]";
+				+ "]";
 	}
 }

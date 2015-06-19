@@ -19,9 +19,9 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import jk.web.entities.ContactEmailEntity;
+import jk.web.entities.EmailEntity;
 import jk.web.entities.user.LoginEntity;
-import jk.web.entities.user.UserHasContactEmails;
+import jk.web.entities.user.UserHasEmails;
 
 /**
  *
@@ -29,7 +29,7 @@ import jk.web.entities.user.UserHasContactEmails;
  */
 @Entity
 @Table(name = "contact_emails", catalog = "jk", schema = "")
-public class BusinessContactEmailEntity extends ContactEmailEntity{
+public class BusinessContactEmailEntity extends EmailEntity{
     private static final long serialVersionUID = 1L;
 
     @JoinTable(name = "user_has_contact_emails", joinColumns = {

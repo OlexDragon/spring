@@ -17,65 +17,54 @@ import javax.validation.constraints.NotNull;
  * @author Oleksandr
  */
 @Embeddable
-public class UserHasContactEmailsPK implements Serializable {
+public class UserHasEmailsPK implements Serializable {
 	private static final long serialVersionUID = -23368926128270709L;
 
 	@Basic(optional = false)
     @NotNull
     @Column(name = "login_id", nullable = false)
-    private int loginId;
+    private Long loginId;
 
 	@Basic(optional = false)
     @NotNull
     @Column(name = "email_id", nullable = false)
-    private int emailId;
+    private Long emailId;
 
-    public UserHasContactEmailsPK() {
+    public UserHasEmailsPK() {
     }
 
-    public UserHasContactEmailsPK(int loginId, int emailId) {
+    public UserHasEmailsPK(Long loginId, Long emailId) {
         this.loginId = loginId;
         this.emailId = emailId;
     }
 
-    public int getLoginId() {
+    public Long getLoginId() {
         return loginId;
     }
 
-    public void setLoginId(int loginId) {
+    public void setLoginId(Long loginId) {
         this.loginId = loginId;
     }
 
-    public int getEmailId() {
+    public Long getEmailId() {
         return emailId;
     }
 
-    public void setEmailId(int emailId) {
+    public void setEmailId(Long emailId) {
         this.emailId = emailId;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (int) loginId;
-        hash += (int) emailId;
+        hash += loginId!=null ? 31* loginId.hashCode() : 31;
+        hash += emailId!=null ? emailId.hashCode() : 0;
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof UserHasContactEmailsPK)) {
-            return false;
-        }
-        UserHasContactEmailsPK other = (UserHasContactEmailsPK) object;
-        if (this.loginId != other.loginId) {
-            return false;
-        }
-        if (this.emailId != other.emailId) {
-            return false;
-        }
-        return true;
+        return object instanceof UserHasEmailsPK ? object.hashCode()==hashCode() : false;
     }
 
     @Override
