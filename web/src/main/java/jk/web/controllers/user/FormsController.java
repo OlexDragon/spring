@@ -13,6 +13,7 @@ import jk.web.controllers.management.NewMessageInformer;
 import jk.web.entities.AddressEntity;
 import jk.web.entities.ContactEmailEntity;
 import jk.web.entities.ContactEmailEntity.EmailStatus;
+import jk.web.entities.ContactUsEmailEntity;
 import jk.web.entities.ContactUsEntity;
 import jk.web.entities.ContactUsEntity.ContactUsStatus;
 import jk.web.entities.ReferenceNumberEntity;
@@ -445,22 +446,23 @@ public class FormsController {
 	}
 
 	private void contactUs(ContactUsForm contactUsForm, HttpServletRequest request) {
-		ContactEmailEntity emailEntity = userContactEmailRepository.findOneByEmail(contactUsForm.getEmail());
+
+		ContactUsEmailEntity emailEntity = userContactEmailRepository.findOneByEmail(contactUsForm.getEmail());
 		if(emailEntity==null)
-			emailEntity = userContactEmailRepository.save(new UserContactEmailEntity(contactUsForm.getEmail(), EmailStatus.TO_CONTACT));
+			emailEntity = new ContactUsEmailEntity(contactUsForm.getEmail());
 
 		ReferenceNumberEntity referenceNumberEntity = referenceNumberRepository.findOneByReferenceNumber(contactUsForm.getReferenceNumber());
 		if(referenceNumberEntity==null)
-			referenceNumberEntity = referenceNumberRepository.save(new ReferenceNumberEntity(contactUsForm.getReferenceNumber()));
+			referenceNumberEntity = new ReferenceNumberEntity(contactUsForm.getReferenceNumber());
 
-		contactUsRepository.save(	new ContactUsEntity(
-															contactUsForm.getName(),
+		ContactUsEntity entity = new ContactUsEntity(		contactUsForm.getName(),
 															contactUsForm.getSubject(),
 															contactUsForm.getMessage(),
 															ipAddressRepository.findOneByIpAddress(Statistic.getIpAddress(request)),
 															referenceNumberEntity,
 															emailEntity,
-															ContactUsStatus.TO_ANSWER));
+															ContactUsStatus.TO_ANSWER);
+		contactUsRepository.save(entity);
 
 		newMessageInformer.notifyAll();
 //		eMailWorker.sendEMail(emaleFrom, "New ContactUs Message", "http://www.fashionprofinder.com/management/messages", null);

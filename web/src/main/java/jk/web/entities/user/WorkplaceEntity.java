@@ -7,12 +7,13 @@
 package jk.web.entities.user;
 
 import java.io.Serializable;
+
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author Oleksandr Potomkin
@@ -20,13 +21,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "workplaces")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "WorkplaceEntity.findAll", query = "SELECT w FROM WorkplaceEntity w"),
-    @NamedQuery(name = "WorkplaceEntity.findByLoginsloginID", query = "SELECT w FROM WorkplaceEntity w WHERE w.workplacesPK.loginsloginID = :loginsloginID"),
-    @NamedQuery(name = "WorkplaceEntity.findByWorkplace", query = "SELECT w FROM WorkplaceEntity w WHERE w.workplacesPK.workplace = :workplace")})
 public class WorkplaceEntity implements Serializable {
     private static final long serialVersionUID = 1L;
+ 
     @EmbeddedId
+    @JsonProperty("key")
     protected WorkplacesPK workplacesPK;
 
     public WorkplaceEntity() {

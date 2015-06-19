@@ -24,6 +24,11 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import org.springframework.security.core.GrantedAuthority;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity(name="login")
 @Table(name="logins", catalog="jk", schema = "")
 public class LoginEntity implements Serializable{
@@ -108,6 +113,7 @@ public class LoginEntity implements Serializable{
 
     @NotNull
 	@Column(name = "password", nullable = false, length = 65)
+    @JsonIgnore
 	private String password;
 
 	@Column(name = "permissions")
@@ -115,17 +121,21 @@ public class LoginEntity implements Serializable{
 
     @Column(name = "created_date")
     @Temporal(TemporalType.TIMESTAMP)
+	@JsonProperty("created-date")
     private Date createdDate;
 
 	@Column(name = "last_accessed")
     @Temporal(TemporalType.TIMESTAMP)
+	@JsonProperty("last-accessed")
     private Date lastAccessed;
 
 
     @ManyToMany(mappedBy = "loginEntityList", cascade=CascadeType.ALL)
+    @JsonManagedReference
     private List<UserContactEmailEntity> emails;
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "loginEntity", fetch = FetchType.LAZY)
+    @JsonBackReference
     private UserEntity userEntity;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "loginEntity", fetch = FetchType.LAZY)

@@ -17,9 +17,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlTransient;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jk.web.entities.ContactEmailEntity;
 import jk.web.entities.ContactUsEntity;
-import jk.web.entities.business.BusinessHasContactEmails;
 
 /**
  *
@@ -33,16 +34,15 @@ public class UserContactEmailEntity extends ContactEmailEntity {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "contactEmailEntity", fetch = FetchType.LAZY)
     private List<UserHasContactEmails> userHasContactEmailsCollection;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "contactEmailEntity", fetch = FetchType.LAZY)
-    private List<BusinessHasContactEmails> businessHasContactEmailsList;
-
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "contactEmailEntity", fetch = FetchType.EAGER)
+    @JsonBackReference
     private List<ContactUsEntity> contactUsList;
 
     @JoinTable(name = "user_has_contact_emails", joinColumns = {
     		@JoinColumn(name = "email_id", referencedColumnName = "email_id", nullable = false)}, inverseJoinColumns = {
             @JoinColumn(name = "login_id", referencedColumnName = "login_id", nullable = false)})
     @ManyToMany(fetch=FetchType.LAZY)
+    @JsonBackReference
     private List<LoginEntity> loginEntityList;
 
     public UserContactEmailEntity() {
@@ -50,10 +50,6 @@ public class UserContactEmailEntity extends ContactEmailEntity {
 
     public UserContactEmailEntity(String email) {
 		super(email);
-	}
-
-	public UserContactEmailEntity(String email, EmailStatus emailStatus) {
-		super(email, emailStatus);
 	}
 
 	@XmlTransient
@@ -72,15 +68,6 @@ public class UserContactEmailEntity extends ContactEmailEntity {
 	public void setLoginEntityList(List<LoginEntity> loginEntityList) {
 		this.loginEntityList = loginEntityList;
 	}
-
-    @XmlTransient
-    public List<BusinessHasContactEmails> getBusinessHasContactEmailsList() {
-        return businessHasContactEmailsList;
-    }
-
-    public void setBusinessHasContactEmailsList(List<BusinessHasContactEmails> businessHasContactEmailsList) {
-        this.businessHasContactEmailsList = businessHasContactEmailsList;
-    }
 
     @XmlTransient
     public List<UserHasContactEmails> getUserHasContactEmailsCollection() {

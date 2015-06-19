@@ -13,8 +13,6 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,6 +22,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 /**
  *
  * @author Alex
@@ -32,6 +32,13 @@ import javax.validation.constraints.Size;
 @Table(name = "contact_emails", catalog = "jk", schema = "")
 public class ContactEmailEntity implements Serializable {
     private static final long serialVersionUID = 1L;
+
+    public enum EmailStatus{
+    	TO_CONFIRM,
+    	CONFIRMED,
+    	ACTIVE,
+    	DISABLED
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,19 +56,6 @@ public class ContactEmailEntity implements Serializable {
     @Column(name = "email_creation_date",insertable=false, updatable=false)
     private Timestamp emailCreationDate;
 
-    public enum EmailStatus{
-    	TO_CONTACT,
-    	TO_CONFIRM,
-    	CONFIRMED
-    }
-    @Column(name = "email_status")
-    @NotNull
-    @Enumerated(EnumType.ORDINAL)
-    private EmailStatus emailStatus = EmailStatus.TO_CONFIRM;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "contactEmailEntity", fetch = FetchType.EAGER)
-    private List<ContactUsEntity> contactUsList;
-
     public ContactEmailEntity() {
     }
 
@@ -71,11 +65,6 @@ public class ContactEmailEntity implements Serializable {
 
     public ContactEmailEntity(String email) {
         this.email = email;
-    }
-
-    public ContactEmailEntity(String email, EmailStatus emailStatus) {
-        this.email = email;
-        this.emailStatus = emailStatus;
     }
 
     public Long getEmailId() {
@@ -102,22 +91,6 @@ public class ContactEmailEntity implements Serializable {
         this.emailCreationDate = emailCreationDate;
     }
 
-    public EmailStatus getEmailStatus() {
-        return emailStatus;
-    }
-
-    public void setEmailStatus(EmailStatus emailStatus) {
-        this.emailStatus = emailStatus;
-    }
-
-    public List<ContactUsEntity> getContactUsList() {
-        return contactUsList;
-    }
-
-    public void setContactUsList(List<ContactUsEntity> contactUsList) {
-        this.contactUsList = contactUsList;
-    }
-
     @Override
     public int hashCode() {
         return emailId != null ? emailId.hashCode() : 0;
@@ -131,7 +104,6 @@ public class ContactEmailEntity implements Serializable {
 	@Override
 	public String toString() {
 		return "/n\tContactEmailEntity [emailId=" + emailId + ", email=" + email
-				+ ", emailCreationDate=" + emailCreationDate + ", emailStatus="
-				+ emailStatus + "]";
+				+ ", emailCreationDate=" + emailCreationDate + "]";
 	}
 }

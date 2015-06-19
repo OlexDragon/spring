@@ -24,7 +24,7 @@ public class WorkplacesPK implements Serializable {
 	@Basic(optional = false)
     @NotNull
     @Column(name = "login_id")
-    private Long loginsloginID;
+    private Long loginID;
 
 	@Basic(optional = false)
     @NotNull
@@ -36,16 +36,16 @@ public class WorkplacesPK implements Serializable {
     }
 
     public WorkplacesPK(Long loginsloginID, String workplace) {
-        this.loginsloginID = loginsloginID;
+        this.loginID = loginsloginID;
         this.workplace = workplace;
     }
 
-    public Long getLoginsloginID() {
-        return loginsloginID;
+    public Long getloginID() {
+        return loginID;
     }
 
-    public void setLoginsloginID(Long loginsloginID) {
-        this.loginsloginID = loginsloginID;
+    public void setloginID(Long loginsloginID) {
+        this.loginID = loginsloginID;
     }
 
     public String getWorkplace() {
@@ -58,7 +58,7 @@ public class WorkplacesPK implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = loginsloginID!=null ? loginsloginID.hashCode() : 0;
+        int hash = loginID!=null ? loginID.hashCode() : 0;
         hash += (workplace != null ? workplace.hashCode() : 0);
         return hash;
     }
@@ -70,7 +70,7 @@ public class WorkplacesPK implements Serializable {
 
     @Override
     public String toString() {
-        return "jk.web.user.entities.WorkplacesPK[ loginsloginID=" + loginsloginID + ", workplace=" + workplace + " ]";
+        return "jk.web.user.entities.WorkplacesPK[ loginsloginID=" + loginID + ", workplace=" + workplace + " ]";
     }
 
 }
