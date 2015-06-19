@@ -14,6 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -27,7 +28,7 @@ public class UserResrController {
 	@Autowired
 	private LoginRepository loginRepository;
 
-	@RequestMapping(produces="application/json;charset=UTF-8")
+	@RequestMapping(produces="application/json;charset=UTF-8", method=RequestMethod.GET)
 	public UserEntity gerUserEntity(Principal principal){
 		logger.entry(principal);
 

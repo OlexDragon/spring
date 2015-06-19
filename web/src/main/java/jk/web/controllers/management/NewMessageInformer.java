@@ -59,7 +59,7 @@ public class NewMessageInformer {
 				} catch (InterruptedException e) {
 					logger.catching(e);
 				}
-				List<ContactUsEntity> findByContactStatus = contactUsRepository.findByContactStatus(ContactUsStatus.TO_ANSWER);
+				List<ContactUsEntity> findByContactStatus = contactUsRepository.findByContactUsStatus(ContactUsStatus.TO_ANSWER);
 				logger.trace("\n\t{}", findByContactStatus);
 
 				if(findByContactStatus!=null && findByContactStatus.size()>0){

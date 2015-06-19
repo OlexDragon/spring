@@ -14,6 +14,8 @@ import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * @author Oleksandr Potomkin
  */
@@ -24,28 +26,30 @@ public class ProfessionalSkillsPK implements Serializable {
 	@Basic(optional = false)
     @NotNull
     @Column(name = "login_id")
-    private Long loginsloginID;
+    @JsonProperty("login_id")
+    private Long loginID;
 
 	@Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 145)
     @Column(name = "professional_skill")
+	@JsonProperty("skill")
     private String professionalSkill;
 
     public ProfessionalSkillsPK() {
     }
 
-    public ProfessionalSkillsPK(Long loginsloginID, String professionalSkill) {
-        this.loginsloginID = loginsloginID;
+    public ProfessionalSkillsPK(Long loginID, String professionalSkill) {
+        this.loginID = loginID;
         this.professionalSkill = professionalSkill;
     }
 
-    public Long getLoginsloginID() {
-        return loginsloginID;
+    public Long getloginID() {
+        return loginID;
     }
 
-    public void setLoginsloginID(Long loginsloginID) {
-        this.loginsloginID = loginsloginID;
+    public void setloginID(Long loginID) {
+        this.loginID = loginID;
     }
 
     public String getProfessionalSkill() {
@@ -58,7 +62,7 @@ public class ProfessionalSkillsPK implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = loginsloginID!=null ? loginsloginID.hashCode() : 0;
+        int hash = loginID!=null ? loginID.hashCode() : 0;
         hash += (professionalSkill != null ? professionalSkill.hashCode() : 0);
         return hash;
     }
@@ -70,7 +74,7 @@ public class ProfessionalSkillsPK implements Serializable {
 
     @Override
     public String toString() {
-        return "jk.web.user.entities.ProfessionalSkillsPK[ loginsloginID=" + loginsloginID + ", professionalSkillscol=" + professionalSkill + " ]";
+        return "jk.web.user.entities.ProfessionalSkillsPK[ loginID=" + loginID + ", professionalSkillscol=" + professionalSkill + " ]";
     }
 
 }

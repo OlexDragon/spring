@@ -12,7 +12,4 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 	public boolean exists(@Param("username") String username);
 
 	public UserEntity findOneByLoginEntityUsername(String username);
-
-	@Query("SELECT u FROM user u JOIN u.loginEntity l LEFT JOIN l.emails e WITH e.email = :eMail")
-	public UserEntity findByEMail(@Param("eMail") String eMail);
 }

@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import jk.web.entities.AddressEntity;
-import jk.web.entities.ContactEmailEntity;
+import jk.web.entities.EmailEntity;
 import jk.web.entities.user.UsersHasBusinessEntity;
 
 import org.hibernate.annotations.NotFound;
@@ -92,7 +92,7 @@ public class BusinessEntity implements Serializable {
             @JoinColumn(name = "contact_emails_email_id", referencedColumnName = "email_id")})
     @ManyToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
     @NotFound(action=NotFoundAction.IGNORE)
-    private List<ContactEmailEntity> contactEmailEntityList;
+    private List<EmailEntity> contactEmailEntityList;
 
     @JoinTable(name = "business_has_urls", joinColumns = {
     		@JoinColumn(name = "business_id", referencedColumnName = "business_id")}, inverseJoinColumns = {
@@ -151,11 +151,11 @@ public class BusinessEntity implements Serializable {
         this.addressEntityList = addressEntityList;
     }
 
-    public List<ContactEmailEntity> getContactEmailEntityList() {
+    public List<EmailEntity> getContactEmailEntityList() {
         return contactEmailEntityList;
     }
 
-    public void setContactEmailEntityList(List<ContactEmailEntity> contactEmailEntityList) {
+    public void setContactEmailEntityList(List<EmailEntity> contactEmailEntityList) {
         this.contactEmailEntityList = contactEmailEntityList;
     }
 

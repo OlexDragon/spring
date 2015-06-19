@@ -13,7 +13,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -26,7 +25,6 @@ import org.springframework.security.core.GrantedAuthority;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity(name="login")
@@ -129,17 +127,12 @@ public class LoginEntity implements Serializable{
 	@JsonProperty("last-accessed")
     private Date lastAccessed;
 
-
-    @ManyToMany(mappedBy = "loginEntityList", cascade=CascadeType.ALL)
-    @JsonManagedReference
-    private List<UserContactEmailEntity> emails;
-
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "loginEntity", fetch = FetchType.LAZY)
     @JsonBackReference
     private UserEntity userEntity;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "loginEntity", fetch = FetchType.LAZY)
-    private List<UserHasContactEmails> userHasContactEmailsCollection;
+    private List<UserHasEmails> hasEmails;
 
     public LoginEntity() {
 	}
@@ -201,23 +194,6 @@ public class LoginEntity implements Serializable{
         this.lastAccessed = lastAccessed;
     }
 
-	public List<UserContactEmailEntity> getEmails() {
-		return emails;
-	}
-
-	public void setEmails(List<UserContactEmailEntity> contactEmailEntityList) {
-		this.emails = contactEmailEntityList;
-	}
-
-	@Override
-	public String toString() {
-		return "\n\tLoginEntity [id=" + id + ", username=" + username
-				+ ", password=" + password + ", permissions=" + permissions
-				+ ", createdDate=" + createdDate + ", lastAccessed="
-				+ lastAccessed + ", contactEmailEntityList="
-				+ emails + "]";
-	}
-
     public UserEntity getUserEntity() {
         return userEntity;
     }
@@ -227,11 +203,19 @@ public class LoginEntity implements Serializable{
     }
 
     @XmlTransient
-    public List<UserHasContactEmails> getUserHasContactEmailsCollection() {
-        return userHasContactEmailsCollection;
+    public List<UserHasEmails> getHasEmails() {
+        return hasEmails;
     }
 
-    public void setUserHasContactEmailsCollection(List<UserHasContactEmails> userHasContactEmailsCollection) {
-        this.userHasContactEmailsCollection = userHasContactEmailsCollection;
+    public void setHasEmails(List<UserHasEmails> userHasContactEmails) {
+        this.hasEmails = userHasContactEmails;
     }
+
+	@Override
+	public String toString() {
+		return "\n\tLoginEntity [id=" + id + ", username=" + username
+				+ ", password=" + password + ", permissions=" + permissions
+				+ ", createdDate=" + createdDate + ", lastAccessed="
+				+ lastAccessed + "]";
+	}
 }

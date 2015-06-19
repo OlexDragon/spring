@@ -40,7 +40,7 @@ public class MessagesController {
 
 	@ModelAttribute("tocontact")
 	public List<ContactUsEntity>  attrUsersView(){
-		return contactUsRepository.findByContactStatus(ContactUsStatus.TO_ANSWER);
+		return contactUsRepository.findByContactUsStatus(ContactUsStatus.TO_ANSWER);
 	}
 
 	@RequestMapping
@@ -73,7 +73,7 @@ public class MessagesController {
 				stringBuilder.append(contactUsEntity.getMessage());
 
 				eMailWorker.sendEMail(
-						contactUsEntity.getContactEmailEntity().getEmail(),
+						contactUsEntity.getContactUsEmailEntity().getEmail(),
 						contactUsEntity.getSubject(),
 						stringBuilder.toString(),
 						new ContactUsStatusUpdater(contactUsRepository, contactUsEntity, ContactUsStatus.IN_PROCESS, ContactUsStatus.ANSWERED));

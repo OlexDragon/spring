@@ -4,7 +4,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 
 import jk.web.entities.user.LoginEntity;
-import jk.web.entities.user.UserEntity;
 import jk.web.entities.user.repositories.LoginRepository;
 import jk.web.repositories.user.TitleRepository;
 import jk.web.user.LoginView;
@@ -17,7 +16,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.NoSuchMessageException;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -61,47 +59,47 @@ public class LoginController {
 		return "forgot_password";
 	}
 
-	@RequestMapping(value="forgot", method=RequestMethod.POST)
-	public String resetPassword(@Param(value = "eMail") String eMail, Model model) throws NoSuchMessageException, UnsupportedEncodingException{
-		logger.entry(eMail);
-		eMail = eMail.toLowerCase();
-		Locale locale = userWorker.getLocale();
-		if(eMail.matches("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")){
-			UserEntity userEntity = userWorker.getUserEntityByEMail(eMail);
-			if(userEntity!=null) {
-				eMailWorker.sendEMail(
-									eMail,
-									applicationContext.getMessage(
-																"LoginController.forgot_password_title",
-																null,
-																locale),
-
-									applicationContext.getMessage(
-																"LoginController.forgot_password",
-																new String[]{
-																		mainURL,
-																		""+userEntity.getId(),
-																		 userEntity.getLoginEntity().getPassword()
-																},
-																locale), null);
-				model.addAttribute("message", "LoginController.forgot_password_title_message");
-			}else
-				model.addAttribute("errorMessage", "LoginController.email_not_exists");
-		}else{
-			model.addAttribute("eMail", eMail);
-			model.addAttribute(
-					"errorMessage",
-					applicationContext.getMessage(
-												"SignUpFormValidator.please_write_a_valid_X",
-												new String[]{"email address"},
-												"Not valid",
-												locale
-					)
-			);
-		}
-
-		return "forgot_password";
-	}
+//	@RequestMapping(value="forgot", method=RequestMethod.POST)
+//	public String resetPassword(@Param(value = "eMail") String eMail, Model model) throws NoSuchMessageException, UnsupportedEncodingException{
+//		logger.entry(eMail);
+//		eMail = eMail.toLowerCase();
+//		Locale locale = userWorker.getLocale();
+//		if(eMail.matches("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")){
+//			UserEntity userEntity = userWorker.getUserEntityByEMail(eMail);
+//			if(userEntity!=null) {
+//				eMailWorker.sendEMail(
+//									eMail,
+//									applicationContext.getMessage(
+//																"LoginController.forgot_password_title",
+//																null,
+//																locale),
+//
+//									applicationContext.getMessage(
+//																"LoginController.forgot_password",
+//																new String[]{
+//																		mainURL,
+//																		""+userEntity.getId(),
+//																		 userEntity.getLoginEntity().getPassword()
+//																},
+//																locale), null);
+//				model.addAttribute("message", "LoginController.forgot_password_title_message");
+//			}else
+//				model.addAttribute("errorMessage", "LoginController.email_not_exists");
+//		}else{
+//			model.addAttribute("eMail", eMail);
+//			model.addAttribute(
+//					"errorMessage",
+//					applicationContext.getMessage(
+//												"SignUpFormValidator.please_write_a_valid_X",
+//												new String[]{"email address"},
+//												"Not valid",
+//												locale
+//					)
+//			);
+//		}
+//
+//		return "forgot_password";
+//	}
 
 	@RequestMapping(value="new_password/{id}", method=RequestMethod.GET)
 	public String resetPassword(@PathVariable long id, @RequestParam(value="p", required=false) String password, Model model) throws UnsupportedEncodingException{

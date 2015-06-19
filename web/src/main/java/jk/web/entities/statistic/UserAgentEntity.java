@@ -38,11 +38,6 @@ import eu.bitwalker.useragentutils.OperatingSystem;
 @Entity
 @Table(name = "user_agent")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "UserAgentEntity.findAll", query = "SELECT u FROM UserAgentEntity u"),
-    @NamedQuery(name = "UserAgentEntity.findByUserAgentId", query = "SELECT u FROM UserAgentEntity u WHERE u.userAgentId = :userAgentId"),
-    @NamedQuery(name = "UserAgentEntity.findByBrowser", query = "SELECT u FROM UserAgentEntity u WHERE u.browser = :browser"),
-    @NamedQuery(name = "UserAgentEntity.findByOperatingSystem", query = "SELECT u FROM UserAgentEntity u WHERE u.operatingSystem = :operatingSystem")})
 public class UserAgentEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 

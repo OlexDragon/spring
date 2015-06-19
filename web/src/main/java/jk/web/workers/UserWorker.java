@@ -491,10 +491,10 @@ public class UserWorker extends LoginWorker{
 		return socialRepository.findOne(connectionKey.toString());
 	}
 
-	public UserEntity getUserEntityByEMail(String eMail) {
-		logger.entry(eMail);
-		return userRepository.findByEMail(eMail);
-	}
+//	public UserEntity getUserEntityByEMail(String eMail) {
+//		logger.entry(eMail);
+//		return userRepository.findByEMail(eMail);
+//	}
 
 	public static Date parseBirthday(Integer year, Integer month, Integer day) {
 		logger.entry(year, month, day);

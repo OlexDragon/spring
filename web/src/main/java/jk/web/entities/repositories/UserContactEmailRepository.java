@@ -1,10 +1,10 @@
 package jk.web.entities.repositories;
 
-import jk.web.entities.user.UserContactEmailEntity;
+import jk.web.entities.user.UserEmailEntity;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserContactEmailRepository extends JpaRepository<UserContactEmailEntity, Long> {
+public interface UserContactEmailRepository extends JpaRepository<UserEmailEntity, Long> {
 
-	public UserContactEmailEntity findOneByEmail(String email);
+	public UserEmailEntity findOneByEmail(String email);
 }

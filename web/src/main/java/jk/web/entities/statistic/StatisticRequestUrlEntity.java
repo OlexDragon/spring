@@ -29,11 +29,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "statistic_request_urls")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "StatisticRequestUrlEntity.findAll", query = "SELECT s FROM StatisticRequestUrlEntity s"),
-    @NamedQuery(name = "StatisticRequestUrlEntity.findByStatisticId", query = "SELECT s FROM StatisticRequestUrlEntity s WHERE s.statisticRequestUrlEntityPK.statisticId = :statisticId"),
-    @NamedQuery(name = "StatisticRequestUrlEntity.findByRequestUrlId", query = "SELECT s FROM StatisticRequestUrlEntity s WHERE s.statisticRequestUrlEntityPK.requestUrlId = :requestUrlId"),
-    @NamedQuery(name = "StatisticRequestUrlEntity.findByTimes", query = "SELECT s FROM StatisticRequestUrlEntity s WHERE s.times = :times")})
 public class StatisticRequestUrlEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
