@@ -14,13 +14,13 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlTransient;
 
-import jk.web.entities.ContactUsEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jk.web.entities.ContactUsEntity.ContactUsStatus;
 import jk.web.entities.EmailEntity;
 import jk.web.entities.ReferenceNumberEntity;
 import jk.web.entities.statistic.IpAddressEntity;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 
 /**
  *
@@ -32,11 +32,8 @@ public class UserEmailEntity extends EmailEntity {
 	private static final long serialVersionUID = -39156753727725349L;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "emailEntity", fetch = FetchType.LAZY)
+	@JsonManagedReference
     private List<UserHasEmails> hasEmails;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "contactUsEmailEntity", fetch = FetchType.EAGER)
-    @JsonBackReference
-    private List<ContactUsEntity> contactUsEntityList;
 
     public UserEmailEntity() {
 	}
@@ -48,15 +45,6 @@ public class UserEmailEntity extends EmailEntity {
 	public UserEmailEntity(String name, String subject, String message, IpAddressEntity findOneByIpAddress, ReferenceNumberEntity referenceNumberEntity, UserEmailEntity emailEntity, ContactUsStatus toAnswer) {
 		super( name,  subject,  message,  findOneByIpAddress,  referenceNumberEntity,  emailEntity,  toAnswer);
 	}
-
-	@XmlTransient
-    public List<ContactUsEntity> getContactUsEntityList() {
-        return contactUsEntityList;
-    }
-
-    public void setContactUsEntityList(List<ContactUsEntity> contactUsList) {
-        this.contactUsEntityList = contactUsList;
-    }
 
     @XmlTransient
     public List<UserHasEmails> getHasEmails() {

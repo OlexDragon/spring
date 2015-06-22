@@ -21,6 +21,10 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jk.web.entities.EmailEntity;
 import jk.web.entities.EmailEntity.EmailStatus;
 
@@ -35,44 +39,48 @@ public class UserHasEmails implements Serializable {
 	private static final long serialVersionUID = -5638482750718458640L;
 
 	@EmbeddedId
-    protected UserHasEmailsPK userHasContactEmailsPK;
+	@JsonProperty("key")
+    protected UserHasEmailsPK userHasEmailsPK;
 
 	@Basic(optional = false)
     @NotNull
     @Column(name = "email_status", nullable = false)
     @Enumerated(EnumType.ORDINAL)
+	@JsonProperty("email_status")
     private EmailStatus emailStatus = EmailStatus.TO_CONFIRM;
 
 	@JoinColumn(name = "login_id", referencedColumnName = "login_id", nullable = false, insertable = false, updatable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+	@JsonBackReference
     private LoginEntity loginEntity;
 
 	@JoinColumn(name = "email_id", referencedColumnName = "email_id", nullable = false, insertable = false, updatable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+	@JsonBackReference
     private UserEmailEntity emailEntity;
 
     public UserHasEmails() {
     }
 
     public UserHasEmails(UserHasEmailsPK userHasContactEmailsPK) {
-        this.userHasContactEmailsPK = userHasContactEmailsPK;
+        this.userHasEmailsPK = userHasContactEmailsPK;
     }
 
     public UserHasEmails(UserHasEmailsPK userHasContactEmailsPK, EmailStatus emailStatus) {
-        this.userHasContactEmailsPK = userHasContactEmailsPK;
+        this.userHasEmailsPK = userHasContactEmailsPK;
         this.emailStatus = emailStatus;
     }
 
     public UserHasEmails(Long loginId, Long emailId) {
-        this.userHasContactEmailsPK = new UserHasEmailsPK(loginId, emailId);
+        this.userHasEmailsPK = new UserHasEmailsPK(loginId, emailId);
     }
 
-    public UserHasEmailsPK getUserHasContactEmailsPK() {
-        return userHasContactEmailsPK;
+    public UserHasEmailsPK getUserHasEmailsPK() {
+        return userHasEmailsPK;
     }
 
-    public void setUserHasContactEmailsPK(UserHasEmailsPK userHasContactEmailsPK) {
-        this.userHasContactEmailsPK = userHasContactEmailsPK;
+    public void setUserHasEmailsPK(UserHasEmailsPK userHasContactEmailsPK) {
+        this.userHasEmailsPK = userHasContactEmailsPK;
     }
 
     public EmailStatus getEmailStatus() {
@@ -100,28 +108,18 @@ public class UserHasEmails implements Serializable {
     }
 
     @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (userHasContactEmailsPK != null ? userHasContactEmailsPK.hashCode() : 0);
-        return hash;
-    }
+	public String toString() {
+		return "\n\tUserHasEmails [userHasEmailsPK=" + userHasEmailsPK + ", emailStatus=" + emailStatus + ", emailEntity=" + emailEntity + "]";
+	}
 
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof UserHasEmails)) {
-            return false;
-        }
-        UserHasEmails other = (UserHasEmails) object;
-        if ((this.userHasContactEmailsPK == null && other.userHasContactEmailsPK != null) || (this.userHasContactEmailsPK != null && !this.userHasContactEmailsPK.equals(other.userHasContactEmailsPK))) {
-            return false;
-        }
-        return true;
-    }
+	@Override
+	public int hashCode() {
+		return 31 + ((userHasEmailsPK == null) ? 0 : userHasEmailsPK.hashCode());
+	}
 
-    @Override
-    public String toString() {
-        return "jk.web.entities.user.UserHasContactEmails[ userHasContactEmailsPK=" + userHasContactEmailsPK + " ]";
-    }
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof UserHasEmails ? obj.hashCode() == hashCode() : false;
+	}
     
 }

@@ -29,9 +29,9 @@ import jk.web.entities.user.UserEmailEntity;
 @Entity
 @Table(name = "contact_emails", catalog = "jk", schema = "")
 public class EmailEntity implements Serializable {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2728779757618264818L;
 
-    public enum EmailStatus{
+	public enum EmailStatus{
     	TO_CONFIRM,
     	CONFIRMED,
     	ACTIVE,
@@ -105,7 +105,6 @@ public class EmailEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "/n\tContactEmailEntity [emailId=" + emailId + ", email=" + email
-				+ ", emailCreationDate=" + emailCreationDate + "]";
+		return "\n\tEmailEntity [emailId=" + emailId + ", email=" + email + ", emailCreationDate=" + emailCreationDate + "]";
 	}
 }
