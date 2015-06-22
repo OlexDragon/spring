@@ -5,7 +5,7 @@ import java.util.Locale;
 
 import jk.web.entities.user.LoginEntity;
 import jk.web.entities.user.repositories.LoginRepository;
-import jk.web.repositories.user.TitleRepository;
+import jk.web.entities.user.repositories.TitleRepository;
 import jk.web.user.LoginView;
 import jk.web.user.validators.SignUpFormValidator;
 import jk.web.workers.UserWorker;

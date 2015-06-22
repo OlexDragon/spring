@@ -1,4 +1,4 @@
-package jk.web.repositories.user;
+package jk.web.entities.user.repositories;
 
 import jk.web.entities.user.TitleEntity;
 
