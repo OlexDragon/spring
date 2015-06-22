@@ -419,11 +419,11 @@ public class FormsController {
 
 		//Email
 		String email = signUpView.getEmail();
-		UserEmailEntity useEmailEntity = userEmailEntityRepository.findOneByEmail(email);
-		if(useEmailEntity==null)
-			useEmailEntity = userEmailEntityRepository.save(new UserEmailEntity(email));
+		UserEmailEntity userEmailEntity = userEmailEntityRepository.findOneByEmail(email);
+		if(userEmailEntity==null)
+			userEmailEntity = userEmailEntityRepository.save(new UserEmailEntity(email));
 		List<UserEmailEntity> emailEntities = new ArrayList<>();
-		emailEntities.add(useEmailEntity);
+		emailEntities.add(userEmailEntity);
 
 		//Login
 		LoginEntity loginEntity = loginRepository.save(new LoginEntity(signUpView.getUsername(), passwordEncoder.encode(signUpView.getPassword())));
@@ -431,7 +431,7 @@ public class FormsController {
 		loginEntityList.add(loginEntity);
 
 		//Login and Email
-		UserHasEmails hasEmails = new UserHasEmails(new UserHasEmailsPK(loginEntity.getId(), useEmailEntity.getEmailId()));
+		UserHasEmails hasEmails = new UserHasEmails(new UserHasEmailsPK(loginEntity.getId(), userEmailEntity.getEmailId()));
 
 		List<UserHasEmails> userHasEmails = new ArrayList<>();
 		userHasEmails.add(hasEmails);

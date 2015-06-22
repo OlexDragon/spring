@@ -17,6 +17,11 @@
 </head>
 <!--comments:IE11-->
 <body>
+<script type="text/javascript">
+	$.post('http://localhost:8090/rest/user', {firstName: 'alex'}, function(user){
+		var u = user;
+	});
+</script>
 <th:block th:fragment="footer"><!--/*
 
 	Modal Log In

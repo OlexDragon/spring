@@ -43,22 +43,18 @@ public class AddressRestTest {
 	@Autowired
 	private CountryRepository countryRepository;
 
-	private final MediaType contentType;
+	public static final MediaType CONTENT_TYPE  = new MediaType(MediaType.APPLICATION_JSON.getType(),
+																MediaType.APPLICATION_JSON.getSubtype(),
+																Charset.forName("utf8"));
+
     private MockMvc mockMvc;
 
     @Autowired
     private WebApplicationContext webApplicationContext;
 
-    public AddressRestTest() {
-        this.contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
-                MediaType.APPLICATION_JSON.getSubtype(),
-                Charset.forName("utf8"));
-    }
-
 	@Before
     public void setup() throws Exception {
         mockMvc = webAppContextSetup(webApplicationContext).build();
-        logger.exit(mockMvc);
     }
 
 	@Test
@@ -67,7 +63,7 @@ public class AddressRestTest {
 		logger.trace(countryEntity);
 		mockMvc.perform(get("/rest/country?geonamesId=" + GEONAME_ID))
 		.andExpect(status().isOk())
-		.andExpect(content().contentType(contentType))
+		.andExpect(content().contentType(CONTENT_TYPE))
 		.andExpect(jsonPath("$.geonamesId", is(countryEntity.getGeonamesId().intValue())))
 		.andExpect(jsonPath("$.capital", is(countryEntity.getCapital())))
 		.andExpect(jsonPath("$.countryCode", is(countryEntity.getCountryCode())))

@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import jk.web.entities.AddressEntity;
 import jk.web.entities.EmailEntity;
-import jk.web.entities.user.UsersHasBusinessEntity;
+import jk.web.entities.user.UsersHasBusinesses;
 
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
@@ -102,7 +102,7 @@ public class BusinessEntity implements Serializable {
     private List<BusinessUrlEntity> urlEntityList;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "businessEntity")
-    private List<UsersHasBusinessEntity> usersHasBusinessEntityList;
+    private List<UsersHasBusinesses> usersHasBusinessEntityList;
  
     public BusinessEntity() {
     }
@@ -188,11 +188,11 @@ public class BusinessEntity implements Serializable {
     }
 
     @XmlTransient
-    public List<UsersHasBusinessEntity> getUsersHasBusinessEntityList() {
+    public List<UsersHasBusinesses> getUsersHasBusinessEntityList() {
         return usersHasBusinessEntityList;
     }
 
-    public void setUsersHasBusinessEntityList(List<UsersHasBusinessEntity> usersHasBusinessEntityList) {
+    public void setUsersHasBusinessEntityList(List<UsersHasBusinesses> usersHasBusinessEntityList) {
         this.usersHasBusinessEntityList = usersHasBusinessEntityList;
     }
 

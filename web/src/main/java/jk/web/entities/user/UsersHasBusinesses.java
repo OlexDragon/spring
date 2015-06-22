@@ -13,15 +13,13 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import jk.web.entities.business.BusinessEntity;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 /**
  *
@@ -30,15 +28,10 @@ import jk.web.entities.business.BusinessEntity;
 @Entity
 @Table(name = "users_has_business", catalog = "jk", schema = "")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "UsersHasBusinessEntity.findAll", query = "SELECT u FROM UsersHasBusinessEntity u"),
-    @NamedQuery(name = "UsersHasBusinessEntity.findByLoginId", query = "SELECT u FROM UsersHasBusinessEntity u WHERE u.usersHasBusinessEntityPK.loginId = :loginId"),
-    @NamedQuery(name = "UsersHasBusinessEntity.findByBusinessId", query = "SELECT u FROM UsersHasBusinessEntity u WHERE u.usersHasBusinessEntityPK.businessId = :businessId"),
-    @NamedQuery(name = "UsersHasBusinessEntity.findByStatus", query = "SELECT u FROM UsersHasBusinessEntity u WHERE u.status = :status")})
-public class UsersHasBusinessEntity implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class UsersHasBusinesses implements Serializable {
+	private static final long serialVersionUID = -1492984734367462475L;
 
-    @EmbeddedId
+	@EmbeddedId
     protected UsersHasBusinessEntityPK usersHasBusinessEntityPK;
 
     public enum BusinessStatus{
@@ -58,23 +51,23 @@ public class UsersHasBusinessEntity implements Serializable {
     @ManyToOne(optional = false)
     private BusinessEntity businessEntity;
 
-    public UsersHasBusinessEntity() {
+    public UsersHasBusinesses() {
     }
  
     public void setStatus(BusinessStatus status) {
         this.status = status;
     }
     
-    public UsersHasBusinessEntity(UsersHasBusinessEntityPK usersHasBusinessEntityPK) {
+    public UsersHasBusinesses(UsersHasBusinessEntityPK usersHasBusinessEntityPK) {
         this.usersHasBusinessEntityPK = usersHasBusinessEntityPK;
     }
 
-    public UsersHasBusinessEntity(UsersHasBusinessEntityPK usersHasBusinessEntityPK, BusinessStatus status) {
+    public UsersHasBusinesses(UsersHasBusinessEntityPK usersHasBusinessEntityPK, BusinessStatus status) {
         this.usersHasBusinessEntityPK = usersHasBusinessEntityPK;
         this.status = status;
     }
 
-    public UsersHasBusinessEntity(int loginId, int businessId) {
+    public UsersHasBusinesses(int loginId, int businessId) {
         this.usersHasBusinessEntityPK = new UsersHasBusinessEntityPK(loginId, businessId);
     }
 
@@ -113,10 +106,10 @@ public class UsersHasBusinessEntity implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof UsersHasBusinessEntity)) {
+        if (!(object instanceof UsersHasBusinesses)) {
             return false;
         }
-        UsersHasBusinessEntity other = (UsersHasBusinessEntity) object;
+        UsersHasBusinesses other = (UsersHasBusinesses) object;
         if ((this.usersHasBusinessEntityPK == null && other.usersHasBusinessEntityPK != null) || (this.usersHasBusinessEntityPK != null && !this.usersHasBusinessEntityPK.equals(other.usersHasBusinessEntityPK))) {
             return false;
         }
