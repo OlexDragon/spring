@@ -2,7 +2,6 @@ package jk.web.entities.user;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Basic;
@@ -15,8 +14,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -27,6 +24,7 @@ import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -48,7 +46,7 @@ public class UserEntity implements Serializable {
     private Long id;
 
     @ManyToOne(fetch=FetchType.EAGER, optional=true)
-    @JoinColumn(name="title_id", updatable=false, insertable=false, nullable=true)
+    @JoinColumn(name="title_id", nullable=true)
     @JsonProperty("title")
     @JsonManagedReference
     private TitleEntity titleEntity;
@@ -62,8 +60,8 @@ public class UserEntity implements Serializable {
     private String lastName;
 
     @Column(name = "birthday")
-    @Temporal(TemporalType.DATE)
-    private Date birthday;
+    @JsonFormat(pattern="yyyy-MM-dd")
+    private Timestamp birthday;
 
     @OneToMany(fetch=FetchType.EAGER)
     @JoinColumn(name = "login_id")
@@ -154,11 +152,11 @@ public class UserEntity implements Serializable {
         this.lastName = lastName;
     }
 
-	public Date getBirthday() {
+	public Timestamp getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(Date birthday) {
+    public void setBirthday(Timestamp birthday) {
         this.birthday = birthday;
     }
 
