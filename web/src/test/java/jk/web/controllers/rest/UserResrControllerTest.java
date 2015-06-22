@@ -7,10 +7,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import jk.web.HomeController;
 import jk.web.entities.user.LoginEntity;
+import jk.web.entities.user.TitleEntity;
 import jk.web.entities.user.UserEntity;
 import jk.web.entities.user.repositories.LoginRepository;
+import jk.web.entities.user.repositories.TitleRepository;
 import jk.web.entities.user.repositories.UserRepository;
 import jk.web.user.User.Gender;
 
@@ -41,6 +47,8 @@ public class UserResrControllerTest {
     private WebApplicationContext webApplicationContext;
     @Autowired
 	private FilterChainProxy  filterChainProxy;
+	@Autowired
+	private TitleRepository titleRepository;
 
 	@Before
     public void setup() throws Exception {
@@ -76,6 +84,7 @@ public class UserResrControllerTest {
 
 	@Test
 	public void updateUser() throws Exception {
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
 		long id = 3L;
 		LoginEntity loginEntity = loginRepository.findOne(id);
@@ -84,14 +93,20 @@ public class UserResrControllerTest {
 		String newFirstName;
 		String newLastName;
 		Gender gender;
+		TitleEntity title;
+		java.util.Date birthday;
 		if(userEntity==null || userEntity.getFirstName().equals("First Name 2")){
 			newFirstName = "First Name 1";
 			newLastName = "Last Name 1";
 			gender = Gender.FEMALE;
+			title = titleRepository.findOne(1);
+			birthday = format.parse("1964-09-12");
 		}else{
 			newFirstName = "First Name 2";
 			newLastName = "Last Name 2";
 			gender = Gender.MALE;
+			title = titleRepository.findOne(2);
+			birthday = format.parse("2064-09-12");
 		}
 
 		mockMvc.perform(post("/rest/user")
@@ -100,11 +115,15 @@ public class UserResrControllerTest {
 				.param("password", "1234567")
 				.param("firstName", newFirstName)
 				.param("lastName", newLastName)
-				.param("gender", gender.name()))
+				.param("gender", gender.name())
+				.param("birthday", format.format(birthday))
+				.param("title", title.getId().toString()))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(AddressRestTest.CONTENT_TYPE))
 				.andExpect(jsonPath("$.firstName", is(newFirstName)))
 				.andExpect(jsonPath("$.lastName", is(newLastName)))
+				.andExpect(jsonPath("$.title.id", is(title.getId())))
+				.andExpect(jsonPath("$.birthday", is(format.format(birthday))))
 				.andExpect(jsonPath("$.gender", is(gender.name())));
 	}
 }

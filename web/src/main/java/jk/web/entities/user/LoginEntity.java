@@ -22,6 +22,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import org.springframework.security.core.GrantedAuthority;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -118,9 +119,11 @@ public class LoginEntity implements Serializable{
 
     @Column(name = "created_date", insertable=false, updatable=false)
 	@JsonProperty("creationDate")
+    @JsonFormat(pattern="yyyy-MM-dd hh:mm:ss")
     private Timestamp createdDate;
 
 	@Column(name = "last_accessed", insertable=false)
+    @JsonFormat(pattern="yyyy-MM-dd hh:mm:ss")
     private Timestamp lastAccessed;
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "loginEntity", fetch = FetchType.LAZY)

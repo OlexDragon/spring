@@ -1,18 +1,26 @@
 package jk.web.controllers.rest;
 
 import java.security.Principal;
+import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 
 import jk.web.entities.user.LoginEntity;
+import jk.web.entities.user.TitleEntity;
 import jk.web.entities.user.UserEntity;
 import jk.web.entities.user.repositories.LoginRepository;
+import jk.web.entities.user.repositories.TitleRepository;
 import jk.web.entities.user.repositories.UserRepository;
 import jk.web.user.User.Gender;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -52,15 +60,21 @@ public class UserRestController {
 		return logger.exit(userEntity);
 	}
 
+
+	public static final DateFormat BIRTHDAY_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+	@Autowired
+	private TitleRepository titleRepository;
 	@RequestMapping(produces="application/json;charset=UTF-8", method=RequestMethod.POST)
 	public UserEntity updateUser(
 			@RequestParam(required=false) String username,
 			@RequestParam(required=false) String password,
 			@RequestParam(required=false) String firstName,
 			@RequestParam(required=false) String lastName,
+			@RequestParam(required=false) Integer title,
 			@RequestParam(required=false) Gender gender,
-			Principal principal){
-		logger.entry(username, password, firstName, lastName, principal);
+			@RequestParam(required=false) String birthday,
+			Principal principal) throws ParseException{
+		logger.entry(username, password, firstName, lastName, title, gender, birthday, principal);
 
 		UserEntity userEntity;
 		if((username=authenticatedUsername(username, password, principal))==null)
@@ -81,6 +95,12 @@ public class UserRestController {
 
 			if(gender!=null)
 				userEntity.setGender(gender);
+
+			if(title!=null)
+				userEntity.setTitleEntity(titleRepository.findOne(title));
+
+			if(birthday!=null)
+				userEntity.setBirthday(new Timestamp(BIRTHDAY_FORMAT.parse(birthday).getTime()));
 
 			if(userEntity.getFirstName()!=null && userEntity.getLastName()!=null)
 				userEntity = userRepository.save(userEntity);
@@ -127,6 +147,10 @@ public class UserRestController {
 	@RequestMapping(value="genders", produces="application/json;charset=UTF-8")
 	public Gender[] getGenders(){
 		return Gender.values();
+	}
+	@RequestMapping(value="titles", produces="application/json;charset=UTF-8")
+	public List<TitleEntity> getUserTitles(){
+		return titleRepository.findAll(new Sort("id"));
 	}
 
 	@RequestMapping(value="prof-skills", produces="application/json;charset=UTF-8")

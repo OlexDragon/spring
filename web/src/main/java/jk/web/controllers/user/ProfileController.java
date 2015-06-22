@@ -7,8 +7,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import jk.web.entities.user.FileEntity;
+import jk.web.entities.user.repositories.TitleRepository;
 import jk.web.repositories.user.FileRepositiry;
-import jk.web.repositories.user.TitleRepository;
 import jk.web.user.Address;
 import jk.web.user.User;
 import jk.web.user.User.Gender;

@@ -1,10 +1,11 @@
 package jk.web.workers;
 
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import jk.web.entities.AddressEntity;
@@ -14,9 +15,9 @@ import jk.web.entities.user.LoginEntity;
 import jk.web.entities.user.TitleEntity;
 import jk.web.entities.user.UserEntity;
 import jk.web.entities.user.WorkplaceEntity;
+import jk.web.entities.user.repositories.TitleRepository;
 import jk.web.entities.user.repositories.UserRepository;
 import jk.web.entities.user.social.SocialEntity;
-import jk.web.repositories.user.TitleRepository;
 import jk.web.user.Address;
 import jk.web.user.Address.AddressType;
 import jk.web.user.User.Gender;
@@ -384,14 +385,14 @@ public class UserWorker extends LoginWorker{
 //		return save();
 //	}
 //
-	public void setBirthday(String username, Date birthday) {
+	public void setBirthday(String username, Timestamp birthday) {
 		logger.entry(username, birthday);
 		setUser(username);
 		userEntity.setBirthday(birthday);
 	}
 
 	public void setBirthday(Integer year, Integer month, Integer day) throws ParseException {
-		userEntity.setBirthday(parseBirthday(year, month, day));
+		userEntity.setBirthday(new Timestamp(parseBirthday(year, month, day).getTime()));
 	}
 
 //	public UserEntity save() {
@@ -500,7 +501,7 @@ public class UserWorker extends LoginWorker{
 		logger.entry(year, month, day);
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(year, month, day);
-		return logger.exit(calendar.getTime());
+		return logger.exit(new Date(calendar.getTime().getTime()));
 	}
 
 	public String getCountryCode(AddressType addressType) {

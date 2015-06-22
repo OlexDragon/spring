@@ -30,12 +30,12 @@ import jk.web.entities.user.UserEmailEntity;
 import jk.web.entities.user.UserHasEmails;
 import jk.web.entities.user.UserHasEmailsPK;
 import jk.web.entities.user.repositories.LoginRepository;
+import jk.web.entities.user.repositories.TitleRepository;
 import jk.web.entities.user.repositories.UserEmailEntityRepository;
 import jk.web.entities.user.repositories.UserHasEmailsRepository;
 import jk.web.filters.Statistic;
 import jk.web.repositories.statictic.IpAddressRepository;
 import jk.web.repositories.user.ActivityRepository;
-import jk.web.repositories.user.TitleRepository;
 import jk.web.user.Business;
 import jk.web.user.User;
 import jk.web.user.validators.SignUpFormValidator;
@@ -81,7 +81,6 @@ public class FormsController {
     protected AuthenticationManager authenticationManager;
     @Autowired
     private ActivityRepository activityRepository;
-
 	@Autowired
 	private TitleRepository titleRepository;
 
@@ -499,7 +498,6 @@ public class FormsController {
 
 	@Autowired
 	private BusinessRepository businessRepository;
-
 	private boolean addSite(AddSiteForm addSiteForm, Model model) {
 		boolean hasAdded = false;
 

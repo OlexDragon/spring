@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import jk.web.entities.user.TitleEntity;
-import jk.web.repositories.user.TitleRepository;
+import jk.web.entities.user.repositories.TitleRepository;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
