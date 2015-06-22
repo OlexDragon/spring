@@ -1,7 +1,7 @@
 package jk.web.entities.user;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -16,8 +16,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -25,6 +23,7 @@ import org.springframework.security.core.GrantedAuthority;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity(name="login")
@@ -117,21 +116,20 @@ public class LoginEntity implements Serializable{
 	@Column(name = "permissions")
 	private Long permissions;
 
-    @Column(name = "created_date")
-    @Temporal(TemporalType.TIMESTAMP)
-	@JsonProperty("created-date")
-    private Date createdDate;
+    @Column(name = "created_date", insertable=false, updatable=false)
+	@JsonProperty("creationDate")
+    private Timestamp createdDate;
 
-	@Column(name = "last_accessed")
-    @Temporal(TemporalType.TIMESTAMP)
-	@JsonProperty("last-accessed")
-    private Date lastAccessed;
+	@Column(name = "last_accessed", insertable=false)
+    private Timestamp lastAccessed;
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "loginEntity", fetch = FetchType.LAZY)
     @JsonBackReference
     private UserEntity userEntity;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "loginEntity", fetch = FetchType.LAZY)
+    @JsonProperty("emails")
+    @JsonManagedReference
     private List<UserHasEmails> hasEmails;
 
     public LoginEntity() {
@@ -178,19 +176,19 @@ public class LoginEntity implements Serializable{
 			this.permissions = permissions;
 	}
 
-    public Date getCreatedDate() {
+    public Timestamp getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(Timestamp createdDate) {
         this.createdDate = createdDate;
     }
 
-    public Date getLastAccessed() {
+    public Timestamp getLastAccessed() {
         return lastAccessed;
     }
 
-    public void setLastAccessed(Date lastAccessed) {
+    public void setLastAccessed(Timestamp lastAccessed) {
         this.lastAccessed = lastAccessed;
     }
 
@@ -207,15 +205,13 @@ public class LoginEntity implements Serializable{
         return hasEmails;
     }
 
-    public void setHasEmails(List<UserHasEmails> userHasContactEmails) {
-        this.hasEmails = userHasContactEmails;
+    public void setHasEmails(List<UserHasEmails> userHasEmails) {
+        this.hasEmails = userHasEmails;
     }
 
 	@Override
 	public String toString() {
-		return "\n\tLoginEntity [id=" + id + ", username=" + username
-				+ ", password=" + password + ", permissions=" + permissions
-				+ ", createdDate=" + createdDate + ", lastAccessed="
-				+ lastAccessed + "]";
+		return "\n\tLoginEntity [id=" + id + ", username=" + username + ", password=" + password + ", permissions=" + permissions + ", createdDate=" + createdDate + ", lastAccessed="
+				+ lastAccessed + ", hasEmails=" + hasEmails + "]";
 	}
 }

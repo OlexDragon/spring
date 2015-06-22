@@ -68,8 +68,8 @@ public class UserHasEmailsPK implements Serializable {
     }
 
     @Override
-    public String toString() {
-        return "jk.web.entities.user.UserHasContactEmailsPK[ loginId=" + loginId + ", emailId=" + emailId + " ]";
-    }
+	public String toString() {
+		return "\n\tUserHasEmailsPK [loginId=" + loginId + ", emailId=" + emailId + "]";
+	}
     
 }

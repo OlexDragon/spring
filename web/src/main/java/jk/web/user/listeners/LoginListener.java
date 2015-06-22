@@ -1,6 +1,7 @@
 package jk.web.user.listeners;
 
-import java.util.Date;
+import java.sql.Timestamp;
+import java.util.Calendar;
 
 import jk.web.entities.user.LoginEntity;
 import jk.web.workers.UserWorker;
@@ -19,7 +20,7 @@ public class LoginListener implements ApplicationListener<AuthenticationSuccessE
 	public void onApplicationEvent(AuthenticationSuccessEvent event) {
 	      String username = ((UserDetails) event.getAuthentication().getPrincipal()).getUsername();
 	      LoginEntity loginEntity = userWorker.getLoginEntity(username);
-	      loginEntity.setLastAccessed(new Date());
+	      loginEntity.setLastAccessed(new Timestamp(Calendar.getInstance().getTime().getTime()));
 	      userWorker.save(loginEntity);
 	}
 

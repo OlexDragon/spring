@@ -17,14 +17,11 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlTransient;
 
 import jk.web.user.User.Gender;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.NotFound;
@@ -39,14 +36,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Entity(name="user")
 @Table(name = "users", catalog = "jk", schema = "")
 public class UserEntity implements Serializable {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 6310832069334467075L;
 
-    public enum ActivityType{
+	public enum ActivityType{
     	NEW_USER
     }
-
-    @Transient
-    private final Logger logger = LogManager.getLogger();
 
     @Id
     @Basic(optional = false)
@@ -61,12 +55,10 @@ public class UserEntity implements Serializable {
 
     @Size(min = 1, max = 164)
     @Column(name = "first_name", length = 164)
-    @JsonProperty("first_name")
     private String firstName;
 
     @Size(min = 1, max = 164)
     @Column(name = "last_name", length = 164)
-    @JsonProperty("last_name")
     private String lastName;
 
     @Column(name = "birthday")
@@ -77,7 +69,7 @@ public class UserEntity implements Serializable {
     @JoinColumn(name = "login_id")
     @NotFound(action=NotFoundAction.IGNORE)
     @Cascade(value=CascadeType.ALL)
-    @JsonProperty("professional_skills")
+    @JsonProperty("skills")
     private List<ProfessionalSkillEntity> professionalSkills;
 
     @OneToMany(fetch=FetchType.EAGER)
@@ -95,7 +87,7 @@ public class UserEntity implements Serializable {
     @OneToMany(cascade = javax.persistence.CascadeType.ALL, mappedBy = "userEntity")
     @JsonProperty("businesses")
     @JsonManagedReference
-    private List<UsersHasBusinessEntity> usersHasBusinessEntityList;
+    private List<UsersHasBusinesses> hasBusinesses;
 
     @Column(name = "gender")
     private Gender gender;
@@ -103,12 +95,12 @@ public class UserEntity implements Serializable {
     @OneToMany(cascade = javax.persistence.CascadeType.ALL, mappedBy = "userEntity", fetch = FetchType.LAZY)
     @JsonProperty("addresses")
     @JsonManagedReference
-    private List<UserHasAddresses> usersHasAddressesList;
+    private List<UserHasAddresses> hasAddresses;
 
     @OneToMany(cascade = javax.persistence.CascadeType.ALL, mappedBy = "userEntity", fetch = FetchType.LAZY)
     @JsonProperty("telephons")
     @JsonManagedReference
-    private List<UsersHasTelephons> usersHasTelephonsList;
+    private List<UsersHasTelephons> hasTelephons;
 
     @OneToMany(cascade = javax.persistence.CascadeType.ALL, mappedBy = "userEntity", fetch = FetchType.LAZY)
     @JsonProperty("urls")
@@ -135,7 +127,6 @@ public class UserEntity implements Serializable {
     }
 
     public void setId(Long id) {
-    	logger.entry(id);
         this.id = id;
     }
 
@@ -144,7 +135,6 @@ public class UserEntity implements Serializable {
 	}
 
 	public void setTitleEntity(TitleEntity titleEntity) {
-		logger.entry(titleEntity);
 		this.titleEntity = titleEntity;
 	}
 
@@ -153,7 +143,6 @@ public class UserEntity implements Serializable {
     }
 
     public void setFirstName(String firstName) {
-    	logger.entry(firstName);
         this.firstName = firstName;
     }
 
@@ -162,7 +151,6 @@ public class UserEntity implements Serializable {
     }
 
     public void setLastName(String lastName) {
-    	logger.entry(lastName);
         this.lastName = lastName;
     }
 
@@ -171,7 +159,6 @@ public class UserEntity implements Serializable {
     }
 
     public void setBirthday(Date birthday) {
-    	logger.entry(birthday);
         this.birthday = birthday;
     }
 
@@ -214,12 +201,12 @@ public class UserEntity implements Serializable {
 	}
 
     @XmlTransient
-    public List<UsersHasBusinessEntity> getUsersHasBusinessEntityList() {
-        return usersHasBusinessEntityList;
+    public List<UsersHasBusinesses> getHasBusinesses() {
+        return hasBusinesses;
     }
 
-    public void setUsersHasBusinessEntityList(List<UsersHasBusinessEntity> usersHasBusinessEntityList) {
-        this.usersHasBusinessEntityList = usersHasBusinessEntityList;
+    public void seHasBusinesses(List<UsersHasBusinesses> usersHasBusinessEntityList) {
+        this.hasBusinesses = usersHasBusinessEntityList;
     }
 
     public Gender getGender() {
@@ -231,21 +218,21 @@ public class UserEntity implements Serializable {
     }
 
     @XmlTransient
-    public List<UserHasAddresses> getUsersHasAddressesList() {
-        return usersHasAddressesList;
+    public List<UserHasAddresses> getHasAddresses() {
+        return hasAddresses;
     }
 
-    public void setUsersHasAddressesList(List<UserHasAddresses> usersHasAddressesList) {
-        this.usersHasAddressesList = usersHasAddressesList;
+    public void setHasAddresses(List<UserHasAddresses> usersHasAddressesList) {
+        this.hasAddresses = usersHasAddressesList;
     }
 
     @XmlTransient
-    public List<UsersHasTelephons> getUsersHasTelephonsList() {
-        return usersHasTelephonsList;
+    public List<UsersHasTelephons> getHasTelephons() {
+        return hasTelephons;
     }
 
-    public void setUsersHasTelephonsList(List<UsersHasTelephons> usersHasTelephonsList) {
-        this.usersHasTelephonsList = usersHasTelephonsList;
+    public void setHasTelephons(List<UsersHasTelephons> usersHasTelephonsList) {
+        this.hasTelephons = usersHasTelephonsList;
     }
 
     @XmlTransient
@@ -259,8 +246,9 @@ public class UserEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "UserEntity [id=" + id + ", titleEntity=" + titleEntity + ", firstName=" + firstName + ", lastName=" + lastName + ", birthday=" + birthday
-//				+ ", addressEntities=" + addressEntityList + ", gender=" + gender + ", professionalSkills=" + professionalSkills + ", workplaces=" + workplaces + ", loginEntity="
-				+ loginEntity + "]";
+		return "\n\tUserEntity [id=" + id + ", titleEntity=" + titleEntity + ", firstName=" + firstName + ", lastName=" + lastName + ", gender=" + gender
+				+ ", birthday=" + birthday + ", professionalSkills="
+				+ professionalSkills + ", workplaces=" + workplaces + ", loginEntity=" + loginEntity + ", hasBusinesses=" + hasBusinesses
+				+ ", hasAddresses=" + hasAddresses + ", hasTelephons=" + hasTelephons + ", usersHasUrlsList=" + usersHasUrlsList + "]";
 	}
 }
