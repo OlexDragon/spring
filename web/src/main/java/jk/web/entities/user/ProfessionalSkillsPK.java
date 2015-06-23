@@ -33,7 +33,7 @@ public class ProfessionalSkillsPK implements Serializable {
     @NotNull
     @Size(min = 1, max = 145)
     @Column(name = "professional_skill")
-	@JsonProperty("skill")
+	@JsonProperty("name")
     private String professionalSkill;
 
     public ProfessionalSkillsPK() {
@@ -62,9 +62,7 @@ public class ProfessionalSkillsPK implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = loginID!=null ? loginID.hashCode() : 0;
-        hash += (professionalSkill != null ? professionalSkill.hashCode() : 0);
-        return hash;
+        return (professionalSkill != null ? professionalSkill.hashCode() *31 : 0) + (loginID!=null ? loginID.hashCode() : 0);
     }
 
     @Override
