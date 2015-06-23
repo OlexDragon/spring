@@ -63,8 +63,7 @@ public class UserEntity implements Serializable {
     @JsonFormat(pattern="yyyy-MM-dd")
     private Timestamp birthday;
 
-    @OneToMany(fetch=FetchType.EAGER)
-    @JoinColumn(name = "login_id")
+    @OneToMany(cascade = javax.persistence.CascadeType.ALL, mappedBy = "userEntity", fetch=FetchType.LAZY)
     @NotFound(action=NotFoundAction.IGNORE)
     @Cascade(value=CascadeType.ALL)
     @JsonProperty("skills")
@@ -82,7 +81,7 @@ public class UserEntity implements Serializable {
     @JsonManagedReference
     private LoginEntity loginEntity;
 
-    @OneToMany(cascade = javax.persistence.CascadeType.ALL, mappedBy = "userEntity")
+    @OneToMany(cascade = javax.persistence.CascadeType.ALL, mappedBy = "userEntity", fetch=FetchType.LAZY)
     @JsonProperty("businesses")
     @JsonManagedReference
     private List<UsersHasBusinesses> hasBusinesses;

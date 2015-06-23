@@ -1,6 +1,7 @@
 package jk.web.controllers.rest;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -36,6 +37,8 @@ import org.springframework.web.context.WebApplicationContext;
 @SpringApplicationConfiguration(classes = HomeController.class)
 @WebAppConfiguration
 public class UserResrControllerTest {
+
+	private static final long ID = 3L;
 
 	private MockMvc mockMvc;
 
@@ -75,8 +78,8 @@ public class UserResrControllerTest {
 
 		mockMvc.perform(get("/rest/user")
 				.param("username", loginEntity.getUsername())
-				.param("password", "1234567")
-				.contentType("application/json;charset=UTF-8"))
+//				.contentType("application/json;charset=UTF-8")
+				.param("password", "1234567"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(AddressRestTest.CONTENT_TYPE))
 				.andExpect(jsonPath("$.id", is(3)));
@@ -86,9 +89,8 @@ public class UserResrControllerTest {
 	public void updateUser() throws Exception {
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
-		long id = 3L;
-		LoginEntity loginEntity = loginRepository.findOne(id);
-		UserEntity userEntity = userRepository.findOne(id);
+		LoginEntity loginEntity = loginRepository.findOne(ID);
+		UserEntity userEntity = userRepository.findOne(ID);
 
 		String newFirstName;
 		String newLastName;
@@ -110,7 +112,7 @@ public class UserResrControllerTest {
 		}
 
 		mockMvc.perform(post("/rest/user")
-				.contentType("application/json;charset=UTF-8")
+//				.contentType("application/json;charset=UTF-8")
 				.param("username", loginEntity.getUsername())
 				.param("password", "1234567")
 				.param("firstName", newFirstName)
@@ -125,5 +127,34 @@ public class UserResrControllerTest {
 				.andExpect(jsonPath("$.title.id", is(title.getId())))
 				.andExpect(jsonPath("$.birthday", is(format.format(birthday))))
 				.andExpect(jsonPath("$.gender", is(gender.name())));
+	}
+
+	@Test
+	public void setSkills() throws Exception {
+		LoginEntity loginEntity = loginRepository.findOne(ID);
+
+		if(loginEntity.getUserEntity()!=null)
+			mockMvc.perform(post("/rest/user/prof-skills")
+				.param("username", loginEntity.getUsername())
+				.param("password", "1234567")
+				.param("skills", "mysql", "java", "thymeleaf", "spring boot"))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType("application/json;charset=UTF-8"))
+				.andExpect(jsonPath("$", hasSize(4)));
+	}
+
+	@Test
+	public void deleteSkills() throws Exception {
+		LoginEntity loginEntity = loginRepository.findOne(ID);
+
+		if(loginEntity.getUserEntity()!=null)
+			mockMvc.perform(post("/rest/user/prof-skills/delete")
+				.contentType("application/json;charset=UTF-8")
+				.param("username", loginEntity.getUsername())
+				.param("password", "1234567")
+				.param("skills", "mysql", "java", "thymeleaf", "spring boot"))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType("application/json;charset=UTF-8"))
+				.andExpect(jsonPath("$").doesNotExist());
 	}
 }
