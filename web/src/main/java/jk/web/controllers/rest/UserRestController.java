@@ -6,13 +6,16 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import jk.web.entities.user.LoginEntity;
+import jk.web.entities.user.ProfessionalSkillEntity;
 import jk.web.entities.user.TitleEntity;
 import jk.web.entities.user.UserEntity;
 import jk.web.entities.user.repositories.LoginRepository;
+import jk.web.entities.user.repositories.ProfessionalSkillEntityRepository;
 import jk.web.entities.user.repositories.TitleRepository;
 import jk.web.entities.user.repositories.UserRepository;
 import jk.web.user.User.Gender;
@@ -153,8 +156,86 @@ public class UserRestController {
 		return titleRepository.findAll(new Sort("id"));
 	}
 
-	@RequestMapping(value="prof-skills", produces="application/json;charset=UTF-8")
-	public Gender[] getProfessionalSkillEntity(){
-		return Gender.values();
+	@Autowired ProfessionalSkillEntityRepository professionalSkillEntityRepository;
+	@RequestMapping(value="prof-skills", produces="application/json;charset=UTF-8", method=RequestMethod.GET)
+	public List<ProfessionalSkillEntity> getProfessionalSkillEntity(
+			@RequestParam(required=false) String username,
+			@RequestParam(required=false)  String password,
+			Principal principal){
+
+		List<ProfessionalSkillEntity> profSkill;
+		if((username = authenticatedUsername(username, password, principal))==null)
+			profSkill = null;
+		else
+			profSkill = professionalSkillEntityRepository.findByUserEntityLoginEntityUsername(username);
+
+		return profSkill;
+	}
+
+	@RequestMapping(value="prof-skills", produces="application/json;charset=UTF-8", method=RequestMethod.POST)
+	public List<ProfessionalSkillEntity> setProfessionalSkillEntity(
+			@RequestParam(required=false) String username,
+			@RequestParam(required=false) String password,
+			@RequestParam(required=false) List<String> skills,
+			Principal principal){
+
+		logger.entry(username, password, skills, principal);
+
+		List<ProfessionalSkillEntity> profSkills;
+		if((username = authenticatedUsername(username, password, principal))==null)
+			profSkills = null;
+		else{
+			LoginEntity loginEntity = loginRepository.findOneByUsername(username);
+			Long id = loginEntity.getId();
+
+			profSkills = professionalSkillEntityRepository.findByKeyLoginID(id);
+			if(profSkills==null)
+				profSkills = new ArrayList<>();
+			if(skills!=null){
+				for(String s:skills){
+					ProfessionalSkillEntity pse = new ProfessionalSkillEntity(id, s);
+					int index = profSkills.indexOf(pse);
+					if(index<0)
+						profSkills.add(pse);
+				}
+				professionalSkillEntityRepository.save(profSkills);
+			}
+		}
+
+		return profSkills;
+	}
+
+	@RequestMapping(value="prof-skills/delete", produces="application/json;charset=UTF-8", method=RequestMethod.POST)
+	public List<ProfessionalSkillEntity> deleteProfessionalSkillEntity(
+			@RequestParam(required=false) String username,
+			@RequestParam(required=false) String password,
+			@RequestParam(required=false) List<String> skills,
+			Principal principal){
+
+		List<ProfessionalSkillEntity> profSkills;
+		if((username = authenticatedUsername(username, password, principal))==null)
+
+			profSkills = null;
+
+		else{
+
+			LoginEntity loginEntity = loginRepository.findOneByUsername(username);
+			Long id = loginEntity.getId();
+
+			if(skills!=null){
+				profSkills = new ArrayList<>();
+
+				for(String s:skills){
+					ProfessionalSkillEntity pse = new ProfessionalSkillEntity(id, s);
+					int index = profSkills.indexOf(pse);
+					if(index<0)
+						profSkills.add(pse);
+				}
+				professionalSkillEntityRepository.delete(profSkills);
+			}
+			profSkills = professionalSkillEntityRepository.findByKeyLoginID(id);
+		}
+
+		return profSkills;
 	}
 }

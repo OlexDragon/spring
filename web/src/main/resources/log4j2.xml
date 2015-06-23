@@ -16,7 +16,7 @@
     </Appenders>
 
     <Loggers>
-		<logger name="jk.web.controllers.rest.UserResrController" level="all" />
+<!-- 		<logger name="jk.web.controllers.rest.UserResrController" level="all" /> -->
 <!--	<logger name="jk.web.controllers.workers.CssController" level="INFO" /> -->
 <!--	<logger name="jk.web.controllers.workers.search.CareerjetAPIController" level="all" /> -->
 <!--	<logger name="jk.web.controllers.management.ManagementStatisticController" level="INFO" /> -->
@@ -29,10 +29,11 @@
 <!--     <logger name="jk.web.entities.ContactUsEntity" level="INFO" /> -->
 <!--     <logger name="jk.web.user.LoginDetails" level="all" /> -->
 <!--    <logger name="jk.web.user.services.LoginDetailsServiceImpl" level="all" /> -->
-    <logger name="jk.web.filters.Statistic" level="INFO" />
-        <Root level="INFO">
+<!--     <logger name="jk.web.filters.Statistic" level="INFO" /> -->
+
+        <Root level="error">
 			<AppenderRef ref="STDOUT" />
-			<AppenderRef ref="FILE" />
+<!-- 			<AppenderRef ref="FILE" /> -->
          </Root>
     </Loggers>
 </Configuration>
