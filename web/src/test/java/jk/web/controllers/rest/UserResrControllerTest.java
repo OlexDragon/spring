@@ -24,7 +24,6 @@ import jk.web.user.User.Gender;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.security.web.FilterChainProxy;
@@ -55,9 +54,7 @@ public class UserResrControllerTest {
 
 	@Before
     public void setup() throws Exception {
-		MockitoAnnotations.initMocks(this);
         mockMvc = webAppContextSetup(webApplicationContext)
-        		.dispatchOptions(true)
         		.addFilter(filterChainProxy)
                 .build();
     }
