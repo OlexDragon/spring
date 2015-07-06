@@ -151,18 +151,6 @@ public class Statistic extends OncePerRequestFilter {
 
 		@Override
 		public void run() {
-			logger.trace("\n\tuserId:{}"
-			   			+ "\n\tipAddress: {}"
-			   			+ "\n\trequestUrl: {}"
-				   		+ "\n\tbrowser: {}"
-				   		+ "\n\tbrowserVersion: {}"
-				   		+ "\n\toperatingSystem: {}",
-				   			userId,
-				   			ipAddress,
-				   			requestUrl,
-				   			browser,
-				   			browserVersion,
-				   			operatingSystem);
 
 			try{
 				synchronized (logger) {

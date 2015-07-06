@@ -16,7 +16,6 @@ import jk.web.entities.AddressEntity;
  * @author Oleksandr Potomkin
  */
 @Entity
-@Table(name = "addresses", catalog = "", schema = "jk")
 public class UserAddressEntity extends AddressEntity{
 	private static final long serialVersionUID = -1237438634242283596L;
 

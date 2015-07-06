@@ -7,8 +7,6 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,8 +17,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import jk.web.user.Address.AddressStatus;
-
 /**
  * @author Oleksandr Potomkin
  */
@@ -28,6 +24,11 @@ import jk.web.user.Address.AddressStatus;
 @Table(name = "addresses", catalog = "", schema = "jk")
 public class AddressEntity implements Serializable {
     private static final long serialVersionUID = 1L;
+
+	public enum AddressStatus{
+		ACTIVE,
+		OLD
+	}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -64,10 +65,6 @@ public class AddressEntity implements Serializable {
     @JoinColumn(name = "country_code", referencedColumnName = "country_code", insertable=false, updatable=false)
     @ManyToOne(fetch=FetchType.EAGER, optional=true)
     private CountryEntity countryEntity;
-
-    @Column(name = "address_status")
-    @Enumerated(EnumType.ORDINAL)
-    private AddressStatus status = AddressStatus.ACTIVE;
 
    @Column(name = "create_date", insertable=false, updatable=false)
     private Timestamp createDate;
@@ -157,14 +154,6 @@ public class AddressEntity implements Serializable {
 		return this;
 	}
 
-    public AddressStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(AddressStatus status) {
-        this.status = status;
-    }
-
 	@Override
     public int hashCode() {
         return addsressId != null ? addsressId.hashCode() : 0;
@@ -184,7 +173,7 @@ public class AddressEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "AddressEntity [addsressId=" + addsressId + ", address=" + address + ", city=" + city + ", postalCode=" + postalCode + ", status=" + status
+		return "AddressEntity [addsressId=" + addsressId + ", address=" + address + ", city=" + city + ", postalCode=" + postalCode
 				+ ", createDate=" + createDate + ", countryEntity=" + countryEntity + "]";
 	}
 }

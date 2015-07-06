@@ -14,22 +14,17 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlTransient;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jk.web.entities.EmailEntity;
 import jk.web.entities.user.LoginEntity;
-import jk.web.entities.user.UserHasEmails;
 
 /**
  *
  * @author Alex
  */
 @Entity
-@Table(name = "contact_emails", catalog = "jk", schema = "")
-public class BusinessContactEmailEntity extends EmailEntity{
+public class BusinessEmailEntity extends EmailEntity{
     private static final long serialVersionUID = 1L;
 
     @JoinTable(name = "user_has_contact_emails", joinColumns = {

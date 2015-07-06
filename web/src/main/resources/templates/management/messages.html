@@ -39,15 +39,15 @@
 					<th>Date</th>
 				</tr>
 			</thead>
-			<tr th:each="cont:${tocontact}" th:class="${cont.contactStatus==T(jk.web.entities.ContactUsEntity.ContactUsStatus).IN_PROCESS ? 'active' : null}">
+			<tr th:each="cont:${tocontact}" th:class="${cont.contactUsStatus==T(jk.web.entities.ContactUsEntity.ContactUsStatus).IN_PROCESS ? 'active' : null}">
 					<td class="id" th:text="${cont.contactUsId}">ID</td>
 					<td class="ipaddress" th:text="${cont.ipAddressEntity}">IP Address</td>
 					<td class="reference" th:text="${cont.referenceNumberEntity}">Reference Number</td>
 					<td class="clname" th:text="${cont.name}">Name</td>
-					<td class="email" th:text="${cont.contactEmailEntity.email}">E-Mail</td>
+					<td class="email" th:text="${cont.emailEntity.email}">E-Mail</td>
 					<td class="subject" th:text="${cont.subject}">Subject</td>
 					<td class="message" th:text="${cont.message}">Message</td>
-					<td class="status" th:text="${cont.contactStatus}">Status</td>
+					<td class="status" th:text="${cont.contactUsStatus}">Status</td>
 					<td class="status" th:text="${#calendars.format(cont.contactDate,'dd MMMM yyyy')}">Date</td>
 			</tr>
 		</table>

@@ -17,11 +17,6 @@
 </head>
 <!--comments:IE11-->
 <body>
-<script type="text/javascript">
-	$.post('http://localhost:8090/rest/user', {firstName: 'alex'}, function(user){
-		var u = user;
-	});
-</script>
 <th:block th:fragment="footer"><!--/*
 
 	Modal Log In
@@ -302,21 +297,27 @@ $(function(){
 </div>
 <script type="text/javascript">
 /*<![CDATA[*/
-setTimeout(function(){
-	$('<script/>').attr('async', 'async').attr('src', '//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js').appendTo($('#advertisement'));
+isAdds = false;
+function showAdds(){
+if(!isAdds){
+	isAdds = true;
 	setTimeout(function(){
-		$('<ins>').addClass('adsbygoogle').attr('style', 'display:inline-block;width:250px;height:250px').attr('data-ad-client', 'ca-pub-1240215757349321').attr('data-ad-slot', '7690894295').appendTo($('#advertisement'));
-		$('<script/>').append('(adsbygoogle = window.adsbygoogle || []).push({})').appendTo($('#advertisement'));
+		$('<script/>').attr('async', 'async').attr('src', '//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js').appendTo($('#advertisement'));
 		setTimeout(function(){
-			$('<ins>').addClass('adsbygoogle').attr('style', 'display:inline-block;width:250px;height:250px').attr('data-ad-client', 'ca-pub-1240215757349321').attr('data-ad-slot', '3260694695').appendTo($('#advertisement'));
+			$('<ins>').addClass('adsbygoogle').attr('style', 'display:inline-block;width:250px;height:250px').attr('data-ad-client', 'ca-pub-1240215757349321').attr('data-ad-slot', '7690894295').appendTo($('#advertisement'));
 			$('<script/>').append('(adsbygoogle = window.adsbygoogle || []).push({})').appendTo($('#advertisement'));
 			setTimeout(function(){
-				$('<ins>').addClass('adsbygoogle').attr('style', 'display:inline-block;width:250px;height:250px').attr('data-ad-client', 'ca-pub-1240215757349321').attr('data-ad-slot', '9307228294').appendTo($('#advertisement'));
+				$('<ins>').addClass('adsbygoogle').attr('style', 'display:inline-block;width:250px;height:250px').attr('data-ad-client', 'ca-pub-1240215757349321').attr('data-ad-slot', '3260694695').appendTo($('#advertisement'));
 				$('<script/>').append('(adsbygoogle = window.adsbygoogle || []).push({})').appendTo($('#advertisement'));
+				setTimeout(function(){
+					$('<ins>').addClass('adsbygoogle').attr('style', 'display:inline-block;width:250px;height:250px').attr('data-ad-client', 'ca-pub-1240215757349321').attr('data-ad-slot', '9307228294').appendTo($('#advertisement'));
+					$('<script/>').append('(adsbygoogle = window.adsbygoogle || []).push({})').appendTo($('#advertisement'));
+				}, 5000);
 			}, 5000);
 		}, 5000);
 	}, 5000);
-}, 5000);
+}
+}
 /*]]>*/
 </script>
 </div>
@@ -527,6 +528,7 @@ $(function(){
 					data['page'] = page;
 				$('#result').empty();
 				$('#result').load('/careerjet', data);
+				showAdds();
 				return false;
 	});
 	$('categoriesList').on('click',
