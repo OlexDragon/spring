@@ -473,7 +473,7 @@ public class FormsController {
 															emailEntity,
 															ContactUsStatus.TO_ANSWER));
 
-		newMessageInformer.notifyAll();
+		newMessageInformer.checkFotNewMessages();
 //		eMailWorker.sendEMail(emaleFrom, "New ContactUs Message", "http://www.fashionprofinder.com/management/messages", null);
 	}
 

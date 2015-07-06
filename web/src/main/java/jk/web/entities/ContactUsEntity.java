@@ -64,7 +64,7 @@ public class ContactUsEntity implements Serializable {
     @JoinColumn(name = "email_id")
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JsonManagedReference
-    private ContactUsEmailEntity contactUsEmailEntity;
+    private EmailEntity emailEntity;
 
     @JoinColumn(name = "ip_address_id")
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
@@ -90,13 +90,13 @@ public class ContactUsEntity implements Serializable {
         this.contactUsId = contactUsId;
     }
 
-    public ContactUsEntity(String name, String subject, String message, IpAddressEntity ipAddressEntity, ReferenceNumberEntity referenceNumberEntity, ContactUsEmailEntity contactUsEmailEntity, ContactUsStatus contactStatus) {
+    public ContactUsEntity(String name, String subject, String message, IpAddressEntity ipAddressEntity, ReferenceNumberEntity referenceNumberEntity, EmailEntity emailEntity, ContactUsStatus contactUsStatus) {
         this.name = name;
         this.subject = subject;
         this.message = message;
-        this.contactUsStatus = contactStatus;
+        this.contactUsStatus = contactUsStatus;
         this.referenceNumberEntity = referenceNumberEntity;
-        this.contactUsEmailEntity = contactUsEmailEntity;
+        this.emailEntity = emailEntity;
         this.ipAddressEntity = ipAddressEntity;
     }
 
@@ -140,12 +140,12 @@ public class ContactUsEntity implements Serializable {
         this.contactDate = contactDate;
     }
 
-    public ContactUsEmailEntity getContactUsEmailEntity() {
-        return contactUsEmailEntity;
+    public EmailEntity getEmailEntity() {
+        return emailEntity;
     }
 
-    public void setContactUsEmailEntity(ContactUsEmailEntity contactUsEmailEntity) {
-        this.contactUsEmailEntity = contactUsEmailEntity;
+    public void setEmailEntity(EmailEntity emailEntity) {
+        this.emailEntity = emailEntity;
     }
 
     public IpAddressEntity getIpAddressEntity() {
@@ -198,9 +198,9 @@ public class ContactUsEntity implements Serializable {
 								+ "subject=" + subject + ",\n\t\t"
 										+ "message=" + message + ",\n\t\t"
 												+ "contactDate=" + contactDate + ",\n\t\t"
-														+ "contactEmailEntity=" + contactUsEmailEntity + ",\n\t\t"
+														+ "contactEmailEntity=" + emailEntity + ",\n\t\t"
 																+ "ipAddressEntity=" + ipAddressEntity + ",\n\t\t"
 																		+ "referenceNumberEntity=" + referenceNumberEntity + ",\n\t\t"
-																				+ "contactStatus=" + contactUsStatus + "]";
+																				+ "contactUsStatus=" + contactUsStatus + "]";
 	}
 }

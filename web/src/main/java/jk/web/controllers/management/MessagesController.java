@@ -73,7 +73,7 @@ public class MessagesController {
 				stringBuilder.append(contactUsEntity.getMessage());
 
 				eMailWorker.sendEMail(
-						contactUsEntity.getContactUsEmailEntity().getEmail(),
+						contactUsEntity.getEmailEntity().getEmail(),
 						contactUsEntity.getSubject(),
 						stringBuilder.toString(),
 						new ContactUsStatusUpdater(contactUsRepository, contactUsEntity, ContactUsStatus.IN_PROCESS, ContactUsStatus.ANSWERED));
