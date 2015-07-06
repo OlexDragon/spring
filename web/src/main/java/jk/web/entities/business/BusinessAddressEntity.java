@@ -6,7 +6,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
 import jk.web.entities.AddressEntity;
 
@@ -14,7 +13,6 @@ import jk.web.entities.AddressEntity;
  * @author Oleksandr Potomkin
  */
 @Entity
-@Table(name = "addresses", catalog = "", schema = "jk")
 public class BusinessAddressEntity extends AddressEntity {
 	private static final long serialVersionUID = 921268631106621453L;
 

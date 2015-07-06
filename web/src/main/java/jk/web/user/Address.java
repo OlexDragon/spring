@@ -9,11 +9,6 @@ public class Address {
 		WORK;
 	}
 
-	public enum AddressStatus{
-		ACTIVE,
-		OLD
-	}
-
 	private AddressType addressType;
 
 	//thymeleaf fields

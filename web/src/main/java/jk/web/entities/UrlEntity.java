@@ -38,6 +38,12 @@ import jk.web.entities.business.BusinessEntity;
 public class UrlEntity implements Serializable {
 	private static final long serialVersionUID = -6239926424978624933L;
 
+    enum UrlStatus{
+    	UNKNOWN,
+    	ACTIVE,
+    	INACTIVE
+    }
+
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -49,16 +55,6 @@ public class UrlEntity implements Serializable {
     @Size(min = 1, max = 45)
     @Column(name = "url")
     private String url;
-
-    enum UrlStatus{
-    	UNKNOWN,
-    	ACTIVE,
-    	INACTIVE
-    }
-    @Basic(optional = false)
-    @NotNull
-    @Enumerated(EnumType.ORDINAL)
-    private UrlStatus urlStatus = UrlStatus.UNKNOWN;
 
     @ManyToMany(mappedBy = "urlEntityList")
     private List<BusinessEntity> businessEntityList;
@@ -94,14 +90,6 @@ public class UrlEntity implements Serializable {
         this.url = url;
     }
 
-    public UrlStatus getUrlStatus() {
-        return urlStatus;
-    }
-
-    public void setUrlStatus(UrlStatus urlStatus) {
-        this.urlStatus = urlStatus;
-    }
-
     public List<BusinessEntity> getBusinessEntityList() {
         return businessEntityList;
     }
@@ -130,7 +118,6 @@ public class UrlEntity implements Serializable {
 
     @Override
 	public String toString() {
-		return "UrlEntity [urlId=" + urlId + ", url=" + url + ", urlStatus="
-				+ urlStatus + "]";
+		return "UrlEntity [urlId=" + urlId + ", url=" + url + "]";
 	}
 }

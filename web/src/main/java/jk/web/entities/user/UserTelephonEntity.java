@@ -11,7 +11,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlTransient;
 
 import jk.web.entities.TelephonEntity;
@@ -21,7 +20,6 @@ import jk.web.entities.TelephonEntity;
  * @author Oleksandr
  */
 @Entity
-@Table(name = "telephons", catalog = "jk", schema = "")
 public class UserTelephonEntity extends TelephonEntity {
 	private static final long serialVersionUID = -8126154621541838128L;
 

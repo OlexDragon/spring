@@ -11,23 +11,20 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlTransient;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jk.web.entities.ContactUsEntity.ContactUsStatus;
 import jk.web.entities.EmailEntity;
 import jk.web.entities.ReferenceNumberEntity;
 import jk.web.entities.statistic.IpAddressEntity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 /**
  *
  * @author Alex
  */
 @Entity
-@Table(name = "contact_emails", catalog = "jk", schema = "")
 public class UserEmailEntity extends EmailEntity {
 	private static final long serialVersionUID = -39156753727725349L;
 
